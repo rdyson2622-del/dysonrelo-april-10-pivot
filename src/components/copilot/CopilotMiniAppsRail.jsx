@@ -54,11 +54,10 @@ export default function CopilotMiniAppsRail({ className = '', onSelectApp }) {
               return (
                 <div
                   key={app.id}
-                  onClick={() => onSelectApp?.(app)}
-                  className={`p-1 rounded-md bg-[#121212] hover:bg-[#181818] border border-white/5 hover:border-[#D4AF37]/50 flex items-center justify-between transition-all cursor-pointer group ${
+                  className={`p-1 rounded-md bg-[#121212] hover:bg-[#181818] border border-white/5 hover:border-white/15 flex items-center justify-between transition-all cursor-default group ${
                     isDNN ? 'ring-1 ring-rose-500/40 bg-rose-950/20' : ''
                   }`}
-                  title={`${app.label} · ${app.copy} (Click to engage)`}
+                  title={`${app.label} · ${app.copy}`}
                 >
                   <div className="flex items-center gap-1.5 min-w-0">
                     {/* App Icon Squircle */}
