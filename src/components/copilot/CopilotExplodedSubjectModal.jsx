@@ -103,7 +103,7 @@ export default function CopilotExplodedSubjectModal({
 
   return (
     <div 
-      className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-2xl text-white flex flex-col overflow-hidden animate-in fade-in duration-200 select-none"
+      className="fixed inset-0 z-[50000] bg-black/95 backdrop-blur-2xl text-white flex flex-col overflow-hidden animate-in fade-in duration-200"
       role="dialog"
       aria-modal="true"
       aria-label="Full-Screen Focus Theater"
@@ -195,7 +195,7 @@ export default function CopilotExplodedSubjectModal({
       {/* ── MAIN SCROLLABLE CONTENT BODY ── */}
       <div 
         ref={modalContainerRef}
-        className="flex-1 overflow-y-auto p-3 sm:p-6 lg:p-8 max-w-5xl mx-auto w-full space-y-6"
+        className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-3 sm:p-6 lg:p-8 max-w-5xl mx-auto w-full space-y-6 pb-32"
       >
         
         {/* ── OPTION A: SPECIFIC SELECTED SOLUTION PLAYBOOK ── */}
