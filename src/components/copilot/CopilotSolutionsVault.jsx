@@ -105,7 +105,7 @@ export const SOLUTIONS_LIBRARY = [
     formatType: 'doc',
     title: 'Licensed Broker Fiduciary Representation vs Franchise Sales Agent',
     subtitle: 'Why Tier 1 Fiduciary Supervision Matters',
-    summary: 'Most agents at large retail brokerages are independent contractor salespersons with zero personal liability and minimal transaction depth. Dyson & Dyson provides direct California Broker supervision (License #00609384).',
+    summary: 'Most agents at large retail brokerages are independent contractor salespersons with zero personal liability and minimal transaction depth. Dyson & Dyson provides direct California Broker supervision.',
     keyRule: 'A true fiduciary is legally obligated to prioritize your net financial outcome over transaction commission.',
     promptQuery: 'What is the legal difference between a licensed broker fiduciary and a standard sales agent?',
     speaker: 'charlie'

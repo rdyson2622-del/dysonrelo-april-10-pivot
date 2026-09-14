@@ -147,7 +147,7 @@ export default function CopilotContactCaptureModal({
             <div className="grid grid-cols-2 gap-2 p-2.5 rounded-xl bg-white/5 border border-white/10 text-[11px]">
               <div className="flex items-center gap-2 text-stone-200">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-                <span>Line 204 Rebate Calculation</span>
+                <span>Lender Compliance Discovery</span>
               </div>
               <div className="flex items-center gap-2 text-stone-200">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
@@ -159,7 +159,7 @@ export default function CopilotContactCaptureModal({
               </div>
               <div className="flex items-center gap-2 text-stone-200">
                 <Radio className="w-3.5 h-3.5 text-rose-400 shrink-0" />
-                <span>VIP Daily News Brief Access</span>
+                <span>VIP Daily News &amp; Library Access</span>
               </div>
             </div>
 
@@ -217,14 +217,14 @@ export default function CopilotContactCaptureModal({
                 </div>
               </div>
 
-              {/* TCPA Legal Re-Contact Consent Disclaimer */}
+              {/* Fair-Use & Privacy Notice */}
               <div className="p-2.5 rounded-lg bg-black/60 border border-white/10 text-[9px] text-stone-400 leading-relaxed space-y-1">
                 <div className="flex items-center gap-1.5 text-stone-300 font-semibold text-[9.5px]">
                   <Lock className="w-3 h-3 text-[#D4AF37]" />
-                  <span>Legal &amp; Privacy Notice · CA DRE #00609384</span>
+                  <span>Complimentary Subscription &amp; Fair Use Policy</span>
                 </div>
                 <p>
-                  By entering your mobile number, you agree to receive your requested property audit, transaction analysis, and occasional curated market intelligence from Dyson &amp; Dyson via SMS and email. Msg &amp; data rates may apply. Reply STOP at any time to opt out. We never sell your personal information.
+                  Free subscription for personal research and report storage. To preserve system performance for all subscribers, excessive or automated lookups may pause access until the next monthly cycle. By entering your number, you agree to receive your requested reports via SMS/email. Reply STOP anytime. We never sell personal data.
                 </p>
               </div>
 
