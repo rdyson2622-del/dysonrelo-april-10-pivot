@@ -562,7 +562,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         </div>
 
         {/* ── RIGHT COLUMN: PROPERTY AUDIT & DAILY NEWS BROADCAST (WITH EXPLODE-TO-FULL-PAGE) ── */}
-        <div className="flex-1 min-w-0 bg-[#080808]">
+        <div className={`flex-1 min-w-0 transition-colors ${rightPanelView === 'solutions' ? 'bg-[#ede0cc]' : 'bg-[#080808]'}`}>
           <CopilotDossierNewsPanel
             property={property}
             dossierData={dossierData}

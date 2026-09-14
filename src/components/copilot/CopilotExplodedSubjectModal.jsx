@@ -428,19 +428,19 @@ export default function CopilotExplodedSubjectModal({
 
         ) : currentTab === 'solutions' ? (
 
-          /* ── OPTION C: SOLUTIONS VAULT IN EXPLODED THEATER ── */
-          <div className="space-y-6 animate-in fade-in duration-150">
-            <div className="rounded-2xl border-2 border-[#D4AF37] bg-gradient-to-r from-[#17140b] via-[#101010] to-[#121212] p-5 sm:p-6 shadow-2xl">
+          /* ── OPTION C: SOLUTIONS VAULT IN EXPLODED THEATER (TAN BACKDROP STYLING) ── */
+          <div className="space-y-6 animate-in fade-in duration-150 text-[#1a1815]">
+            <div className="rounded-2xl border-2 border-[#d8cab6] bg-[#fbf7f0] p-5 sm:p-6 shadow-sm">
               <div className="flex items-center gap-2 mb-1">
-                <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#D4AF37] font-bold">
+                <span className="w-2 h-2 rounded-full bg-[#854d0e] animate-pulse" />
+                <span className="text-[10.5px] font-mono uppercase tracking-widest text-[#854d0e] font-bold">
                   EXPANDED SOLUTIONS VAULT · {SOLUTIONS_LIBRARY.length} ACTIVE PLAYBOOKS
                 </span>
               </div>
-              <h2 className="text-lg sm:text-2xl font-bold text-white tracking-wide">
+              <h2 className="text-lg sm:text-2xl font-bold text-[#1a1815] tracking-wide" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                 Fiduciary Playbooks, Legal Shields &amp; Tax Portability
               </h2>
-              <p className="text-xs sm:text-sm text-stone-300 mt-1">
+              <p className="text-xs sm:text-sm text-[#554c40] mt-1">
                 Tap any playbook below to review its fiduciary mechanics or ask Bob Dyson and Charlie Simmons directly.
               </p>
             </div>
@@ -451,27 +451,27 @@ export default function CopilotExplodedSubjectModal({
                 <div
                   key={item.id}
                   onClick={() => onSelectItem?.(item)}
-                  className="rounded-xl bg-[#121212] border border-white/10 hover:border-[#D4AF37] p-4 space-y-3 cursor-pointer group transition-all shadow-lg hover:bg-[#161512]"
+                  className="rounded-2xl bg-[#fbf7f0] border border-[#d8cab6] hover:border-[#854d0e] p-4 sm:p-5 space-y-3 cursor-pointer group transition-all shadow-sm hover:shadow-md hover:bg-white"
                 >
                   <div className="flex items-center justify-between text-[10px]">
-                    <span className="font-mono font-bold text-[#D4AF37] flex items-center gap-1.5">
-                      <BookOpen className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <span className="font-mono font-bold text-[#854d0e] flex items-center gap-1.5">
+                      <BookOpen className="w-3.5 h-3.5 text-[#854d0e]" />
                       <span>{item.format}</span>
                     </span>
-                    <span className="px-2 py-0.5 rounded bg-white/5 text-stone-300 font-mono text-[9px]">
-                      {item.speaker === 'bob' ? 'Bob Dyson' : 'Charlie'}
+                    <span className="px-2 py-0.5 rounded bg-[#ede0cc] text-[#854d0e] font-mono text-[9px] font-bold border border-[#c4b59f]">
+                      {item.speaker === 'bob' ? 'Bob Dyson (Broker)' : 'Charlie (AI Voice)'}
                     </span>
                   </div>
 
-                  <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-[#D4AF37] transition-colors leading-snug">
+                  <h3 className="text-sm sm:text-base font-bold text-[#1a1815] group-hover:text-[#854d0e] transition-colors leading-snug">
                     {item.title}
                   </h3>
-                  <p className="text-xs text-stone-300 line-clamp-2">
+                  <p className="text-xs text-[#554c40] line-clamp-2">
                     {item.summary}
                   </p>
 
-                  <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
-                    <span className="text-[10px] text-[#D4AF37] font-semibold">
+                  <div className="pt-2 border-t border-[#d8cab6] flex items-center justify-between text-xs">
+                    <span className="text-[11px] text-[#854d0e] font-bold">
                       View Full Protocol →
                     </span>
                     <button
@@ -480,7 +480,7 @@ export default function CopilotExplodedSubjectModal({
                         e.stopPropagation();
                         handleReturnToCommunication(item.promptQuery);
                       }}
-                      className="px-2.5 py-1 rounded bg-white/10 hover:bg-[#D4AF37] text-white hover:text-black font-semibold text-[11px] transition-all cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg bg-[#0a0a0a] hover:bg-[#222] text-[#D4AF37] hover:text-[#e8c84a] font-bold text-xs transition-all cursor-pointer shadow-sm"
                     >
                       Ask in Chat
                     </button>
@@ -586,7 +586,7 @@ export default function CopilotExplodedSubjectModal({
                     <span>Lender &amp; Fiduciary Compliance Audit</span>
                   </div>
                   <p className="text-xs text-stone-400">
-                    Pre-Offer Fiduciary Verification | California DRE #00609384
+                    Pre-Offer Fiduciary Verification | Fiduciary Desk Supervision
                   </p>
                   <div className="p-4 rounded-xl bg-black border border-[#D4AF37]/50 flex items-center justify-between mt-2">
                     <span className="text-xs sm:text-sm font-semibold text-white">Earnest Deposit Contingency</span>
