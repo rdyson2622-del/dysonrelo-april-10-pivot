@@ -258,7 +258,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
               </h3>
             </div>
             <p className="text-[11px] text-[#554c40] font-medium">
-              Rebate estimate where allowed by law | Based on $7.95M purchase price.
+              Rebate estimate where allowed by law | Based on $1.5M purchase price.
             </p>
 
             <div className="bg-[#f7efe3] border border-[#d8cab6] rounded-lg p-3 sm:p-3.5 flex items-center justify-between">
@@ -267,10 +267,10 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
               </span>
               <div className="text-right">
                 <div className="text-base sm:text-lg font-bold font-mono text-[#854d0e]">
-                  $199,500 – $238,500
+                  $37,500 – $45,000
                 </div>
                 <div className="text-[11px] text-[#554c40] font-mono">
-                  (2.51% – 3.00%)
+                  (2.50% – 3.00%)
                 </div>
               </div>
             </div>
