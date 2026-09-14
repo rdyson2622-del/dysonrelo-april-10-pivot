@@ -3,7 +3,7 @@ import { ShieldCheck, ExternalLink, Plus } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 
 // Authentic evening luxury estate villa (hero-evening-luxury.png, never daytime hero-estate.jpg)
-const HERO_EVENING = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a57180df3_Screenshot2026-09-13at43243AM.png";
+const HERO_EVENING = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/4e3495635_Screenshot2026-09-14at43057PM.png";
 
 const SAMPLE_SEARCHES = [
   '742 Vista Del Mar, La Jolla, CA 92037',
@@ -92,7 +92,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
               </div>
             </form>
 
-            <p className="text-xs sm:text-[13px] text-[#F3F0E6]/85 leading-tight font-normal px-1">
+            <p className="text-xs sm:text-[13px] text-[#F3F0E6]/85 leading-tight font-normal px-1 whitespace-nowrap">
               Paste any address to see real comps, property risks, and your closing rebate — where allowed by law.
             </p>
           </div>
