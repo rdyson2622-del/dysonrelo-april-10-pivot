@@ -7,7 +7,7 @@ export const KNOWN_PROPERTY_DOSSIERS = {
     city: 'Scottsdale, AZ',
     fullAddress: '1844 Mountain Shadow Way, Scottsdale, AZ 85253',
     listPrice: '$2.15M',
-    marketSummary: 'Market-aligned pricing vs Desert Ridge comps; rebate estimate where allowed by law.',
+    marketSummary: 'Market-aligned pricing vs Desert Ridge comps; individual legal & lender discovery required.',
     comps: [
       {
         address: '1812 E Desert Cove Ave',
@@ -50,16 +50,16 @@ export const KNOWN_PROPERTY_DOSSIERS = {
       }
     ],
     risksSummary: 'Review solar lease transfer terms and HOA CC&Rs closely.',
-    rebateBasis: 'Based on $2.15M purchase price.',
-    rebateRange: '$13,500 – $15,000',
-    rebatePercent: '(0.63% – 0.70%)'
+    complianceBasis: 'Transaction-specific legal & underwriting discovery required.',
+    complianceProtocol: 'Case-by-Case Discovery',
+    complianceStatus: 'Checked Against State, Fed & Lender Regs'
   },
   '742 vista del mar': {
     shortAddress: '742 Vista Del Mar',
     city: 'La Jolla, CA',
     fullAddress: '742 Vista Del Mar, La Jolla, CA 92037',
     listPrice: '$7.95M',
-    marketSummary: 'Overpriced vs comps; rebate estimate where allowed by law.',
+    marketSummary: 'Overpriced vs comps; individual legal & lender discovery required.',
     comps: [
       {
         address: '718 Via Capri',
@@ -102,16 +102,16 @@ export const KNOWN_PROPERTY_DOSSIERS = {
       }
     ],
     risksSummary: 'Review seller disclosures and coastal reports closely.',
-    rebateBasis: 'Based on $1.5M purchase price.',
-    rebateRange: '$10,000 – $12,000',
-    rebatePercent: '(0.67% – 0.80%)'
+    complianceBasis: 'Transaction-specific legal & underwriting discovery required.',
+    complianceProtocol: 'Case-by-Case Discovery',
+    complianceStatus: 'Checked Against State, Fed & Lender Regs'
   },
   '4220 oak hollow': {
     shortAddress: '4220 Oak Hollow Terrace',
     city: 'Austin, TX',
     fullAddress: '4220 Oak Hollow Terrace, Austin, TX 78746',
     listPrice: '$1.85M',
-    marketSummary: 'Westlake Hills micro-market analyzed; rebate estimate where allowed by law.',
+    marketSummary: 'Westlake Hills micro-market analyzed; individual legal & lender discovery required.',
     comps: [
       {
         address: '4108 Lost Creek Blvd',
@@ -154,9 +154,9 @@ export const KNOWN_PROPERTY_DOSSIERS = {
       }
     ],
     risksSummary: 'Review foundation warranty transfer and arborist surveys closely.',
-    rebateBasis: 'Based on $1.85M purchase price.',
-    rebateRange: '$11,500 – $13,000',
-    rebatePercent: '(0.62% – 0.70%)'
+    complianceBasis: 'Transaction-specific legal & underwriting discovery required.',
+    complianceProtocol: 'Case-by-Case Discovery',
+    complianceStatus: 'Checked Against State, Fed & Lender Regs'
   }
 };
 
@@ -180,7 +180,7 @@ export function getPropertyDossier(rawAddress) {
     city: city,
     fullAddress: rawAddress,
     listPrice: '$1.50M',
-    marketSummary: `Micro-market analysis complete for ${street}; rebate estimate where allowed by law.`,
+    marketSummary: `Micro-market analysis complete for ${street}; individual legal & lender discovery required.`,
     comps: [
       {
         address: `Nearby Comp 1 (${street.replace(/^\d+\s*/, '') || 'Local'})`,
@@ -223,8 +223,8 @@ export function getPropertyDossier(rawAddress) {
       }
     ],
     risksSummary: 'Review seller disclosures and municipal permit records closely.',
-    rebateBasis: 'Based on $1.5M purchase price.',
-    rebateRange: '$10,000 – $12,000',
-    rebatePercent: '(0.67% – 0.80%)'
+    complianceBasis: 'Transaction-specific legal & underwriting discovery required.',
+    complianceProtocol: 'Case-by-Case Discovery',
+    complianceStatus: 'Checked Against State, Fed & Lender Regs'
   };
 }

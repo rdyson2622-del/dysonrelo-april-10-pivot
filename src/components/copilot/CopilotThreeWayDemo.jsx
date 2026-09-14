@@ -19,9 +19,7 @@ export const THREE_WAY_SCRIPT = [
     role: 'Verified Buyer',
     colorName: 'Red Ring',
     colorHex: '#ef4444',
-    text: "We're looking at 7414 Fay Ave in La Jolla. Is the bluff setback going to be a problem, and can we structure a closing rebate?",
-    // Authentic lifelike American female voice for buyer
-    audioUrl: "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/e7bab9e3a_buyer_annie_three_way.wav",
+    text: "We're looking at 7414 Fay Ave in La Jolla. Is the bluff setback going to be a problem, and how do you review contract terms and lender compliance?",
     voiceConfig: { pitch: 1.05, rate: 1.02, voiceType: 'consumer' },
     delayMs: 4000
   },
@@ -32,9 +30,7 @@ export const THREE_WAY_SCRIPT = [
     role: 'AI Voice Concierge',
     colorName: 'Green Ring',
     colorHex: '#10b981',
-    text: "Charlie here. On 7414 Fay Ave, coastal zoning requires a mandatory 25-foot bluff setback and geotechnical soil report. Comps show the property is listed at an 18% premium. Let me bring in Bob Dyson to structure your contingency shield.",
-    // Official Charlie Simmons Ruben Voice (cc5fb6c924064712ba9f690852aa4646)
-    audioUrl: "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/e7da6a823_charlie_ruben_three_way.wav",
+    text: "Charlie here. On 7414 Fay Ave, coastal zoning requires a mandatory 25-foot bluff setback and geotechnical soil report. Comps show the property is listed at an 18% premium. Let me bring in Bob Dyson to review your contingency protections and compliance discovery.",
     voiceConfig: { pitch: 1.0, rate: 1.0, voiceType: 'charlie' },
     delayMs: 7000
   },
@@ -45,9 +41,7 @@ export const THREE_WAY_SCRIPT = [
     role: 'Principal Broker · DRE #00609384',
     colorName: 'Gold Ring',
     colorHex: '#D4AF37',
-    text: "Bob Dyson here. In California coastal transactions, we never let you write an offer without an unwaivable soil stability inspection. And under our zero-fee protocol, your estimated $16,800 closing rebate is locked directly on line 204 of your HUD-1.",
-    // Official Bob Dyson Cloned Voice (147b8f5713024fb9afc106f266e47482)
-    audioUrl: "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/d7d032452_bob_dyson_official_three_way.wav",
+    text: "Bob Dyson here. In California coastal transactions, we never let you write an offer without an un-waivable soil stability inspection. Any discussion of credits, concessions, or transaction structures is handled through individual discovery—verified case-by-case against specific state, federal, and lender regulations so you are always fully protected.",
     voiceConfig: { pitch: 0.95, rate: 0.95, voiceType: 'bob' },
     delayMs: 7500
   }

@@ -93,10 +93,10 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
     };
     setMessages(prev => [...prev, userMsg]);
 
-    const isBobQuery = /bob|trap|escrow|bluff|contract|legal|closing rebate|rebate|offer strategy|hud-1|line 204/i.test(query);
+    const isBobQuery = /bob|trap|escrow|bluff|contract|legal|compliance|regulations|offer strategy|hud-1/i.test(query);
     const isNewsQuery = /news|broadcast|inventory|bullet|summary|headline/i.test(query);
     const isTextReportQuery = /text|mobile|phone|send report|send me/i.test(query);
-    const isSolutionsQuery = /solution|vault|prop 19|tax|bluff|coastal|setback|how to|guide|playbook|exchange|1031|rebate|trap|fiduciary/i.test(query);
+    const isSolutionsQuery = /solution|vault|prop 19|tax|bluff|coastal|setback|how to|guide|playbook|exchange|1031|compliance|trap|fiduciary/i.test(query);
 
     if (isTextReportQuery) {
       setIsCaptureModalOpen(true);
@@ -125,17 +125,17 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
       setTimeout(() => {
         let answerText = '';
         if (query.includes('bullet') || (isNewsQuery && !isBobQuery)) {
-          answerText = `Charlie: Here is your DNN Daily Broadcast Summary for ${dossierData.city || 'Southern California'}:\n• Constrained inventory down 14% YoY across luxury zip codes.\n• Price resilience supported by high equity buyers, but appraisal gaps are emerging.\n• Our fiduciary protocol secures unvarnished comps and up to ${dossierData.rebateRange} back on line 204 of your closing HUD-1.`;
+          answerText = `Charlie: Here is your DNN Daily Broadcast Summary for ${dossierData.city || 'Southern California'}:\n• Constrained inventory down 14% YoY across luxury zip codes.\n• Price resilience supported by high equity buyers, but appraisal gaps are emerging.\n• Our fiduciary protocol secures unvarnished comps, strict inspection contingency shields, and verified compliance with all state and lender guidelines.`;
         } else if (isBobQuery && isNewsQuery) {
           answerText = `Bob Dyson: In a constrained inventory market like ${dossierData.shortAddress}, listing agents love to bluff about multiple offers. Under my California broker license #00609384, we demand signed confirmation of competing offers and lock in appraisal protective shields so you never overpay.`;
-        } else if (/line 204|rebate/i.test(query)) {
-          answerText = `Bob Dyson: On line 204 of your closing HUD-1 / settlement statement, California law and the DOJ explicitly allow licensed brokers to credit buyer representation fees. On ${dossierData.shortAddress}, that delivers ${dossierData.rebateRange} directly to offset your closing costs or buydown your mortgage rate.`;
+        } else if (/compliance|concession|credit|structure|lender/i.test(query)) {
+          answerText = `Bob Dyson: Any potential credits, concessions, or transaction structures require individual discovery and strict compliance audits against specific state, federal, and lender regulations. On ${dossierData.shortAddress}, our fiduciary protocol ensures every term is verified and legally compliant before submitting an offer.`;
         } else if (/prop 19|tax/i.test(query)) {
           answerText = `Charlie: Under California Proposition 19, if you or your spouse are 55+, severely disabled, or wildfire victims, you can transfer your taxable property base to any replacement home anywhere in California up to 3 times, saving tens of thousands annually.`;
         } else if (/bluff|coastal|setback|soil/i.test(query)) {
           answerText = `Charlie: For coastal parcels, California Coastal Commission setback rules require 75-year erosion projections. We mandate a deep geotechnical review of ancient landslide fault lines before you waive physical inspection contingencies.`;
         } else if (isBobQuery) {
-          answerText = `Bob Dyson: Regarding "${query}" — in California contracts, we never allow premature contingency waivers. We draft appraisal and title contingency shields to verify soil stability and credit your representation rebate directly on your HUD-1.`;
+          answerText = `Bob Dyson: Regarding "${query}" — in California contracts, we never allow premature contingency waivers. We draft appraisal and title contingency shields to verify soil stability and structure comprehensive contract shields tailored to your specific lender and property requirements.`;
         } else {
           answerText = `Charlie: I've opened the corresponding playbook in the Solutions Vault on the right. With ${dossierData.shortAddress}, our fiduciary protocol protects you with zero added broker fees and independent comps.`;
         }
@@ -171,10 +171,10 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
     setInputText('');
 
     const explainer = findExplainerByQuery(text);
-    const isBobQuery = /bob|trap|escrow|bluff|contract|legal|fee|disclosure|title|broker|offer strategy|hud-1|line 204|rebate/i.test(text);
+    const isBobQuery = /bob|trap|escrow|bluff|contract|legal|fee|disclosure|title|broker|compliance|regulations|offer strategy|hud-1/i.test(text);
     const isNewsQuery = /news|broadcast|video|inventory|headline|dnn/i.test(text);
     const isPhoneOrText = /text|mobile|phone|\d{3}.*\d{3}.*\d{4}/i.test(text);
-    const isSolutionsQuery = /solution|vault|prop 19|tax|bluff|coastal|setback|how to|guide|playbook|exchange|1031|rebate|trap|fiduciary/i.test(text);
+    const isSolutionsQuery = /solution|vault|prop 19|tax|bluff|coastal|setback|how to|guide|playbook|exchange|1031|compliance|trap|fiduciary/i.test(text);
 
     if (isPhoneOrText && !isBobQuery && !isNewsQuery) {
       setIsCaptureModalOpen(true);
@@ -468,12 +468,12 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                 type="button"
                 onClick={() => {
                   setRightPanelView('solutions');
-                  handlePillClick("How do closing rebates work on line 204 of the HUD-1 statement?");
+                  handlePillClick("Bob, how does Dyson & Dyson handle transaction discovery and lender compliance?");
                 }}
                 className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-white/5 hover:bg-white/10 text-amber-300 border border-amber-400/40 transition-all cursor-pointer flex items-center gap-1"
               >
-                <DollarSign className="w-2.5 h-2.5 text-yellow-400" />
-                <span>Line 204 Rebate</span>
+                <Shield className="w-2.5 h-2.5 text-yellow-400" />
+                <span>Lender Compliance</span>
               </button>
               <button
                 type="button"
@@ -528,7 +528,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                   type="text"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  placeholder="Ask anything real estate—rebates, Prop 19, escrow traps, comps..."
+                  placeholder="Ask anything real estate—compliance, Prop 19, escrow traps, comps..."
                   className="flex-1 bg-transparent text-white text-xs sm:text-sm outline-none placeholder:text-stone-500 font-normal min-w-0"
                 />
 

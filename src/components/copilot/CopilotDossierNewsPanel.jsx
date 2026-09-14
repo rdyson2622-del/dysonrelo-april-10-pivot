@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { 
-  Scale, ShieldAlert, DollarSign, Waves, Clock, Radio, 
+  Scale, ShieldAlert, Shield, DollarSign, Waves, Clock, Radio, 
   Maximize2, Minimize2, Newspaper, Sparkles, Play, Pause,
   Share2, Volume2, VolumeX, ChevronRight, MessageSquare, BookOpen
 } from 'lucide-react';
@@ -301,34 +301,34 @@ export default function CopilotDossierNewsPanel({
             </p>
           </div>
 
-          {/* Card 3: Closing-Cost Credit */}
+          {/* Card 3: Transaction Compliance & Discovery */}
           <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-lg">
             <div className="flex items-center gap-2">
-              <DollarSign className="w-4 h-4 text-[#D4AF37]" />
+              <Shield className="w-4 h-4 text-[#D4AF37]" />
               <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-white">
-                CLOSING-COST CREDIT
+                COMPLIANCE &amp; DISCOVERY
               </h3>
             </div>
             <p className="text-[11px] text-stone-400 font-medium">
-              Rebate estimate where allowed by law | {dossierData.rebateBasis}
+              Case-by-case legal &amp; lender review | {dossierData.complianceBasis || 'Specific property issue audit'}
             </p>
 
             <div className="bg-[#181818] border border-white/10 rounded-lg p-3 sm:p-3.5 flex items-center justify-between">
               <span className="text-xs sm:text-sm font-semibold text-white">
-                Estimated buyer credit
+                Transaction Review
               </span>
               <div className="text-right">
-                <div className="text-base sm:text-lg font-bold font-mono text-[#D4AF37]">
-                  {dossierData.rebateRange}
+                <div className="text-xs sm:text-sm font-bold font-mono text-[#D4AF37]">
+                  {dossierData.complianceProtocol || 'Individual Discovery'}
                 </div>
-                <div className="text-[11px] text-stone-400 font-mono">
-                  {dossierData.rebatePercent}
+                <div className="text-[10px] text-stone-400 font-mono">
+                  {dossierData.complianceStatus || 'State, Fed & Lender Regs'}
                 </div>
               </div>
             </div>
 
-            <p className="text-[11px] font-semibold text-[#D4AF37] pt-0.5">
-              Requires licensed broker representation. Not available in all states.
+            <p className="text-[11px] text-stone-300 pt-0.5 leading-relaxed">
+              All transaction terms, concessions, or credits require individual discovery checked against state, federal, and lender regulations.
             </p>
           </div>
         </div>
@@ -443,11 +443,11 @@ export default function CopilotDossierNewsPanel({
 
                 <button
                   type="button"
-                  onClick={() => onPromptClick?.("How do closing rebates apply during an inventory freeze?")}
+                  onClick={() => onPromptClick?.("How do contract protections and lender regulations apply during an inventory freeze?")}
                   className="px-3 py-1.5 rounded-lg bg-[#181818] hover:bg-white/10 border border-white/15 text-stone-200 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer"
                 >
-                  <DollarSign className="w-3.5 h-3.5 text-yellow-400" />
-                  <span>Rebate in Inventory Freeze?</span>
+                  <Shield className="w-3.5 h-3.5 text-yellow-400" />
+                  <span>Contract Shield in Freeze?</span>
                 </button>
               </div>
             </div>
