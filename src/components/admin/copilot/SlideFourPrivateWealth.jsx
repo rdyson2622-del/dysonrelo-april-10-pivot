@@ -41,26 +41,24 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
         {/* Left Column (7 cols): Official Logo Lockup + Title + Search + Samples + Trust */}
         <div className="lg:col-span-7 space-y-6">
           
-          {/* Official Logo Badge */}
-          <div className="flex items-center">
-            <DysonVerticalBadge height={44} />
-          </div>
-
-          {/* Heading Copy: meet CoPilot / The First Human Driven & Personal AI Real Estate Assistant */}
-          <div className="space-y-2">
-            <div className="flex items-baseline gap-3">
-              <span 
-                className="text-3xl sm:text-4xl lg:text-5xl font-light text-white tracking-wide font-serif"
-                style={{ fontFamily: 'Cormorant Garamond, serif' }}
-              >
-                meet
-              </span>
-              <span 
-                className="text-4xl sm:text-6xl lg:text-7xl font-serif italic font-medium text-[#D4AF37] leading-none"
-                style={{ fontFamily: 'Cormorant Garamond, serif' }}
-              >
-                CoPilot
-              </span>
+          {/* Official Logo Badge centered above meet CoPilot */}
+          <div className="space-y-3">
+            <div className="inline-flex flex-col items-center">
+              <DysonVerticalBadge height={88} className="mb-3" />
+              <div className="flex items-baseline gap-3">
+                <span 
+                  className="text-3xl sm:text-4xl lg:text-5xl font-light text-white tracking-wide font-serif"
+                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                >
+                  meet
+                </span>
+                <span 
+                  className="text-4xl sm:text-6xl lg:text-7xl font-serif italic font-medium text-[#D4AF37] leading-none"
+                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                >
+                  CoPilot
+                </span>
+              </div>
             </div>
 
             <p className="text-base sm:text-lg lg:text-xl text-[#F3F0E6] font-normal tracking-wide">
