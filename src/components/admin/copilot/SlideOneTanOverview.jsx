@@ -95,8 +95,8 @@ export default function SlideOneTanOverview({ onRunAudit }) {
                 copilot
               </span>
             </span>
-            <span className="block text-lg sm:text-2xl lg:text-[25px] text-[#4a4237] font-normal tracking-normal mt-2">
-              The First Personal Human &amp; AI Real Estate Assistant
+            <span className="block text-base sm:text-xl lg:text-[20px] text-[#4a4237] font-normal tracking-normal mt-2">
+              The First Human Driven &amp; Personal AI Real Estate Assistant
             </span>
           </h1>
 

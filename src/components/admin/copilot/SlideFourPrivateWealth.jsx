@@ -113,10 +113,10 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
               </span>
             </div>
             <h2 
-              className="text-lg sm:text-2xl lg:text-[25px] text-white/90 font-normal tracking-normal mt-2 font-serif text-center"
+              className="text-base sm:text-xl lg:text-[20px] text-white/90 font-normal tracking-normal mt-2 font-serif text-center"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
-              The First Personal Human &amp; AI Real Estate Assistant
+              The First Human Driven &amp; Personal AI Real Estate Assistant
             </h2>
           </div>
 
