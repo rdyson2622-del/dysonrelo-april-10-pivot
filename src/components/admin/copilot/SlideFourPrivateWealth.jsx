@@ -324,9 +324,9 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
         {/* Bottom Row: 3 Boxes Across (Comps / Risks / Rebate) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
           {/* Box 1: Comps & Market Intelligence */}
-          <div className="relative p-5 rounded-lg bg-[#0e0e0e] border border-[#D4AF37]/50 shadow-lg flex items-center gap-4">
-            <div className="w-12 h-12 shrink-0 flex items-center justify-center">
-              <svg className="w-10 h-10 text-[#D4AF37]" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="relative p-5 rounded-lg bg-[#0e0e0e] border border-[#D4AF37]/50 shadow-lg flex items-center gap-3.5">
+            <div className="w-11 h-11 shrink-0 flex items-center justify-center">
+              <svg className="w-9 h-9 text-[#D4AF37]" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M6 38h36" />
                 <path d="M12 38V26" />
                 <path d="M18 38V20" />
@@ -336,8 +336,8 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
                 <path d="m39 37 5 5" />
               </svg>
             </div>
-            <div className="space-y-1">
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-white uppercase font-sans">
+            <div className="space-y-1 min-w-0">
+              <h3 className="text-[11px] sm:text-[11.5px] xl:text-xs 2xl:text-[13px] font-bold tracking-wide text-white uppercase font-sans whitespace-nowrap">
                 WE RUN COMPS &amp; MARKET INTEL
               </h3>
               <p className="text-xs text-white/70 leading-snug">
@@ -347,17 +347,17 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
           </div>
 
           {/* Box 2: Risks & Due Diligence */}
-          <div className="relative p-5 rounded-lg bg-[#0e0e0e] border border-[#D4AF37]/50 shadow-lg flex items-center gap-4">
-            <div className="w-12 h-12 shrink-0 flex items-center justify-center">
-              <svg className="w-10 h-10 text-[#D4AF37]" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="relative p-5 rounded-lg bg-[#0e0e0e] border border-[#D4AF37]/50 shadow-lg flex items-center gap-3.5">
+            <div className="w-11 h-11 shrink-0 flex items-center justify-center">
+              <svg className="w-9 h-9 text-[#D4AF37]" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M24 6s14 4 14 14c0 14-14 22-14 22S10 34 10 20c0-10 14-14 14-14z" />
                 <path d="M24 16v10" />
                 <circle cx="24" cy="31" r="1.5" fill="currentColor" />
               </svg>
             </div>
-            <div className="space-y-1">
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-white uppercase font-sans">
-                WE EXPLORE RISKS &amp; DUE DILIGENCE
+            <div className="space-y-1 min-w-0">
+              <h3 className="text-[11px] sm:text-[11.5px] xl:text-xs 2xl:text-[13px] font-bold tracking-wide text-white uppercase font-sans whitespace-nowrap">
+                WE EXPLORE RISKS THRU DUE DILIGENCE
               </h3>
               <p className="text-xs text-white/70 leading-snug">
                 Hidden risks, title issues, zoning, and red flags—<span className="text-[#D4AF37] font-semibold">before you commit.</span>
@@ -366,17 +366,17 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
           </div>
 
           {/* Box 3: Closing Rebate */}
-          <div className="relative p-5 rounded-lg bg-[#0e0e0e] border border-[#D4AF37]/50 shadow-lg flex items-center gap-4">
-            <div className="w-12 h-12 shrink-0 flex items-center justify-center">
-              <svg className="w-10 h-10 text-[#D4AF37]" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="relative p-5 rounded-lg bg-[#0e0e0e] border border-[#D4AF37]/50 shadow-lg flex items-center gap-3.5">
+            <div className="w-11 h-11 shrink-0 flex items-center justify-center">
+              <svg className="w-9 h-9 text-[#D4AF37]" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="24" cy="24" r="18" />
                 <circle cx="18" cy="18" r="2.5" fill="currentColor" />
                 <circle cx="30" cy="30" r="2.5" fill="currentColor" />
                 <path d="m16 32 16-16" />
               </svg>
             </div>
-            <div className="space-y-1">
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-white uppercase font-sans">
+            <div className="space-y-1 min-w-0">
+              <h3 className="text-[11px] sm:text-[11.5px] xl:text-xs 2xl:text-[13px] font-bold tracking-wide text-white uppercase font-sans whitespace-nowrap">
                 WE CALCULATE CLOSING REBATES
               </h3>
               <p className="text-xs text-white/70 leading-snug">
