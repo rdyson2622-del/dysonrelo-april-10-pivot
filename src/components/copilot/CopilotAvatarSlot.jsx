@@ -234,7 +234,72 @@ export default function CopilotAvatarSlot({
 
   // ── RENDER: DEFAULT IDLE CHARLIE AVATAR SLOT ──
   const isCompact = size === 'compact';
+  const isVertical = size === 'vertical';
 
+  // Vertical rectangular card (Page 2 upper-right slot)
+  if (isVertical) {
+    return (
+      <div 
+        className={`w-full rounded-2xl bg-[#0c0c0c] border border-[#D4AF37]/60 shadow-[0_10px_35px_rgba(0,0,0,0.9)] p-4 flex flex-col items-center text-center space-y-2.5 transition-all relative ${className}`}
+      >
+        {/* Charlie prominent portrait with gold trim */}
+        <div className="relative shrink-0 pt-0.5">
+          <div className="w-22 h-22 sm:w-24 sm:h-24 rounded-full border-2 border-[#D4AF37] p-1 overflow-hidden bg-black shadow-xl ring-4 ring-[#D4AF37]/20">
+            <img 
+              src={CHARLIE_HEADSHOT} 
+              alt="Charlie Simmons — The Face of CoPilot" 
+              className="w-full h-full object-cover scale-105 rounded-full"
+            />
+          </div>
+          {/* Online green indicator */}
+          <span className="w-3.5 h-3.5 rounded-full bg-[#10b981] absolute bottom-1 right-1 ring-2 ring-[#0c0c0c] shadow-sm animate-pulse" />
+        </div>
+
+        {/* "The Face of CoPilot" in logo style */}
+        <div className="w-full pt-0.5">
+          <div className="inline-flex items-baseline justify-center gap-1.5 px-3 py-0.5 rounded-full bg-white/5 border border-[#D4AF37]/40 shadow-inner">
+            <span 
+              className="text-xs text-white/90 font-serif tracking-wide"
+              style={{ fontFamily: 'Cormorant Garamond, serif' }}
+            >
+              The Face of
+            </span>
+            <span 
+              className="text-sm font-serif italic text-[#D4AF37] font-semibold tracking-normal"
+              style={{ fontFamily: 'Cormorant Garamond, serif' }}
+            >
+              CoPilot
+            </span>
+          </div>
+        </div>
+
+        {/* Identity & Status */}
+        <div className="space-y-0.5 w-full">
+          <h3 className="text-base font-bold text-white tracking-wide">
+            Charlie Simmons
+          </h3>
+          <p className="text-[11px] text-stone-300 font-medium">
+            Voice &amp; Market Concierge <span className="text-[#10b981] font-semibold">• Ready</span>
+          </p>
+        </div>
+
+        {/* Talk Live Button */}
+        <div className="w-full pt-0.5">
+          <button
+            type="button"
+            onClick={startVoice}
+            className="w-full py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-[#D4AF37]/60 hover:border-[#D4AF37] text-white text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md group"
+            title="Start live 2-way voice conversation"
+          >
+            <Mic className="w-3.5 h-3.5 text-[#D4AF37] group-hover:scale-110 transition-transform" />
+            <span>Talk Live</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Horizontal card (compact or standard)
   return (
     <div 
       className={`rounded-2xl bg-[#0f0f0f] border border-[#D4AF37]/40 shadow-lg ${
@@ -260,9 +325,14 @@ export default function CopilotAvatarSlot({
             <h3 className="text-xs sm:text-sm font-bold text-white tracking-wide leading-tight">
               Charlie Simmons
             </h3>
-            <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-white/10 text-[#D4AF37] font-semibold uppercase tracking-wider">
-              Copilot Face
-            </span>
+            <div className="inline-flex items-baseline gap-1 px-2 py-0.5 rounded-full bg-white/10 border border-[#D4AF37]/30">
+              <span className="text-[10px] text-white/90 font-serif" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                The Face of
+              </span>
+              <span className="text-[11px] font-serif italic text-[#D4AF37] font-medium" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                CoPilot
+              </span>
+            </div>
           </div>
           <p className="text-[10.5px] text-stone-400 leading-tight mt-0.5 truncate">
             Voice &amp; Market Concierge • Ready

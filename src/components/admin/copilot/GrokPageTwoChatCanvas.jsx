@@ -81,20 +81,30 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, on
         </div>
       </div>
 
+      {/* ── UPPER-RIGHT CHARLIE VERTICAL RECTANGULAR BOX (Directly below Listen Pill on desktop) ── */}
+      <div className="hidden lg:block absolute top-[74px] right-6 sm:right-8 w-60 z-20">
+        <CopilotAvatarSlot 
+          activeExplainer={activeExplainer}
+          onClearExplainer={() => setActiveExplainer(null)}
+          size="vertical"
+        />
+      </div>
+
       {/* ── CENTER CONTENT ── */}
-      <div className="w-full max-w-2xl mx-auto text-center space-y-5 my-auto py-4">
-        {/* Persistent Avatar Slot (Charlie default / Bob on solutions / Canned MP4 player) */}
-        <div className="w-full max-w-md mx-auto">
+      <div className="w-full max-w-xl xl:max-w-2xl mx-auto text-center space-y-5 my-auto py-4 lg:pr-14 xl:pr-0">
+        {/* Mobile/Tablet Fallback: Avatar Slot above heading */}
+        <div className="lg:hidden w-full max-w-xs mx-auto mb-2">
           <CopilotAvatarSlot 
             activeExplainer={activeExplainer}
             onClearExplainer={() => setActiveExplainer(null)}
+            size="vertical"
           />
         </div>
 
         {/* Headline greeting */}
         <div className="space-y-1.5">
           <h1 
-            className="text-3xl sm:text-5xl lg:text-[48px] font-normal text-white tracking-tight font-serif"
+            className="text-3xl sm:text-4xl lg:text-[42px] font-normal text-white tracking-tight font-serif"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
             What can I help you with?
