@@ -41,20 +41,9 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
         {/* Left Column (7 cols): Official Logo Lockup + Title + Search + Samples + Trust */}
         <div className="lg:col-span-7 space-y-6">
           
-          {/* Official Logo Lockup: D&D vertical badge + CoPilot wordmark (capital C and P, black/gold/white, no green) */}
-          <div className="flex items-center gap-3">
+          {/* Official Logo Badge */}
+          <div className="flex items-center">
             <DysonVerticalBadge height={44} />
-            <div className="flex flex-col justify-center leading-none">
-              <span className="text-[11px] tracking-[0.28em] uppercase text-white font-medium font-sans">
-                DYSON &amp; DYSON
-              </span>
-              <span 
-                className="text-2xl sm:text-3xl font-serif italic text-[#D4AF37] font-medium tracking-wide mt-0.5"
-                style={{ fontFamily: 'Cormorant Garamond, serif' }}
-              >
-                CoPilot
-              </span>
-            </div>
           </div>
 
           {/* Heading Copy: meet CoPilot / The First Human Driven & Personal AI Real Estate Assistant */}
