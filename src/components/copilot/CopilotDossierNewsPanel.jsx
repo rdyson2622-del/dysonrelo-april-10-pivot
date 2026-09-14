@@ -154,12 +154,15 @@ export default function CopilotDossierNewsPanel({
             </span>
           )}
 
-          {/* Universal Explode Action for any active view (News, Solutions, or Property Audit) */}
+          {/* Universal Expand Working Content Action */}
           <button
             type="button"
-            onClick={onToggleExplode}
+            onClick={() => {
+              // WIRE: full-screen working content trigger; implement viewport expansion here
+              onToggleExplode?.();
+            }}
             className="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-[#D4AF37]/15 border border-[#D4AF37]/60 text-[#D4AF37] font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
-            title={isExploded ? "Collapse to Split Screen" : "Explode Entire Page to Full Screen"}
+            title={isExploded ? "Collapse to Split Screen" : "Expand chat + dossier canvas to full viewport"}
           >
             {isExploded ? (
               <>
@@ -170,8 +173,8 @@ export default function CopilotDossierNewsPanel({
             ) : (
               <>
                 <Maximize2 className="w-3.5 h-3.5 text-[#D4AF37]" />
-                <span className="hidden sm:inline">Explode to Full Page</span>
-                <span className="sm:hidden">Explode</span>
+                <span className="hidden sm:inline">Expand Working Content</span>
+                <span className="sm:hidden">Expand</span>
               </>
             )}
           </button>

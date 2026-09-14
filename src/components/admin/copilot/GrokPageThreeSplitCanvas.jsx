@@ -290,14 +290,17 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             </button>
           </div>
 
-          {/* Dedicated Explode Button in Header - Especially Handy for Portrait Mobile Screens */}
+          {/* Dedicated Expand Working Content Control */}
           <button
             type="button"
-            onClick={() => setIsPageExploded(true)}
+            onClick={() => {
+              // WIRE: full-screen working content trigger; implement viewport expansion here
+              setIsPageExploded(true);
+            }}
             className="px-2.5 py-1 rounded-lg bg-[#D4AF37]/15 hover:bg-[#D4AF37]/30 border border-[#D4AF37]/60 text-[#D4AF37] text-[10px] sm:text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ml-1 shadow-sm"
-            title="Explode this view to full screen (ideal for portrait mobile devices)"
+            title="Expand chat + dossier canvas to full viewport"
           >
-            <span>⛶ Explode View</span>
+            <span>⛶ Expand Working Content</span>
           </button>
         </div>
 
