@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import { 
   Paperclip, Send, Scale, ShieldAlert, FileText, CheckCircle2, 
-  Waves, Clock, Square, DollarSign, Sparkles, Shield, Briefcase
+  Waves, Clock, Square, DollarSign, Sparkles, Shield, Briefcase,
+  Mic, User, Bot, Radio
 } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import CopilotDynamicSpeakerBox from '@/components/copilot/CopilotDynamicSpeakerBox';
+import CopilotConsumerSpeakerBox from '@/components/copilot/CopilotConsumerSpeakerBox';
 import { COPILOT_EXPLAINERS, findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { getPropertyDossier } from './propertyDossierData';
 
 export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
   const [inputText, setInputText] = useState('');
   const [activeExplainer, setActiveExplainer] = useState(null);
+  const [isConsumerTransmitting, setIsConsumerTransmitting] = useState(false);
+  const messagesEndRef = React.useRef(null);
   const dossierData = getPropertyDossier(property);
 
   const [messages, setMessages] = useState(() => {
@@ -48,7 +52,22 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
     ]);
   }, [property]);
 
+  // Auto-scroll chat to bottom
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  React.useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   const handlePillClick = (query) => {
+    // 1. Highlight consumer transmitting
+    setIsConsumerTransmitting(true);
+    setTimeout(() => setIsConsumerTransmitting(false), 1400);
+
     const explainer = findExplainerByQuery(query);
     const userMsg = {
       id: Date.now(),
@@ -57,6 +76,8 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
     setMessages(prev => [...prev, userMsg]);
+
+    const isBobQuery = /bob|trap|escrow|bluff|contract|legal|closing rebate|rebate/i.test(query);
 
     if (explainer?.videoUrl) {
       setActiveExplainer(explainer);
@@ -77,11 +98,13 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
           ...prev,
           {
             id: Date.now() + 1,
-            sender: 'charlie',
-            text: `Got it! Let me know if you need any adjustments or offer structuring guidance for ${dossierData.shortAddress}.`
+            sender: isBobQuery ? 'bob' : 'charlie',
+            text: isBobQuery
+              ? `Bob Dyson here: Regarding "${query}" on ${dossierData.shortAddress} — in California transactions, we always draft contingency shields to verify soil stability and ensure credits are credited on your HUD-1 with zero hidden broker fees.`
+              : `Got it! On ${dossierData.shortAddress}, the comps show 24–32% premium over adjusted sold averages. We can structure an offer anchored to the $6.25M micro-comps.`
           }
         ]);
-      }, 500);
+      }, 600);
     }
   };
 
@@ -89,6 +112,10 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
     if (e) e.preventDefault();
     const text = inputText.trim();
     if (!text) return;
+
+    // 1. Highlight consumer transmitting animation
+    setIsConsumerTransmitting(true);
+    setTimeout(() => setIsConsumerTransmitting(false), 1400);
 
     const userMsg = {
       id: Date.now(),
@@ -100,6 +127,8 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
     setInputText('');
 
     const explainer = findExplainerByQuery(text);
+    const isBobQuery = /bob|trap|escrow|bluff|contract|legal|fee|disclosure|title|broker/i.test(text);
+
     if (explainer?.videoUrl) {
       setActiveExplainer(explainer);
       setTimeout(() => {
@@ -119,11 +148,13 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
           ...prev,
           {
             id: Date.now() + 1,
-            sender: 'charlie',
-            text: `Got it! I've dispatched the ${dossierData.shortAddress} dossier directly to you. Feel free to ask about nearby micro-comps or offer terms.`
+            sender: isBobQuery ? 'bob' : 'charlie',
+            text: isBobQuery
+              ? `Bob Dyson: Under CA DRE #00609384, our fiduciary protocol protects you with zero added broker fees and strict disclosure audits for ${dossierData.shortAddress}. Would you like me to prepare an initial offer analysis?`
+              : `Charlie: I've logged that for ${dossierData.shortAddress}. We can text this full audit directly to your phone or connect you live with Bob.`
           }
         ]);
-      }, 600);
+      }, 700);
     }
   };
 
@@ -171,15 +202,26 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
         </div>
       </div>
 
-      {/* ── 2-COLUMN MAIN CANVAS: Left ~35% Charlie Chat & Upper-Left Voice Box, Right ~65% Dossier (3 Tan Boxes) ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[660px]">
+      {/* ── 2-COLUMN MAIN CANVAS: Left ~42% Dialogue Engine (3-Way Avatar Staging + Chat Stream + Pinned Grok Bar), Right ~58% Presentation Dossier ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[720px]">
         
-        {/* ── LEFT COLUMN: STICKY CHARLIE CHAT + CHARLIE VOICE BOX IN UPPER LEFT (~35% = 5 cols lg) ── */}
-        <div className="lg:col-span-5 p-4 sm:p-5 flex flex-col justify-between bg-[#0d0d0d] border-b lg:border-b-0 lg:border-r border-white/10">
-          <div className="space-y-4">
-            {/* ── BOB & CHARLIE DUAL DYNAMIC SPEAKER BOXES (UPPER LEFT) ── */}
-            <div className="flex flex-wrap items-start gap-2 pl-1 pt-1">
-              {/* Bob Dyson Box — enlarges when Bob answers or speaks */}
+        {/* ── LEFT COLUMN: ALL COMMUNICATION & LIVE DIALOGUE ENGINE (~5 cols lg) ── */}
+        <div className="lg:col-span-5 p-3 sm:p-4 flex flex-col justify-between bg-[#0b0b0b] border-b lg:border-b-0 lg:border-r border-white/10 relative">
+          
+          {/* Scrollable Conversation Container */}
+          <div className="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[560px]">
+            {/* Header Stage Label */}
+            <div className="flex items-center justify-between pb-1 border-b border-white/5">
+              <span className="text-[9px] font-mono tracking-widest text-[#D4AF37] uppercase font-bold flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                3-WAY FIDUCIARY DIALOGUE STAGE
+              </span>
+              <span className="text-[8px] text-stone-500 font-mono">LIVE CONVERSATION</span>
+            </div>
+
+            {/* ── 3-WAY AVATAR STAGING: BOB, CHARLIE & CONSUMER/SUBSCRIBER ── */}
+            <div className="flex flex-wrap items-start gap-2 pt-0.5">
+              {/* Bob Dyson Box */}
               <CopilotDynamicSpeakerBox 
                 speaker="bob"
                 variant="card"
@@ -188,7 +230,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
                 onTriggerExplainer={handlePillClick}
               />
 
-              {/* Charlie Simmons Box — enlarges when Charlie answers or speaks */}
+              {/* Charlie Simmons Box */}
               <CopilotDynamicSpeakerBox 
                 speaker="charlie"
                 variant="card"
@@ -208,97 +250,144 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
                   }
                 }}
               />
+
+              {/* Consumer / Subscriber Box (Enlarges when sending) */}
+              <CopilotConsumerSpeakerBox 
+                isTransmitting={isConsumerTransmitting}
+                userName="You"
+                userRole="Verified Buyer"
+              />
             </div>
 
-            {/* Chat Messages */}
-            <div className="space-y-3.5 pt-1">
-              {messages.map((m) => (
-                <div 
-                  key={m.id} 
-                  className={`flex flex-col ${m.sender === 'user' ? 'items-end' : 'items-start'}`}
-                >
+            {/* ── CHAT MESSAGES STREAM ── */}
+            <div className="space-y-3 pt-2">
+              {messages.map((m) => {
+                const isUser = m.sender === 'user';
+                const isBob = m.sender === 'bob';
+
+                return (
                   <div 
-                    className={`rounded-2xl px-4 py-3 text-xs sm:text-[13px] leading-relaxed max-w-[92%] ${
-                      m.sender === 'user'
-                        ? 'bg-[#1e1e1e] border border-white/10 text-white rounded-br-xs'
-                        : 'bg-[#161616] border border-white/10 text-stone-200 rounded-bl-xs'
-                    }`}
+                    key={m.id} 
+                    className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}
                   >
-                    <p className="whitespace-pre-line">{m.text}</p>
+                    {/* Speaker Header Tag */}
+                    <div className="flex items-center gap-1.5 mb-1 px-1 text-[10px]">
+                      {isUser ? (
+                        <>
+                          <span className="text-stone-400 font-medium">You</span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
+                        </>
+                      ) : isBob ? (
+                        <>
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
+                          <span className="text-[#D4AF37] font-bold">Bob Dyson (Broker)</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                          <span className="text-emerald-400 font-bold">Charlie Simmons (Voice)</span>
+                        </>
+                      )}
+                    </div>
+
+                    <div 
+                      className={`rounded-2xl px-4 py-3 text-xs sm:text-[12.5px] leading-relaxed max-w-[94%] shadow-md ${
+                        isUser
+                          ? 'bg-[#1e1e1e] border border-white/15 text-white rounded-tr-xs'
+                          : isBob
+                          ? 'bg-[#16140e] border border-[#D4AF37]/40 text-stone-200 rounded-tl-xs'
+                          : 'bg-[#141414] border border-white/10 text-stone-200 rounded-tl-xs'
+                      }`}
+                    >
+                      <p className="whitespace-pre-line">{m.text}</p>
+                    </div>
+
+                    {m.time && (
+                      <span className="text-[9.5px] text-stone-500 mt-0.5 px-1 font-mono">
+                        {m.time}
+                      </span>
+                    )}
                   </div>
-                  {m.time && (
-                    <span className="text-[10px] text-stone-500 mt-1 px-1">
-                      {m.time}
-                    </span>
-                  )}
-                </div>
-              ))}
+                );
+              })}
+              <div ref={messagesEndRef} />
             </div>
           </div>
 
-          {/* Quick Explainer Pills in Chat Column */}
-          <div className="pt-3 flex flex-wrap items-center gap-1.5">
-            <button
-              type="button"
-              onClick={() => handlePillClick('How do I get thousands back at closing?')}
-              className={`px-2.5 py-1 rounded-full text-[10.5px] font-semibold border flex items-center gap-1 transition-all cursor-pointer ${
-                activeExplainer?.id === 'closing_rebate'
-                  ? 'bg-[#1e1e1e] text-[#D4AF37] border-[#D4AF37] ring-1 ring-[#D4AF37]'
-                  : 'bg-white/5 hover:bg-white/10 text-[#D4AF37] border-[#D4AF37]/40'
-              }`}
-            >
-              <Sparkles className="w-3 h-3 text-[#D4AF37]" />
-              <span>Closing rebate</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handlePillClick('How do you find hidden property risks?')}
-              className={`px-2.5 py-1 rounded-full text-[10.5px] font-semibold border flex items-center gap-1 transition-all cursor-pointer ${
-                activeExplainer?.id === 'hidden_risks'
-                  ? 'bg-[#1e1e1e] text-[#D4AF37] border-[#D4AF37] ring-1 ring-[#D4AF37]'
-                  : 'bg-white/5 hover:bg-white/10 text-[#D4AF37] border-[#D4AF37]/40'
-              }`}
-            >
-              <Shield className="w-3 h-3 text-[#D4AF37]" />
-              <span>Hidden risks</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handlePillClick("Bob's Take: Escrow & Deal Traps")}
-              className={`px-2.5 py-1 rounded-full text-[10.5px] font-semibold border flex items-center gap-1 transition-all cursor-pointer ${
-                activeExplainer?.id === 'bob_solutions_traps'
-                  ? 'bg-[#1e1e1e] text-[#D4AF37] border-[#D4AF37] ring-1 ring-[#D4AF37]'
-                  : 'bg-white/5 hover:bg-white/10 text-[#D4AF37] border-[#D4AF37]/40'
-              }`}
-            >
-              <Briefcase className="w-3 h-3 text-[#D4AF37]" />
-              <span>Bob's Take</span>
-            </button>
-          </div>
+          {/* ── PINNED BOTTOM DIALOGUE BAR (MODELED AFTER GROK BOT) ── */}
+          <div className="pt-2 mt-auto border-t border-white/10 sticky bottom-0 bg-[#0b0b0b] z-20 space-y-2">
+            
+            {/* Quick Prompt Pill Suggestions */}
+            <div className="flex flex-wrap items-center gap-1">
+              <button
+                type="button"
+                onClick={() => handlePillClick('What should my opening offer be based on comps?')}
+                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-white/5 hover:bg-white/10 text-[#D4AF37] border border-[#D4AF37]/40 transition-all cursor-pointer"
+              >
+                <span>Opening offer?</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handlePillClick("Bob's Take: Escrow & Deal Traps")}
+                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-white/5 hover:bg-white/10 text-[#D4AF37] border border-[#D4AF37]/40 transition-all cursor-pointer flex items-center gap-1"
+              >
+                <Briefcase className="w-2.5 h-2.5" />
+                <span>Ask Bob</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handlePillClick('How do you find hidden property risks?')}
+                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-white/5 hover:bg-white/10 text-stone-300 border border-white/15 transition-all cursor-pointer"
+              >
+                <span>Bluff risks</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handlePillClick('How do I get thousands back at closing?')}
+                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-white/5 hover:bg-white/10 text-stone-300 border border-white/15 transition-all cursor-pointer"
+              >
+                <span>Rebate info</span>
+              </button>
+            </div>
 
-          {/* Bottom Chat Input Form: ask mobile to text report */}
-          <div className="pt-3 mt-auto">
-            <form onSubmit={handleSendMessage} className="space-y-1.5">
-              <div className="flex items-center bg-[#141414] rounded-2xl border border-white/10 focus-within:border-[#D4AF37]/60 p-2 pl-3 shadow-inner">
-                <Paperclip className="w-4 h-4 text-stone-400 mr-2 shrink-0 cursor-pointer hover:text-white" />
+            {/* Grok-Style Message Bar */}
+            <form onSubmit={handleSendMessage} className="space-y-1">
+              <div className="flex items-center bg-[#141414] hover:bg-[#171717] rounded-2xl border border-white/15 focus-within:border-[#D4AF37] focus-within:ring-1 focus-within:ring-[#D4AF37]/40 px-3 py-2 shadow-2xl transition-all">
+                <Paperclip className="w-4 h-4 text-stone-400 mr-2 shrink-0 cursor-pointer hover:text-white transition-colors" title="Attach file or pre-approval" />
+                
                 <input
                   type="text"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  placeholder="Enter your mobile or ask Charlie..."
-                  className="flex-1 bg-transparent text-white text-xs sm:text-sm outline-none placeholder:text-stone-500 font-normal"
+                  placeholder="Ask Bob or Charlie about comps, risks, or closing rebate..."
+                  className="flex-1 bg-transparent text-white text-xs sm:text-sm outline-none placeholder:text-stone-500 font-normal min-w-0"
                 />
-                <button
-                  type="submit"
-                  disabled={!inputText.trim()}
-                  className="w-8 h-8 rounded-full bg-[#D4AF37] hover:brightness-110 disabled:opacity-40 text-black flex items-center justify-center transition-all cursor-pointer shrink-0 ml-1.5 shadow-md"
-                >
-                  <Send className="w-3.5 h-3.5 text-black -rotate-12 translate-x-px" />
-                </button>
+
+                <div className="flex items-center gap-1.5 ml-2 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => handlePillClick('Talk Live with Charlie')}
+                    className="p-1.5 rounded-full text-stone-400 hover:text-[#D4AF37] hover:bg-white/5 transition-all cursor-pointer"
+                    title="Voice input"
+                  >
+                    <Mic className="w-4 h-4 text-emerald-400" />
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={!inputText.trim()}
+                    className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#D4AF37] hover:brightness-110 disabled:opacity-40 disabled:hover:brightness-100 text-black flex items-center justify-center transition-all cursor-pointer shadow-md"
+                    title="Send message"
+                  >
+                    <Send className="w-3.5 h-3.5 text-black -rotate-12 translate-x-px" />
+                  </button>
+                </div>
               </div>
-              <p className="text-[10px] text-stone-500 text-center">
-                Charlie can make mistakes. Verify important information.
-              </p>
+
+              <div className="flex items-center justify-between text-[8.5px] text-stone-500 px-1">
+                <span>CoPilot Fiduciary Dialogue · DRE #00609384</span>
+                <span className="font-mono">Zero Fee</span>
+              </div>
             </form>
           </div>
         </div>
