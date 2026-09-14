@@ -583,7 +583,7 @@ export default function CopilotDynamicSpeakerBox({
               </>
             ) : (
               <>
-                <Mic className="w-2.5 h-2.5 text-[#10b981]" />
+                <span className="text-[#10b981] font-bold text-xs leading-none">↓</span>
                 <span>Talk Live</span>
               </>
             )}

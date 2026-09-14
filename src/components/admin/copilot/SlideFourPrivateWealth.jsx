@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { 
-  ShieldCheck, ArrowRight, TrendingUp, ShieldAlert, 
-  MapPin, Volume2, CheckCircle2, DollarSign, ExternalLink,
-  Brain, FileText, ChevronRight, Search
+  ShieldCheck, ArrowRight, ExternalLink,
+  Brain, FileText, ChevronRight, Search,
+  Plus, Users
 } from 'lucide-react';
-import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
-import CopilotSweepLogo from '@/components/brand/CopilotSweepLogo';
 
 const NIGHT_HILLSIDE_ESTATE = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a57180df3_Screenshot2026-09-13at43243AM.png";
 
@@ -20,252 +18,154 @@ function normalizeAddress(raw) {
   return raw.trim().replace(/\s+/g, ' ');
 }
 
-export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGoToChatCanvas }) {
+export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
   const [address, setAddress] = useState('742 Vista Del Mar, La Jolla, CA 92037');
-  const [normalizedAddress, setNormalizedAddress] = useState('742 Vista Del Mar, La Jolla, CA 92037');
-  const [isAuditing, setIsAuditing] = useState(false);
-  const [auditComplete, setAuditComplete] = useState(false);
-  const [workflowStep, setWorkflowStep] = useState(2);
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
-  const handleSubmit = (e, customAddr) => {
-    if (e) e.preventDefault();
-    const targetAddr = customAddr || address;
-    const cleanAddr = normalizeAddress(targetAddr);
+  const handleSend = (targetAddr) => {
+    const cleanAddr = normalizeAddress(targetAddr || address);
     if (!cleanAddr) return;
-
-    setIsAuditing(true);
-    setAuditComplete(false);
-    setNormalizedAddress(cleanAddr);
-    setWorkflowStep(3);
-
     if (onRunAudit) onRunAudit(cleanAddr);
-
-    setTimeout(() => {
-      setIsAuditing(false);
-      setAuditComplete(true);
-      setWorkflowStep(4);
-    }, 500);
+    if (onOpenDossier) onOpenDossier(cleanAddr);
   };
 
-  const handleOpenDossier = () => {
-    const target = normalizedAddress || normalizeAddress(address);
-    if (!target) return;
-
-    setWorkflowStep(5);
-
-    if (onOpenDossier) {
-      onOpenDossier(target);
-    } else if (onRunAudit) {
-      onRunAudit(target);
-    }
-
-    const dossierSection = document.getElementById('page-3');
-    if (dossierSection) {
-      dossierSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
-
-  const handleToggleAudio = () => {
-    setIsPlayingAudio(prev => !prev);
+  const handleSampleClick = (chip) => {
+    setAddress(chip);
+    handleSend(chip);
   };
 
   return (
-    <div className="w-full text-left select-none" style={{ background: '#050505', color: '#f5f5f5' }}>
-      {/* ── TOP HEADER BAR ── */}
-      <div className="px-6 sm:px-10 pt-5 pb-4 flex items-center justify-between border-b border-white/10">
-        <div className="flex items-center gap-4">
-          {/* Real Dyson & Dyson vertical DD badge — no white side bars, no tear lines */}
-          <DysonVerticalBadge height={48} />
-
-          {/* Brand Title with Italicized Copilot */}
-          <div className="flex items-center gap-2.5">
-            <div className="flex items-baseline gap-2.5">
-              <span 
-                className="font-serif text-base sm:text-lg font-normal tracking-[0.18em] text-white uppercase leading-none"
-                style={{ fontFamily: 'Cormorant Garamond, serif' }}
-              >
-                DYSON HOMES
-              </span>
-              <span 
-                className="font-serif italic text-lg sm:text-[21px] font-normal text-[#D4AF37] leading-none"
-                style={{ fontFamily: 'Cormorant Garamond, serif' }}
-              >
-                CoPilot
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Header Actions */}
-        <div className="flex items-center gap-2">
-          {onGoToChatCanvas && (
-            <button
-              type="button"
-              onClick={onGoToChatCanvas}
-              className="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-[#D4AF37]/40 text-[#D4AF37] text-xs font-semibold transition-all cursor-pointer shadow-sm hidden sm:inline-flex items-center gap-1.5"
-            >
-              <span>Chat Canvas</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          )}
-          <button
-            type="button"
-            onClick={handleToggleAudio}
-            className="px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-[#D4AF37]/40 text-[#D4AF37] text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer shadow-sm"
-          >
-            <Volume2 className="w-3.5 h-3.5 text-[#D4AF37]" />
-            <span className="hidden sm:inline">{isPlayingAudio ? 'Audio Playing...' : 'Listen to Your Copilots'}</span>
-            <span className="sm:hidden">Listen</span>
-          </button>
-        </div>
-      </div>
-
-      {/* ── MAIN HERO SECTION (SPLIT LAYOUT) ── */}
-      <div className="px-6 sm:px-10 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <div 
+      className="w-full text-left select-none relative overflow-hidden" 
+      style={{ background: '#000000', color: '#f5f5f5' }}
+    >
+      {/* ── MAIN HERO SECTION (MATCHES LOCKED PAGE 1 PNG EXACTLY) ── */}
+      <div className="px-6 sm:px-10 lg:px-12 pt-10 pb-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
         {/* Left Column (7 cols) */}
         <div className="lg:col-span-7 space-y-4">
-          {/* Headline: "meet" in white font, smaller than italicized gold "copilot" */}
-          <div className="text-center pt-1 pb-2">
-            <div className="inline-flex items-baseline justify-center gap-3">
+          
+          {/* Header Title: "meet" in white serif + "CoPilot" in gold italic */}
+          <div className="space-y-1.5">
+            <div className="flex items-baseline gap-3">
               <span 
-                className="text-lg sm:text-2xl lg:text-3xl font-light text-white tracking-wide font-serif"
+                className="text-2xl sm:text-3xl lg:text-4xl font-light text-white tracking-wide font-serif"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
                 meet
               </span>
               <span 
-                className="text-3xl sm:text-5xl lg:text-6xl font-serif italic font-medium text-[#D4AF37] leading-none"
+                className="text-4xl sm:text-6xl lg:text-7xl font-serif italic font-medium text-[#D4AF37] leading-none"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
                 CoPilot
               </span>
             </div>
-            <h2 
-              className="text-base sm:text-xl lg:text-[20px] text-white/90 font-normal tracking-normal mt-2 font-serif text-center"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
-            >
+
+            <p className="text-sm sm:text-base lg:text-lg text-white font-normal tracking-wide">
               The First Human Driven &amp; Personal AI Real Estate Assistant
-            </h2>
+            </p>
           </div>
 
-          {/* Search Bar — Tan Pill with Black Font + Statement on ONE Line */}
-          <div className="space-y-1.5 pt-1">
-            <form onSubmit={handleSubmit}>
-              <div className="flex items-center bg-[#ede0cc] rounded-2xl border-2 border-[#b8920a] shadow-[0_4px_24px_rgba(0,0,0,0.7)] p-2 pl-4 transition-all focus-within:border-[#854d0e] focus-within:ring-1 focus-within:ring-[#854d0e]">
-                <MapPin className="w-4 h-4 text-[#854d0e] shrink-0 mr-2" />
+          {/* Search Bar — Tan Pill with Black Font + Black "Send →" inside */}
+          <div className="space-y-2 pt-1">
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSend(address);
+              }}
+            >
+              <div className="flex items-center bg-[#ede0cc] rounded-full border-2 border-[#c5b59e] shadow-[0_4px_24px_rgba(0,0,0,0.8)] p-1.5 pl-4 transition-all focus-within:ring-2 focus-within:ring-[#D4AF37]">
+                <span className="text-[#854d0e] text-base mr-2 shrink-0">⌖</span>
                 <input
                   type="text"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  placeholder="Paste any address (e.g., 742 Vista Del Mar, La Jolla, CA 92037)"
-                  className="flex-1 bg-transparent text-black text-xs sm:text-sm outline-none placeholder:text-[#554c40] font-semibold"
+                  placeholder="742 Vista Del Mar, La Jolla, CA 92037"
+                  className="flex-1 bg-transparent text-black text-xs sm:text-sm outline-none placeholder:text-[#554c40] font-semibold min-w-0"
                 />
                 <button
                   type="submit"
-                  disabled={isAuditing}
-                  className="px-6 py-2.5 rounded-xl bg-[#0a0a0a] hover:bg-[#1a1a1a] text-[#D4AF37] border border-[#D4AF37]/50 font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-md transition-all cursor-pointer shrink-0"
+                  className="px-6 py-2.5 rounded-full bg-[#0a0a0a] hover:bg-[#181818] text-[#ede0cc] hover:text-[#D4AF37] font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-md transition-all cursor-pointer shrink-0 border border-black/40"
                 >
-                  <span>{isAuditing ? 'Auditing...' : 'Send'}</span>
-                  <ArrowRight className="w-4 h-4 text-[#D4AF37]" />
+                  <span>Send</span>
+                  <span>→</span>
                 </button>
               </div>
             </form>
-            <p className="text-[11px] sm:text-xs lg:text-[13px] text-white/80 leading-tight font-normal px-2 whitespace-nowrap">
+
+            <p className="text-xs sm:text-[13px] text-white/90 leading-tight font-normal px-1">
               Paste any address to see real comps, property risks, and your closing rebate — where allowed by law.
             </p>
           </div>
 
-          {/* SAMPLE LOOKUPS: Three TAN fill pills, BLACK text, GOLD accents/icons INSIDE */}
-          <div className="flex items-center gap-2 flex-wrap pt-0.5">
-            <span className="text-[10px] uppercase font-bold text-[#D4AF37] tracking-wider">
-              Sample Lookups:
+          {/* SAMPLE LOOKUPS: Three TAN fill pills (Clicking opens Page 2) */}
+          <div className="flex items-center gap-2 flex-wrap pt-1">
+            <span className="text-[10.5px] uppercase font-bold text-[#D4AF37] tracking-wider font-mono">
+              SAMPLE LOOKUPS:
             </span>
             {SAMPLE_SEARCHES.map((chip) => (
               <button
                 key={chip}
                 type="button"
-                onClick={() => {
-                  setAddress(chip);
-                  setIsAuditing(false);
-                  setAuditComplete(false);
-                }}
-                className="text-xs px-3 py-1.5 rounded-full bg-[#ede0cc] hover:bg-[#e4d4bd] text-[#0a0a0a] font-semibold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 border border-[#c4b59f]"
+                onClick={() => handleSampleClick(chip)}
+                className="text-xs px-3.5 py-1.5 rounded-full bg-[#ede0cc] hover:bg-[#e4d4bd] text-black font-semibold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 border border-[#c4b59f]"
               >
-                <MapPin className="w-3 h-3 text-[#b8920a]" />
+                <span className="text-[#854d0e] text-xs">⌖</span>
                 <span>{chip.split(',')[0]}</span>
               </button>
             ))}
           </div>
 
-          {/* Trust Banner */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-[#D4AF37]/30 text-xs text-[#D4AF37] shadow-sm whitespace-nowrap font-medium">
-            <ShieldCheck className="w-4 h-4 text-[#D4AF37] shrink-0" />
-            <span className="text-[#D4AF37] whitespace-nowrap font-medium">We are an independent research entity - no spam calls or agent involvement</span>
+          {/* Independent Trust Banner */}
+          <div className="pt-1">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black border border-[#D4AF37]/50 text-xs text-[#D4AF37] shadow-sm">
+              <ShieldCheck className="w-4 h-4 text-[#D4AF37] shrink-0" />
+              <span className="text-[#D4AF37] text-xs font-medium">
+                We are an independent research entity - no spam calls or agent involvement
+              </span>
+            </div>
           </div>
+
         </div>
 
-        {/* Right Column (5 cols): Night Luxury Hillside Estate */}
-        <div className="lg:col-span-5 rounded-2xl overflow-hidden shadow-2xl border border-white/10 aspect-[16/11] bg-black relative group">
+        {/* Right Column (5 cols): Night Luxury Hillside Estate Image */}
+        <div className="lg:col-span-5 rounded-2xl overflow-hidden shadow-2xl border border-white/10 aspect-[16/11] bg-black relative">
           <img 
             src={NIGHT_HILLSIDE_ESTATE} 
             alt="Luxury Estate at Night" 
-            className="w-full h-full object-cover origin-bottom-left scale-[1.20] translate-y-[2%] -translate-x-[2%]"
+            className="w-full h-full object-cover origin-center scale-[1.05]"
           />
-          {auditComplete && (
-            <div 
-              onClick={handleOpenDossier}
-              className="absolute bottom-3 left-3 right-3 p-2.5 rounded-xl bg-black/90 backdrop-blur-md border border-[#10b981]/60 hover:border-[#10b981] text-white text-xs flex items-center justify-between shadow-xl cursor-pointer transition-all"
-            >
-              <div className="flex items-center gap-2 min-w-0 pr-2">
-                <CheckCircle2 className="w-4 h-4 text-[#10b981] shrink-0" />
-                <span className="text-[11px] font-semibold truncate">
-                  Audit Ready for {(normalizedAddress || address).split(',')[0]}
-                </span>
-              </div>
-              <button
-                type="button"
-                id="btn-report-generated-dossier"
-                aria-label={`Open generated report for ${normalizedAddress || address}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleOpenDossier();
-                }}
-                className="text-[10px] text-[#D4AF37] hover:text-[#e8c84a] font-bold tracking-wider uppercase bg-transparent border-0 cursor-pointer flex items-center gap-1 transition-colors hover:underline focus:outline-none focus:ring-1 focus:ring-[#D4AF37] rounded px-1.5 py-0.5 shrink-0"
-              >
-                <span>REPORT GENERATED</span>
-                <span aria-hidden="true">&darr;</span>
-              </button>
-            </div>
-          )}
         </div>
+
       </div>
 
-      {/* ── HOW DYSON HOMES COPILOT WORKS FIRST, THEN 3 BOXES BELOW ── */}
-      <div className="px-6 sm:px-10 pb-8 space-y-6">
+      {/* ── HOW DYSON HOMES COPILOT WORKS (MATCHES LOCKED PAGE 1 PNG) ── */}
+      <div className="px-6 sm:px-10 lg:px-12 pb-10 space-y-6">
+        
         {/* Divider: HOW DYSON HOMES COPILOT WORKS */}
         <div className="relative flex items-center justify-center my-4">
-          <div className="border-t border-[#D4AF37]/30 w-full" />
-          <div className="absolute px-6 bg-[#050505] text-[11px] sm:text-xs font-bold tracking-[0.25em] text-[#D4AF37] uppercase whitespace-nowrap">
+          <div className="border-t border-[#D4AF37]/40 w-full" />
+          <div className="absolute px-6 bg-[#000000] text-xs sm:text-[13px] font-bold tracking-[0.25em] text-[#D4AF37] uppercase whitespace-nowrap font-mono">
             HOW DYSON HOMES COPILOT WORKS
           </div>
         </div>
 
-        {/* Top Line: Browse MLS Spread Across & Centered Directly Below Header */}
+        {/* Step 1 Line: Browse MLS Pills */}
         <div className="flex items-center justify-center gap-3 pb-1 flex-wrap text-center">
-          <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-wider">
+          <div className="flex items-center gap-2 text-xs sm:text-[13px] font-bold text-white uppercase tracking-wider">
             <span className="w-5 h-5 rounded-full border border-[#D4AF37] text-[#D4AF37] text-[11px] font-bold flex items-center justify-center shrink-0">
               1
             </span>
             <Search className="w-4 h-4 text-[#D4AF37] shrink-0" />
             <span>FIRST OF ALL BROWSE YOUR PREFERRED MLS AND COPY THE MLS# OR ADDRESS:</span>
           </div>
+          
           <div className="flex items-center gap-2 flex-wrap justify-center">
             <a 
               href="https://www.realtor.com" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="px-3 py-1 rounded-full bg-[#ede0cc] hover:bg-[#e4d4bd] text-[#0a0a0a] text-xs font-semibold border border-[#c4b59f] inline-flex items-center gap-1.5 transition-colors shadow-sm"
+              className="px-3.5 py-1 rounded-full bg-[#ede0cc] hover:bg-[#e4d4bd] text-black text-xs font-semibold border border-[#c4b59f] inline-flex items-center gap-1.5 transition-colors shadow-sm"
             >
               <span>Realtor.com</span>
               <ExternalLink className="w-3 h-3 text-[#854d0e]" />
@@ -274,7 +174,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
               href="https://www.homes.com" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="px-3 py-1 rounded-full bg-[#ede0cc] hover:bg-[#e4d4bd] text-[#0a0a0a] text-xs font-semibold border border-[#c4b59f] inline-flex items-center gap-1.5 transition-colors shadow-sm"
+              className="px-3.5 py-1 rounded-full bg-[#ede0cc] hover:bg-[#e4d4bd] text-black text-xs font-semibold border border-[#c4b59f] inline-flex items-center gap-1.5 transition-colors shadow-sm"
             >
               <span>Homes.com</span>
               <ExternalLink className="w-3 h-3 text-[#854d0e]" />
@@ -283,7 +183,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
               href="https://www.zillow.com" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="px-3 py-1 rounded-full bg-[#ede0cc] hover:bg-[#e4d4bd] text-[#0a0a0a] text-xs font-semibold border border-[#c4b59f] inline-flex items-center gap-1.5 transition-colors shadow-sm"
+              className="px-3.5 py-1 rounded-full bg-[#ede0cc] hover:bg-[#e4d4bd] text-black text-xs font-semibold border border-[#c4b59f] inline-flex items-center gap-1.5 transition-colors shadow-sm"
             >
               <span>Zillow</span>
               <ExternalLink className="w-3 h-3 text-[#854d0e]" />
@@ -291,7 +191,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
           </div>
         </div>
 
-        {/* 4 Steps Across (Renumbered 2 through 5) */}
+        {/* 4 Steps Across (Steps 2 to 5) */}
         <div className="flex flex-col lg:flex-row items-center justify-between gap-4 pt-1">
           {/* Step 2 */}
           <div className="flex items-center gap-3.5 flex-1 w-full lg:w-auto">
@@ -364,10 +264,11 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
           </div>
         </div>
 
-        {/* Bottom Row: 3 Boxes Across (Comps / Risks / Rebate) */}
+        {/* 3 Gold-Bordered Boxes Across */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+          
           {/* Box 1: Comps & Market Intelligence */}
-          <div className="relative p-5 rounded-lg bg-[#0e0e0e] border border-[#D4AF37]/50 shadow-lg flex items-center gap-3.5">
+          <div className="relative p-5 rounded-xl bg-[#0c0c0c] border border-[#D4AF37]/60 shadow-lg flex items-center gap-3.5">
             <div className="w-11 h-11 shrink-0 flex items-center justify-center">
               <svg className="w-9 h-9 text-[#D4AF37]" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M6 38h36" />
@@ -380,7 +281,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
               </svg>
             </div>
             <div className="space-y-1 min-w-0">
-              <h3 className="text-[11px] sm:text-[11.5px] xl:text-xs 2xl:text-[13px] font-bold tracking-wide text-white uppercase font-sans whitespace-nowrap">
+              <h3 className="text-xs sm:text-[12.5px] font-bold tracking-wide text-white uppercase whitespace-nowrap">
                 WE RUN COMPS &amp; MARKET INTEL
               </h3>
               <p className="text-xs text-white/70 leading-snug">
@@ -390,7 +291,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
           </div>
 
           {/* Box 2: Risks & Due Diligence */}
-          <div className="relative p-5 rounded-lg bg-[#0e0e0e] border border-[#D4AF37]/50 shadow-lg flex items-center gap-3.5">
+          <div className="relative p-5 rounded-xl bg-[#0c0c0c] border border-[#D4AF37]/60 shadow-lg flex items-center gap-3.5">
             <div className="w-11 h-11 shrink-0 flex items-center justify-center">
               <svg className="w-9 h-9 text-[#D4AF37]" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M24 6s14 4 14 14c0 14-14 22-14 22S10 34 10 20c0-10 14-14 14-14z" />
@@ -399,7 +300,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
               </svg>
             </div>
             <div className="space-y-1 min-w-0">
-              <h3 className="text-[11px] sm:text-[11.5px] xl:text-xs 2xl:text-[13px] font-bold tracking-wide text-white uppercase font-sans whitespace-nowrap">
+              <h3 className="text-xs sm:text-[12.5px] font-bold tracking-wide text-white uppercase whitespace-nowrap">
                 WE EXPLORE RISKS THRU DUE DILIGENCE
               </h3>
               <p className="text-xs text-white/70 leading-snug">
@@ -408,8 +309,8 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
             </div>
           </div>
 
-          {/* Box 3: Escrow & Lender Compliance Audit */}
-          <div className="relative p-5 rounded-lg bg-[#0e0e0e] border border-[#D4AF37]/50 shadow-lg flex items-center gap-3.5">
+          {/* Box 3: Escrow & Compliance */}
+          <div className="relative p-5 rounded-xl bg-[#0c0c0c] border border-[#D4AF37]/60 shadow-lg flex items-center gap-3.5">
             <div className="w-11 h-11 shrink-0 flex items-center justify-center">
               <svg className="w-9 h-9 text-[#D4AF37]" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M24 4v40" />
@@ -423,7 +324,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
               </svg>
             </div>
             <div className="space-y-1 min-w-0">
-              <h3 className="text-[11px] sm:text-[11.5px] xl:text-xs 2xl:text-[13px] font-bold tracking-wide text-white uppercase font-sans whitespace-nowrap">
+              <h3 className="text-xs sm:text-[12.5px] font-bold tracking-wide text-white uppercase whitespace-nowrap">
                 WE AUDIT ESCROW &amp; COMPLIANCE
               </h3>
               <p className="text-xs text-white/70 leading-snug">
@@ -431,10 +332,26 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
               </p>
             </div>
           </div>
+
         </div>
 
-
       </div>
+
+      {/* Floating Bottom-Right Pill (Matches PNG) */}
+      <div className="fixed bottom-4 right-4 z-40 flex items-center gap-1.5 shadow-2xl">
+        <a 
+          href="/refer"
+          className="px-3.5 py-2 rounded-l-full bg-[#fce38a] hover:bg-[#fad85d] text-black font-bold text-xs flex items-center gap-1.5 transition-all shadow-lg"
+        >
+          <Plus className="w-3.5 h-3.5 text-black stroke-[3]" />
+          <span>Refer a Friend</span>
+        </a>
+        <div className="px-3 py-2 rounded-r-full bg-[#0a0a0a] border border-[#fce38a]/40 text-[#fce38a] font-mono text-[11px] font-bold flex items-center gap-1 shadow-lg">
+          <span>⌖</span>
+          <span>V2V</span>
+        </div>
+      </div>
+
     </div>
   );
 }

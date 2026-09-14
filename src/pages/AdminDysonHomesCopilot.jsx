@@ -53,7 +53,7 @@ export default function AdminDysonHomesCopilot() {
   }, [location.hash, location.search]);
 
   const copySponsorScript = () => {
-    const text = `Today's housing market report is brought to you by DysonHomes Copilot at DysonHomes.com. Before you click 'Contact Agent' on any online home search site or aggregator, paste the address into DysonHomes.com to see unvarnished comps, hidden property risks, and verify lender compliance shields. Independent human and AI-assisted fiduciary intelligence under California DRE #00609384 at DysonHomes.com.`;
+    const text = `Today's housing market report is brought to you by DysonHomes Copilot at DysonHomes.com. Before you click 'Contact Agent' on any online home search site or aggregator, paste the address into DysonHomes.com to see unvarnished comps, hidden property risks, and verify lender compliance shields. Independent human and AI-assisted fiduciary intelligence under California broker supervision at DysonHomes.com.`;
     navigator.clipboard.writeText(text);
     setCopiedScript(true);
     setTimeout(() => setCopiedScript(false), 2000);
@@ -445,7 +445,7 @@ export default function AdminDysonHomesCopilot() {
 
             {/* Safe Harbor Legal Compliance */}
             <div className="p-3 rounded-xl bg-black/60 border border-white/10 flex items-center justify-between text-[10px] text-stone-400">
-              <span>California DRE #00609384 Fiduciary Standard</span>
+              <span>California Fiduciary Standard</span>
               <span className="text-[#D4AF37] font-semibold">100% Conflict-Free Second Opinion</span>
             </div>
           </div>

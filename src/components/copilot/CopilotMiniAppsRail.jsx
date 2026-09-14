@@ -105,7 +105,7 @@ export default function CopilotMiniAppsRail({ className = '', onSelectApp }) {
       </div>
 
       <div className="pt-2 mt-auto border-t border-white/10 text-[7px] text-stone-500 leading-tight text-center">
-        Under Bob Dyson DRE #00609384
+        Under Bob Dyson · Fiduciary Desk
       </div>
     </aside>
   );

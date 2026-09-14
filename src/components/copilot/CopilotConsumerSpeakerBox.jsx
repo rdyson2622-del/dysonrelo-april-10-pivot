@@ -71,7 +71,7 @@ export default function CopilotConsumerSpeakerBox({
       className={`w-[132px] sm:w-[138px] rounded-xl bg-[#0c0c0c] border border-stone-700/60 hover:border-rose-500/70 shadow-[0_6px_20px_rgba(0,0,0,0.8)] p-2 flex flex-col items-center text-center space-y-1 transition-all duration-300 shrink-0 relative group cursor-default ${className}`}
     >
       <div className="relative shrink-0 pt-0.5">
-        <div className="w-12 h-12 aspect-square rounded-full border-2 border-stone-500 group-hover:border-rose-500 p-0.5 overflow-hidden bg-black shadow-md ring-1.5 ring-white/10 group-hover:ring-rose-500/50 group-hover:scale-105 transition-all">
+        <div className="w-12 h-12 aspect-square rounded-full border-2 border-rose-500 p-0.5 overflow-hidden bg-black shadow-md ring-1.5 ring-rose-500/40 group-hover:scale-105 transition-all">
           <img 
             src={photoUrl} 
             alt={userName} 
