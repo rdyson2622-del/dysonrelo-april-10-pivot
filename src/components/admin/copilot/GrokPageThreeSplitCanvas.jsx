@@ -19,7 +19,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
       {
         id: 1,
         sender: 'charlie',
-        text: `I audited ${data.shortAddress}, ${data.city}.\n${data.marketSummary} Dossier on the left.\nWhat's your mobile so I can text this report to you?`
+        text: `I audited ${data.shortAddress}, ${data.city}.\n${data.marketSummary} Dossier on the right.\nWhat's your mobile so I can text this report to you?`
       },
       {
         id: 2,
@@ -37,7 +37,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
       {
         id: 1,
         sender: 'charlie',
-        text: `I audited ${data.shortAddress}, ${data.city}.\n${data.marketSummary} Dossier on the left.\nWhat's your mobile so I can text this report to you?`
+        text: `I audited ${data.shortAddress}, ${data.city}.\n${data.marketSummary} Dossier on the right.\nWhat's your mobile so I can text this report to you?`
       },
       {
         id: 2,
@@ -171,114 +171,14 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
         </div>
       </div>
 
-      {/* ── 2-COLUMN MAIN CANVAS (REVERSED): Left ~65% Dossier, Right ~35% Sticky Chat + Charlie in Box ── */}
+      {/* ── 2-COLUMN MAIN CANVAS: Left ~35% Charlie Chat & Upper-Left Voice Box, Right ~65% Dossier (3 Tan Boxes) ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[660px]">
         
-        {/* ── LEFT COLUMN: DOSSIER WITH THREE TAN FILL BOXES (~65% = 7 cols lg) ── */}
-        <div className="lg:col-span-7 p-4 sm:p-6 bg-[#080808] space-y-4 overflow-y-auto border-b lg:border-b-0 lg:border-r border-white/10">
-          {/* Header */}
-          <div className="pb-1">
-            <span className="text-[10.5px] font-bold tracking-widest text-[#D4AF37] uppercase font-mono">
-              DOSSIER • {dossierData.shortAddress.toUpperCase()} {dossierData.city ? `(${dossierData.city.toUpperCase()})` : ''}
-            </span>
-          </div>
-
-          {/* ── TAN BOX 1: HONEST COMPS (TAN FILL #ede0cc, BLACK TEXT) ── */}
-          <div className="rounded-xl border border-[#c4b59f] bg-[#ede0cc] text-[#0a0a0a] p-4 space-y-2.5 shadow-lg">
-            <div className="flex items-center gap-2">
-              <Scale className="w-4 h-4 text-[#854d0e]" />
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-[#1a1815]">
-                HONEST COMPS
-              </h3>
-            </div>
-            <p className="text-[11px] text-[#554c40] font-medium">
-              Sold 30–90 days | Within 0.75 mi | Adjusted to current market
-            </p>
-
-            {/* Comps Table in Tan Container */}
-            <div className="space-y-1.5 pt-1 text-[11.5px] font-mono">
-              {dossierData.comps.map((comp, idx) => (
-                <div key={idx} className="flex flex-wrap items-center justify-between text-[#2a241c] py-1 border-b border-[#d8cab6] gap-2">
-                  <span className="font-bold text-[#0a0a0a] w-32 sm:w-36 truncate">{comp.address}</span>
-                  <span className="text-[#554c40]">{comp.distance}</span>
-                  <span className="text-[#554c40]">{comp.specs}</span>
-                  <span className="text-[#2a241c]">{comp.soldPrice}</span>
-                  <span className="text-[#854d0e] font-bold">{comp.adjPrice}</span>
-                </div>
-              ))}
-            </div>
-
-            <p className="text-[11px] font-semibold text-[#854d0e] pt-1">
-              {dossierData.compsSummary}
-            </p>
-          </div>
-
-          {/* ── TAN BOX 2: HIDDEN RISKS (TAN FILL #ede0cc, BLACK TEXT) ── */}
-          <div className="rounded-xl border border-[#c4b59f] bg-[#ede0cc] text-[#0a0a0a] p-4 space-y-2.5 shadow-lg">
-            <div className="flex items-center gap-2">
-              <ShieldAlert className="w-4 h-4 text-[#854d0e]" />
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-[#1a1815]">
-                HIDDEN RISKS
-              </h3>
-            </div>
-
-            <div className="space-y-2.5 text-xs">
-              {dossierData.risks.map((risk, idx) => {
-                const IconComp = idx === 0 ? Scale : idx === 1 ? Waves : Clock;
-                return (
-                  <div key={risk.id || idx} className="flex items-start gap-2.5">
-                    <IconComp className="w-4 h-4 text-[#854d0e] shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="font-bold text-[#0a0a0a]">{risk.title}</h4>
-                      <p className="text-[#554c40] text-[11px]">{risk.desc}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <p className="text-[11px] font-semibold text-[#854d0e] pt-1">
-              {dossierData.risksSummary}
-            </p>
-          </div>
-
-          {/* ── TAN BOX 3: CLOSING-COST CREDIT (TAN FILL #ede0cc, BLACK TEXT) ── */}
-          <div className="rounded-xl border border-[#c4b59f] bg-[#ede0cc] text-[#0a0a0a] p-4 space-y-2.5 shadow-lg">
-            <div className="flex items-center gap-2">
-              <DollarSign className="w-4 h-4 text-[#854d0e]" />
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-[#1a1815]">
-                CLOSING-COST CREDIT
-              </h3>
-            </div>
-            <p className="text-[11px] text-[#554c40] font-medium">
-              Rebate estimate where allowed by law | {dossierData.rebateBasis}
-            </p>
-
-            <div className="bg-[#f7efe3] border border-[#d8cab6] rounded-lg p-3 sm:p-3.5 flex items-center justify-between">
-              <span className="text-xs sm:text-sm font-semibold text-[#1a1815]">
-                Estimated buyer credit
-              </span>
-              <div className="text-right">
-                <div className="text-base sm:text-lg font-bold font-mono text-[#854d0e]">
-                  {dossierData.rebateRange}
-                </div>
-                <div className="text-[11px] text-[#554c40] font-mono">
-                  {dossierData.rebatePercent}
-                </div>
-              </div>
-            </div>
-
-            <p className="text-[11px] font-semibold text-[#854d0e] pt-0.5">
-              Requires licensed broker representation. Not available in all states.
-            </p>
-          </div>
-        </div>
-
-        {/* ── RIGHT COLUMN: STICKY CHARLIE CHAT + CHARLIE IN HIS VERTICAL BOX LIKE SLIDE #2 (~35% = 5 cols lg) ── */}
-        <div className="lg:col-span-5 p-4 sm:p-5 flex flex-col justify-between bg-[#0d0d0d]">
+        {/* ── LEFT COLUMN: STICKY CHARLIE CHAT + CHARLIE VOICE BOX IN UPPER LEFT (~35% = 5 cols lg) ── */}
+        <div className="lg:col-span-5 p-4 sm:p-5 flex flex-col justify-between bg-[#0d0d0d] border-b lg:border-b-0 lg:border-r border-white/10">
           <div className="space-y-4">
-            {/* Charlie in his vertical rectangular card like Slide #2 positioned to the right */}
-            <div className="flex justify-end pr-1 pt-1">
+            {/* Charlie in his vertical rectangular card positioned to the UPPER LEFT */}
+            <div className="flex justify-start pl-1 pt-1">
               <div className="w-[185px]">
                 <CopilotAvatarSlot 
                   activeExplainer={activeExplainer}
@@ -390,6 +290,106 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
                 Charlie can make mistakes. Verify important information.
               </p>
             </form>
+          </div>
+        </div>
+
+        {/* ── RIGHT COLUMN: DOSSIER WITH THREE TAN FILL BOXES (~65% = 7 cols lg) ── */}
+        <div className="lg:col-span-7 p-4 sm:p-6 bg-[#080808] space-y-4 overflow-y-auto">
+          {/* Header */}
+          <div className="pb-1">
+            <span className="text-[10.5px] font-bold tracking-widest text-[#D4AF37] uppercase font-mono">
+              DOSSIER • {dossierData.shortAddress.toUpperCase()} {dossierData.city ? `(${dossierData.city.toUpperCase()})` : ''}
+            </span>
+          </div>
+
+          {/* ── TAN BOX 1: HONEST COMPS (TAN FILL #ede0cc, BLACK TEXT) ── */}
+          <div className="rounded-xl border border-[#c4b59f] bg-[#ede0cc] text-[#0a0a0a] p-4 space-y-2.5 shadow-lg">
+            <div className="flex items-center gap-2">
+              <Scale className="w-4 h-4 text-[#854d0e]" />
+              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-[#1a1815]">
+                HONEST COMPS
+              </h3>
+            </div>
+            <p className="text-[11px] text-[#554c40] font-medium">
+              Sold 30–90 days | Within 0.75 mi | Adjusted to current market
+            </p>
+
+            {/* Comps Table in Tan Container */}
+            <div className="space-y-1.5 pt-1 text-[11.5px] font-mono">
+              {dossierData.comps.map((comp, idx) => (
+                <div key={idx} className="flex flex-wrap items-center justify-between text-[#2a241c] py-1 border-b border-[#d8cab6] gap-2">
+                  <span className="font-bold text-[#0a0a0a] w-32 sm:w-36 truncate">{comp.address}</span>
+                  <span className="text-[#554c40]">{comp.distance}</span>
+                  <span className="text-[#554c40]">{comp.specs}</span>
+                  <span className="text-[#2a241c]">{comp.soldPrice}</span>
+                  <span className="text-[#854d0e] font-bold">{comp.adjPrice}</span>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-[11px] font-semibold text-[#854d0e] pt-1">
+              {dossierData.compsSummary}
+            </p>
+          </div>
+
+          {/* ── TAN BOX 2: HIDDEN RISKS (TAN FILL #ede0cc, BLACK TEXT) ── */}
+          <div className="rounded-xl border border-[#c4b59f] bg-[#ede0cc] text-[#0a0a0a] p-4 space-y-2.5 shadow-lg">
+            <div className="flex items-center gap-2">
+              <ShieldAlert className="w-4 h-4 text-[#854d0e]" />
+              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-[#1a1815]">
+                HIDDEN RISKS
+              </h3>
+            </div>
+
+            <div className="space-y-2.5 text-xs">
+              {dossierData.risks.map((risk, idx) => {
+                const IconComp = idx === 0 ? Scale : idx === 1 ? Waves : Clock;
+                return (
+                  <div key={risk.id || idx} className="flex items-start gap-2.5">
+                    <IconComp className="w-4 h-4 text-[#854d0e] shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="font-bold text-[#0a0a0a]">{risk.title}</h4>
+                      <p className="text-[#554c40] text-[11px]">{risk.desc}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <p className="text-[11px] font-semibold text-[#854d0e] pt-1">
+              {dossierData.risksSummary}
+            </p>
+          </div>
+
+          {/* ── TAN BOX 3: CLOSING-COST CREDIT (TAN FILL #ede0cc, BLACK TEXT) ── */}
+          <div className="rounded-xl border border-[#c4b59f] bg-[#ede0cc] text-[#0a0a0a] p-4 space-y-2.5 shadow-lg">
+            <div className="flex items-center gap-2">
+              <DollarSign className="w-4 h-4 text-[#854d0e]" />
+              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-[#1a1815]">
+                CLOSING-COST CREDIT
+              </h3>
+            </div>
+            <p className="text-[11px] text-[#554c40] font-medium">
+              Rebate estimate where allowed by law | {dossierData.rebateBasis}
+            </p>
+
+            <div className="bg-[#f7efe3] border border-[#d8cab6] rounded-lg p-3 sm:p-3.5 flex items-center justify-between">
+              <span className="text-xs sm:text-sm font-semibold text-[#1a1815]">
+                Estimated buyer credit
+              </span>
+              <div className="text-right">
+                <div className="text-base sm:text-lg font-bold font-mono text-[#854d0e]">
+                  {dossierData.rebateRange}
+                </div>
+                <div className="text-[11px] text-[#554c40] font-mono">
+                  {dossierData.rebatePercent}
+                </div>
+              </div>
+            </div>
+
+            <p className="text-[11px] font-semibold text-[#854d0e] pt-0.5">
+              Requires licensed broker representation. Not available in all states.
+            </p>
           </div>
         </div>
 
