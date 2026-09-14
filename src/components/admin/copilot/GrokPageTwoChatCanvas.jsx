@@ -90,8 +90,8 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, on
         />
       </div>
 
-      {/* ── CENTER CONTENT (Lowered by 10% to give generous breathing room) ── */}
-      <div className="w-full max-w-xl xl:max-w-2xl mx-auto text-center space-y-5 pt-24 sm:pt-32 pb-8 sm:pb-12 my-auto">
+      {/* ── CENTER CONTENT (Shifted left 5% and lowered another 10% for clear separation) ── */}
+      <div className="w-full max-w-xl xl:max-w-2xl mx-auto text-center space-y-5 pt-24 sm:pt-32 pb-8 sm:pb-12 my-auto translate-y-[10%] -translate-x-[5%] transition-transform">
         {/* Mobile/Tablet Fallback: Avatar Slot above heading */}
         <div className="lg:hidden w-full max-w-xs mx-auto mb-2">
           <CopilotAvatarSlot 
