@@ -44,7 +44,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
           {/* Official Logo Badge centered above meet CoPilot */}
           <div className="space-y-3">
             <div className="inline-flex flex-col items-center">
-              <DysonVerticalBadge height={88} className="mb-3" />
+              <DysonVerticalBadge height={106} className="mb-3" />
               <div className="flex items-baseline gap-3">
                 <span 
                   className="text-3xl sm:text-4xl lg:text-5xl font-light text-white tracking-wide font-serif"
