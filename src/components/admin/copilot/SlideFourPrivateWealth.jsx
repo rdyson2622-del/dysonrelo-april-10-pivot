@@ -6,7 +6,7 @@ import {
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import CopilotSweepLogo from '@/components/brand/CopilotSweepLogo';
 
-const NIGHT_HILLSIDE_ESTATE = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a57180df3_Screenshot2026-09-13at43243AM.png";
+const HERO_ESTATE = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/3e3531fda_Screenshot2026-09-13at43748AM.png";
 
 const SAMPLE_SEARCHES = [
   '742 Vista Del Mar, La Jolla, CA 92037',
@@ -40,8 +40,8 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
       className="w-full text-left select-none relative overflow-hidden bg-[#0a0a0a]" 
       style={{ color: '#F3F0E6' }}
     >
-      {/* ── BLACK HERO SECTION (BRIGHT HALL: pt-30, px-10, pb-24, max-w-[1180px]) ── */}
-      <div className="max-w-[1180px] mx-auto px-6 sm:px-10 pt-28 sm:pt-30 pb-20 sm:pb-24 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+      {/* ── BLACK HERO SECTION (BRIGHT HALL: pt-30+ air, px-10, pb-24, max-w-[1180px]) ── */}
+      <div className="max-w-[1180px] mx-auto px-6 sm:px-10 pt-30 sm:pt-32 lg:pt-36 pb-20 sm:pb-24 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
         
         {/* Left Column (7 cols): Lockup + Title + Gravitational Pill + Samples + Trust */}
         <div className="lg:col-span-7 space-y-6">
@@ -141,8 +141,8 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
         {/* Right Column (5 cols): Locked Luxury Estate Asset */}
         <div className="lg:col-span-5 rounded-2xl overflow-hidden shadow-2xl border border-[#D4AF37]/40 aspect-[16/11] bg-[#0a0a0a] relative">
           <img 
-            src={NIGHT_HILLSIDE_ESTATE} 
-            alt="Luxury Estate at Night" 
+            src={HERO_ESTATE} 
+            alt="Dyson Homes Luxury Estate" 
             className="w-full h-full object-cover origin-center scale-[1.02]"
           />
         </div>
@@ -280,7 +280,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
           {/* Three White Gold-Border Value Cards with Locked Pack Copy */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
             
-            {/* Box 1: Comps & Market Intel */}
+            {/* Box 1: We Run Comps & Market Intel */}
             <div className="relative p-6 rounded-2xl bg-white border-2 border-[#D4AF37] shadow-lg flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl bg-[#0a0a0a] shrink-0 flex items-center justify-center shadow-md">
                 <svg className="w-7 h-7 text-[#D4AF37]" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -295,7 +295,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
               </div>
               <div className="space-y-1.5 min-w-0">
                 <h3 className="text-xs sm:text-[13px] font-bold tracking-wide text-[#0a0a0a] uppercase">
-                  COMPS &amp; MARKET INTEL
+                  WE RUN COMPS &amp; MARKET INTEL
                 </h3>
                 <p className="text-xs text-[#171717]/80 leading-relaxed">
                   AI-powered comps, trends, and valuation <span className="text-[#0a0a0a] font-semibold">insights.</span>
@@ -303,7 +303,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
               </div>
             </div>
 
-            {/* Box 2: Risks Thru Due Diligence */}
+            {/* Box 2: We Explore Risks Thru Due Diligence */}
             <div className="relative p-6 rounded-2xl bg-white border-2 border-[#D4AF37] shadow-lg flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl bg-[#0a0a0a] shrink-0 flex items-center justify-center shadow-md">
                 <svg className="w-7 h-7 text-[#D4AF37]" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -314,15 +314,15 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
               </div>
               <div className="space-y-1.5 min-w-0">
                 <h3 className="text-xs sm:text-[13px] font-bold tracking-wide text-[#0a0a0a] uppercase">
-                  RISKS THRU DUE DILIGENCE
+                  WE EXPLORE RISKS THRU DUE DILIGENCE
                 </h3>
                 <p className="text-xs text-[#171717]/80 leading-relaxed">
-                  Hidden risks, title issues, zoning, and red flags—<span className="text-[#0a0a0a] font-semibold">before you commit.</span>
+                  Hidden risks, title issues, zoning, and red flags— <span className="text-[#0a0a0a] font-semibold">before you commit.</span>
                 </p>
               </div>
             </div>
 
-            {/* Box 3: Escrow & Compliance */}
+            {/* Box 3: We Audit Escrow & Compliance */}
             <div className="relative p-6 rounded-2xl bg-white border-2 border-[#D4AF37] shadow-lg flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl bg-[#0a0a0a] shrink-0 flex items-center justify-center shadow-md">
                 <svg className="w-7 h-7 text-[#D4AF37]" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -338,10 +338,10 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
               </div>
               <div className="space-y-1.5 min-w-0">
                 <h3 className="text-xs sm:text-[13px] font-bold tracking-wide text-[#0a0a0a] uppercase">
-                  ESCROW &amp; COMPLIANCE
+                  WE AUDIT ESCROW &amp; COMPLIANCE
                 </h3>
                 <p className="text-xs text-[#171717]/80 leading-relaxed">
-                  Strict escrow shields &amp; lender guidelines—<span className="text-[#0a0a0a] font-semibold">protecting your deposit.</span>
+                  Strict escrow shields &amp; lender guidelines— <span className="text-[#0a0a0a] font-semibold">protecting your deposit.</span>
                 </p>
               </div>
             </div>
