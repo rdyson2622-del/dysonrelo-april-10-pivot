@@ -81,8 +81,8 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, on
         </div>
       </div>
 
-      {/* ── UPPER-RIGHT CHARLIE VERTICAL RECTANGULAR BOX (Directly below Listen Pill on desktop) ── */}
-      <div className="hidden lg:block absolute top-[74px] right-6 sm:right-8 w-60 z-20">
+      {/* ── UPPER-RIGHT CHARLIE VERTICAL RECTANGULAR BOX (Reduced 20%, tight to right below Listen) ── */}
+      <div className="hidden lg:block absolute top-[68px] right-3 sm:right-4 w-[185px] z-20">
         <CopilotAvatarSlot 
           activeExplainer={activeExplainer}
           onClearExplainer={() => setActiveExplainer(null)}
@@ -90,8 +90,8 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, on
         />
       </div>
 
-      {/* ── CENTER CONTENT ── */}
-      <div className="w-full max-w-xl xl:max-w-2xl mx-auto text-center space-y-5 my-auto py-4 lg:pr-14 xl:pr-0">
+      {/* ── CENTER CONTENT (Lowered on page to avoid clashing with Charlie) ── */}
+      <div className="w-full max-w-xl xl:max-w-2xl mx-auto text-center space-y-5 pt-14 pb-8 sm:pt-20 sm:pb-10 my-auto">
         {/* Mobile/Tablet Fallback: Avatar Slot above heading */}
         <div className="lg:hidden w-full max-w-xs mx-auto mb-2">
           <CopilotAvatarSlot 
@@ -194,16 +194,15 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, on
       <div className="w-full flex items-center justify-between text-[11px] text-stone-500 pt-4 border-t border-white/5">
         <span>DysonHomes Copilot • Chat Canvas</span>
         
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#e8c84a] text-black font-semibold text-xs shadow-lg">
-          <span className="flex items-center gap-1">
-            <span className="text-sm font-bold leading-none">+</span>
-            <span>Refer a Friend</span>
-          </span>
-          <span className="text-black/40">|</span>
-          <span className="flex items-center gap-1 text-[11px] font-bold">
-            <Volume2 className="w-3.5 h-3.5 text-black" />
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={handleToggleListen}
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 hover:bg-white/10 border border-[#D4AF37]/40 text-[#D4AF37] text-xs font-semibold cursor-pointer transition-all shadow-sm"
+          >
+            <Volume2 className="w-3.5 h-3.5 text-[#D4AF37]" />
             <span>V2V</span>
-          </span>
+          </button>
         </div>
       </div>
     </div>

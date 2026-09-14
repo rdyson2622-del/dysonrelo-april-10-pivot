@@ -120,14 +120,11 @@ export default function CopilotAvatarSlot({
         className={`w-full rounded-2xl overflow-hidden border border-[#D4AF37]/60 shadow-[0_8px_30px_rgba(0,0,0,0.8)] bg-black transition-all ${className}`}
       >
         {/* Header Bar inside video slot */}
-        <div className="px-3 py-2 bg-[#121212] border-b border-white/10 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2 min-w-0">
+        <div className="px-2.5 py-1.5 bg-[#121212] border-b border-white/10 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-1.5 min-w-0">
             <span className={`w-2 h-2 rounded-full ${isBob ? 'bg-[#D4AF37]' : 'bg-[#10b981]'} animate-pulse shrink-0`} />
-            <span className="font-bold text-white text-[11px] truncate">
+            <span className="font-bold text-white text-[10.5px] truncate">
               {activeExplainer.speakerName || (isBob ? 'Bob Dyson' : 'Charlie Simmons')}
-            </span>
-            <span className="text-[9.5px] px-1.5 py-0.5 rounded bg-white/10 text-[#D4AF37] font-semibold uppercase tracking-wider shrink-0">
-              {activeExplainer.speakerRole || (isBob ? "Bob's Solution Take" : 'Explainer')}
             </span>
           </div>
 
@@ -154,33 +151,30 @@ export default function CopilotAvatarSlot({
           />
 
           {/* Quick Overlay Controls */}
-          <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-xs text-white">
-            <div className="flex items-center gap-2">
+          <div className="absolute bottom-1.5 left-1.5 right-1.5 flex items-center justify-between bg-black/80 backdrop-blur-md px-2 py-1 rounded-lg border border-white/10 text-xs text-white">
+            <div className="flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={toggleVideoPlay}
                 className="hover:text-[#D4AF37] transition-colors cursor-pointer"
               >
-                {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+                {isPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
               </button>
               <button
                 type="button"
                 onClick={toggleMute}
                 className="hover:text-[#D4AF37] transition-colors cursor-pointer"
               >
-                {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+                {isMuted ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
               </button>
-              <span className="text-[10px] text-stone-300 font-medium truncate max-w-[200px]">
-                {activeExplainer.topic || activeExplainer.label}
-              </span>
             </div>
 
             <button
               type="button"
               onClick={onClearExplainer}
-              className="text-[10px] text-[#D4AF37] hover:underline font-semibold cursor-pointer shrink-0"
+              className="text-[9.5px] text-[#D4AF37] hover:underline font-semibold cursor-pointer shrink-0"
             >
-              Done → Charlie
+              Done →
             </button>
           </div>
         </div>
@@ -236,15 +230,15 @@ export default function CopilotAvatarSlot({
   const isCompact = size === 'compact';
   const isVertical = size === 'vertical';
 
-  // Vertical rectangular card (Page 2 upper-right slot)
+  // Vertical rectangular card (Page 2 upper-right slot, reduced by 20%)
   if (isVertical) {
     return (
       <div 
-        className={`w-full rounded-2xl bg-[#0c0c0c] border border-[#D4AF37]/60 shadow-[0_10px_35px_rgba(0,0,0,0.9)] p-4 flex flex-col items-center text-center space-y-2.5 transition-all relative ${className}`}
+        className={`w-full rounded-xl bg-[#0c0c0c] border border-[#D4AF37]/60 shadow-[0_8px_30px_rgba(0,0,0,0.9)] p-2.5 flex flex-col items-center text-center space-y-1.5 transition-all relative ${className}`}
       >
-        {/* Charlie prominent portrait with gold trim */}
+        {/* Charlie prominent portrait with gold trim (reduced 20%) */}
         <div className="relative shrink-0 pt-0.5">
-          <div className="w-22 h-22 sm:w-24 sm:h-24 rounded-full border-2 border-[#D4AF37] p-1 overflow-hidden bg-black shadow-xl ring-4 ring-[#D4AF37]/20">
+          <div className="w-18 h-18 sm:w-19 sm:h-19 rounded-full border-2 border-[#D4AF37] p-0.5 overflow-hidden bg-black shadow-lg ring-2 ring-[#D4AF37]/20">
             <img 
               src={CHARLIE_HEADSHOT} 
               alt="Charlie Simmons — The Face of CoPilot" 
@@ -252,20 +246,20 @@ export default function CopilotAvatarSlot({
             />
           </div>
           {/* Online green indicator */}
-          <span className="w-3.5 h-3.5 rounded-full bg-[#10b981] absolute bottom-1 right-1 ring-2 ring-[#0c0c0c] shadow-sm animate-pulse" />
+          <span className="w-3 h-3 rounded-full bg-[#10b981] absolute bottom-0.5 right-0.5 ring-2 ring-[#0c0c0c] shadow-sm animate-pulse" />
         </div>
 
         {/* "The Face of CoPilot" in logo style */}
-        <div className="w-full pt-0.5">
-          <div className="inline-flex items-baseline justify-center gap-1.5 px-3 py-0.5 rounded-full bg-white/5 border border-[#D4AF37]/40 shadow-inner">
+        <div className="w-full">
+          <div className="inline-flex items-baseline justify-center gap-1 px-2.5 py-0.5 rounded-full bg-white/5 border border-[#D4AF37]/40 shadow-inner">
             <span 
-              className="text-xs text-white/90 font-serif tracking-wide"
+              className="text-[10px] text-white/90 font-serif tracking-wide"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
               The Face of
             </span>
             <span 
-              className="text-sm font-serif italic text-[#D4AF37] font-semibold tracking-normal"
+              className="text-xs font-serif italic text-[#D4AF37] font-semibold tracking-normal"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
               CoPilot
@@ -275,10 +269,10 @@ export default function CopilotAvatarSlot({
 
         {/* Identity & Status */}
         <div className="space-y-0.5 w-full">
-          <h3 className="text-base font-bold text-white tracking-wide">
+          <h3 className="text-xs sm:text-[13px] font-bold text-white tracking-wide">
             Charlie Simmons
           </h3>
-          <p className="text-[11px] text-stone-300 font-medium">
+          <p className="text-[10px] text-stone-300 font-medium">
             Voice &amp; Market Concierge <span className="text-[#10b981] font-semibold">• Ready</span>
           </p>
         </div>
@@ -288,10 +282,10 @@ export default function CopilotAvatarSlot({
           <button
             type="button"
             onClick={startVoice}
-            className="w-full py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-[#D4AF37]/60 hover:border-[#D4AF37] text-white text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md group"
+            className="w-full py-1.5 px-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-[#D4AF37]/60 hover:border-[#D4AF37] text-white text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-md group"
             title="Start live 2-way voice conversation"
           >
-            <Mic className="w-3.5 h-3.5 text-[#D4AF37] group-hover:scale-110 transition-transform" />
+            <Mic className="w-3 h-3 text-[#D4AF37] group-hover:scale-110 transition-transform" />
             <span>Talk Live</span>
           </button>
         </div>
