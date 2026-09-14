@@ -55,7 +55,7 @@
 5. **Mandatory Hard-Stops & Process Guidance Appended (PASS):**
    - `src/lib/charlieSimmonsPrompt.js` contains the mandatory V2V HARD STOPS & Relo a2 process instructions:
      - 0 fees for buyers.
-     - 25% broker-to-broker referral compensation model.
+     - Strict removal of any unsupported 25% referral allocation claim (no invented fees, commissions, or referral splits quoted).
      - CA DRE #02303118 brokerage identity.
      - Tax/legal disclaimer referring to licensed CPAs and attorneys.
      - Yield-immediately barge-in behavior.
