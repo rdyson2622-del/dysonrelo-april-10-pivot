@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { 
   ShieldCheck, DollarSign, Copy, Check, Lock,
   ArrowDown, Monitor, Smartphone
@@ -16,6 +17,7 @@ export default function AdminDysonHomesCopilot() {
   const [activeTab, setActiveTab] = useState('vertical_scroll'); // vertical_scroll | dnn_sponsor | admin_specs
   const [copiedScript, setCopiedScript] = useState(false);
 
+  const location = useLocation();
   const page1Ref = useRef(null);
   const page2Ref = useRef(null);
   const [analyzedProperty, setAnalyzedProperty] = useState('742 Vista Del Mar, La Jolla, CA 92037');
@@ -26,11 +28,25 @@ export default function AdminDysonHomesCopilot() {
     }
   };
 
-  React.useEffect(() => {
-    const hash = window.location.hash;
-    if (hash === '#page-1' || hash === '#landing') scrollToSection(page1Ref);
-    else if (hash === '#page-2' || hash === '#dossier' || hash === '#team' || hash === '#chat') scrollToSection(page2Ref);
-  }, []);
+  useEffect(() => {
+    const hash = location.hash;
+    const params = new URLSearchParams(location.search);
+    const pageParam = params.get('page');
+
+    if (hash === '#page-1' || hash === '#landing' || pageParam === '1') {
+      scrollToSection(page1Ref);
+    } else if (
+      hash === '#page-2' || 
+      hash === '#dossier' || 
+      hash === '#team' || 
+      hash === '#chat' || 
+      pageParam === '2' || 
+      pageParam === '3' || 
+      pageParam === '4'
+    ) {
+      scrollToSection(page2Ref);
+    }
+  }, [location.hash, location.search]);
 
   const copySponsorScript = () => {
     const text = `Today's housing market report is brought to you by DysonHomes Copilot at DysonHomes.com. Before you click 'Contact Agent' on any online home search site or aggregator, paste the address into DysonHomes.com to see unvarnished comps, hidden property risks, and claim your buyer closing cost rebate. Human and AI assisted real estate intelligence at DysonHomes.com.`;
@@ -62,7 +78,7 @@ export default function AdminDysonHomesCopilot() {
             </div>
           </div>
           <p className="text-xs text-white/70 mt-1 max-w-2xl leading-relaxed">
-            Locked 3-page vertical scroll: Page 1 Landing, Page 2 Team Rail &amp; Chat, Page 3 Chat + Dossier.
+            Consolidated 2-page flow: Page 1 Landing &amp; Search, Page 2 Fiduciary Command Center (Minions Rail + 3-Way Dialogue + Property Audit).
           </p>
         </div>
 

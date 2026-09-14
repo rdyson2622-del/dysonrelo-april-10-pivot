@@ -32,10 +32,8 @@ const NAV_SECTIONS = [
     children: [
       { isCommsBadge: true },
       { label: '✨ DYSONHOMES COPILOT LAB', path: '/admin/dysonhomes-copilot', icon: Sparkles, highlight: true },
-      { label: '↳ Page 1: Landing Page (Private Wealth)', path: '/admin/dysonhomes-copilot?page=1', icon: Home, indent: true },
-      { label: '↳ Page 2: Chat Canvas ("What can I help you with?")', path: '/admin/dysonhomes-copilot?page=2', icon: MessageCircle, indent: true },
-      { label: '↳ Page 3: Live Dossier Split (Two-Column)', path: '/admin/dysonhomes-copilot?page=3', icon: FileText, indent: true },
-      { label: '↳ Page 4: Team Rail (Fiduciary Roster)', path: '/admin/dysonhomes-copilot?page=4', icon: Users, indent: true },
+      { label: '↳ Page 1: Landing & Property Search', path: '/admin/dysonhomes-copilot?page=1', icon: Home, indent: true },
+      { label: '↳ Page 2: Fiduciary Command Center', path: '/admin/dysonhomes-copilot?page=2', icon: FileText, indent: true },
       { label: '📱 10 PLATFORM APPS & SPRINGBOARD SPECS', path: '/admin/app-store-mockup', icon: Star, highlight: true },
       { isWorkingModelsScroll: true },
       { label: '📞 Relocation Call Desk', path: '/admin/relocation-call-desk', icon: PhoneCall, highlight: true },
@@ -409,38 +407,27 @@ export default function AdminSidebar() {
           </span>
         </Link>
 
-        {/* Sub-links matching 3-page sequence */}
+        {/* Sub-links matching 2-page consolidated sequence */}
         <div className="pt-1 space-y-0.5">
           <Link
             to="/admin/dysonhomes-copilot?page=1"
             className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white hover:text-[#D4AF37] hover:bg-white/5 transition-all group"
-            title="Page 1: Landing Page (Private Wealth)"
+            title="Page 1: Landing & Property Search (Private Wealth)"
           >
             <Home className="w-3.5 h-3.5 text-stone-400 group-hover:text-[#D4AF37] shrink-0" />
             <span className="text-[11px] font-semibold text-white group-hover:text-[#D4AF37] truncate">
-              ↳ Page 1: Landing Page (Private Wealth)
+              ↳ Page 1: Landing &amp; Property Search
             </span>
           </Link>
 
           <Link
             to="/admin/dysonhomes-copilot?page=2"
             className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white hover:text-[#D4AF37] hover:bg-white/5 transition-all group"
-            title="Page 2: Team Rail (Fiduciary Roster & Chat)"
-          >
-            <Users className="w-3.5 h-3.5 text-stone-400 group-hover:text-[#D4AF37] shrink-0" />
-            <span className="text-[11px] font-semibold text-white group-hover:text-[#D4AF37] truncate">
-              ↳ Page 2: Team Rail (Fiduciary Roster &amp; Chat)
-            </span>
-          </Link>
-
-          <Link
-            to="/admin/dysonhomes-copilot?page=3"
-            className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white hover:text-[#D4AF37] hover:bg-white/5 transition-all group"
-            title="Page 3: Live Dossier Split (Two-Column)"
+            title="Page 2: Fiduciary Command Center & Dossier"
           >
             <FileText className="w-3.5 h-3.5 text-stone-400 group-hover:text-[#D4AF37] shrink-0" />
             <span className="text-[11px] font-semibold text-white group-hover:text-[#D4AF37] truncate">
-              ↳ Page 3: Live Dossier Split (Two-Column)
+              ↳ Page 2: Fiduciary Command Center
             </span>
           </Link>
         </div>
