@@ -19,10 +19,11 @@ const DEFAULT_SHOW_HEADLINE = 'San Diego Housing Inventory Remains Constrained A
 export default function CopilotDossierNewsPanel({
   property,
   dossierData,
-  activeView = 'dossier', // 'dossier' | 'news'
+  activeView = 'dossier', // 'dossier' | 'news' | 'solutions'
   onViewChange,
   isExploded = false,
   onToggleExplode,
+  onExplodeItem,
   onPromptClick,
   onOpenCaptureModal,
   isSubscriber = false,
@@ -153,26 +154,27 @@ export default function CopilotDossierNewsPanel({
             </span>
           )}
 
-          {activeView === 'news' && (
-            <button
-              type="button"
-              onClick={onToggleExplode}
-              className="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-[#D4AF37]/50 text-[#D4AF37] font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
-              title={isExploded ? "Collapse to Split Screen" : "Explode to Full Page Theater"}
-            >
-              {isExploded ? (
-                <>
-                  <Minimize2 className="w-3.5 h-3.5 text-[#D4AF37]" />
-                  <span>Collapse View</span>
-                </>
-              ) : (
-                <>
-                  <Maximize2 className="w-3.5 h-3.5 text-[#D4AF37]" />
-                  <span>Explode to Full Page</span>
-                </>
-              )}
-            </button>
-          )}
+          {/* Universal Explode Action for any active view (News, Solutions, or Property Audit) */}
+          <button
+            type="button"
+            onClick={onToggleExplode}
+            className="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-[#D4AF37]/15 border border-[#D4AF37]/60 text-[#D4AF37] font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+            title={isExploded ? "Collapse to Split Screen" : "Explode Entire Page to Full Screen"}
+          >
+            {isExploded ? (
+              <>
+                <Minimize2 className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span className="hidden sm:inline">Collapse View</span>
+                <span className="sm:hidden">Exit</span>
+              </>
+            ) : (
+              <>
+                <Maximize2 className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span className="hidden sm:inline">Explode to Full Page</span>
+                <span className="sm:hidden">Explode</span>
+              </>
+            )}
+          </button>
 
           <span className="text-[9px] text-stone-500 font-mono hidden sm:inline-block">
             {activeView === 'dossier' 
@@ -188,7 +190,10 @@ export default function CopilotDossierNewsPanel({
           VIEW: REAL ESTATE SOLUTIONS & INTELLIGENCE VAULT
           ───────────────────────────────────────────────────────────── */}
       {activeView === 'solutions' && (
-        <CopilotSolutionsVault onPromptClick={onPromptClick} />
+        <CopilotSolutionsVault 
+          onPromptClick={onPromptClick} 
+          onExplodePlaybook={(item) => onExplodeItem?.(item)}
+        />
       )}
 
       {/* ─────────────────────────────────────────────────────────────

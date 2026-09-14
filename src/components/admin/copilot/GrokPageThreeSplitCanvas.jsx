@@ -11,6 +11,7 @@ import CopilotMiniAppsRail from '@/components/copilot/CopilotMiniAppsRail';
 import CopilotThreeWayDemo from '@/components/copilot/CopilotThreeWayDemo';
 import CopilotDossierNewsPanel from '@/components/copilot/CopilotDossierNewsPanel';
 import CopilotContactCaptureModal from '@/components/copilot/CopilotContactCaptureModal';
+import CopilotExplodedSubjectModal from '@/components/copilot/CopilotExplodedSubjectModal';
 import { COPILOT_EXPLAINERS, findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { getPropertyDossier } from './propertyDossierData';
 
@@ -19,8 +20,9 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
   const [activeExplainer, setActiveExplainer] = useState(null);
   const [isConsumerTransmitting, setIsConsumerTransmitting] = useState(false);
   const [activeDemoSpeaker, setActiveDemoSpeaker] = useState(null);
-  const [rightPanelView, setRightPanelView] = useState('dossier'); // 'dossier' | 'news'
-  const [isNewsExploded, setIsNewsExploded] = useState(false);
+  const [rightPanelView, setRightPanelView] = useState('dossier'); // 'dossier' | 'news' | 'solutions'
+  const [isPageExploded, setIsPageExploded] = useState(false);
+  const [selectedExplodedItem, setSelectedExplodedItem] = useState(null);
   const [isCaptureModalOpen, setIsCaptureModalOpen] = useState(false);
   const [isSubscriber, setIsSubscriber] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -287,6 +289,16 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
               <span>Daily News</span>
             </button>
           </div>
+
+          {/* Dedicated Explode Button in Header - Especially Handy for Portrait Mobile Screens */}
+          <button
+            type="button"
+            onClick={() => setIsPageExploded(true)}
+            className="px-2.5 py-1 rounded-lg bg-[#D4AF37]/15 hover:bg-[#D4AF37]/30 border border-[#D4AF37]/60 text-[#D4AF37] text-[10px] sm:text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ml-1 shadow-sm"
+            title="Explode this view to full screen (ideal for portrait mobile devices)"
+          >
+            <span>⛶ Explode View</span>
+          </button>
         </div>
 
         {/* Center / Right: Brand Header with Italicized Copilot */}
@@ -603,8 +615,12 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             dossierData={dossierData}
             activeView={rightPanelView}
             onViewChange={setRightPanelView}
-            isExploded={isNewsExploded}
-            onToggleExplode={() => setIsNewsExploded(prev => !prev)}
+            isExploded={isPageExploded}
+            onToggleExplode={() => setIsPageExploded(prev => !prev)}
+            onExplodeItem={(item) => {
+              setSelectedExplodedItem(item);
+              setIsPageExploded(true);
+            }}
             onPromptClick={handlePillClick}
             onOpenCaptureModal={() => setIsCaptureModalOpen(true)}
             isSubscriber={isSubscriber}
@@ -612,6 +628,25 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         </div>
 
       </div>
+
+      {/* ── FULL-PAGE EXPLODED SUBJECT THEATER (VIDEOS, STORIES, SOLUTIONS, PROPERTY AUDIT) ── */}
+      <CopilotExplodedSubjectModal
+        isOpen={isPageExploded}
+        onClose={() => {
+          setIsPageExploded(false);
+          setSelectedExplodedItem(null);
+        }}
+        subjectType={rightPanelView}
+        activeView={rightPanelView}
+        onViewChange={setRightPanelView}
+        selectedItem={selectedExplodedItem}
+        onSelectItem={setSelectedExplodedItem}
+        dossierData={dossierData}
+        property={property}
+        onPromptClick={handlePillClick}
+        onOpenCaptureModal={() => setIsCaptureModalOpen(true)}
+        isSubscriber={isSubscriber}
+      />
 
       {/* ── CONTACT CAPTURE MODAL (ZERO-PRESSURE SUBSCRIBER ONBOARDING) ── */}
       <CopilotContactCaptureModal

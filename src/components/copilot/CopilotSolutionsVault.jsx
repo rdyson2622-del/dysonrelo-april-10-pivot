@@ -112,7 +112,7 @@ export const SOLUTIONS_LIBRARY = [
   }
 ];
 
-export default function CopilotSolutionsVault({ onPromptClick }) {
+export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
@@ -262,11 +262,16 @@ export default function CopilotSolutionsVault({ onPromptClick }) {
                 </div>
               </div>
 
-              {/* Action Button: Connects Directly to the Left Column Dialogue Engine */}
-              <div className="pt-2 border-t border-white/10 flex items-center justify-between">
-                <span className="text-[9.5px] text-stone-500 font-mono">
-                  DRE #00609384 Fiduciary
-                </span>
+              {/* Action Buttons: Explode Protocol & Ask in Dialogue */}
+              <div className="pt-2 border-t border-white/10 flex items-center justify-between gap-1">
+                <button
+                  type="button"
+                  onClick={() => onExplodePlaybook?.(sol)}
+                  className="text-[10px] text-[#D4AF37] hover:underline font-semibold flex items-center gap-1 cursor-pointer"
+                  title="Explode this playbook to full screen"
+                >
+                  <span>⛶ Explode</span>
+                </button>
 
                 <button
                   type="button"
