@@ -97,134 +97,129 @@ export default function CopilotPublicReadOnlyTeamRail({ onAskAddress, onBackToLa
   return (
     <div className="w-full rounded-2xl border border-[#D4AF37]/50 shadow-2xl overflow-hidden text-left bg-[#050505] flex flex-col lg:flex-row">
       
-      {/* ── FAR-LEFT REDESIGNED TEAM & MINI APPS RAIL ── */}
-      <aside className="w-full lg:w-[310px] xl:w-[325px] bg-[#0c0c0c] border-b lg:border-b-0 lg:border-r border-white/10 p-4 sm:p-5 flex flex-col shrink-0 select-none max-h-[920px] overflow-y-auto">
-        <div className="space-y-4">
+      {/* ── FAR-LEFT COMPACT TEAM & MINI APPS RAIL (REDUCED TO ~55% WIDTH) ── */}
+      <aside className="w-full lg:w-[175px] xl:w-[185px] bg-[#0c0c0c] border-b lg:border-b-0 lg:border-r border-white/10 p-2.5 sm:p-3 flex flex-col shrink-0 select-none max-h-[920px] overflow-y-auto">
+        <div className="space-y-3">
           
-          {/* Top: D&D Brand Header */}
-          <div className="flex items-center gap-3 pb-3 border-b border-white/10">
-            <DysonVerticalBadge height={44} />
+          {/* Top: Compact D&D Brand Header */}
+          <div className="flex flex-col items-center text-center pb-2.5 border-b border-white/10 gap-1">
+            <DysonVerticalBadge height={36} />
             <div>
-              <h2 className="text-sm font-serif font-bold text-white tracking-wider" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+              <h2 className="text-[11px] font-serif font-bold text-white tracking-wider leading-tight" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                 DYSON &amp; DYSON
               </h2>
-              <span className="text-[9px] uppercase tracking-widest text-[#D4AF37] block font-mono font-semibold">
+              <span className="text-[7.5px] uppercase tracking-widest text-[#D4AF37] block font-mono font-semibold">
                 FIDUCIARY TEAM
               </span>
             </div>
           </div>
 
           {/* View Only Pill */}
-          <div className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between text-xs">
-            <div className="flex items-center gap-1.5 text-stone-300">
-              <Eye className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span className="text-[11px] font-semibold">Public Team Roster</span>
+          <div className="px-2 py-1 rounded-lg bg-white/5 border border-white/10 flex items-center justify-between text-[10px]">
+            <div className="flex items-center gap-1 text-stone-300 min-w-0">
+              <Eye className="w-3 h-3 text-[#D4AF37] shrink-0" />
+              <span className="text-[9px] font-semibold truncate">Team Roster</span>
             </div>
-            <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/10 text-stone-400 font-mono uppercase tracking-wider">
-              VIEW ONLY
+            <span className="text-[7px] px-1 py-0.5 rounded bg-white/10 text-stone-400 font-mono uppercase tracking-wider shrink-0">
+              VIEW
             </span>
           </div>
 
-          {/* ── 1. BOB AT THE TOP (HEADSHOT IN BLACK SHIRT IN A BOX) ── */}
-          <div className="space-y-1.5">
-            <span className="text-[9.5px] font-bold uppercase tracking-wider text-[#D4AF37] block">
-              PRINCIPAL BROKER (HUMAN)
+          {/* ── 1. BOB DYSON: VERTICAL / SQUARE CARD ── */}
+          <div className="space-y-1">
+            <span className="text-[8px] font-bold uppercase tracking-wider text-[#D4AF37] block text-center">
+              PRINCIPAL BROKER
             </span>
-            <div className="p-2.5 rounded-xl bg-[#141414] border border-[#D4AF37]/40 space-y-2 shadow-md">
-              <div className="flex items-center gap-2.5">
-                {/* Bob Photo in a Box (Headshot in Black Shirt) */}
-                <div className="w-12 h-12 rounded-lg overflow-hidden border border-[#D4AF37]/60 shrink-0 bg-black shadow-md">
+            <div className="p-2 rounded-xl bg-[#141414] border border-[#D4AF37]/40 flex flex-col items-center text-center space-y-1.5 shadow-md">
+              {/* Bob Photo */}
+              <div className="relative pt-0.5">
+                <div className="w-14 h-14 rounded-lg overflow-hidden border border-[#D4AF37]/60 shrink-0 bg-black shadow-md">
                   <img 
                     src={BOB_HEADSHOT} 
-                    alt="Bob Dyson Headshot in Black Shirt" 
+                    alt="Bob Dyson Headshot" 
                     className="w-full h-full object-cover object-top"
                   />
                 </div>
-
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between gap-1">
-                    <h4 className="text-xs font-bold text-white truncate">Bob Dyson</h4>
-                    <span className="text-[8.5px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono font-bold shrink-0">
-                      ACTIVE
-                    </span>
-                  </div>
-                  <span className="text-[10px] text-stone-300 font-medium block truncate">
-                    Principal &amp; Fiduciary
-                  </span>
-                  <span className="text-[9px] text-[#D4AF37]/90 font-mono block">
-                    DRE #00609384
-                  </span>
-                </div>
+                <span className="text-[7.5px] px-1.5 py-0.5 rounded bg-emerald-500/90 text-black font-mono font-bold absolute -bottom-1 left-1/2 -translate-x-1/2 shadow whitespace-nowrap">
+                  ACTIVE
+                </span>
               </div>
 
-              <p className="text-[10px] text-stone-400 leading-snug pt-0.5 border-t border-white/5">
-                Licensed California Broker. 35+ years luxury representation &amp; closing rebate audit.
+              <div className="w-full pt-0.5 space-y-0.5">
+                <h4 className="text-[11px] font-bold text-white truncate">Bob Dyson</h4>
+                <span className="text-[9px] text-stone-300 font-medium block leading-tight">
+                  Principal &amp; Fiduciary
+                </span>
+                <span className="text-[8px] text-[#D4AF37]/90 font-mono block">
+                  DRE #00609384
+                </span>
+              </div>
+
+              <p className="text-[8px] text-stone-400 leading-tight pt-1 border-t border-white/5 w-full">
+                Licensed CA Broker. 35+ yrs luxury representation &amp; rebate audit.
               </p>
             </div>
           </div>
 
-          {/* ── 2. CHARLIE IN A BOX AT HIS DESK AND COMPUTER ── */}
-          <div className="space-y-1.5">
-            <span className="text-[9.5px] font-bold uppercase tracking-wider text-emerald-400 block">
-              THE FACE OF COPILOT (AI CONCIERGE)
+          {/* ── 2. CHARLIE SIMMONS: VERTICAL / SQUARE CARD ── */}
+          <div className="space-y-1">
+            <span className="text-[8px] font-bold uppercase tracking-wider text-emerald-400 block text-center">
+              THE FACE OF COPILOT
             </span>
-            <div className="p-2.5 rounded-xl bg-[#141414] border border-emerald-500/40 space-y-2 shadow-md">
-              <div className="flex items-center gap-2.5">
-                {/* Charlie at Desk & Computer */}
-                <div className="w-12 h-12 rounded-lg overflow-hidden border border-emerald-500/60 shrink-0 bg-black shadow-md relative">
+            <div className="p-2 rounded-xl bg-[#141414] border border-emerald-500/40 flex flex-col items-center text-center space-y-1.5 shadow-md">
+              {/* Charlie Desk Photo */}
+              <div className="relative pt-0.5">
+                <div className="w-14 h-14 rounded-lg overflow-hidden border border-emerald-500/60 shrink-0 bg-black shadow-md">
                   <img 
                     src={CHARLIE_DESK_PHOTO} 
-                    alt="Charlie Simmons at Desk with Computer" 
+                    alt="Charlie Simmons at Desk" 
                     className="w-full h-full object-cover"
                   />
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 absolute bottom-0.5 right-0.5 ring-2 ring-black animate-pulse" />
                 </div>
-
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between gap-1">
-                    <h4 className="text-xs font-bold text-white truncate">Charlie Simmons</h4>
-                    <span className="text-[8px] px-1.5 py-0.5 rounded bg-emerald-500/25 text-emerald-300 font-bold shrink-0">
-                      LIVE CONVERSATION
-                    </span>
-                  </div>
-                  <span className="text-[10px] text-stone-300 font-medium block truncate">
-                    Voice &amp; Market Concierge
-                  </span>
-                  <span className="text-[9px] text-[#D4AF37] font-serif italic block">
-                    The Face of CoPilot
-                  </span>
-                </div>
+                <span className="text-[7px] px-1.5 py-0.5 rounded bg-emerald-500 text-black font-bold absolute -bottom-1 left-1/2 -translate-x-1/2 shadow whitespace-nowrap">
+                  LIVE CHAT
+                </span>
               </div>
 
-              <p className="text-[10px] text-stone-400 leading-snug pt-0.5 border-t border-white/5">
-                AI Concierge at the DNN Desk. Full property comps, risk checks &amp; closing rebate audit.
+              <div className="w-full pt-0.5 space-y-0.5">
+                <h4 className="text-[11px] font-bold text-white truncate">Charlie Simmons</h4>
+                <span className="text-[9px] text-stone-300 font-medium block leading-tight">
+                  Voice &amp; Concierge
+                </span>
+                <span className="text-[8px] text-[#D4AF37] font-serif italic block">
+                  The Face of CoPilot
+                </span>
+              </div>
+
+              <p className="text-[8px] text-stone-400 leading-tight pt-1 border-t border-white/5 w-full">
+                AI Concierge at DNN Desk. Full comps, risk checks &amp; rebate audit.
               </p>
             </div>
           </div>
 
-          {/* ── 3. MINI APPS IN A SINGLE ROW WITH LOWER IDENTIFIERS (RUN DOWN IN A SINGULAR LINE) ── */}
-          <div className="space-y-2 pt-1">
-            <div className="flex items-center justify-between">
-              <span className="text-[9.5px] font-bold uppercase tracking-wider text-stone-400">
-                SPECIALIZED AI SYSTEMS &amp; MINI APPS
+          {/* ── 3. COMPACT MINI APPS LIST ── */}
+          <div className="space-y-1 pt-0.5">
+            <div className="flex items-center justify-between px-0.5">
+              <span className="text-[7.5px] font-bold uppercase tracking-wider text-stone-400 truncate">
+                MINI APPS
               </span>
-              <span className="text-[8.5px] text-stone-500 font-mono">SEE-ONLY</span>
+              <span className="text-[7px] text-stone-500 font-mono">SEE-ONLY</span>
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-1">
               {MINI_APPS.map((app) => {
                 const IconComponent = app.icon;
                 return (
                   <div
                     key={app.name}
-                    className="p-2 rounded-xl bg-[#121212] hover:bg-[#181818] border border-white/5 hover:border-white/15 flex items-center justify-between transition-all cursor-default group"
+                    className="p-1.5 rounded-lg bg-[#121212] hover:bg-[#181818] border border-white/5 hover:border-white/15 flex items-center justify-between transition-all cursor-default group"
                   >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      {/* Vibrant Mini-App Icon Squircle */}
-                      <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${app.gradient} border ${app.border} flex items-center justify-center shrink-0 shadow-sm relative`}>
-                        <IconComponent className={`w-4 h-4 ${app.iconColor}`} />
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      {/* Mini-App Icon */}
+                      <div className={`w-6 h-6 rounded-md bg-gradient-to-br ${app.gradient} border ${app.border} flex items-center justify-center shrink-0 shadow-sm relative`}>
+                        <IconComponent className={`w-3 h-3 ${app.iconColor}`} />
                         {app.badge && (
-                          <span className={`absolute -top-1 -right-1 text-[7.5px] font-bold px-1 rounded-full ${
+                          <span className={`absolute -top-1 -right-1 text-[6.5px] font-bold px-0.5 rounded-full ${
                             app.badge === 'LIVE' 
                               ? 'bg-rose-500 text-white animate-pulse' 
                               : 'bg-rose-600 text-white'
@@ -234,18 +229,18 @@ export default function CopilotPublicReadOnlyTeamRail({ onAskAddress, onBackToLa
                         )}
                       </div>
 
-                      {/* Name + Lower Identifier */}
+                      {/* Name + Identifier */}
                       <div className="min-w-0">
-                        <div className="text-[11.5px] font-semibold text-stone-200 group-hover:text-white truncate leading-tight">
+                        <div className="text-[9.5px] font-semibold text-stone-200 group-hover:text-white truncate leading-tight">
                           {app.name}
                         </div>
-                        <div className="text-[9.5px] text-stone-400 group-hover:text-stone-300 truncate leading-tight mt-0.5">
+                        <div className="text-[7.5px] text-stone-400 group-hover:text-stone-300 truncate leading-tight mt-0.5">
                           {app.identifier}
                         </div>
                       </div>
                     </div>
 
-                    <Lock className="w-3 h-3 text-stone-600 group-hover:text-stone-500 shrink-0 ml-1.5" />
+                    <Lock className="w-2.5 h-2.5 text-stone-600 group-hover:text-stone-500 shrink-0 ml-1" />
                   </div>
                 );
               })}
@@ -255,8 +250,8 @@ export default function CopilotPublicReadOnlyTeamRail({ onAskAddress, onBackToLa
         </div>
 
         {/* Footer Notice */}
-        <div className="pt-3 mt-4 border-t border-white/10 text-[9.5px] text-stone-500 leading-snug">
-          Specialist units operate in background support under Bob Dyson's California broker license.
+        <div className="pt-2 mt-3 border-t border-white/10 text-[7.5px] text-stone-500 leading-tight text-center">
+          Under Bob Dyson's CA Broker License #00609384.
         </div>
       </aside>
 
