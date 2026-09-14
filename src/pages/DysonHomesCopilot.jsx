@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { ArrowDown, Shield, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '@/lib/AuthContext';
@@ -16,6 +16,7 @@ export default function DysonHomesCopilot({ initialPage }) {
   const page1Ref = useRef(null);
   const page2Ref = useRef(null);
   const page3Ref = useRef(null);
+  const [analyzedProperty, setAnalyzedProperty] = useState('742 Vista Del Mar, La Jolla, CA 92037');
 
   const scrollToSection = (ref, pageNum, path) => {
     if (ref && ref.current) {
@@ -111,7 +112,11 @@ export default function DysonHomesCopilot({ initialPage }) {
         <section id="page-1" ref={page1Ref} className="w-full max-w-7xl scroll-mt-24">
           <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
             <SlideFourPrivateWealth
-              onRunAudit={() => {
+              onRunAudit={(addr) => {
+                if (addr) setAnalyzedProperty(addr);
+              }}
+              onOpenDossier={(addr) => {
+                if (addr) setAnalyzedProperty(addr);
                 scrollToSection(page3Ref, 3, '/dossier');
               }}
               onGoToChatCanvas={() => {
@@ -125,7 +130,8 @@ export default function DysonHomesCopilot({ initialPage }) {
         <section id="page-2" ref={page2Ref} className="w-full max-w-7xl scroll-mt-24">
           <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
             <CopilotPublicReadOnlyTeamRail
-              onAskAddress={() => {
+              onAskAddress={(addr) => {
+                if (addr) setAnalyzedProperty(addr);
                 scrollToSection(page3Ref, 3, '/dossier');
               }}
               onBackToLanding={() => {
@@ -139,6 +145,7 @@ export default function DysonHomesCopilot({ initialPage }) {
         <section id="page-3" ref={page3Ref} className="w-full max-w-7xl scroll-mt-24">
           <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
             <GrokPageThreeSplitCanvas
+              property={analyzedProperty}
               onBackToSearch={() => {
                 scrollToSection(page1Ref, 1, '/');
               }}

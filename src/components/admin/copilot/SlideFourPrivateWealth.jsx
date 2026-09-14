@@ -15,26 +15,55 @@ const SAMPLE_SEARCHES = [
   '4220 Oak Hollow Terrace, Austin, TX 78746'
 ];
 
-export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas }) {
+function normalizeAddress(raw) {
+  if (!raw) return '';
+  return raw.trim().replace(/\s+/g, ' ');
+}
+
+export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGoToChatCanvas }) {
   const [address, setAddress] = useState('742 Vista Del Mar, La Jolla, CA 92037');
+  const [normalizedAddress, setNormalizedAddress] = useState('742 Vista Del Mar, La Jolla, CA 92037');
   const [isAuditing, setIsAuditing] = useState(false);
   const [auditComplete, setAuditComplete] = useState(false);
+  const [workflowStep, setWorkflowStep] = useState(2);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
   const handleSubmit = (e, customAddr) => {
     if (e) e.preventDefault();
     const targetAddr = customAddr || address;
-    if (!targetAddr.trim()) return;
+    const cleanAddr = normalizeAddress(targetAddr);
+    if (!cleanAddr) return;
 
     setIsAuditing(true);
     setAuditComplete(false);
+    setNormalizedAddress(cleanAddr);
+    setWorkflowStep(3);
 
-    if (onRunAudit) onRunAudit(targetAddr);
+    if (onRunAudit) onRunAudit(cleanAddr);
 
     setTimeout(() => {
       setIsAuditing(false);
       setAuditComplete(true);
+      setWorkflowStep(4);
     }, 500);
+  };
+
+  const handleOpenDossier = () => {
+    const target = normalizedAddress || normalizeAddress(address);
+    if (!target) return;
+
+    setWorkflowStep(5);
+
+    if (onOpenDossier) {
+      onOpenDossier(target);
+    } else if (onRunAudit) {
+      onRunAudit(target);
+    }
+
+    const dossierSection = document.getElementById('page-3');
+    if (dossierSection) {
+      dossierSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   const handleToggleAudio = () => {
@@ -183,16 +212,29 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
             className="w-full h-full object-cover origin-bottom-left scale-[1.20] translate-y-[2%] -translate-x-[2%]"
           />
           {auditComplete && (
-            <div className="absolute bottom-3 left-3 right-3 p-2.5 rounded-xl bg-black/90 backdrop-blur-md border border-[#10b981]/60 text-white text-xs flex items-center justify-between shadow-xl">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#10b981]" />
+            <div 
+              onClick={handleOpenDossier}
+              className="absolute bottom-3 left-3 right-3 p-2.5 rounded-xl bg-black/90 backdrop-blur-md border border-[#10b981]/60 hover:border-[#10b981] text-white text-xs flex items-center justify-between shadow-xl cursor-pointer transition-all"
+            >
+              <div className="flex items-center gap-2 min-w-0 pr-2">
+                <CheckCircle2 className="w-4 h-4 text-[#10b981] shrink-0" />
                 <span className="text-[11px] font-semibold truncate">
-                  Audit Ready for {address.split(',')[0]}
+                  Audit Ready for {(normalizedAddress || address).split(',')[0]}
                 </span>
               </div>
-              <span className="text-[10px] text-[#D4AF37] font-bold tracking-wider uppercase">
-                REPORT GENERATED &darr;
-              </span>
+              <button
+                type="button"
+                id="btn-report-generated-dossier"
+                aria-label={`Open generated report for ${normalizedAddress || address}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenDossier();
+                }}
+                className="text-[10px] text-[#D4AF37] hover:text-[#e8c84a] font-bold tracking-wider uppercase bg-transparent border-0 cursor-pointer flex items-center gap-1 transition-colors hover:underline focus:outline-none focus:ring-1 focus:ring-[#D4AF37] rounded px-1.5 py-0.5 shrink-0"
+              >
+                <span>REPORT GENERATED</span>
+                <span aria-hidden="true">&darr;</span>
+              </button>
             </div>
           )}
         </div>

@@ -19,6 +19,7 @@ export default function AdminDysonHomesCopilot() {
   const page1Ref = useRef(null);
   const page2Ref = useRef(null);
   const page3Ref = useRef(null);
+  const [analyzedProperty, setAnalyzedProperty] = useState('742 Vista Del Mar, La Jolla, CA 92037');
 
   const scrollToSection = (ref) => {
     if (ref && ref.current) {
@@ -219,7 +220,11 @@ export default function AdminDysonHomesCopilot() {
               </div>
 
               <SlideFourPrivateWealth
-                onRunAudit={() => {
+                onRunAudit={(addr) => {
+                  if (addr) setAnalyzedProperty(addr);
+                }}
+                onOpenDossier={(addr) => {
+                  if (addr) setAnalyzedProperty(addr);
                   scrollToSection(page3Ref);
                 }}
                 onGoToChatCanvas={() => {
@@ -261,7 +266,8 @@ export default function AdminDysonHomesCopilot() {
               </div>
 
               <CopilotPublicReadOnlyTeamRail
-                onAskAddress={() => {
+                onAskAddress={(addr) => {
+                  if (addr) setAnalyzedProperty(addr);
                   scrollToSection(page3Ref);
                 }}
                 onBackToLanding={() => {
@@ -303,6 +309,7 @@ export default function AdminDysonHomesCopilot() {
               </div>
 
               <GrokPageThreeSplitCanvas
+                property={analyzedProperty}
                 onBackToSearch={() => {
                   scrollToSection(page1Ref);
                 }}

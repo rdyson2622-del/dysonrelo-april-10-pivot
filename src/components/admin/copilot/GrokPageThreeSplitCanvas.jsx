@@ -155,7 +155,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
           {/* Header */}
           <div className="pb-1">
             <span className="text-[10.5px] font-bold tracking-widest text-[#D4AF37] uppercase font-mono">
-              DOSSIER • 742 VISTA DEL MAR
+              DOSSIER • {(property || '742 Vista Del Mar').split(',')[0].toUpperCase()}
             </span>
           </div>
 

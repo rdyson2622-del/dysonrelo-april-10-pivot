@@ -1,18 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Paperclip, Send, Sparkles, Shield, User, Volume2, ShieldCheck, Briefcase } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
-import CopilotAvatarSlot from '@/components/copilot/CopilotAvatarSlot';
+import CopilotAvatarSlot, { CHARLIE_HEADSHOT } from '@/components/copilot/CopilotAvatarSlot';
 import { COPILOT_EXPLAINERS, findExplainerByQuery } from '@/components/copilot/copilotExplainers';
+import { CHARLIE_COPILOT_LIVE_PROMPT } from '@/lib/charlieSimmonsPrompt';
+
+function isAddressLike(str) {
+  if (!str) return false;
+  const s = str.trim().toLowerCase();
+  if (/^\d+\s+[a-z0-9\s.,#-]+/i.test(s) && (
+    /\b(st|street|ave|avenue|rd|road|blvd|boulevard|dr|drive|way|ct|court|lane|ln|cir|circle|ter|terrace|pl|place|hwy|highway|pkwy|parkway)\b/i.test(s) ||
+    /,\s*[a-z]{2}\b/i.test(s) ||
+    /\b\d{5}\b/.test(s) ||
+    s.includes('vista del mar') ||
+    s.includes('mountain shadow') ||
+    s.includes('oak hollow')
+  )) {
+    return true;
+  }
+  if (s.includes('vista del mar') || s.includes('mountain shadow') || s.includes('oak hollow')) {
+    return true;
+  }
+  return false;
+}
 
 export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, onBackToLanding, hideBadge = false }) {
   const [inputValue, setInputValue] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [activeExplainer, setActiveExplainer] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const chatBottomRef = useRef(null);
+
+  useEffect(() => {
+    if (chatBottomRef.current) {
+      chatBottomRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, isTyping]);
 
   const handlePillClick = (query) => {
     const explainer = findExplainerByQuery(query);
     if (explainer?.videoUrl) {
       setActiveExplainer(explainer);
+      setMessages(prev => [
+        ...prev,
+        { id: Date.now(), sender: 'user', text: query },
+        { 
+          id: Date.now() + 1, 
+          sender: 'charlie', 
+          text: explainer.textAnswer || `Playing the explainer for "${explainer.label}" in the Copilot slot above.` 
+        }
+      ]);
     } else {
       setActiveExplainer(null);
       if (onAskAddress) {
@@ -21,19 +60,92 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, on
     }
   };
 
-  const handleSubmit = (e, customText) => {
+  const handleSubmit = async (e, customText) => {
     if (e) e.preventDefault();
-    const query = customText || inputValue;
-    if (!query.trim()) return;
+    const query = (customText || inputValue).trim();
+    if (!query) return;
 
-    const explainer = findExplainerByQuery(query.trim());
+    setInputValue('');
+
+    // 1. Canned prompt pill check -> plays MP4 explainer
+    const explainer = findExplainerByQuery(query);
     if (explainer?.videoUrl) {
       setActiveExplainer(explainer);
-    } else {
+      setMessages(prev => [
+        ...prev,
+        { id: Date.now(), sender: 'user', text: query },
+        { 
+          id: Date.now() + 1, 
+          sender: 'charlie', 
+          text: explainer.textAnswer || `Playing the explainer for "${explainer.label}" in the Copilot slot above.` 
+        }
+      ]);
+      return;
+    }
+
+    // 2. Address-shaped input -> opens Page 3 Dossier
+    if (isAddressLike(query)) {
       setActiveExplainer(null);
+      setMessages(prev => [
+        ...prev,
+        { id: Date.now(), sender: 'user', text: query },
+        { 
+          id: Date.now() + 1, 
+          sender: 'charlie', 
+          text: `Auditing ${query} for honest comps, hidden risks, and closing-cost rebates. Opening your dossier now.` 
+        }
+      ]);
       if (onAskAddress) {
-        onAskAddress(query.trim());
+        setTimeout(() => {
+          onAskAddress(query);
+        }, 500);
       }
+      return;
+    }
+
+    // 3. Non-address free-text question -> Real Charlie LLM response appended
+    setActiveExplainer(null);
+    setMessages(prev => [
+      ...prev,
+      { id: Date.now(), sender: 'user', text: query }
+    ]);
+    setIsTyping(true);
+
+    try {
+      const res = await base44.integrations.Core.InvokeLLM({
+        prompt: `${CHARLIE_COPILOT_LIVE_PROMPT}
+
+You are Charlie Simmons answering a live question typed into the DysonHomes Copilot Chat Canvas.
+Provide a concise, authoritative, articulate 2 to 3 sentence fiduciary answer based on Bob Dyson's 55+ years of real estate brokerage leadership.
+Remember: 0 fees for buyers, 25% broker-to-broker referral compensation, closing rebates where allowed by law, and refer to licensed CPA/attorney for legal/tax decisions.
+
+User question: "${query}"`
+      });
+
+      const replyText = typeof res === 'string' 
+        ? res 
+        : (res?.output || res?.reply || res?.text || (typeof res === 'object' ? Object.values(res)[0] : 'I am here to guide your transaction.'));
+
+      setMessages(prev => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          sender: 'charlie',
+          text: String(replyText).replace(/^["']|["']$/g, '').trim()
+        }
+      ]);
+    } catch (err) {
+      console.warn('Charlie InvokeLLM error:', err);
+      setMessages(prev => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          sender: 'charlie',
+          text: "As an independent fiduciary real estate concierge backed by Dyson & Dyson (CA DRE #02303118), our team reviews contracts, contingency timelines, and micro-comps directly. How can we assist with your target market or property?"
+        }
+      ]);
+    } finally {
+      setIsTyping(false);
     }
   };
 
@@ -91,7 +203,7 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, on
       </div>
 
       {/* ── CENTER CONTENT (Shifted left 5% and lowered another 10% for clear separation) ── */}
-      <div className="w-full max-w-xl xl:max-w-2xl mx-auto text-center space-y-5 pt-24 sm:pt-32 pb-8 sm:pb-12 my-auto translate-y-[10%] -translate-x-[5%] transition-transform">
+      <div className="w-full max-w-xl xl:max-w-2xl mx-auto text-center space-y-4 pt-16 sm:pt-24 pb-8 sm:pb-12 my-auto translate-y-[6%] -translate-x-[5%] transition-transform">
         {/* Mobile/Tablet Fallback: Avatar Slot above heading */}
         <div className="lg:hidden w-full max-w-xs mx-auto mb-2">
           <CopilotAvatarSlot 
@@ -101,21 +213,55 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, on
           />
         </div>
 
-        {/* Headline greeting */}
-        <div className="space-y-1.5">
-          <h1 
-            className="text-3xl sm:text-4xl lg:text-[42px] font-normal text-white tracking-tight font-serif"
-            style={{ fontFamily: 'Cormorant Garamond, serif' }}
-          >
-            What can I help you with?
-          </h1>
-          <p className="text-xs sm:text-sm text-stone-400 font-light tracking-wide">
-            Ask Charlie about any address or tap a prompt for an explainer
-          </p>
-        </div>
+        {/* When no messages yet: Greeting heading */}
+        {messages.length === 0 ? (
+          <div className="space-y-1.5">
+            <h1 
+              className="text-3xl sm:text-4xl lg:text-[42px] font-normal text-white tracking-tight font-serif"
+              style={{ fontFamily: 'Cormorant Garamond, serif' }}
+            >
+              What can I help you with?
+            </h1>
+            <p className="text-xs sm:text-sm text-stone-400 font-light tracking-wide">
+              Ask Charlie about any address or tap a prompt for an explainer
+            </p>
+          </div>
+        ) : (
+          /* When messages exist: Conversation Stream Container */
+          <div className="w-full max-h-[300px] sm:max-h-[320px] overflow-y-auto space-y-3 px-1 text-left scrollbar-thin">
+            {messages.map((m) => (
+              <div key={m.id}>
+                {m.sender === 'user' ? (
+                  <div className="flex justify-end">
+                    <div className="rounded-2xl rounded-br-xs px-4 py-2.5 bg-[#1e1e1e] border border-white/10 text-white text-xs sm:text-[13px] max-w-[85%] shadow-md">
+                      {m.text}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex justify-start items-start gap-2.5">
+                    <div className="w-7 h-7 rounded-full border border-[#D4AF37] overflow-hidden shrink-0 mt-0.5 bg-black shadow">
+                      <img src={CHARLIE_HEADSHOT} alt="Charlie Simmons" className="w-full h-full object-cover scale-110" />
+                    </div>
+                    <div className="rounded-2xl rounded-bl-xs px-4 py-2.5 bg-[#141414] border border-[#D4AF37]/40 text-stone-200 text-xs sm:text-[13px] leading-relaxed max-w-[88%] shadow-lg whitespace-pre-line">
+                      {m.text}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {isTyping && (
+              <div className="flex justify-start items-center gap-2 text-stone-400 text-xs italic pl-9">
+                <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-ping" />
+                <span>Charlie is analyzing...</span>
+              </div>
+            )}
+            <div ref={chatBottomRef} />
+          </div>
+        )}
 
         {/* Prominent input + Gold Send */}
-        <form onSubmit={handleSubmit} className="w-full">
+        <form onSubmit={handleSubmit} className="w-full pt-1">
           <div className="flex items-center bg-[#141414] rounded-full border-2 border-[#D4AF37]/60 shadow-[0_4px_24px_rgba(0,0,0,0.8)] px-5 py-3 transition-all focus-within:border-[#D4AF37] focus-within:ring-1 focus-within:ring-[#D4AF37]">
             <Paperclip className="w-5 h-5 text-[#D4AF37]/80 shrink-0 mr-3 cursor-pointer hover:text-[#D4AF37]" />
             <input
@@ -127,7 +273,7 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, on
             />
             <button
               type="submit"
-              disabled={!inputValue.trim()}
+              disabled={!inputValue.trim() || isTyping}
               className="w-10 h-10 rounded-full bg-[#D4AF37] hover:brightness-110 disabled:opacity-30 flex items-center justify-center text-black font-bold transition-all cursor-pointer shrink-0 ml-2 shadow-md"
             >
               <Send className="w-4 h-4 text-black -rotate-12 translate-x-px" />
