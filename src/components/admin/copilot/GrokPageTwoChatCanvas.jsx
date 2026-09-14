@@ -193,8 +193,8 @@ User question: "${query}"`
         </div>
       </div>
 
-      {/* ── CHARLIE AVATAR SLOT: Single responsive instance (mobile fallback in flow, desktop upper-right) ── */}
-      <div className="w-full max-w-xs mx-auto mb-2 lg:mb-0 lg:max-w-none lg:absolute lg:top-[84px] lg:right-3 lg:w-[185px] lg:z-20">
+      {/* ── CHARLIE AVATAR SLOT: Single responsive instance (reduced box width matching 25% circle scale) ── */}
+      <div className="w-full max-w-xs mx-auto mb-2 lg:mb-0 lg:max-w-none lg:absolute lg:top-[84px] lg:right-3 lg:w-[140px] lg:z-20">
         <CopilotAvatarSlot 
           activeExplainer={activeExplainer}
           onClearExplainer={() => setActiveExplainer(null)}

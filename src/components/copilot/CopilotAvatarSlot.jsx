@@ -342,11 +342,11 @@ export default function CopilotAvatarSlot({
         {/* Charlie Avatar with Live Pulsing Audio Ring */}
         <div className="relative shrink-0 pt-0.5">
           <div 
-            className={`w-18 h-18 sm:w-19 sm:h-19 rounded-full p-0.5 overflow-hidden bg-black shadow-lg transition-all ${
+            className={`w-14 h-14 aspect-square rounded-full p-0.5 overflow-hidden bg-black shadow-lg transition-all ${
               isSpeaking 
-                ? 'border-2 border-[#D4AF37] ring-4 ring-[#D4AF37]/50 shadow-[0_0_20px_rgba(212,175,55,0.7)] scale-105'
+                ? 'border-2 border-[#D4AF37] ring-3 ring-[#D4AF37]/50 shadow-[0_0_15px_rgba(212,175,55,0.7)] scale-105'
                 : isListening 
-                ? 'border-2 border-[#10b981] ring-3 ring-[#10b981]/40'
+                ? 'border-2 border-[#10b981] ring-2 ring-[#10b981]/40'
                 : 'border-2 border-amber-500/70'
             }`}
           >
@@ -358,53 +358,53 @@ export default function CopilotAvatarSlot({
           </div>
 
           {/* Audio Visualizer Wave indicator */}
-          <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-black/90 border border-white/20 text-[9px] font-mono text-white flex items-center gap-1 shadow-md whitespace-nowrap">
+          <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded-full bg-black/90 border border-white/20 text-[8px] font-mono text-white flex items-center gap-0.5 shadow-md whitespace-nowrap">
             {isSpeaking ? (
               <span className="flex items-center gap-0.5 text-[#D4AF37]">
-                <span className="w-0.5 h-2 bg-[#D4AF37] animate-pulse" />
-                <span className="w-0.5 h-3 bg-[#D4AF37] animate-pulse delay-75" />
-                <span className="w-0.5 h-1.5 bg-[#D4AF37] animate-pulse delay-150" />
-                <span className="text-[9px] font-bold ml-0.5">Voice</span>
+                <span className="w-0.5 h-1.5 bg-[#D4AF37] animate-pulse" />
+                <span className="w-0.5 h-2.5 bg-[#D4AF37] animate-pulse delay-75" />
+                <span className="w-0.5 h-1 bg-[#D4AF37] animate-pulse delay-150" />
+                <span className="text-[8px] font-bold ml-0.5">Voice</span>
               </span>
             ) : isListening ? (
-              <span className="flex items-center gap-1 text-[#10b981]">
-                <Mic className="w-2.5 h-2.5" />
-                <span className="text-[9px] font-bold">Barge-in on</span>
+              <span className="flex items-center gap-0.5 text-[#10b981]">
+                <Mic className="w-2 h-2" />
+                <span className="text-[8px] font-bold">Barge-in</span>
               </span>
             ) : (
-              <span className="text-amber-400 text-[9px]">Connecting</span>
+              <span className="text-amber-400 text-[8px]">Connecting</span>
             )}
           </div>
         </div>
 
         {/* Identity & Status Line */}
-        <div className="space-y-0.5 w-full pt-1">
-          <h3 className="text-xs sm:text-[13px] font-bold text-white tracking-wide">
+        <div className="space-y-0.5 w-full pt-0.5">
+          <h3 className="text-[11.5px] font-bold text-white tracking-wide leading-tight">
             Charlie Simmons
           </h3>
-          <p className="text-[10px] text-stone-300 font-medium truncate">
+          <p className="text-[9px] text-stone-300 font-medium truncate leading-tight">
             {isConnecting 
               ? 'Waking Algieba native audio...' 
               : isSpeaking 
-              ? 'Speaking · Tap mic or speak to interrupt' 
+              ? 'Speaking · Tap mic or interrupt' 
               : 'Listening · Speak out loud anytime'}
           </p>
         </div>
 
         {/* Live Controls: Mic Mute Toggle & End Session Kill Switch */}
-        <div className="w-full grid grid-cols-2 gap-1.5 pt-1">
+        <div className="w-full grid grid-cols-2 gap-1 pt-0.5">
           {/* Mic Toggle Button */}
           <button
             type="button"
             onClick={toggleMicMute}
-            className={`py-1.5 px-2 rounded-lg border text-[11px] font-semibold flex items-center justify-center gap-1 transition-all cursor-pointer shadow-sm ${
+            className={`py-1 px-1 rounded-md border text-[10px] font-semibold flex items-center justify-center gap-0.5 transition-all cursor-pointer shadow-sm ${
               isMicMuted
                 ? 'bg-amber-950/70 border-amber-500/60 text-amber-300'
                 : 'bg-white/5 hover:bg-white/10 border-white/15 text-stone-200'
             }`}
             title={isMicMuted ? 'Unmute microphone' : 'Mute microphone'}
           >
-            {isMicMuted ? <MicOff className="w-3 h-3 text-amber-400" /> : <Mic className="w-3 h-3 text-[#10b981]" />}
+            {isMicMuted ? <MicOff className="w-2.5 h-2.5 text-amber-400" /> : <Mic className="w-2.5 h-2.5 text-[#10b981]" />}
             <span>{isMicMuted ? 'Unmute' : 'Mute'}</span>
           </button>
 
@@ -412,11 +412,11 @@ export default function CopilotAvatarSlot({
           <button
             type="button"
             onClick={() => endVoiceSession()}
-            className="py-1.5 px-2 rounded-lg bg-red-950/80 hover:bg-red-900 border border-red-500/50 text-red-200 text-[11px] font-bold flex items-center justify-center gap-1 transition-all cursor-pointer shadow-md"
+            className="py-1 px-1 rounded-md bg-red-950/80 hover:bg-red-900 border border-red-500/50 text-red-200 text-[10px] font-bold flex items-center justify-center gap-0.5 transition-all cursor-pointer shadow-md"
             title="Immediately terminate Gemini Live voice session"
           >
-            <Square className="w-3 h-3 fill-current text-red-400" />
-            <span>End Session</span>
+            <Square className="w-2.5 h-2.5 fill-current text-red-400" />
+            <span>End</span>
           </button>
         </div>
       </div>
@@ -426,11 +426,11 @@ export default function CopilotAvatarSlot({
   // ── 3. RENDER: DEFAULT IDLE CHARLIE AVATAR SLOT WITH TALK LIVE TRIGGER ──
   return (
     <div 
-      className={`w-full rounded-xl bg-[#0c0c0c] border border-[#D4AF37]/60 shadow-[0_8px_30px_rgba(0,0,0,0.9)] p-2.5 flex flex-col items-center text-center space-y-1.5 transition-all relative ${className}`}
+      className={`w-full rounded-xl bg-[#0c0c0c] border border-[#D4AF37]/60 shadow-[0_8px_30px_rgba(0,0,0,0.9)] p-2 flex flex-col items-center text-center space-y-1 transition-all relative ${className}`}
     >
-      {/* Charlie prominent portrait with gold trim */}
+      {/* Charlie portrait circle (reduced 25% to 56px) with gold trim */}
       <div className="relative shrink-0 pt-0.5">
-        <div className="w-18 h-18 sm:w-19 sm:h-19 rounded-full border-2 border-[#D4AF37] p-0.5 overflow-hidden bg-black shadow-lg ring-2 ring-[#D4AF37]/20">
+        <div className="w-14 h-14 aspect-square rounded-full border-2 border-[#D4AF37] p-0.5 overflow-hidden bg-black shadow-lg ring-1.5 ring-[#D4AF37]/20">
           <img 
             src={CHARLIE_HEADSHOT} 
             alt="Charlie Simmons — The Face of CoPilot" 
@@ -438,20 +438,20 @@ export default function CopilotAvatarSlot({
           />
         </div>
         {/* Online green indicator */}
-        <span className="w-3 h-3 rounded-full bg-[#10b981] absolute bottom-0.5 right-0.5 ring-2 ring-[#0c0c0c] shadow-sm animate-pulse" />
+        <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] absolute bottom-0 right-0 ring-1.5 ring-[#0c0c0c] shadow-sm animate-pulse" />
       </div>
 
       {/* "The Face of CoPilot" in logo typography */}
       <div className="w-full">
-        <div className="inline-flex items-baseline justify-center gap-1 px-2.5 py-0.5 rounded-full bg-white/5 border border-[#D4AF37]/40 shadow-inner">
+        <div className="inline-flex items-baseline justify-center gap-1 px-2 py-0.5 rounded-full bg-white/5 border border-[#D4AF37]/40 shadow-inner">
           <span 
-            className="text-[10px] text-white/90 font-serif tracking-wide"
+            className="text-[9px] text-white/90 font-serif tracking-wide"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
             The Face of
           </span>
           <span 
-            className="text-xs font-serif italic text-[#D4AF37] font-semibold tracking-normal"
+            className="text-[11px] font-serif italic text-[#D4AF37] font-semibold tracking-normal"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
             CoPilot
@@ -461,19 +461,19 @@ export default function CopilotAvatarSlot({
 
       {/* Identity & Status */}
       <div className="space-y-0.5 w-full">
-        <h3 className="text-xs sm:text-[13px] font-bold text-white tracking-wide">
+        <h3 className="text-[11.5px] font-bold text-white tracking-wide leading-tight">
           Charlie Simmons
         </h3>
-        <p className="text-[10px] text-stone-300 font-medium">
+        <p className="text-[9px] text-stone-300 font-medium leading-tight">
           Voice &amp; Market Concierge <span className="text-[#10b981] font-semibold">• Ready</span>
         </p>
       </div>
 
       {/* Error or Mic Permission notice if applicable */}
       {voiceError && (
-        <div className="w-full p-1.5 rounded-lg bg-red-950/60 border border-red-500/40 text-[9.5px] text-red-200 flex items-start gap-1 text-left">
-          <AlertCircle className="w-3 h-3 text-red-400 shrink-0 mt-0.5" />
-          <span className="flex-1">{voiceError}</span>
+        <div className="w-full p-1 rounded-md bg-red-950/60 border border-red-500/40 text-[9px] text-red-200 flex items-start gap-1 text-left">
+          <AlertCircle className="w-2.5 h-2.5 text-red-400 shrink-0 mt-0.5" />
+          <span className="flex-1 leading-tight">{voiceError}</span>
         </div>
       )}
 
@@ -483,17 +483,17 @@ export default function CopilotAvatarSlot({
           type="button"
           onClick={startVoiceSession}
           disabled={micPermissionState === 'requesting'}
-          className="w-full py-1.5 px-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-[#D4AF37]/60 hover:border-[#D4AF37] text-white text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-md group disabled:opacity-50"
+          className="w-full py-1.5 px-2 rounded-lg bg-white/5 hover:bg-white/10 border border-[#D4AF37]/60 hover:border-[#D4AF37] text-white text-[10.5px] font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-md group disabled:opacity-50"
           title="Start live 2-way Gemini duplex voice conversation"
         >
           {micPermissionState === 'requesting' ? (
             <>
-              <RefreshCw className="w-3 h-3 text-[#D4AF37] animate-spin" />
+              <RefreshCw className="w-2.5 h-2.5 text-[#D4AF37] animate-spin" />
               <span>Checking Mic...</span>
             </>
           ) : (
             <>
-              <Mic className="w-3 h-3 text-[#D4AF37] group-hover:scale-110 transition-transform" />
+              <Mic className="w-2.5 h-2.5 text-[#D4AF37] group-hover:scale-110 transition-transform" />
               <span>Talk Live</span>
             </>
           )}

@@ -179,7 +179,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
           <div className="space-y-4">
             {/* Charlie in his vertical rectangular card positioned to the UPPER LEFT */}
             <div className="flex justify-start pl-1 pt-1">
-              <div className="w-[185px]">
+              <div className="w-[140px]">
                 <CopilotAvatarSlot 
                   activeExplainer={activeExplainer}
                   onClearExplainer={() => setActiveExplainer(null)}
