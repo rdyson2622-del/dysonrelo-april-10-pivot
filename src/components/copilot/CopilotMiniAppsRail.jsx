@@ -1,158 +1,17 @@
 import React from 'react';
-import { 
-  Eye, ShieldCheck, Tv, Network, Newspaper, 
-  MapPin, DollarSign, Shield, MessageSquare, Mail, Lock,
-  FileCheck, Scale, Truck, Calculator, Umbrella, FileText
-} from 'lucide-react';
+import { Eye, Lock } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
-
-export const MINI_APPS = [
-  {
-    name: 'Grok Viewer',
-    identifier: 'Screen Vision',
-    icon: Tv,
-    gradient: 'from-sky-500/25 via-blue-600/20 to-slate-900',
-    border: 'border-sky-500/40',
-    iconColor: 'text-sky-400',
-    badge: null,
-  },
-  {
-    name: 'Workflows',
-    identifier: 'Atlas & Roadmap',
-    icon: Network,
-    gradient: 'from-cyan-500/25 via-teal-600/20 to-slate-900',
-    border: 'border-cyan-400/40',
-    iconColor: 'text-cyan-300',
-    badge: null,
-  },
-  {
-    name: 'DNN News',
-    identifier: 'Studio Broadcast',
-    icon: Newspaper,
-    gradient: 'from-rose-600/25 via-red-700/20 to-slate-900',
-    border: 'border-rose-500/40',
-    iconColor: 'text-rose-400',
-    badge: '3',
-  },
-  {
-    name: 'Vetting Desk',
-    identifier: 'Agents & Lenders',
-    icon: ShieldCheck,
-    gradient: 'from-purple-600/25 via-indigo-700/20 to-slate-900',
-    border: 'border-purple-400/40',
-    iconColor: 'text-purple-300',
-    badge: null,
-  },
-  {
-    name: 'MLS Outreach',
-    identifier: 'Listing Agent CRM',
-    icon: MapPin,
-    gradient: 'from-amber-600/25 via-orange-700/20 to-slate-900',
-    border: 'border-amber-400/40',
-    iconColor: 'text-amber-400',
-    badge: '1',
-  },
-  {
-    name: 'Finance',
-    identifier: 'HUD-1 & Escrow',
-    icon: DollarSign,
-    gradient: 'from-yellow-600/25 via-amber-700/20 to-slate-900',
-    border: 'border-yellow-400/40',
-    iconColor: 'text-yellow-400',
-    badge: null,
-  },
-  {
-    name: 'Operations',
-    identifier: 'Compliance & Audits',
-    icon: Shield,
-    gradient: 'from-emerald-600/25 via-teal-700/20 to-slate-900',
-    border: 'border-emerald-500/40',
-    iconColor: 'text-emerald-400',
-    badge: null,
-  },
-  {
-    name: 'Text / SMS',
-    identifier: 'Twilio (858) 353-0858',
-    icon: MessageSquare,
-    gradient: 'from-emerald-500/25 via-green-600/20 to-slate-900',
-    border: 'border-emerald-400/40',
-    iconColor: 'text-emerald-300',
-    badge: null,
-  },
-  {
-    name: 'Email Desk',
-    identifier: 'bob@dysonrelo.com',
-    icon: Mail,
-    gradient: 'from-sky-500/25 via-blue-600/20 to-slate-900',
-    border: 'border-sky-400/40',
-    iconColor: 'text-sky-300',
-    badge: 'LIVE',
-  },
-  {
-    name: 'Title & Escrow',
-    identifier: 'Document Audit',
-    icon: FileCheck,
-    gradient: 'from-amber-500/25 via-yellow-600/20 to-slate-900',
-    border: 'border-amber-500/40',
-    iconColor: 'text-amber-400',
-    badge: 'NEW',
-  },
-  {
-    name: 'Appraisal Desk',
-    identifier: 'Comps & Valuations',
-    icon: Scale,
-    gradient: 'from-indigo-500/25 via-purple-600/20 to-slate-900',
-    border: 'border-indigo-400/40',
-    iconColor: 'text-indigo-300',
-    badge: null,
-  },
-  {
-    name: 'Relo Logistics',
-    identifier: 'Movers & Concierge',
-    icon: Truck,
-    gradient: 'from-teal-500/25 via-cyan-600/20 to-slate-900',
-    border: 'border-teal-400/40',
-    iconColor: 'text-teal-300',
-    badge: null,
-  },
-  {
-    name: 'Tax & Prop 19',
-    identifier: 'CA Base Transfer',
-    icon: Calculator,
-    gradient: 'from-yellow-500/25 via-amber-600/20 to-slate-900',
-    border: 'border-yellow-400/40',
-    iconColor: 'text-yellow-300',
-    badge: null,
-  },
-  {
-    name: 'Insurance Vault',
-    identifier: 'Wildfire & Hazard',
-    icon: Umbrella,
-    gradient: 'from-sky-500/25 via-cyan-600/20 to-slate-900',
-    border: 'border-sky-400/40',
-    iconColor: 'text-sky-300',
-    badge: null,
-  },
-  {
-    name: 'Legal Shields',
-    identifier: 'Broker Clauses',
-    icon: FileText,
-    gradient: 'from-rose-500/25 via-red-600/20 to-slate-900',
-    border: 'border-rose-400/40',
-    iconColor: 'text-rose-300',
-    badge: null,
-  },
-];
+import { ADMIN_DEPT_MINI_APPS } from '@/components/admin/AdminMiniAppsGrid';
 
 /**
  * CopilotMiniAppsRail
  * 
- * Expanded vertical rail (~128px) showcasing the complete suite of AI minions
- * & automated desks backing Dyson & Dyson's fiduciary intelligence.
+ * Complete 24-App Department Mini App Library on the far-left of Page 2 (Command Center),
+ * pulling directly from the canonical Admin Department Mini Apps suite.
  */
 export default function CopilotMiniAppsRail({ className = '', onSelectApp }) {
   return (
-    <aside className={`w-full lg:w-[126px] xl:w-[130px] bg-[#0c0c0c] border-b lg:border-b-0 lg:border-r border-white/10 p-2 flex flex-col shrink-0 select-none max-h-[960px] overflow-visible relative z-30 ${className}`}>
+    <aside className={`w-full lg:w-[130px] xl:w-[136px] bg-[#0c0c0c] border-b lg:border-b-0 lg:border-r border-white/10 p-2 flex flex-col shrink-0 select-none max-h-[960px] overflow-visible relative z-30 ${className}`}>
       <div className="space-y-2">
         {/* Brand Header */}
         <div className="flex flex-col items-center text-center pb-2 border-b border-white/10 gap-0.5">
@@ -173,8 +32,8 @@ export default function CopilotMiniAppsRail({ className = '', onSelectApp }) {
             <Eye className="w-2.5 h-2.5 text-[#D4AF37] shrink-0" />
             <span className="text-[7.5px] font-semibold truncate">Active Desks</span>
           </div>
-          <span className="text-[6px] px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono uppercase tracking-wider shrink-0 font-bold">
-            15 LIVE
+          <span className="text-[6.5px] px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono uppercase tracking-wider shrink-0 font-bold">
+            {ADMIN_DEPT_MINI_APPS.length} LIVE
           </span>
         </div>
 
@@ -182,45 +41,63 @@ export default function CopilotMiniAppsRail({ className = '', onSelectApp }) {
         <div className="space-y-1 pt-0.5">
           <div className="flex items-center justify-between px-0.5">
             <span className="text-[7px] font-bold uppercase tracking-wider text-stone-400 truncate">
-              AUTOMATIONS
+              MINI APPS ({ADMIN_DEPT_MINI_APPS.length})
             </span>
             <span className="text-[6px] text-stone-500 font-mono">STANDBY</span>
           </div>
 
-          <div className="space-y-1 max-h-[580px] lg:max-h-[640px] overflow-y-auto pr-0.5">
-            {MINI_APPS.map((app) => {
+          <div className="space-y-1 max-h-[580px] lg:max-h-[660px] overflow-y-auto pr-0.5 scrollbar-thin">
+            {ADMIN_DEPT_MINI_APPS.map((app) => {
               const IconComponent = app.icon;
+              const isDNN = app.id === 'dnn';
+
               return (
                 <div
-                  key={app.name}
+                  key={app.id}
                   onClick={() => onSelectApp?.(app)}
                   className={`p-1 rounded-md bg-[#121212] hover:bg-[#181818] border border-white/5 hover:border-[#D4AF37]/50 flex items-center justify-between transition-all cursor-pointer group ${
-                    app.name === 'DNN News' ? 'ring-1 ring-rose-500/40' : ''
+                    isDNN ? 'ring-1 ring-rose-500/40 bg-rose-950/20' : ''
                   }`}
-                  title={`${app.name} · ${app.identifier} (Click to open)`}
+                  title={`${app.label} · ${app.copy} (Click to engage)`}
                 >
                   <div className="flex items-center gap-1.5 min-w-0">
-                    <div className={`w-5 h-5 rounded bg-gradient-to-br ${app.gradient} border ${app.border} flex items-center justify-center shrink-0 relative`}>
-                      <IconComponent className={`w-2.5 h-2.5 ${app.iconColor}`} />
-                      {app.badge && (
+                    {/* App Icon Squircle */}
+                    <div 
+                      className={`w-5 h-5 rounded-[6px] bg-gradient-to-br ${app.bgGradient} border ${app.border} flex items-center justify-center shrink-0 relative`}
+                      style={{
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.6)',
+                      }}
+                    >
+                      <IconComponent 
+                        className="w-2.5 h-2.5 transition-transform duration-150 group-hover:scale-110" 
+                        style={{ color: app.iconColor }}
+                      />
+                      
+                      {app.badgeCount && (
                         <span className={`absolute -top-1 -right-1 text-[5px] font-bold px-0.5 rounded-full ${
-                          app.badge === 'LIVE' 
+                          app.badgeCount === 'LIVE' 
                             ? 'bg-rose-500 text-white animate-pulse' 
+                            : app.badgeCount === 'V2V'
+                            ? 'bg-amber-500 text-black font-extrabold'
                             : 'bg-rose-600 text-white'
                         }`}>
-                          {app.badge}
+                          {app.badgeCount}
                         </span>
                       )}
                     </div>
 
-                    <div className="min-w-0">
+                    {/* App Name and Sub-Label */}
+                    <div className="min-w-0 flex flex-col">
                       <div className="text-[7.5px] font-semibold text-stone-200 group-hover:text-white truncate leading-tight">
-                        {app.name}
+                        {app.label}
+                      </div>
+                      <div className="text-[6.5px] text-stone-500 group-hover:text-stone-400 truncate leading-tight font-mono">
+                        {app.copy}
                       </div>
                     </div>
                   </div>
 
-                  <Lock className="w-2 h-2 text-stone-600 group-hover:text-stone-500 shrink-0 ml-0.5" />
+                  <Lock className="w-2 h-2 text-stone-600 group-hover:text-stone-400 shrink-0 ml-0.5" />
                 </div>
               );
             })}

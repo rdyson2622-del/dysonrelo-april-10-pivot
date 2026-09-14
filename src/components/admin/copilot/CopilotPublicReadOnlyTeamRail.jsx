@@ -1,96 +1,10 @@
 import React, { useState } from 'react';
-import { 
-  Eye, ShieldCheck, Tv, Network, Newspaper, 
-  MapPin, DollarSign, Shield, MessageSquare, Mail, Lock 
-} from 'lucide-react';
+import { Eye, Lock } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import GrokPageTwoChatCanvas from './GrokPageTwoChatCanvas';
 import CopilotDynamicSpeakerBox from '@/components/copilot/CopilotDynamicSpeakerBox';
 import { findExplainerByQuery } from '@/components/copilot/copilotExplainers';
-
-const MINI_APPS = [
-  {
-    name: 'Grok Viewer',
-    identifier: 'Screen Vision',
-    icon: Tv,
-    gradient: 'from-sky-500/25 via-blue-600/20 to-slate-900',
-    border: 'border-sky-500/40',
-    iconColor: 'text-sky-400',
-    badge: null,
-  },
-  {
-    name: 'Workflows',
-    identifier: 'Atlas & Roadmap',
-    icon: Network,
-    gradient: 'from-cyan-500/25 via-teal-600/20 to-slate-900',
-    border: 'border-cyan-400/40',
-    iconColor: 'text-cyan-300',
-    badge: null,
-  },
-  {
-    name: 'DNN News',
-    identifier: 'Studio Broadcast',
-    icon: Newspaper,
-    gradient: 'from-rose-600/25 via-red-700/20 to-slate-900',
-    border: 'border-rose-500/40',
-    iconColor: 'text-rose-400',
-    badge: '3',
-  },
-  {
-    name: 'Vetting Desk',
-    identifier: 'Agents & Lenders',
-    icon: ShieldCheck,
-    gradient: 'from-purple-600/25 via-indigo-700/20 to-slate-900',
-    border: 'border-purple-400/40',
-    iconColor: 'text-purple-300',
-    badge: null,
-  },
-  {
-    name: 'MLS Outreach',
-    identifier: 'Listing Agent CRM',
-    icon: MapPin,
-    gradient: 'from-amber-600/25 via-orange-700/20 to-slate-900',
-    border: 'border-amber-400/40',
-    iconColor: 'text-amber-400',
-    badge: '1',
-  },
-  {
-    name: 'Finance',
-    identifier: 'HUD-1 & Escrow',
-    icon: DollarSign,
-    gradient: 'from-yellow-600/25 via-amber-700/20 to-slate-900',
-    border: 'border-yellow-400/40',
-    iconColor: 'text-yellow-400',
-    badge: null,
-  },
-  {
-    name: 'Operations',
-    identifier: 'Compliance & Audits',
-    icon: Shield,
-    gradient: 'from-emerald-600/25 via-teal-700/20 to-slate-900',
-    border: 'border-emerald-500/40',
-    iconColor: 'text-emerald-400',
-    badge: null,
-  },
-  {
-    name: 'Text / SMS',
-    identifier: 'Twilio (858) 353-0858',
-    icon: MessageSquare,
-    gradient: 'from-emerald-500/25 via-green-600/20 to-slate-900',
-    border: 'border-emerald-400/40',
-    iconColor: 'text-emerald-300',
-    badge: null,
-  },
-  {
-    name: 'Email Desk',
-    identifier: 'bob@dysonrelo.com',
-    icon: Mail,
-    gradient: 'from-sky-500/25 via-blue-600/20 to-slate-900',
-    border: 'border-sky-400/40',
-    iconColor: 'text-sky-300',
-    badge: 'LIVE',
-  },
-];
+import { ADMIN_DEPT_MINI_APPS } from '@/components/admin/AdminMiniAppsGrid';
 
 export default function CopilotPublicReadOnlyTeamRail({ onAskAddress, onBackToLanding, onListenToggle }) {
   const [activeExplainer, setActiveExplainer] = useState(null);
@@ -158,42 +72,53 @@ export default function CopilotPublicReadOnlyTeamRail({ onAskAddress, onBackToLa
             />
           </div>
 
-          {/* ── 3. COMPACT MINI APPS LIST ── */}
+          {/* ── 3. COMPACT MINI APPS LIST (24 APPS) ── */}
           <div className="space-y-1 pt-1 border-t border-white/10">
             <div className="flex items-center justify-between px-0.5">
               <span className="text-[7px] font-bold uppercase tracking-wider text-stone-400 truncate">
-                MINI APPS
+                MINI APPS ({ADMIN_DEPT_MINI_APPS.length})
               </span>
               <span className="text-[6px] text-stone-500 font-mono">SEE-ONLY</span>
             </div>
 
-            <div className="space-y-1">
-              {MINI_APPS.map((app) => {
+            <div className="space-y-1 max-h-[380px] overflow-y-auto pr-0.5 scrollbar-thin">
+              {ADMIN_DEPT_MINI_APPS.map((app) => {
                 const IconComponent = app.icon;
                 return (
                   <div
-                    key={app.name}
+                    key={app.id}
                     className="p-1 rounded-md bg-[#121212] hover:bg-[#181818] border border-white/5 hover:border-white/15 flex items-center justify-between transition-all cursor-default group"
                   >
                     <div className="flex items-center gap-1.5 min-w-0">
-                      {/* Mini-App Icon */}
-                      <div className={`w-5 h-5 rounded bg-gradient-to-br ${app.gradient} border ${app.border} flex items-center justify-center shrink-0 relative`}>
-                        <IconComponent className={`w-2.5 h-2.5 ${app.iconColor}`} />
-                        {app.badge && (
-                          <span className={`absolute -top-1 -right-1 text-[5.5px] font-bold px-0.5 rounded-full ${
-                            app.badge === 'LIVE' 
+                      {/* Mini-App Icon Squircle */}
+                      <div 
+                        className={`w-5 h-5 rounded-[6px] bg-gradient-to-br ${app.bgGradient} border ${app.border} flex items-center justify-center shrink-0 relative`}
+                        style={{ boxShadow: '0 2px 6px rgba(0,0,0,0.6)' }}
+                      >
+                        <IconComponent 
+                          className="w-2.5 h-2.5" 
+                          style={{ color: app.iconColor }} 
+                        />
+                        {app.badgeCount && (
+                          <span className={`absolute -top-1 -right-1 text-[5px] font-bold px-0.5 rounded-full ${
+                            app.badgeCount === 'LIVE' 
                               ? 'bg-rose-500 text-white animate-pulse' 
+                              : app.badgeCount === 'V2V'
+                              ? 'bg-amber-500 text-black font-extrabold'
                               : 'bg-rose-600 text-white'
                           }`}>
-                            {app.badge}
+                            {app.badgeCount}
                           </span>
                         )}
                       </div>
 
-                      {/* Name */}
-                      <div className="min-w-0">
-                        <div className="text-[8.5px] font-semibold text-stone-200 group-hover:text-white truncate leading-tight">
-                          {app.name}
+                      {/* Name & Copy */}
+                      <div className="min-w-0 flex flex-col">
+                        <div className="text-[7.5px] font-semibold text-stone-200 group-hover:text-white truncate leading-tight">
+                          {app.label}
+                        </div>
+                        <div className="text-[6.5px] text-stone-500 group-hover:text-stone-400 truncate leading-tight font-mono">
+                          {app.copy}
                         </div>
                       </div>
                     </div>

@@ -309,11 +309,15 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
       {/* ── UNIFIED 3-ZONE MAIN CANVAS: Far-Left Mini-Apps Rail (~124px), Left Dialogue Engine, Right Presentation Dossier ── */}
       <div className="flex flex-col lg:flex-row min-h-[740px]">
         
-        {/* ── FAR-LEFT STREAMLINED AI MINIONS RAIL ── */}
+        {/* ── FAR-LEFT STREAMLINED AI MINIONS RAIL (24 APPS) ── */}
         {showRail && (
           <CopilotMiniAppsRail 
             onSelectApp={(app) => {
-              if (app?.name === 'DNN News') {
+              const appId = app?.id;
+              const appName = app?.label || app?.name;
+              const appCopy = app?.copy || app?.identifier;
+
+              if (appId === 'dnn' || appName === 'DNN News') {
                 setRightPanelView('news');
                 setMessages(prev => [
                   ...prev,
@@ -323,13 +327,33 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                     text: "Switched the presentation screen to today's DNN Daily News Broadcast. You can watch the full 1080p briefing or click 'Explode to Full Page' while asking us anything live.",
                   }
                 ]);
+              } else if (appId === 'specialists' || appId === 'business_plan') {
+                setRightPanelView('solutions');
+                setMessages(prev => [
+                  ...prev,
+                  {
+                    id: Date.now(),
+                    sender: 'charlie',
+                    text: "Opened our AI Specialists & Fiduciary Playbooks in the Solutions Vault on the right. You can search our entire library of legal shields, Prop 19 guides, and video how-tos.",
+                  }
+                ]);
+              } else if (appId === 'wisdom' || appId === 'operations' || appId === 'finance') {
+                setRightPanelView('dossier');
+                setMessages(prev => [
+                  ...prev,
+                  {
+                    id: Date.now(),
+                    sender: 'charlie',
+                    text: `Opened the Property Audit & Escrow Intelligence for ${dossierData.shortAddress}. Our transaction audit and escrow milestone desks verify every disclosure under Bob Dyson's broker supervision.`,
+                  }
+                ]);
               } else {
                 setMessages(prev => [
                   ...prev,
                   {
                     id: Date.now(),
                     sender: 'charlie',
-                    text: `Connecting to ${app.name} (${app.identifier}). Our fiduciary automation desk operates in real-time under Bob Dyson's broker supervision.`
+                    text: `Engaged ${appName} (${appCopy}). Our fiduciary desk operates in real-time under Bob Dyson's California broker license #00609384.`
                   }
                 ]);
               }
