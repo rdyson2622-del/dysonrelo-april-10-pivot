@@ -267,10 +267,10 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
               </span>
               <div className="text-right">
                 <div className="text-base sm:text-lg font-bold font-mono text-[#854d0e]">
-                  $37,500 – $45,000
+                  $10,000 – $12,000
                 </div>
                 <div className="text-[11px] text-[#554c40] font-mono">
-                  (2.50% – 3.00%)
+                  (0.67% – 0.80%)
                 </div>
               </div>
             </div>
