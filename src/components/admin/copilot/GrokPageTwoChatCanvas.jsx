@@ -25,10 +25,23 @@ function isAddressLike(str) {
   return false;
 }
 
-export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, onBackToLanding, hideBadge = false }) {
+export default function GrokPageTwoChatCanvas({ 
+  onAskAddress, 
+  onListenToggle, 
+  onBackToLanding, 
+  hideBadge = false,
+  hideAvatarSlot = false,
+  activeExplainer: controlledExplainer,
+  onExplainerChange,
+}) {
   const [inputValue, setInputValue] = useState('');
   const [isListening, setIsListening] = useState(false);
-  const [activeExplainer, setActiveExplainer] = useState(null);
+  const [internalExplainer, setInternalExplainer] = useState(null);
+  const activeExplainer = controlledExplainer !== undefined ? controlledExplainer : internalExplainer;
+  const setActiveExplainer = (val) => {
+    setInternalExplainer(val);
+    if (onExplainerChange) onExplainerChange(val);
+  };
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const chatBottomRef = useRef(null);
@@ -193,14 +206,16 @@ User question: "${query}"`
         </div>
       </div>
 
-      {/* ── CHARLIE AVATAR SLOT: Single responsive instance (reduced box width matching 25% circle scale) ── */}
-      <div className="w-full max-w-xs mx-auto mb-2 lg:mb-0 lg:max-w-none lg:absolute lg:top-[84px] lg:right-3 lg:w-[140px] lg:z-20">
-        <CopilotAvatarSlot 
-          activeExplainer={activeExplainer}
-          onClearExplainer={() => setActiveExplainer(null)}
-          size="vertical"
-        />
-      </div>
+      {/* ── CHARLIE AVATAR SLOT: Rendered only when not in Team Rail mode (Team Rail uses dynamic rail avatar enlargement) ── */}
+      {!hideAvatarSlot && (
+        <div className="w-full max-w-xs mx-auto mb-2 lg:mb-0 lg:max-w-none lg:absolute lg:top-[84px] lg:right-3 lg:w-[140px] lg:z-20">
+          <CopilotAvatarSlot 
+            activeExplainer={activeExplainer}
+            onClearExplainer={() => setActiveExplainer(null)}
+            size="vertical"
+          />
+        </div>
+      )}
 
       {/* ── CENTER CONTENT (Shifted left 5% and lowered another 10% for clear separation) ── */}
       <div className="w-full max-w-xl xl:max-w-2xl mx-auto text-center space-y-4 pt-4 lg:pt-24 pb-8 sm:pb-12 my-auto translate-y-[6%] -translate-x-[5%] transition-transform">
