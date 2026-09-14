@@ -562,7 +562,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         </div>
 
         {/* ── RIGHT COLUMN: PROPERTY AUDIT & DAILY NEWS BROADCAST (WITH EXPLODE-TO-FULL-PAGE) ── */}
-        <div className={`flex-1 min-w-0 transition-colors ${rightPanelView === 'solutions' ? 'bg-[#ede0cc]' : 'bg-[#080808]'}`}>
+        <div className="flex-1 min-w-0 bg-[#080808]">
           <CopilotDossierNewsPanel
             property={property}
             dossierData={dossierData}
@@ -619,7 +619,20 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         }}
       />
 
-
+      {/* ── FLOATING BOTTOM-RIGHT PILL (MATCHES LOCKED PAGE 2 PNG) ── */}
+      <div className="fixed bottom-4 right-4 z-40 flex items-center gap-1.5 shadow-2xl">
+        <a 
+          href="/refer"
+          className="px-3.5 py-2 rounded-l-full bg-[#fce38a] hover:bg-[#fad85d] text-black font-bold text-xs flex items-center gap-1.5 transition-all shadow-lg"
+        >
+          <span className="text-black font-bold text-base leading-none">+</span>
+          <span>Refer a Friend</span>
+        </a>
+        <div className="px-3 py-2 rounded-r-full bg-[#0a0a0a] border border-[#fce38a]/40 text-[#fce38a] font-mono text-[11px] font-bold flex items-center gap-1 shadow-lg">
+          <span>⌖</span>
+          <span>V2V</span>
+        </div>
+      </div>
     </div>
   );
 }

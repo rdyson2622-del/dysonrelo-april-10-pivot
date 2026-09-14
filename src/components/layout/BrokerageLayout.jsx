@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import BrokerageOnboarding from '@/components/brokerage/BrokerageOnboarding';
 import BrokerageAlertBanner from '@/components/brokerage/BrokerageAlertBanner';
+import ReferralFloatingPill from '@/components/portal/ReferralFloatingPill';
 import IPhoneSpringboardGrid, { BROKER_DEFAULT_APPS } from '@/components/springboard/IPhoneSpringboardGrid';
 
 const GOLD = '#D4AF37';
@@ -359,6 +360,7 @@ export default function BrokerageLayout() {
 
         {/* Page content */}
         <Outlet />
+        <ReferralFloatingPill />
       </main>
     </div>
   );

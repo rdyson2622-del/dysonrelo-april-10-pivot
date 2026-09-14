@@ -88,24 +88,13 @@ export default function CopilotDossierNewsPanel({
   };
 
   return (
-    <div 
-      className={`flex flex-col h-full transition-colors ${
-        activeView === 'solutions' 
-          ? 'bg-[#ede0cc] text-[#1a1815]' 
-          : 'bg-[#080808] text-white'
-      } ${
-        isExploded 
-          ? 'fixed inset-0 z-50 p-4 sm:p-6 overflow-y-auto bg-black/95 backdrop-blur-xl' 
-          : 'p-4 sm:p-6 space-y-4 overflow-y-auto'
-      }`}
-      style={activeView === 'solutions' ? { background: '#ede0cc', color: '#1a1815' } : undefined}
-    >
+    <div className={`flex flex-col h-full bg-[#080808] text-white ${isExploded ? 'fixed inset-0 z-50 p-4 sm:p-6 overflow-y-auto bg-black/95 backdrop-blur-xl' : 'p-4 sm:p-6 space-y-4 overflow-y-auto'}`}>
       
       {/* ── TOP CONTROLS & DUAL TAB SELECTOR ── */}
-      <div className={`flex flex-wrap items-center justify-between gap-2 pb-2 border-b ${activeView === 'solutions' ? 'border-[#c4b59f]' : 'border-white/10'}`}>
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/10">
         
         {/* View Switcher Tabs: 3 Pillars */}
-        <div className="flex flex-wrap items-center bg-[#141414] p-1 rounded-xl border border-black/30 shadow-sm gap-0.5">
+        <div className="flex flex-wrap items-center bg-[#141414] p-1 rounded-xl border border-white/10 gap-0.5">
           <button
             type="button"
             onClick={() => onViewChange?.('dossier')}
@@ -159,12 +148,8 @@ export default function CopilotDossierNewsPanel({
         {/* Action Controls: Explode to Full Page & Status */}
         <div className="flex items-center gap-2">
           {isSubscriber && (
-            <span className={`text-[8.5px] px-2 py-1 rounded-full font-mono font-bold flex items-center gap-1 ${
-              activeView === 'solutions'
-                ? 'bg-emerald-950/20 border border-emerald-800/40 text-emerald-900'
-                : 'bg-emerald-500/15 border border-emerald-500/40 text-emerald-300'
-            }`}>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            <span className="text-[8.5px] px-2 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-mono font-bold flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
               VIP SUBSCRIBER TIER
             </span>
           )}
@@ -173,11 +158,7 @@ export default function CopilotDossierNewsPanel({
           <button
             type="button"
             onClick={onToggleExplode}
-            className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm ${
-              activeView === 'solutions'
-                ? 'bg-[#0a0a0a] hover:bg-[#1a1a1a] border border-[#D4AF37]/60 text-[#D4AF37]'
-                : 'bg-white/5 hover:bg-[#D4AF37]/15 border border-[#D4AF37]/60 text-[#D4AF37]'
-            }`}
+            className="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-[#D4AF37]/15 border border-[#D4AF37]/60 text-[#D4AF37] font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
             title={isExploded ? "Collapse to Split Screen" : "Explode Entire Page to Full Screen"}
           >
             {isExploded ? (
@@ -195,9 +176,7 @@ export default function CopilotDossierNewsPanel({
             )}
           </button>
 
-          <span className={`text-[9px] font-mono hidden sm:inline-block ${
-            activeView === 'solutions' ? 'text-[#786a58] font-bold' : 'text-stone-500'
-          }`}>
+          <span className="text-[9px] text-stone-500 font-mono hidden sm:inline-block">
             {activeView === 'dossier' 
               ? 'INDEPENDENT 2ND-OPINION' 
               : activeView === 'solutions' 

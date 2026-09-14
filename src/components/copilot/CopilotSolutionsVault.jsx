@@ -139,28 +139,28 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
   });
 
   return (
-    <div className="space-y-4 animate-in fade-in duration-200" style={{ color: '#1a1815' }}>
+    <div className="space-y-4 animate-in fade-in duration-200">
       
       {/* ── HEADER BANNER ── */}
-      <div className="rounded-2xl border-2 border-[#d8cab6] bg-[#fbf7f0] p-4 sm:p-5 shadow-sm text-[#1a1815]">
+      <div className="rounded-xl border border-[#D4AF37]/50 bg-gradient-to-r from-[#17140b] via-[#101010] to-[#14120e] p-3.5 sm:p-4 shadow-xl">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#854d0e] animate-pulse" />
-              <span className="text-[10.5px] font-mono uppercase tracking-widest text-[#854d0e] font-bold">
+              <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
+              <span className="text-[10px] font-mono uppercase tracking-widest text-[#D4AF37] font-bold">
                 FIDUCIARY INTELLIGENCE &amp; SOLUTIONS VAULT
               </span>
             </div>
-            <h2 className="text-base sm:text-lg font-bold text-[#1a1815] tracking-wide" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+            <h2 className="text-sm sm:text-base font-bold text-white tracking-wide">
               Real Estate Knowledge, Playbooks &amp; Legal Shields
             </h2>
-            <p className="text-xs text-[#554c40] leading-relaxed">
+            <p className="text-xs text-stone-300">
               Most consumers move once every 5 to 7 years. Our curated vault eliminates the guesswork—covering lender compliance discovery, contract traps, coastal hazards, and tax portability.
             </p>
           </div>
 
-          <div className="text-[10px] text-[#44382c] font-mono font-bold shrink-0 bg-[#ede0cc] border border-[#c4b59f] px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-xs">
-            <BookOpen className="w-3.5 h-3.5 text-[#854d0e]" />
+          <div className="text-[10px] text-stone-400 font-mono shrink-0 bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+            <BookOpen className="w-3.5 h-3.5 text-[#D4AF37]" />
             <span>{SOLUTIONS_LIBRARY.length} Active Playbooks</span>
           </div>
         </div>
@@ -169,19 +169,19 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
       {/* ── SEARCH & CATEGORY FILTER ── */}
       <div className="space-y-2.5">
         <div className="relative">
-          <Search className="w-4 h-4 text-[#8c7e6c] absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search solutions, podcast how-tos, escrow traps, Prop 19, lender compliance..."
-            className="w-full bg-[#fbf7f0] border-2 border-[#c4b59f] focus:border-[#854d0e] rounded-xl pl-9 pr-4 py-2.5 text-xs sm:text-sm text-[#1a1815] placeholder:text-[#8c7e6c] outline-none transition-all shadow-xs"
+            className="w-full bg-[#121212] border border-white/15 focus:border-[#D4AF37] rounded-xl pl-9 pr-4 py-2.5 text-xs sm:text-sm text-white placeholder:text-stone-500 outline-none transition-all shadow-inner"
           />
           {searchQuery && (
             <button
               type="button"
               onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#554c40] hover:text-[#1a1815] text-xs px-2 py-0.5 rounded bg-[#ede0cc]"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-white text-xs px-1.5 py-0.5 rounded bg-white/10"
             >
               Clear
             </button>
@@ -195,10 +195,10 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
               key={cat.id}
               type="button"
               onClick={() => setSelectedCategory(cat.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 ${
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 ${
                 selectedCategory === cat.id
-                  ? 'bg-[#0a0a0a] text-[#D4AF37] border border-black shadow-md font-bold'
-                  : 'bg-[#fbf7f0] text-[#554c40] hover:text-[#1a1815] hover:bg-white border border-[#c4b59f] shadow-xs'
+                  ? 'bg-[#D4AF37] text-black shadow-md'
+                  : 'bg-[#141414] text-stone-400 hover:text-white border border-white/10'
               }`}
             >
               <span>{cat.label}</span>
@@ -215,26 +215,26 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
           return (
             <div
               key={sol.id}
-              className="rounded-2xl bg-[#fbf7f0] border border-[#d8cab6] hover:border-[#854d0e] p-4 space-y-3 flex flex-col justify-between transition-all shadow-sm hover:shadow-md group hover:bg-white"
+              className="rounded-xl bg-[#121212] border border-white/10 hover:border-[#D4AF37]/60 p-3.5 space-y-2.5 flex flex-col justify-between transition-all shadow-lg group hover:bg-[#151412]"
             >
               <div className="space-y-1.5">
                 {/* Format & Speaker Tag */}
-                <div className="flex items-center justify-between text-[10px]">
-                  <span className="font-mono font-bold text-[#854d0e] tracking-wider flex items-center gap-1">
+                <div className="flex items-center justify-between text-[9.5px]">
+                  <span className="font-mono font-bold text-[#D4AF37] tracking-wider flex items-center gap-1">
                     {sol.formatType === 'video' ? (
-                      <Video className="w-3 h-3 text-red-600" />
+                      <Video className="w-3 h-3 text-red-400" />
                     ) : sol.formatType === 'audio' ? (
-                      <Headphones className="w-3 h-3 text-sky-600" />
+                      <Headphones className="w-3 h-3 text-sky-400" />
                     ) : (
-                      <FileText className="w-3 h-3 text-emerald-700" />
+                      <FileText className="w-3 h-3 text-emerald-400" />
                     )}
                     <span>{sol.format}</span>
                   </span>
 
-                  <span className={`px-2 py-0.5 rounded font-mono font-bold text-[9.5px] ${
+                  <span className={`px-1.5 py-0.5 rounded font-mono font-bold ${
                     isBob 
-                      ? 'bg-[#ede0cc] text-[#854d0e] border border-[#c4b59f]'
-                      : 'bg-emerald-100 text-emerald-900 border border-emerald-300'
+                      ? 'bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/30'
+                      : 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
                   }`}>
                     {isBob ? 'Bob Dyson (Broker)' : 'Charlie (AI Voice)'}
                   </span>
@@ -242,32 +242,32 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
 
                 {/* Title & Subtitle */}
                 <div>
-                  <h3 className="text-xs sm:text-[13.5px] font-bold text-[#1a1815] group-hover:text-[#854d0e] transition-colors leading-snug">
+                  <h3 className="text-xs sm:text-[13px] font-bold text-white group-hover:text-[#D4AF37] transition-colors leading-snug">
                     {sol.title}
                   </h3>
-                  <p className="text-[10px] text-[#786a58] font-mono mt-0.5">
+                  <p className="text-[10px] text-stone-400 font-mono mt-0.5">
                     {sol.subtitle}
                   </p>
                 </div>
 
                 {/* Summary */}
-                <p className="text-xs text-[#554c40] leading-relaxed">
+                <p className="text-xs text-stone-300 leading-relaxed">
                   {sol.summary}
                 </p>
 
                 {/* Key Fiduciary Rule */}
-                <div className="bg-[#ede0cc]/70 border border-[#c4b59f] rounded-lg p-2.5 text-[11px] text-[#332b22] font-mono flex items-start gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#854d0e] shrink-0 mt-0.5" />
-                  <span><strong className="text-[#1a1815]">Rule:</strong> {sol.keyRule}</span>
+                <div className="bg-[#181818] border border-white/10 rounded-lg p-2 text-[10.5px] text-stone-300 font-mono flex items-start gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 mt-0.5" />
+                  <span><strong className="text-white">Rule:</strong> {sol.keyRule}</span>
                 </div>
               </div>
 
               {/* Action Buttons: Explode Protocol & Ask in Dialogue */}
-              <div className="pt-2 border-t border-[#d8cab6]/80 flex items-center justify-between gap-1">
+              <div className="pt-2 border-t border-white/10 flex items-center justify-between gap-1">
                 <button
                   type="button"
                   onClick={() => onExplodePlaybook?.(sol)}
-                  className="text-[11px] text-[#854d0e] hover:underline font-bold flex items-center gap-1 cursor-pointer"
+                  className="text-[10px] text-[#D4AF37] hover:underline font-semibold flex items-center gap-1 cursor-pointer"
                   title="Explode this playbook to full screen"
                 >
                   <span>⛶ Explode</span>
@@ -276,10 +276,10 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
                 <button
                   type="button"
                   onClick={() => onPromptClick?.(sol.promptQuery)}
-                  className="px-3 py-1.5 rounded-lg bg-[#0a0a0a] hover:bg-[#222] text-[#D4AF37] hover:text-[#e8c84a] border border-black text-xs font-bold flex items-center gap-1 transition-all cursor-pointer shadow-sm"
+                  className="px-2.5 py-1 rounded-md bg-white/5 hover:bg-[#D4AF37] text-white hover:text-black border border-white/15 hover:border-[#D4AF37] text-[11px] font-semibold flex items-center gap-1 transition-all cursor-pointer shadow-sm"
                 >
                   <span>Ask {isBob ? 'Bob' : 'Charlie'}</span>
-                  <ArrowRight className="w-3 h-3 text-[#D4AF37]" />
+                  <ArrowRight className="w-3 h-3" />
                 </button>
               </div>
             </div>
@@ -288,10 +288,10 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
       </div>
 
       {filteredSolutions.length === 0 && (
-        <div className="text-center py-8 bg-[#fbf7f0] rounded-2xl border border-[#d8cab6] p-6 space-y-2">
-          <HelpCircle className="w-8 h-8 text-[#8c7e6c] mx-auto" />
-          <h4 className="text-sm font-bold text-[#1a1815]">No exact playbook found</h4>
-          <p className="text-xs text-[#554c40] max-w-sm mx-auto">
+        <div className="text-center py-8 bg-[#121212] rounded-xl border border-white/10 p-6 space-y-2">
+          <HelpCircle className="w-8 h-8 text-stone-500 mx-auto" />
+          <h4 className="text-sm font-bold text-white">No exact playbook found</h4>
+          <p className="text-xs text-stone-400 max-w-sm mx-auto">
             You can type your exact question directly into the dialogue engine on the left, and Bob or Charlie will prepare a bespoke answer.
           </p>
         </div>
