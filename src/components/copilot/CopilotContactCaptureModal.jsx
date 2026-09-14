@@ -85,7 +85,7 @@ export default function CopilotContactCaptureModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[60000] flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
       <div 
         className="w-full max-w-lg rounded-2xl bg-[#0e0e0e] border border-[#D4AF37]/60 shadow-[0_20px_70px_rgba(0,0,0,0.9)] overflow-hidden text-left relative text-white"
         onClick={(e) => e.stopPropagation()}
