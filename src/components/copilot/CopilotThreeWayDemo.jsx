@@ -42,13 +42,13 @@ export const THREE_WAY_SCRIPT = [
     turn: 3,
     speaker: 'bob',
     speakerName: 'Bob Dyson',
-    role: 'Principal Broker · DRE #00609384',
+    role: 'Principal Broker',
     colorName: 'Gold Ring',
     colorHex: '#D4AF37',
-    text: "Bob Dyson here. Charlie is spot-on about the bluff setback. In California coastal parcels, ancient fault lines and erosion zones are serious deal-breakers. Under my broker license #00609384, we mandate an un-waivable geological soil stability inspection and strict escrow contingency shields so you never risk your earnest money deposit.",
-    // Authentic HeyGen Bob Dyson cloned studio voice
-    audioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/147b8f5713024fb9afc106f266e47482/id=9e301f9f-7314-479e-89ca-6e626559204f.wav",
-    backupAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/30f033c82_speech.mp3",
+    text: "Bob Dyson here. Charlie is spot-on about the bluff setback. In California coastal parcels, ancient fault lines and erosion zones are serious deal-breakers. We mandate an un-waivable geological soil stability inspection and strict escrow contingency shields so you never risk your earnest money deposit.",
+    // Authentic HeyGen Bob Dyson cloned studio voice (strictly answering without license reference)
+    audioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/147b8f5713024fb9afc106f266e47482/id=f002a65f-b3e9-4d51-907f-88f57c2aa9f5.wav",
+    backupAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/87ef3b1d1_speech.mp3",
     voiceConfig: { pitch: 0.95, rate: 0.95, voiceType: 'bob' },
     delayMs: 7500
   }

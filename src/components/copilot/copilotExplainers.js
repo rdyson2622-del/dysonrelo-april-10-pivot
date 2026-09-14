@@ -33,7 +33,7 @@ export const COPILOT_EXPLAINERS = [
     speakerRole: 'Founder & Principal Broker',
     topic: '55+ Years of Real Estate Leadership',
     videoUrl: 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/a4a2013f3_bobanswer_6a5d2e96818523aa87495089.mp4',
-    textAnswer: 'Dyson & Dyson is an independent relocation concierge management firm founded by Bob Dyson (CA DRE #00609384), former founder who grew Red Carpet Corporation to 1,600+ offices nationwide.',
+    textAnswer: 'Dyson & Dyson is an independent relocation concierge management firm founded by Bob Dyson, former founder who grew Red Carpet Corporation to 1,600+ offices nationwide.',
   },
   {
     id: 'bob_solutions_traps',

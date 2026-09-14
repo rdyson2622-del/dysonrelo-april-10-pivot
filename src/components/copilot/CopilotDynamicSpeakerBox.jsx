@@ -39,7 +39,7 @@ export default function CopilotDynamicSpeakerBox({
   const headshot = isBob ? BOB_HEADSHOT : CHARLIE_HEADSHOT;
   const name = isBob ? 'Bob Dyson' : 'Charlie Simmons';
   const title = isBob ? 'Principal & Fiduciary' : 'Voice & Concierge';
-  const subtitle = isBob ? 'DRE #00609384' : 'The Face of CoPilot';
+  const subtitle = isBob ? 'Principal Broker' : 'The Face of CoPilot';
 
   // Video State
   const [isPlaying, setIsPlaying] = useState(true);

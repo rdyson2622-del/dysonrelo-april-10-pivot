@@ -127,9 +127,9 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         if (query.includes('bullet') || (isNewsQuery && !isBobQuery)) {
           answerText = `Charlie: Here is your DNN Daily Broadcast Summary for ${dossierData.city || 'Southern California'}:\n• Constrained inventory down 14% YoY across luxury zip codes.\n• Price resilience supported by high equity buyers, but appraisal gaps are emerging.\n• Our fiduciary protocol secures unvarnished comps, strict inspection contingency shields, and verified compliance with all state and lender guidelines.`;
         } else if (isBobQuery && isNewsQuery) {
-          answerText = `Bob Dyson: In a constrained inventory market like ${dossierData.shortAddress}, listing agents love to bluff about multiple offers. Under my California broker license #00609384, we demand signed confirmation of competing offers and lock in appraisal protective shields so you never overpay.`;
+          answerText = `Bob Dyson: In a constrained inventory market like ${dossierData.shortAddress}, listing agents love to bluff about multiple offers. We demand signed confirmation of competing offers and lock in appraisal protective shields so you never overpay.`;
         } else if (/compliance|concession|credit|structure|lender/i.test(query)) {
-          answerText = `Bob Dyson: On ${dossierData.shortAddress}, our fiduciary protocol ensures all contract terms, title exceptions, and physical disclosures are rigorously verified under California broker standards before submitting an offer.`;
+          answerText = `Bob Dyson: On ${dossierData.shortAddress}, our fiduciary protocol ensures all contract terms, title exceptions, and physical disclosures are rigorously verified before submitting an offer.`;
         } else if (/prop 19|tax/i.test(query)) {
           answerText = `Charlie: Under California Proposition 19, if you or your spouse are 55+, severely disabled, or wildfire victims, you can transfer your taxable property base to any replacement home anywhere in California up to 3 times, saving tens of thousands annually.`;
         } else if (/bluff|coastal|setback|soil/i.test(query)) {
@@ -207,7 +207,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         } else if (isNewsQuery) {
           answerText = `Charlie: I've brought up today's DNN Studio Broadcast on the right. You can watch the full report, expand it to full-screen theater mode, or ask us any questions as it plays.`;
         } else if (isBobQuery) {
-          answerText = `Bob Dyson: Under CA DRE #00609384, our fiduciary protocol protects you with zero added broker fees and strict disclosure audits for ${dossierData.shortAddress}. Would you like me to prepare an initial offer analysis?`;
+          answerText = `Bob Dyson: Our fiduciary protocol protects you with zero added broker fees and strict disclosure audits for ${dossierData.shortAddress}. Would you like me to prepare an initial offer analysis?`;
         } else {
           answerText = `Charlie: I've logged that for ${dossierData.shortAddress}. We can text this full audit directly to your phone or connect you live with Bob.`;
         }
@@ -554,7 +554,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
               </div>
 
               <div className="flex items-center justify-between text-[8.5px] text-stone-500 px-1">
-                <span>CoPilot Fiduciary Dialogue · DRE #00609384</span>
+                <span>CoPilot Fiduciary Dialogue</span>
                 <span className="font-mono">Zero Fee</span>
               </div>
             </form>
@@ -613,7 +613,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             {
               id: Date.now(),
               sender: 'charlie',
-              text: `I've queued the complete fiduciary property audit for ${captured.address} directly to ${captured.phone}.\n\nYou've also been granted complimentary VIP Subscriber access to our Daily DNN News broadcasts under Bob Dyson's broker desk (DRE #00609384)!`
+              text: `I've queued the complete fiduciary property audit for ${captured.address} directly to ${captured.phone}.\n\nYou've also been granted complimentary VIP Subscriber access to our Daily DNN News broadcasts under Bob Dyson's broker desk!`
             }
           ]);
         }}
