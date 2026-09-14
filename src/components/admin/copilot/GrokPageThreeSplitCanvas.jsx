@@ -302,6 +302,20 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
           >
             <span>⛶ Expand Working Content</span>
           </button>
+
+          {/* Project Daily News Control */}
+          <button
+            type="button"
+            onClick={() => {
+              // WIRE: project/open today’s DNN Daily News show; Admin DNN tools remain source; do not rebuild Daily News in Copilot
+              setRightPanelView('news');
+            }}
+            className="px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/30 border border-rose-500/50 text-rose-300 text-[10px] sm:text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ml-1 shadow-sm"
+            title="Project today's DNN Daily News show"
+          >
+            <Radio className="w-3 h-3 text-rose-400 animate-pulse" />
+            <span>Project Daily News</span>
+          </button>
         </div>
 
         {/* Center / Right: Brand Header with Italicized Copilot */}

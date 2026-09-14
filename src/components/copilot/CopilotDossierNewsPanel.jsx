@@ -128,7 +128,10 @@ export default function CopilotDossierNewsPanel({
 
           <button
             type="button"
-            onClick={() => onViewChange?.('news')}
+            onClick={() => {
+              // WIRE: project/open today’s DNN Daily News show; Admin DNN tools remain source; do not rebuild Daily News in Copilot
+              onViewChange?.('news');
+            }}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
               activeView === 'news'
                 ? 'bg-[#D4AF37] text-black shadow-md'
@@ -177,6 +180,21 @@ export default function CopilotDossierNewsPanel({
                 <span className="sm:hidden">Expand</span>
               </>
             )}
+          </button>
+
+          {/* Project Daily News Control */}
+          <button
+            type="button"
+            onClick={() => {
+              // WIRE: project/open today’s DNN Daily News show; Admin DNN tools remain source; do not rebuild Daily News in Copilot
+              onViewChange?.('news');
+            }}
+            className="px-2.5 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/30 border border-rose-500/50 text-rose-300 font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+            title="Project today's DNN Daily News show"
+          >
+            <Radio className="w-3 h-3 text-rose-400 animate-pulse" />
+            <span className="hidden sm:inline">Project Daily News</span>
+            <span className="sm:hidden">News</span>
           </button>
 
           <span className="text-[9px] text-stone-500 font-mono hidden sm:inline-block">
