@@ -85,20 +85,20 @@ export default function DysonHomesCopilot({ initialPage }) {
           <button
             type="button"
             onClick={() => scrollToSection(page1Ref, 1, '/')}
-            className="px-3.5 py-1.5 rounded-xl bg-[#1c1c1c] hover:bg-[#D4AF37] text-white hover:text-black font-semibold text-xs transition-all border border-white/10 hover:border-[#D4AF37] cursor-pointer flex items-center gap-1.5 shadow-sm"
+            className="px-3.5 py-1.5 rounded-lg bg-[#1c1c1c] hover:bg-[#262626] text-white font-medium text-xs transition-colors border border-white/15 hover:border-[#D4AF37] cursor-pointer flex items-center gap-1.5"
           >
-            <span className="w-4 h-4 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] flex items-center justify-center text-[10px] font-bold">1</span>
-            <span>Page 1: Landing &amp; Search</span>
+            <span className="font-mono text-stone-400 text-xs">1.</span>
+            <span>Landing &amp; Search</span>
             <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
           </button>
 
           <button
             type="button"
             onClick={() => scrollToSection(page2Ref, 2, '/dossier')}
-            className="px-3.5 py-1.5 rounded-xl bg-[#1c1c1c] hover:bg-[#D4AF37] text-white hover:text-black font-semibold text-xs transition-all border border-white/10 hover:border-[#D4AF37] cursor-pointer flex items-center gap-1.5 shadow-sm"
+            className="px-3.5 py-1.5 rounded-lg bg-[#1c1c1c] hover:bg-[#262626] text-white font-medium text-xs transition-colors border border-white/15 hover:border-[#D4AF37] cursor-pointer flex items-center gap-1.5"
           >
-            <span className="w-4 h-4 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] flex items-center justify-center text-[10px] font-bold">2</span>
-            <span>Page 2: Fiduciary Command Center</span>
+            <span className="font-mono text-stone-400 text-xs">2.</span>
+            <span>Fiduciary Command Center</span>
             <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
           </button>
         </div>

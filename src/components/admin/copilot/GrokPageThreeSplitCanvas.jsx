@@ -1,25 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
-  Paperclip, Send, Scale, ShieldAlert, FileText, CheckCircle2, 
-  Waves, Clock, Square, DollarSign, Sparkles, Shield, Briefcase,
-  Mic, User, Bot, Radio
+  Paperclip, Send, Scale, ShieldAlert, FileText, 
+  Waves, Clock, Square, Radio, Mic, Briefcase, Shield, Sparkles
 } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import CopilotDynamicSpeakerBox from '@/components/copilot/CopilotDynamicSpeakerBox';
 import CopilotConsumerSpeakerBox from '@/components/copilot/CopilotConsumerSpeakerBox';
 import CopilotMiniAppsRail from '@/components/copilot/CopilotMiniAppsRail';
-import CopilotThreeWayDemo from '@/components/copilot/CopilotThreeWayDemo';
 import CopilotDossierNewsPanel from '@/components/copilot/CopilotDossierNewsPanel';
 import CopilotContactCaptureModal from '@/components/copilot/CopilotContactCaptureModal';
 import CopilotExplodedSubjectModal from '@/components/copilot/CopilotExplodedSubjectModal';
-import { COPILOT_EXPLAINERS, findExplainerByQuery } from '@/components/copilot/copilotExplainers';
+import { findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { getPropertyDossier } from './propertyDossierData';
 
 export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, showRail = true }) {
   const [inputText, setInputText] = useState('');
   const [activeExplainer, setActiveExplainer] = useState(null);
-  const [isConsumerTransmitting, setIsConsumerTransmitting] = useState(false);
-  const [activeDemoSpeaker, setActiveDemoSpeaker] = useState(null);
   const [rightPanelView, setRightPanelView] = useState('dossier'); // 'dossier' | 'news' | 'solutions'
   const [isPageExploded, setIsPageExploded] = useState(false);
   const [selectedExplodedItem, setSelectedExplodedItem] = useState(null);
@@ -30,7 +26,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
     }
     return false;
   });
-  const messagesEndRef = React.useRef(null);
+  const messagesEndRef = useRef(null);
   const dossierData = getPropertyDossier(property);
 
   const [messages, setMessages] = useState(() => {
@@ -51,7 +47,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
   });
 
   // Keep chat initial messages strictly in sync whenever property prop changes
-  React.useEffect(() => {
+  useEffect(() => {
     const data = getPropertyDossier(property);
     setMessages([
       {
@@ -75,15 +71,11 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
   const handlePillClick = (query) => {
-    // 1. Highlight consumer transmitting
-    setIsConsumerTransmitting(true);
-    setTimeout(() => setIsConsumerTransmitting(false), 1400);
-
     const explainer = findExplainerByQuery(query);
     const userMsg = {
       id: Date.now(),
@@ -157,10 +149,6 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
     const text = inputText.trim();
     if (!text) return;
 
-    // 1. Highlight consumer transmitting animation
-    setIsConsumerTransmitting(true);
-    setTimeout(() => setIsConsumerTransmitting(false), 1400);
-
     const userMsg = {
       id: Date.now(),
       sender: 'user',
@@ -229,13 +217,14 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
       className="w-full rounded-2xl border border-[#D4AF37]/40 shadow-2xl overflow-hidden select-none text-left"
       style={{ background: '#080808', color: '#f5f5f5' }}
     >
-      {/* ── TOP HEADER BAR: D&D badge + sweep copilot logo ── */}
-      <div className="px-5 py-3 border-b border-white/10 flex items-center justify-between bg-[#0a0a0a]">
+      {/* ── TOP HEADER BAR: D&D badge + CoPilot wordmark (capital C+P, black/gold/white, no green) ── */}
+      <div className="px-5 py-3 border-b border-white/10 flex flex-wrap items-center justify-between gap-3 bg-[#0a0a0a]">
+        
         {/* Left: D&D badge + Back Button + Dual View Indicator */}
         <div className="flex items-center gap-3">
-          <DysonVerticalBadge height={40} />
+          <DysonVerticalBadge height={38} />
           <div className="flex items-center gap-2">
-            <span className="text-[10px] tracking-widest text-[#D4AF37] font-bold uppercase">
+            <span className="text-[10px] tracking-widest text-[#D4AF37] font-bold uppercase font-mono">
               PAGE 2 · COMMAND CENTER
             </span>
             <Square className="w-3.5 h-3.5 text-stone-500" />
@@ -244,20 +233,20 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             <button
               type="button"
               onClick={onBackToSearch}
-              className="text-xs text-[#D4AF37] hover:underline flex items-center gap-1 font-medium px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 hover:border-[#D4AF37] transition-all ml-1 cursor-pointer"
+              className="text-xs text-[#D4AF37] hover:underline flex items-center gap-1 font-medium px-2.5 py-1 rounded-md bg-white/5 border border-white/10 hover:border-[#D4AF37] transition-all ml-1 cursor-pointer"
             >
               ← Search
             </button>
           )}
 
-          {/* Quick Right-Side View Switcher in Header: Audit, Solutions & News */}
-          <div className="hidden sm:flex items-center bg-[#141414] p-0.5 rounded-lg border border-white/10 ml-2 gap-0.5">
+          {/* Quick Right-Side View Switcher: Audit, Solutions & News */}
+          <div className="hidden sm:flex items-center bg-[#141414] p-0.5 rounded-md border border-white/10 ml-2 gap-0.5">
             <button
               type="button"
               onClick={() => setRightPanelView('dossier')}
-              className={`px-2 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 ${
+              className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ${
                 rightPanelView === 'dossier'
-                  ? 'bg-[#D4AF37] text-black shadow'
+                  ? 'bg-[#D4AF37] text-black font-semibold'
                   : 'text-stone-400 hover:text-white'
               }`}
             >
@@ -267,67 +256,59 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             <button
               type="button"
               onClick={() => setRightPanelView('solutions')}
-              className={`px-2 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 ${
+              className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ${
                 rightPanelView === 'solutions'
-                  ? 'bg-[#D4AF37] text-black shadow'
+                  ? 'bg-[#D4AF37] text-black font-semibold'
                   : 'text-stone-400 hover:text-white'
               }`}
             >
-              <FileText className="w-3 h-3 text-amber-400" />
+              <FileText className="w-3 h-3" />
               <span>Solutions Vault</span>
             </button>
             <button
               type="button"
               onClick={() => setRightPanelView('news')}
-              className={`px-2 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 ${
+              className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ${
                 rightPanelView === 'news'
-                  ? 'bg-[#D4AF37] text-black shadow'
+                  ? 'bg-[#D4AF37] text-black font-semibold'
                   : 'text-stone-400 hover:text-white'
               }`}
             >
-              <Radio className="w-3 h-3 text-rose-500 animate-pulse" />
+              <Radio className="w-3 h-3 text-rose-400" />
               <span>Daily News</span>
             </button>
           </div>
 
-          {/* Dedicated Expand Working Content Control */}
+          {/* Quiet Full-Screen Expand Stub */}
           <button
             type="button"
-            onClick={() => {
-              // WIRE: full-screen working content trigger; implement viewport expansion here
-              setIsPageExploded(true);
-            }}
-            className="px-2.5 py-1 rounded-lg bg-[#D4AF37]/15 hover:bg-[#D4AF37]/30 border border-[#D4AF37]/60 text-[#D4AF37] text-[10px] sm:text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ml-1 shadow-sm"
+            onClick={() => setIsPageExploded(true)}
+            className="px-2.5 py-1 rounded-md bg-white/5 hover:bg-white/10 border border-white/15 text-stone-300 text-xs font-normal transition-all cursor-pointer ml-1"
             title="Expand chat + dossier canvas to full viewport"
           >
-            <span>⛶ Expand Working Content</span>
+            <span>Full screen</span>
           </button>
 
-          {/* Project Daily News Control */}
+          {/* Quiet Project Daily News Stub */}
           <button
             type="button"
-            onClick={() => {
-              // WIRE: project/open today’s DNN Daily News show; Admin DNN tools remain source; do not rebuild Daily News in Copilot
-              setRightPanelView('news');
-            }}
-            className="px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/30 border border-rose-500/50 text-rose-300 text-[10px] sm:text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ml-1 shadow-sm"
+            onClick={() => setRightPanelView('news')}
+            className="px-2.5 py-1 rounded-md bg-white/5 hover:bg-white/10 border border-white/15 text-stone-300 text-xs font-normal transition-all cursor-pointer ml-1"
             title="Project today's DNN Daily News show"
           >
-            <Radio className="w-3 h-3 text-rose-400 animate-pulse" />
             <span>Project Daily News</span>
           </button>
         </div>
 
-        {/* Center / Right: Brand Header with Italicized Copilot */}
-        <div className="flex items-baseline gap-2.5">
+        {/* Center / Right: Official Brand Lockup (CoPilot capital C and P, black/gold/white, no green) */}
+        <div className="flex items-baseline gap-2">
           <span 
-            className="font-serif text-base sm:text-lg font-normal tracking-[0.18em] text-white uppercase leading-none"
-            style={{ fontFamily: 'Cormorant Garamond, serif' }}
+            className="text-xs sm:text-sm tracking-[0.2em] text-white uppercase font-sans font-medium"
           >
             DYSON HOMES
           </span>
           <span 
-            className="font-serif italic text-lg sm:text-[21px] font-normal text-[#D4AF37] leading-none"
+            className="font-serif italic text-lg sm:text-xl font-normal text-[#D4AF37] leading-none"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
             CoPilot
@@ -335,82 +316,65 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         </div>
       </div>
 
-      {/* ── UNIFIED 3-ZONE MAIN CANVAS: Far-Left Mini-Apps Rail (~124px), Left Dialogue Engine, Right Presentation Dossier ── */}
-      <div className="flex flex-col lg:flex-row min-h-[740px]">
+      {/* ── PORTRAIT-FIRST IPAD-PRIORITY MAIN CANVAS (FLEX-COL TO LG:FLEX-ROW) ── */}
+      <div className="flex flex-col lg:flex-row min-h-[700px]">
         
-        {/* ── FAR-LEFT STREAMLINED AI MINIONS RAIL (24 APPS) ── */}
+        {/* ── FAR-LEFT STREAMLINED AI MINIONS RAIL ── */}
         {showRail && (
           <CopilotMiniAppsRail />
         )}
 
-        {/* ── CENTER-LEFT COLUMN: ALL COMMUNICATION & LIVE DIALOGUE ENGINE ── */}
-        <div className="w-full lg:w-[460px] xl:w-[490px] p-3 sm:p-4 flex flex-col justify-between bg-[#0b0b0b] border-b lg:border-b-0 lg:border-r border-white/10 relative shrink-0">
+        {/* ── CENTER-LEFT COLUMN: ROSTER (VISUAL/READ-ONLY, CHARLIE ONLY LIVE TALK) + GROK-PLAIN CHAT ── */}
+        <div className="w-full lg:w-[480px] xl:w-[500px] p-3 sm:p-4 flex flex-col justify-between bg-[#0b0b0b] border-b lg:border-b-0 lg:border-r border-white/10 relative shrink-0">
           
           {/* Scrollable Conversation Container */}
-          <div className="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[580px]">
-            {/* Header Stage Label */}
-            <div className="flex items-center justify-between pb-1 border-b border-white/5">
-              <span className="text-[9px] font-mono tracking-widest text-[#D4AF37] uppercase font-bold flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                3-WAY FIDUCIARY DIALOGUE STAGE
-              </span>
-              <span className="text-[8px] text-stone-500 font-mono">LIVE CONVERSATION</span>
+          <div className="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[560px]">
+            
+            {/* Stage Label */}
+            <div className="flex items-center justify-between pb-1 border-b border-white/5 text-[10px] text-stone-400 font-mono">
+              <span className="uppercase text-[#D4AF37] font-semibold">FIDUCIARY TEAM ROSTER</span>
+              <span>CHARLIE LIVE TALK ACTIVE</span>
             </div>
 
-            {/* ── HOW TO / WHAT TO EXPECT: INTERACTIVE 3-WAY AUDIO DISCUSSION DEMO ── */}
-            <CopilotThreeWayDemo 
-              onTurnChange={setActiveDemoSpeaker}
-              onMessagePosted={(msg) => {
-                setMessages(prev => [...prev, msg]);
-              }}
-              onResetDemo={() => {
-                setActiveDemoSpeaker(null);
-              }}
-            />
+            {/* ── ROSTER: BOB (VISUAL / READ-ONLY), CHARLIE (ONLY LIVE TALK), CONSUMER (READ-ONLY) ── */}
+            <div className="grid grid-cols-3 gap-2 pt-1">
+              
+              {/* Bob Dyson: Visual / Read-Only (no speech synthesis / no TTS) */}
+              <div className="p-2.5 rounded-lg bg-[#121212] border border-white/10 text-left space-y-1">
+                <div className="text-[10px] text-stone-400 uppercase font-mono font-medium">BROKER DESK</div>
+                <div className="text-xs font-bold text-white">Bob Dyson</div>
+                <div className="text-[10px] text-[#D4AF37] font-sans">Fiduciary Oversight</div>
+                <div className="text-[9px] text-stone-500 pt-0.5">Read-only advisor</div>
+              </div>
 
-            {/* ── 3-WAY AVATAR STAGING: BOB, CHARLIE & CONSUMER/SUBSCRIBER ── */}
-            <div className="flex flex-wrap items-start gap-2 pt-0.5">
-              {/* Bob Dyson Box */}
-              <CopilotDynamicSpeakerBox 
-                speaker="bob"
-                variant="card"
-                activeExplainer={activeExplainer}
-                isSpeakingOverride={activeDemoSpeaker === 'bob'}
-                onClearExplainer={() => setActiveExplainer(null)}
-                onTriggerExplainer={handlePillClick}
-              />
+              {/* Charlie Simmons: ONLY LIVE TALK */}
+              <div className="p-2.5 rounded-lg bg-[#14120c] border border-[#D4AF37]/50 text-left space-y-1">
+                <div className="text-[10px] text-[#D4AF37] uppercase font-mono font-bold flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  LIVE TALK
+                </div>
+                <div className="text-xs font-bold text-white">Charlie Simmons</div>
+                <div className="text-[10px] text-emerald-400 font-sans">Voice &amp; Audio</div>
+                <button
+                  type="button"
+                  onClick={() => handlePillClick('Talk Live with Charlie')}
+                  className="w-full text-center text-[9.5px] px-2 py-0.5 mt-1 rounded bg-[#D4AF37]/20 hover:bg-[#D4AF37]/30 text-[#D4AF37] font-medium border border-[#D4AF37]/40 transition-colors cursor-pointer"
+                >
+                  Talk Live
+                </button>
+              </div>
 
-              {/* Charlie Simmons Box */}
-              <CopilotDynamicSpeakerBox 
-                speaker="charlie"
-                variant="card"
-                activeExplainer={activeExplainer}
-                isSpeakingOverride={activeDemoSpeaker === 'charlie'}
-                onClearExplainer={() => setActiveExplainer(null)}
-                onTriggerExplainer={handlePillClick}
-                onVoiceTranscript={(t) => {
-                  if (t?.text && t?.role === 'assistant') {
-                    setMessages(prev => [
-                      ...prev,
-                      {
-                        id: Date.now(),
-                        sender: 'charlie',
-                        text: t.text,
-                      }
-                    ]);
-                  }
-                }}
-              />
+              {/* Consumer / Verified Buyer: Visual Read-Only */}
+              <div className="p-2.5 rounded-lg bg-[#121212] border border-white/10 text-left space-y-1">
+                <div className="text-[10px] text-stone-400 uppercase font-mono font-medium">YOU</div>
+                <div className="text-xs font-bold text-white">Buyer Client</div>
+                <div className="text-[10px] text-stone-300 font-sans">Private Session</div>
+                <div className="text-[9px] text-stone-500 pt-0.5">Fiduciary Protected</div>
+              </div>
 
-              {/* Consumer / Subscriber Box (Enlarges when sending) */}
-              <CopilotConsumerSpeakerBox 
-                isTransmitting={isConsumerTransmitting || activeDemoSpeaker === 'consumer'}
-                userName="You"
-                userRole="Verified Buyer"
-              />
             </div>
 
-            {/* ── CHAT MESSAGES STREAM ── */}
+            {/* ── PLAIN GROK-STYLE TEXT CHAT (NO YELLOW DOTS, NO RINGS, CLEAN TYPOGRAPHY) ── */}
             <div className="space-y-3 pt-2">
               {messages.map((m) => {
                 const isUser = m.sender === 'user';
@@ -421,40 +385,26 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                     key={m.id} 
                     className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}
                   >
-                    {/* Speaker Header Tag */}
-                    <div className="flex items-center gap-1.5 mb-1 px-1 text-[10px]">
-                      {isUser ? (
-                        <>
-                          <span className="text-stone-400 font-medium">You</span>
-                          <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
-                        </>
-                      ) : isBob ? (
-                        <>
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
-                          <span className="text-[#D4AF37] font-bold">Bob Dyson (Broker)</span>
-                        </>
-                      ) : (
-                        <>
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                          <span className="text-emerald-400 font-bold">Charlie Simmons (Voice)</span>
-                        </>
-                      )}
+                    {/* Plain Sender Tag without colored dots */}
+                    <div className="mb-0.5 px-1 text-[11px] font-medium text-stone-400">
+                      {isUser ? 'You' : isBob ? 'Bob Dyson (Broker)' : 'Charlie Simmons (Voice)'}
                     </div>
 
+                    {/* Grok-style text bubble: clean, flat, thin border, no rings */}
                     <div 
-                      className={`rounded-2xl px-4 py-3 text-xs sm:text-[12.5px] leading-relaxed max-w-[94%] shadow-md ${
+                      className={`rounded-lg px-3.5 py-2.5 text-xs sm:text-[13px] leading-relaxed max-w-[94%] ${
                         isUser
-                          ? 'bg-[#1e1e1e] border border-white/15 text-white rounded-tr-xs'
+                          ? 'bg-[#1e1e1e] border border-white/15 text-white'
                           : isBob
-                          ? 'bg-[#16140e] border border-[#D4AF37]/40 text-stone-200 rounded-tl-xs'
-                          : 'bg-[#141414] border border-white/10 text-stone-200 rounded-tl-xs'
+                          ? 'bg-[#141414] border border-[#D4AF37]/40 text-stone-200'
+                          : 'bg-[#141414] border border-white/15 text-stone-200'
                       }`}
                     >
-                      <p className="whitespace-pre-line">{m.text}</p>
+                      <p className="whitespace-pre-line font-normal">{m.text}</p>
                     </div>
 
                     {m.time && (
-                      <span className="text-[9.5px] text-stone-500 mt-0.5 px-1 font-mono">
+                      <span className="text-[9px] text-stone-500 mt-0.5 px-1 font-mono">
                         {m.time}
                       </span>
                     )}
@@ -465,21 +415,20 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             </div>
           </div>
 
-          {/* ── PINNED BOTTOM DIALOGUE BAR (MODELED AFTER GROK BOT) ── */}
+          {/* ── PINNED BOTTOM DIALOGUE BAR: Grok-plain input, thin borders, no rings ── */}
           <div className="pt-2 mt-auto border-t border-white/10 sticky bottom-0 bg-[#0b0b0b] z-20 space-y-2">
             
-            {/* Directional Guidance Chips: "Anything Real Estate" Mode */}
-            <div className="flex flex-wrap items-center gap-1">
+            {/* Plain prompt chips with thin borders (no rings, no yellow dots) */}
+            <div className="flex flex-wrap items-center gap-1.5">
               <button
                 type="button"
                 onClick={() => {
                   setRightPanelView('solutions');
                   handlePillClick("What solutions and playbooks do you offer for home buyers?");
                 }}
-                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-[#D4AF37]/15 hover:bg-[#D4AF37]/25 text-[#D4AF37] border border-[#D4AF37]/50 transition-all cursor-pointer flex items-center gap-1 shadow-sm"
+                className="px-2.5 py-1 rounded-md text-[10px] bg-white/5 hover:bg-white/10 text-[#D4AF37] border border-white/15 hover:border-[#D4AF37] transition-colors cursor-pointer"
               >
-                <Sparkles className="w-2.5 h-2.5 text-[#D4AF37]" />
-                <span>🔍 Anything Real Estate</span>
+                <span>Solutions Vault</span>
               </button>
               <button
                 type="button"
@@ -487,9 +436,8 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                   setRightPanelView('solutions');
                   handlePillClick("Bob, how does Dyson & Dyson handle transaction discovery and lender compliance?");
                 }}
-                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-white/5 hover:bg-white/10 text-amber-300 border border-amber-400/40 transition-all cursor-pointer flex items-center gap-1"
+                className="px-2.5 py-1 rounded-md text-[10px] bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-colors cursor-pointer"
               >
-                <Shield className="w-2.5 h-2.5 text-yellow-400" />
                 <span>Lender Compliance</span>
               </button>
               <button
@@ -498,9 +446,8 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                   setRightPanelView('solutions');
                   handlePillClick("Bob, what are the biggest escrow traps and how do we protect our earnest money deposit?");
                 }}
-                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-white/5 hover:bg-white/10 text-[#D4AF37] border border-[#D4AF37]/40 transition-all cursor-pointer flex items-center gap-1"
+                className="px-2.5 py-1 rounded-md text-[10px] bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-colors cursor-pointer"
               >
-                <Briefcase className="w-2.5 h-2.5" />
                 <span>Ask Bob: Escrow Traps</span>
               </button>
               <button
@@ -509,7 +456,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                   setRightPanelView('solutions');
                   handlePillClick("How does Prop 19 tax base portability work when relocating in California?");
                 }}
-                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-white/5 hover:bg-white/10 text-stone-300 border border-white/15 transition-all cursor-pointer"
+                className="px-2.5 py-1 rounded-md text-[10px] bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-colors cursor-pointer"
               >
                 <span>Prop 19 Tax</span>
               </button>
@@ -519,7 +466,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                   setRightPanelView('solutions');
                   handlePillClick("What are the coastal bluff setback and soil stability risks in California?");
                 }}
-                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-white/5 hover:bg-white/10 text-stone-300 border border-white/15 transition-all cursor-pointer"
+                className="px-2.5 py-1 rounded-md text-[10px] bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-colors cursor-pointer"
               >
                 <span>Bluff Setbacks</span>
               </button>
@@ -529,17 +476,16 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                   setRightPanelView('news');
                   handlePillClick("Charlie, summarize this broadcast in bullet points");
                 }}
-                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/40 transition-all cursor-pointer flex items-center gap-1"
+                className="px-2.5 py-1 rounded-md text-[10px] bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-colors cursor-pointer"
               >
-                <Radio className="w-2.5 h-2.5 text-rose-400" />
                 <span>Daily News</span>
               </button>
             </div>
 
-            {/* Grok-Style Message Bar with Directions */}
+            {/* Plain Grok-Style Input (No glow ring, thin border) */}
             <form onSubmit={handleSendMessage} className="space-y-1">
-              <div className="flex items-center bg-[#141414] hover:bg-[#171717] rounded-2xl border border-white/15 focus-within:border-[#D4AF37] focus-within:ring-1 focus-within:ring-[#D4AF37]/40 px-3 py-2 shadow-2xl transition-all">
-                <Paperclip className="w-4 h-4 text-stone-400 mr-2 shrink-0 cursor-pointer hover:text-white transition-colors" title="Attach file or pre-approval" />
+              <div className="flex items-center bg-[#141414] hover:bg-[#171717] rounded-xl border border-white/20 focus-within:border-[#D4AF37] px-3 py-2 transition-all">
+                <Paperclip className="w-4 h-4 text-stone-400 mr-2 shrink-0 cursor-pointer hover:text-white" title="Attach file or pre-approval" />
                 
                 <input
                   type="text"
@@ -553,32 +499,32 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                   <button
                     type="button"
                     onClick={() => handlePillClick('Talk Live with Charlie')}
-                    className="p-1.5 rounded-full text-stone-400 hover:text-[#D4AF37] hover:bg-white/5 transition-all cursor-pointer"
-                    title="Voice input"
+                    className="p-1 rounded-md text-stone-400 hover:text-[#D4AF37] hover:bg-white/5 transition-all cursor-pointer"
+                    title="Voice input (Charlie Live)"
                   >
-                    <Mic className="w-4 h-4 text-emerald-400" />
+                    <Mic className="w-4 h-4 text-[#D4AF37]" />
                   </button>
 
                   <button
                     type="submit"
                     disabled={!inputText.trim()}
-                    className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#D4AF37] hover:brightness-110 disabled:opacity-40 disabled:hover:brightness-100 text-black flex items-center justify-center transition-all cursor-pointer shadow-md"
+                    className="px-3 py-1 rounded-md bg-[#D4AF37] hover:brightness-110 disabled:opacity-40 text-black font-semibold text-xs flex items-center justify-center transition-all cursor-pointer"
                     title="Send message"
                   >
-                    <Send className="w-3.5 h-3.5 text-black -rotate-12 translate-x-px" />
+                    <span>Send</span>
                   </button>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between text-[8.5px] text-stone-500 px-1">
+              <div className="flex items-center justify-between text-[8.5px] text-stone-500 px-1 font-mono">
                 <span>CoPilot Fiduciary Dialogue</span>
-                <span className="font-mono">Zero Fee</span>
+                <span>Zero Broker Fee</span>
               </div>
             </form>
           </div>
         </div>
 
-        {/* ── RIGHT COLUMN: PROPERTY AUDIT & DAILY NEWS BROADCAST (WITH EXPLODE-TO-FULL-PAGE) ── */}
+        {/* ── RIGHT COLUMN: PROPERTY AUDIT, SOLUTIONS VAULT & DAILY NEWS ── */}
         <div className="flex-1 min-w-0 bg-[#080808]">
           <CopilotDossierNewsPanel
             property={property}
@@ -599,7 +545,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
 
       </div>
 
-      {/* ── FULL-PAGE EXPLODED SUBJECT THEATER (VIDEOS, STORIES, SOLUTIONS, PROPERTY AUDIT) ── */}
+      {/* ── FULL-PAGE EXPLODED SUBJECT THEATER ── */}
       <CopilotExplodedSubjectModal
         isOpen={isPageExploded}
         onClose={() => {
@@ -618,7 +564,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         isSubscriber={isSubscriber}
       />
 
-      {/* ── CONTACT CAPTURE MODAL (ZERO-PRESSURE SUBSCRIBER ONBOARDING) ── */}
+      {/* ── CONTACT CAPTURE MODAL ── */}
       <CopilotContactCaptureModal
         isOpen={isCaptureModalOpen}
         onClose={() => setIsCaptureModalOpen(false)}
@@ -636,7 +582,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         }}
       />
 
-      {/* ── FLOATING BOTTOM-RIGHT PILL (MATCHES LOCKED PAGE 2 PNG) ── */}
+      {/* ── FLOATING BOTTOM-RIGHT PILL: REFER A FRIEND + V2V ── */}
       <div className="fixed bottom-4 right-4 z-40 flex items-center gap-1.5 shadow-2xl">
         <a 
           href="/refer"
