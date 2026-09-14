@@ -163,7 +163,7 @@ export default function AdminDysonHomesCopilot() {
               className="px-3.5 py-1.5 rounded-xl bg-[#1c1c1c] hover:bg-[#D4AF37] text-white hover:text-black font-semibold text-xs transition-all border border-white/10 hover:border-[#D4AF37] cursor-pointer flex items-center gap-1.5 shadow-sm"
             >
               <span className="w-4 h-4 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] flex items-center justify-center text-[10px] font-bold">2</span>
-              <span>Page 2: Command Center &amp; Dossier</span>
+              <span>Page 2: Fiduciary Command Center</span>
               <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
             </button>
           </div>
@@ -229,7 +229,7 @@ export default function AdminDysonHomesCopilot() {
             <div className="flex items-center justify-between px-2">
               <div className="flex items-center gap-2">
                 <span className="px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">
-                  PAGE 2 — COMMAND CENTER &amp; DOSSIER
+                  PAGE 2 — FIDUCIARY COMMAND CENTER
                 </span>
                 <span className="text-xs text-[#0a0a0a]/70 font-medium">
                   AI Minions Rail • 3-Way Live Audio Dialogue • Fiduciary Dossier

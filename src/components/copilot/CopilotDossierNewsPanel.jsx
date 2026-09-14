@@ -22,7 +22,9 @@ export default function CopilotDossierNewsPanel({
   onViewChange,
   isExploded = false,
   onToggleExplode,
-  onPromptClick
+  onPromptClick,
+  onOpenCaptureModal,
+  isSubscriber = false,
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -101,7 +103,7 @@ export default function CopilotDossierNewsPanel({
             }`}
           >
             <Scale className="w-3.5 h-3.5" />
-            <span>Fiduciary Dossier</span>
+            <span>Property Audit &amp; Intelligence</span>
           </button>
 
           <button
@@ -125,6 +127,13 @@ export default function CopilotDossierNewsPanel({
 
         {/* Action Controls: Explode to Full Page & Status */}
         <div className="flex items-center gap-2">
+          {isSubscriber && (
+            <span className="text-[8.5px] px-2 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-mono font-bold flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              VIP SUBSCRIBER TIER
+            </span>
+          )}
+
           {activeView === 'news' && (
             <button
               type="button"
@@ -153,7 +162,7 @@ export default function CopilotDossierNewsPanel({
       </div>
 
       {/* ─────────────────────────────────────────────────────────────
-          VIEW A: FIDUCIARY PROPERTY DOSSIER
+          VIEW A: FIDUCIARY PROPERTY AUDIT & INTELLIGENCE
           ───────────────────────────────────────────────────────────── */}
       {activeView === 'dossier' && (
         <div className="space-y-4">
@@ -170,15 +179,21 @@ export default function CopilotDossierNewsPanel({
                 I've audited {dossierData.shortAddress}. Can we help?
               </h2>
               <p className="text-xs text-stone-300">
-                {dossierData.marketSummary} Ask questions on the left or text the full dossier to your mobile.
+                {dossierData.marketSummary} Ask questions on the left or tap below to text the full report to your mobile.
               </p>
             </div>
             
             <div className="flex items-center gap-2 shrink-0">
               <button
                 type="button"
-                onClick={() => onPromptClick?.("Text full report to my mobile")}
-                className="px-3 py-1.5 rounded-lg bg-[#D4AF37] hover:bg-[#e8c84a] text-black font-bold text-xs flex items-center gap-1.5 transition-all shadow-md cursor-pointer"
+                onClick={() => {
+                  if (onOpenCaptureModal) {
+                    onOpenCaptureModal();
+                  } else {
+                    onPromptClick?.("Text full report to my mobile");
+                  }
+                }}
+                className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-[#D4AF37] to-[#e8c84a] hover:brightness-110 text-black font-bold text-xs flex items-center gap-1.5 transition-all shadow-md cursor-pointer"
               >
                 <span>Text Me Report</span>
                 <span>→</span>
@@ -186,10 +201,10 @@ export default function CopilotDossierNewsPanel({
             </div>
           </div>
 
-          {/* Dossier Header Label */}
+          {/* Property Audit Header Label */}
           <div className="pb-1 flex items-center justify-between">
             <span className="text-[10.5px] font-bold tracking-widest text-[#D4AF37] uppercase font-mono">
-              DOSSIER • {dossierData.shortAddress.toUpperCase()} {dossierData.city ? `(${dossierData.city.toUpperCase()})` : ''}
+              PROPERTY AUDIT • {dossierData.shortAddress.toUpperCase()} {dossierData.city ? `(${dossierData.city.toUpperCase()})` : ''}
             </span>
           </div>
 

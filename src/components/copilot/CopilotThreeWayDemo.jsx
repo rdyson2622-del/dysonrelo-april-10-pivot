@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, RotateCcw, Volume2, Sparkles, CheckCircle, ShieldCheck } from 'lucide-react';
+import { Play, Pause, RotateCcw, Volume2, Sparkles, CheckCircle, Radio } from 'lucide-react';
 
 /**
  * CopilotThreeWayDemo
  * 
- * Interactive "How to / What to Expect" 3-way conversational audio demo:
- * 1. Consumer asks about bluff risk and closing credit on La Jolla property
- * 2. Charlie (AI Concierge) pulls zoning/setbacks and hands off to Bob
- * 3. Bob Dyson (Broker) steps in with legal contingencies and HUD-1 credit verification
+ * Interactive 3-way conversational audio demo:
+ * 1. Consumer speaks -> Client box lights up in vibrant RED
+ * 2. Charlie speaks -> Charlie box lights up in EMERALD GREEN
+ * 3. Bob Dyson speaks -> Bob box lights up in DYSON GOLD
  * 
- * Manages audio playback sequentially using synthesized voices with distinct pitches/rates,
- * ensuring zero audio collisions or overlapping streams.
+ * Demonstrates real-time 3-way verbal and visual dialogue.
  */
 export const THREE_WAY_SCRIPT = [
   {
@@ -18,6 +17,8 @@ export const THREE_WAY_SCRIPT = [
     speaker: 'consumer',
     speakerName: 'You (Buyer)',
     role: 'Verified Buyer',
+    colorName: 'Red Ring',
+    colorHex: '#ef4444',
     text: "We're looking at 7414 Fay Ave in La Jolla. Is the bluff setback going to be a problem, and can we structure a closing rebate?",
     voiceConfig: { pitch: 1.05, rate: 1.02, voiceType: 'consumer' },
     delayMs: 3800
@@ -27,6 +28,8 @@ export const THREE_WAY_SCRIPT = [
     speaker: 'charlie',
     speakerName: 'Charlie Simmons',
     role: 'AI Voice Concierge',
+    colorName: 'Green Ring',
+    colorHex: '#10b981',
     text: "Charlie here: On 7414 Fay Ave, coastal zoning requires a mandatory 25-foot bluff setback and geotechnical soil report. Comps show the property is listed at an 18% premium. Let me bring in Bob Dyson to structure your contingency shield.",
     voiceConfig: { pitch: 1.15, rate: 1.05, voiceType: 'charlie' },
     delayMs: 6500
@@ -36,6 +39,8 @@ export const THREE_WAY_SCRIPT = [
     speaker: 'bob',
     speakerName: 'Bob Dyson',
     role: 'Principal Broker · DRE #00609384',
+    colorName: 'Gold Ring',
+    colorHex: '#D4AF37',
     text: "Bob Dyson here. In California coastal transactions, we never let you write an offer without an un-waivable soil stability inspection. And under our zero-fee protocol, your estimated $16,800 closing rebate is locked directly on line 204 of your HUD-1.",
     voiceConfig: { pitch: 0.88, rate: 0.95, voiceType: 'bob' },
     delayMs: 6800
@@ -44,15 +49,8 @@ export const THREE_WAY_SCRIPT = [
 
 export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessagePosted }) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0); // 0 = idle, 1 = consumer, 2 = charlie, 3 = bob, 4 = done
-  const [hasAudioSupport, setHasAudioSupport] = useState(true);
+  const [currentStep, setCurrentStep] = useState(0); // 0 = idle, 1 = consumer (red), 2 = charlie (green), 3 = bob (gold), 4 = done
   const timerRef = useRef(null);
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-      setHasAudioSupport(false);
-    }
-  }, []);
 
   // Helper to speak a turn with distinct voice profile
   const speakTurn = (turnData, onEndCallback) => {
@@ -62,24 +60,20 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
     }
 
     try {
-      window.speechSynthesis.cancel(); // Stop any pending speech
+      window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(turnData.text);
       utterance.pitch = turnData.voiceConfig.pitch || 1.0;
       utterance.rate = turnData.voiceConfig.rate || 1.0;
 
-      // Select distinct system voices if available
       const voices = window.speechSynthesis.getVoices();
       if (voices && voices.length > 0) {
         if (turnData.speaker === 'bob') {
-          // Look for deeper/male sounding English voice
           const maleVoice = voices.find(v => v.lang.startsWith('en') && /male|david|george|alex|daniel/i.test(v.name));
           if (maleVoice) utterance.voice = maleVoice;
         } else if (turnData.speaker === 'charlie') {
-          // Look for clean/bright voice
           const charlieVoice = voices.find(v => v.lang.startsWith('en') && /natural|aaron|samantha|karen|fred/i.test(v.name));
           if (charlieVoice) utterance.voice = charlieVoice;
         } else {
-          // Consumer voice
           const consumerVoice = voices.find(v => v.lang.startsWith('en') && /susan|victoria|zoe|steffi/i.test(v.name));
           if (consumerVoice) utterance.voice = consumerVoice;
         }
@@ -114,7 +108,7 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
   const playTurn = (stepIndex) => {
     if (stepIndex >= THREE_WAY_SCRIPT.length) {
       setIsPlaying(false);
-      setCurrentStep(4); // Completed
+      setCurrentStep(4);
       if (onTurnChange) onTurnChange(null);
       return;
     }
@@ -122,7 +116,7 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
     const turn = THREE_WAY_SCRIPT[stepIndex];
     setCurrentStep(stepIndex + 1);
 
-    // Notify parent to visually enlarge the active speaker box
+    // Notify parent to visually enlarge and light up the active speaker box
     if (onTurnChange) onTurnChange(turn.speaker);
 
     // Post turn to chat message feed
@@ -136,7 +130,7 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
       });
     }
 
-    // Play spoken voice with fallback timer in case utterance finishes early/late
+    // Play spoken voice with fallback timer
     speakTurn(turn, () => {
       timerRef.current = setTimeout(() => {
         playTurn(stepIndex + 1);
@@ -156,7 +150,6 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
     playTurn(0);
   };
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
@@ -167,61 +160,73 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
   }, []);
 
   return (
-    <div className="rounded-xl p-2 bg-gradient-to-r from-[#18150c] via-[#121212] to-[#141818] border border-[#D4AF37]/50 shadow-md flex items-center justify-between gap-2 text-left">
-      <div className="flex items-center gap-2 min-w-0">
-        <div className="w-7 h-7 rounded-lg bg-[#D4AF37]/15 border border-[#D4AF37]/40 flex items-center justify-center shrink-0">
+    <div className="rounded-xl p-2.5 bg-gradient-to-r from-[#18150c] via-[#121212] to-[#141818] border border-[#D4AF37]/50 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-left">
+      <div className="flex items-center gap-2.5 min-w-0">
+        <div className="w-8 h-8 rounded-lg bg-[#D4AF37]/15 border border-[#D4AF37]/40 flex items-center justify-center shrink-0">
           {isPlaying ? (
-            <Volume2 className="w-3.5 h-3.5 text-[#D4AF37] animate-pulse" />
+            <Volume2 className="w-4 h-4 text-[#D4AF37] animate-pulse" />
           ) : (
-            <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <Sparkles className="w-4 h-4 text-[#D4AF37]" />
           )}
         </div>
         <div className="min-w-0">
-          <div className="flex items-center gap-1.5 leading-none">
-            <span className="text-[10px] font-bold text-white tracking-wide truncate">
+          <div className="flex flex-wrap items-center gap-1.5 leading-none">
+            <span className="text-[10.5px] font-bold text-white tracking-wide">
               {isPlaying 
                 ? currentStep === 1 
-                  ? 'Step 1/3: You Ask (Buyer)' 
+                  ? 'Step 1/3: Buyer Speaking' 
                   : currentStep === 2 
-                  ? 'Step 2/3: Charlie Analyzes' 
-                  : 'Step 3/3: Bob Dyson Directs'
+                  ? 'Step 2/3: Charlie Simmons Speaking' 
+                  : 'Step 3/3: Bob Dyson Directing'
                 : currentStep === 4
                 ? 'Demo Complete · Try Live Question'
-                : 'What To Expect: 3-Way Live Audio Discussion'
+                : 'Interactive 3-Way Dialogue Stage'
               }
             </span>
-            <span className="text-[7.5px] px-1 py-0.2 rounded bg-[#D4AF37]/20 text-[#D4AF37] font-mono uppercase font-bold shrink-0">
-              AUDIO DEMO
+            <span className="text-[7.5px] px-1.5 py-0.5 rounded bg-[#D4AF37]/20 text-[#D4AF37] font-mono uppercase font-bold shrink-0">
+              AUDIO &amp; VISUAL DEMO
             </span>
           </div>
-          <p className="text-[8.5px] text-stone-400 truncate mt-0.5">
-            {isPlaying 
-              ? 'Hear real-time speaker turn-taking between Buyer, AI Concierge & Broker'
-              : 'Listen to a sample 3-way turn between You, Charlie Simmons & Bob Dyson'
-            }
-          </p>
+
+          {/* Color Indicators Pill */}
+          <div className="flex items-center gap-2 mt-1">
+            <span className={`inline-flex items-center gap-1 text-[8px] font-mono ${currentStep === 1 ? 'text-rose-400 font-bold' : 'text-stone-400'}`}>
+              <span className={`w-2 h-2 rounded-full bg-rose-500 ${currentStep === 1 ? 'animate-ping' : ''}`} />
+              Buyer (Red)
+            </span>
+            <span className="text-stone-600 text-[8px]">·</span>
+            <span className={`inline-flex items-center gap-1 text-[8px] font-mono ${currentStep === 2 ? 'text-emerald-400 font-bold' : 'text-stone-400'}`}>
+              <span className={`w-2 h-2 rounded-full bg-emerald-400 ${currentStep === 2 ? 'animate-ping' : ''}`} />
+              Charlie (Green)
+            </span>
+            <span className="text-stone-600 text-[8px]">·</span>
+            <span className={`inline-flex items-center gap-1 text-[8px] font-mono ${currentStep === 3 ? 'text-[#D4AF37] font-bold' : 'text-stone-400'}`}>
+              <span className={`w-2 h-2 rounded-full bg-[#D4AF37] ${currentStep === 3 ? 'animate-ping' : ''}`} />
+              Bob (Gold)
+            </span>
+          </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-1.5 shrink-0">
+      <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
         <button
           type="button"
           onClick={handleStartDemo}
-          className={`px-2.5 py-1 rounded-lg text-[9.5px] font-bold transition-all flex items-center gap-1 shadow-sm cursor-pointer ${
+          className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer ${
             isPlaying 
-              ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 hover:bg-rose-500/30'
+              ? 'bg-rose-500/20 text-rose-300 border border-rose-500/50 hover:bg-rose-500/30'
               : 'bg-[#D4AF37] hover:bg-[#e8c84a] text-black border border-[#D4AF37]'
           }`}
         >
           {isPlaying ? (
             <>
-              <Pause className="w-2.5 h-2.5" />
-              <span>Stop</span>
+              <Pause className="w-3 h-3" />
+              <span>Stop Demo</span>
             </>
           ) : (
             <>
-              <Play className="w-2.5 h-2.5 fill-black" />
-              <span>{currentStep === 4 ? 'Replay' : 'Play Audio'}</span>
+              <Play className="w-3 h-3 fill-black" />
+              <span>{currentStep === 4 ? 'Replay 3-Way Demo' : 'Play 3-Way Demo'}</span>
             </>
           )}
         </button>
@@ -230,10 +235,10 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
           <button
             type="button"
             onClick={stopDemo}
-            className="p-1 rounded-md text-stone-400 hover:text-white bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer"
+            className="p-1.5 rounded-md text-stone-400 hover:text-white bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer"
             title="Reset conversation"
           >
-            <RotateCcw className="w-3 h-3" />
+            <RotateCcw className="w-3.5 h-3.5" />
           </button>
         )}
       </div>

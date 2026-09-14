@@ -10,6 +10,7 @@ import CopilotConsumerSpeakerBox from '@/components/copilot/CopilotConsumerSpeak
 import CopilotMiniAppsRail from '@/components/copilot/CopilotMiniAppsRail';
 import CopilotThreeWayDemo from '@/components/copilot/CopilotThreeWayDemo';
 import CopilotDossierNewsPanel from '@/components/copilot/CopilotDossierNewsPanel';
+import CopilotContactCaptureModal from '@/components/copilot/CopilotContactCaptureModal';
 import { COPILOT_EXPLAINERS, findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { getPropertyDossier } from './propertyDossierData';
 
@@ -20,6 +21,13 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
   const [activeDemoSpeaker, setActiveDemoSpeaker] = useState(null);
   const [rightPanelView, setRightPanelView] = useState('dossier'); // 'dossier' | 'news'
   const [isNewsExploded, setIsNewsExploded] = useState(false);
+  const [isCaptureModalOpen, setIsCaptureModalOpen] = useState(false);
+  const [isSubscriber, setIsSubscriber] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('dyson_subscriber_unlocked') === 'true';
+    }
+    return false;
+  });
   const messagesEndRef = React.useRef(null);
   const dossierData = getPropertyDossier(property);
 
@@ -29,7 +37,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
       {
         id: 1,
         sender: 'charlie',
-        text: `I audited ${data.shortAddress}, ${data.city}.\n${data.marketSummary} Dossier on the right.\nWhat's your mobile so I can text this report to you?`
+        text: `I audited ${data.shortAddress}, ${data.city}.\n${data.marketSummary} Executive audit on the right.\nWhat's your mobile so I can text this report to you?`
       },
       {
         id: 2,
@@ -47,7 +55,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
       {
         id: 1,
         sender: 'charlie',
-        text: `I audited ${data.shortAddress}, ${data.city}.\n${data.marketSummary} Dossier on the right.\nWhat's your mobile so I can text this report to you?`
+        text: `I audited ${data.shortAddress}, ${data.city}.\n${data.marketSummary} Executive audit on the right.\nWhat's your mobile so I can text this report to you?`
       },
       {
         id: 2,
@@ -85,6 +93,11 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
 
     const isBobQuery = /bob|trap|escrow|bluff|contract|legal|closing rebate|rebate|offer strategy/i.test(query);
     const isNewsQuery = /news|broadcast|inventory|bullet|summary|headline/i.test(query);
+    const isTextReportQuery = /text|mobile|phone|send report|send me/i.test(query);
+
+    if (isTextReportQuery) {
+      setIsCaptureModalOpen(true);
+    }
 
     if (isNewsQuery) {
       setRightPanelView('news');
@@ -149,6 +162,11 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
     const explainer = findExplainerByQuery(text);
     const isBobQuery = /bob|trap|escrow|bluff|contract|legal|fee|disclosure|title|broker|offer strategy/i.test(text);
     const isNewsQuery = /news|broadcast|video|inventory|headline|dnn/i.test(text);
+    const isPhoneOrText = /text|mobile|phone|\d{3}.*\d{3}.*\d{4}/i.test(text);
+
+    if (isPhoneOrText && !isBobQuery && !isNewsQuery) {
+      setIsCaptureModalOpen(true);
+    }
 
     if (isNewsQuery) {
       setRightPanelView('news');
@@ -230,7 +248,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
               }`}
             >
               <Scale className="w-3 h-3" />
-              <span>Dossier</span>
+              <span>Audit</span>
             </button>
             <button
               type="button"
@@ -506,7 +524,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
           </div>
         </div>
 
-        {/* ── RIGHT COLUMN: PRESENTATION DOSSIER & DAILY NEWS BROADCAST (WITH EXPLODE-TO-FULL-PAGE) ── */}
+        {/* ── RIGHT COLUMN: PROPERTY AUDIT & DAILY NEWS BROADCAST (WITH EXPLODE-TO-FULL-PAGE) ── */}
         <div className="flex-1 min-w-0 bg-[#080808]">
           <CopilotDossierNewsPanel
             property={property}
@@ -516,10 +534,30 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             isExploded={isNewsExploded}
             onToggleExplode={() => setIsNewsExploded(prev => !prev)}
             onPromptClick={handlePillClick}
+            onOpenCaptureModal={() => setIsCaptureModalOpen(true)}
+            isSubscriber={isSubscriber}
           />
         </div>
 
       </div>
+
+      {/* ── CONTACT CAPTURE MODAL (ZERO-PRESSURE SUBSCRIBER ONBOARDING) ── */}
+      <CopilotContactCaptureModal
+        isOpen={isCaptureModalOpen}
+        onClose={() => setIsCaptureModalOpen(false)}
+        propertyAddress={dossierData.fullAddress || property || '742 Vista Del Mar, La Jolla, CA'}
+        onCaptureSuccess={(captured) => {
+          setIsSubscriber(true);
+          setMessages(prev => [
+            ...prev,
+            {
+              id: Date.now(),
+              sender: 'charlie',
+              text: `I've queued the complete fiduciary property audit for ${captured.address} directly to ${captured.phone}.\n\nYou've also been granted complimentary VIP Subscriber access to our Daily DNN News broadcasts under Bob Dyson's broker desk (DRE #00609384)!`
+            }
+          ]);
+        }}
+      />
     </div>
   );
 }

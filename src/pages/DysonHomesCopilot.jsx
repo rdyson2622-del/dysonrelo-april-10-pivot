@@ -98,7 +98,7 @@ export default function DysonHomesCopilot({ initialPage }) {
             className="px-3.5 py-1.5 rounded-xl bg-[#1c1c1c] hover:bg-[#D4AF37] text-white hover:text-black font-semibold text-xs transition-all border border-white/10 hover:border-[#D4AF37] cursor-pointer flex items-center gap-1.5 shadow-sm"
           >
             <span className="w-4 h-4 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] flex items-center justify-center text-[10px] font-bold">2</span>
-            <span>Page 2: Command Center &amp; Dossier</span>
+            <span>Page 2: Fiduciary Command Center</span>
             <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
           </button>
         </div>

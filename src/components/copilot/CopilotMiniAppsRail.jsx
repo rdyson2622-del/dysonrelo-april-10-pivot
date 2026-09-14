@@ -1,7 +1,8 @@
 import React from 'react';
 import { 
   Eye, ShieldCheck, Tv, Network, Newspaper, 
-  MapPin, DollarSign, Shield, MessageSquare, Mail, Lock 
+  MapPin, DollarSign, Shield, MessageSquare, Mail, Lock,
+  FileCheck, Scale, Truck, Calculator, Umbrella, FileText
 } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 
@@ -87,18 +88,72 @@ export const MINI_APPS = [
     iconColor: 'text-sky-300',
     badge: 'LIVE',
   },
+  {
+    name: 'Title & Escrow',
+    identifier: 'Document Audit',
+    icon: FileCheck,
+    gradient: 'from-amber-500/25 via-yellow-600/20 to-slate-900',
+    border: 'border-amber-500/40',
+    iconColor: 'text-amber-400',
+    badge: 'NEW',
+  },
+  {
+    name: 'Appraisal Desk',
+    identifier: 'Comps & Valuations',
+    icon: Scale,
+    gradient: 'from-indigo-500/25 via-purple-600/20 to-slate-900',
+    border: 'border-indigo-400/40',
+    iconColor: 'text-indigo-300',
+    badge: null,
+  },
+  {
+    name: 'Relo Logistics',
+    identifier: 'Movers & Concierge',
+    icon: Truck,
+    gradient: 'from-teal-500/25 via-cyan-600/20 to-slate-900',
+    border: 'border-teal-400/40',
+    iconColor: 'text-teal-300',
+    badge: null,
+  },
+  {
+    name: 'Tax & Prop 19',
+    identifier: 'CA Base Transfer',
+    icon: Calculator,
+    gradient: 'from-yellow-500/25 via-amber-600/20 to-slate-900',
+    border: 'border-yellow-400/40',
+    iconColor: 'text-yellow-300',
+    badge: null,
+  },
+  {
+    name: 'Insurance Vault',
+    identifier: 'Wildfire & Hazard',
+    icon: Umbrella,
+    gradient: 'from-sky-500/25 via-cyan-600/20 to-slate-900',
+    border: 'border-sky-400/40',
+    iconColor: 'text-sky-300',
+    badge: null,
+  },
+  {
+    name: 'Legal Shields',
+    identifier: 'Broker Clauses',
+    icon: FileText,
+    gradient: 'from-rose-500/25 via-red-600/20 to-slate-900',
+    border: 'border-rose-400/40',
+    iconColor: 'text-rose-300',
+    badge: null,
+  },
 ];
 
 /**
  * CopilotMiniAppsRail
  * 
- * Compact vertical rail (~120px) showcasing the team of AI minions & automated workflows
- * backing Dyson & Dyson's rapid responses and fiduciary intelligence.
+ * Expanded vertical rail (~128px) showcasing the complete suite of AI minions
+ * & automated desks backing Dyson & Dyson's fiduciary intelligence.
  */
 export default function CopilotMiniAppsRail({ className = '', onSelectApp }) {
   return (
-    <aside className={`w-full lg:w-[124px] xl:w-[128px] bg-[#0c0c0c] border-b lg:border-b-0 lg:border-r border-white/10 p-2 flex flex-col shrink-0 select-none max-h-[920px] overflow-visible relative z-30 ${className}`}>
-      <div className="space-y-2.5">
+    <aside className={`w-full lg:w-[126px] xl:w-[130px] bg-[#0c0c0c] border-b lg:border-b-0 lg:border-r border-white/10 p-2 flex flex-col shrink-0 select-none max-h-[960px] overflow-visible relative z-30 ${className}`}>
+      <div className="space-y-2">
         {/* Brand Header */}
         <div className="flex flex-col items-center text-center pb-2 border-b border-white/10 gap-0.5">
           <DysonVerticalBadge height={28} />
@@ -112,19 +167,19 @@ export default function CopilotMiniAppsRail({ className = '', onSelectApp }) {
           </div>
         </div>
 
-        {/* Live Pill */}
+        {/* Live Status Pill */}
         <div className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 flex items-center justify-between text-[8px]">
           <div className="flex items-center gap-1 text-stone-300 min-w-0">
             <Eye className="w-2.5 h-2.5 text-[#D4AF37] shrink-0" />
             <span className="text-[7.5px] font-semibold truncate">Active Desks</span>
           </div>
           <span className="text-[6px] px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono uppercase tracking-wider shrink-0 font-bold">
-            9 LIVE
+            15 LIVE
           </span>
         </div>
 
-        {/* Mini Apps List */}
-        <div className="space-y-1 pt-1">
+        {/* Mini Apps Scrollable List */}
+        <div className="space-y-1 pt-0.5">
           <div className="flex items-center justify-between px-0.5">
             <span className="text-[7px] font-bold uppercase tracking-wider text-stone-400 truncate">
               AUTOMATIONS
@@ -132,7 +187,7 @@ export default function CopilotMiniAppsRail({ className = '', onSelectApp }) {
             <span className="text-[6px] text-stone-500 font-mono">STANDBY</span>
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-1 max-h-[580px] lg:max-h-[640px] overflow-y-auto pr-0.5">
             {MINI_APPS.map((app) => {
               const IconComponent = app.icon;
               return (
@@ -148,7 +203,7 @@ export default function CopilotMiniAppsRail({ className = '', onSelectApp }) {
                     <div className={`w-5 h-5 rounded bg-gradient-to-br ${app.gradient} border ${app.border} flex items-center justify-center shrink-0 relative`}>
                       <IconComponent className={`w-2.5 h-2.5 ${app.iconColor}`} />
                       {app.badge && (
-                        <span className={`absolute -top-1 -right-1 text-[5.5px] font-bold px-0.5 rounded-full ${
+                        <span className={`absolute -top-1 -right-1 text-[5px] font-bold px-0.5 rounded-full ${
                           app.badge === 'LIVE' 
                             ? 'bg-rose-500 text-white animate-pulse' 
                             : 'bg-rose-600 text-white'
@@ -159,7 +214,7 @@ export default function CopilotMiniAppsRail({ className = '', onSelectApp }) {
                     </div>
 
                     <div className="min-w-0">
-                      <div className="text-[8px] font-semibold text-stone-200 group-hover:text-white truncate leading-tight">
+                      <div className="text-[7.5px] font-semibold text-stone-200 group-hover:text-white truncate leading-tight">
                         {app.name}
                       </div>
                     </div>
