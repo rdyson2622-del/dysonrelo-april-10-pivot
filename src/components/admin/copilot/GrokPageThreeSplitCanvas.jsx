@@ -233,7 +233,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
               onClick={() => handlePillClick('How do I get thousands back at closing?')}
               className={`px-2.5 py-1 rounded-full text-[10.5px] font-semibold border flex items-center gap-1 transition-all cursor-pointer ${
                 activeExplainer?.id === 'closing_rebate'
-                  ? 'bg-[#ede0cc] text-black border-[#854d0e] ring-1 ring-[#D4AF37]'
+                  ? 'bg-[#1e1e1e] text-[#D4AF37] border-[#D4AF37] ring-1 ring-[#D4AF37]'
                   : 'bg-white/5 hover:bg-white/10 text-[#D4AF37] border-[#D4AF37]/40'
               }`}
             >
@@ -245,7 +245,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
               onClick={() => handlePillClick('How do you find hidden property risks?')}
               className={`px-2.5 py-1 rounded-full text-[10.5px] font-semibold border flex items-center gap-1 transition-all cursor-pointer ${
                 activeExplainer?.id === 'hidden_risks'
-                  ? 'bg-[#ede0cc] text-black border-[#854d0e] ring-1 ring-[#D4AF37]'
+                  ? 'bg-[#1e1e1e] text-[#D4AF37] border-[#D4AF37] ring-1 ring-[#D4AF37]'
                   : 'bg-white/5 hover:bg-white/10 text-[#D4AF37] border-[#D4AF37]/40'
               }`}
             >
@@ -257,11 +257,11 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
               onClick={() => handlePillClick("Bob's Take: Escrow & Deal Traps")}
               className={`px-2.5 py-1 rounded-full text-[10.5px] font-semibold border flex items-center gap-1 transition-all cursor-pointer ${
                 activeExplainer?.id === 'bob_solutions_traps'
-                  ? 'bg-[#ede0cc] text-black border-[#854d0e] ring-1 ring-[#D4AF37]'
+                  ? 'bg-[#1e1e1e] text-[#D4AF37] border-[#D4AF37] ring-1 ring-[#D4AF37]'
                   : 'bg-white/5 hover:bg-white/10 text-[#D4AF37] border-[#D4AF37]/40'
               }`}
             >
-              <Briefcase className="w-3 h-3 text-[#854d0e]" />
+              <Briefcase className="w-3 h-3 text-[#D4AF37]" />
               <span>Bob's Take</span>
             </button>
           </div>
@@ -302,41 +302,41 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
             </span>
           </div>
 
-          {/* ── TAN BOX 1: HONEST COMPS (TAN FILL #ede0cc, BLACK TEXT) ── */}
-          <div className="rounded-xl border border-[#c4b59f] bg-[#ede0cc] text-[#0a0a0a] p-4 space-y-2.5 shadow-lg">
+          {/* ── BLACK BOX 1: HONEST COMPS (BLACK BACKDROP, WHITE/GREY/GOLD TEXT) ── */}
+          <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-lg">
             <div className="flex items-center gap-2">
-              <Scale className="w-4 h-4 text-[#854d0e]" />
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-[#1a1815]">
+              <Scale className="w-4 h-4 text-[#D4AF37]" />
+              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-white">
                 HONEST COMPS
               </h3>
             </div>
-            <p className="text-[11px] text-[#554c40] font-medium">
+            <p className="text-[11px] text-stone-400 font-medium">
               Sold 30–90 days | Within 0.75 mi | Adjusted to current market
             </p>
 
-            {/* Comps Table in Tan Container */}
+            {/* Comps Table */}
             <div className="space-y-1.5 pt-1 text-[11.5px] font-mono">
               {dossierData.comps.map((comp, idx) => (
-                <div key={idx} className="flex flex-wrap items-center justify-between text-[#2a241c] py-1 border-b border-[#d8cab6] gap-2">
-                  <span className="font-bold text-[#0a0a0a] w-32 sm:w-36 truncate">{comp.address}</span>
-                  <span className="text-[#554c40]">{comp.distance}</span>
-                  <span className="text-[#554c40]">{comp.specs}</span>
-                  <span className="text-[#2a241c]">{comp.soldPrice}</span>
-                  <span className="text-[#854d0e] font-bold">{comp.adjPrice}</span>
+                <div key={idx} className="flex flex-wrap items-center justify-between text-stone-300 py-1 border-b border-white/10 gap-2">
+                  <span className="font-bold text-white w-32 sm:w-36 truncate">{comp.address}</span>
+                  <span className="text-stone-400">{comp.distance}</span>
+                  <span className="text-stone-400">{comp.specs}</span>
+                  <span className="text-stone-300">{comp.soldPrice}</span>
+                  <span className="text-[#D4AF37] font-bold">{comp.adjPrice}</span>
                 </div>
               ))}
             </div>
 
-            <p className="text-[11px] font-semibold text-[#854d0e] pt-1">
+            <p className="text-[11px] font-semibold text-[#D4AF37] pt-1">
               {dossierData.compsSummary}
             </p>
           </div>
 
-          {/* ── TAN BOX 2: HIDDEN RISKS (TAN FILL #ede0cc, BLACK TEXT) ── */}
-          <div className="rounded-xl border border-[#c4b59f] bg-[#ede0cc] text-[#0a0a0a] p-4 space-y-2.5 shadow-lg">
+          {/* ── BLACK BOX 2: HIDDEN RISKS (BLACK BACKDROP, WHITE/GREY/GOLD TEXT) ── */}
+          <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-lg">
             <div className="flex items-center gap-2">
-              <ShieldAlert className="w-4 h-4 text-[#854d0e]" />
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-[#1a1815]">
+              <ShieldAlert className="w-4 h-4 text-[#D4AF37]" />
+              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-white">
                 HIDDEN RISKS
               </h3>
             </div>
@@ -346,48 +346,48 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
                 const IconComp = idx === 0 ? Scale : idx === 1 ? Waves : Clock;
                 return (
                   <div key={risk.id || idx} className="flex items-start gap-2.5">
-                    <IconComp className="w-4 h-4 text-[#854d0e] shrink-0 mt-0.5" />
+                    <IconComp className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="font-bold text-[#0a0a0a]">{risk.title}</h4>
-                      <p className="text-[#554c40] text-[11px]">{risk.desc}</p>
+                      <h4 className="font-bold text-white">{risk.title}</h4>
+                      <p className="text-stone-400 text-[11px]">{risk.desc}</p>
                     </div>
                   </div>
                 );
               })}
             </div>
 
-            <p className="text-[11px] font-semibold text-[#854d0e] pt-1">
+            <p className="text-[11px] font-semibold text-[#D4AF37] pt-1">
               {dossierData.risksSummary}
             </p>
           </div>
 
-          {/* ── TAN BOX 3: CLOSING-COST CREDIT (TAN FILL #ede0cc, BLACK TEXT) ── */}
-          <div className="rounded-xl border border-[#c4b59f] bg-[#ede0cc] text-[#0a0a0a] p-4 space-y-2.5 shadow-lg">
+          {/* ── BLACK BOX 3: CLOSING-COST CREDIT (BLACK BACKDROP, WHITE/GREY/GOLD TEXT) ── */}
+          <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-lg">
             <div className="flex items-center gap-2">
-              <DollarSign className="w-4 h-4 text-[#854d0e]" />
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-[#1a1815]">
+              <DollarSign className="w-4 h-4 text-[#D4AF37]" />
+              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-white">
                 CLOSING-COST CREDIT
               </h3>
             </div>
-            <p className="text-[11px] text-[#554c40] font-medium">
+            <p className="text-[11px] text-stone-400 font-medium">
               Rebate estimate where allowed by law | {dossierData.rebateBasis}
             </p>
 
-            <div className="bg-[#f7efe3] border border-[#d8cab6] rounded-lg p-3 sm:p-3.5 flex items-center justify-between">
-              <span className="text-xs sm:text-sm font-semibold text-[#1a1815]">
+            <div className="bg-[#181818] border border-white/10 rounded-lg p-3 sm:p-3.5 flex items-center justify-between">
+              <span className="text-xs sm:text-sm font-semibold text-white">
                 Estimated buyer credit
               </span>
               <div className="text-right">
-                <div className="text-base sm:text-lg font-bold font-mono text-[#854d0e]">
+                <div className="text-base sm:text-lg font-bold font-mono text-[#D4AF37]">
                   {dossierData.rebateRange}
                 </div>
-                <div className="text-[11px] text-[#554c40] font-mono">
+                <div className="text-[11px] text-stone-400 font-mono">
                   {dossierData.rebatePercent}
                 </div>
               </div>
             </div>
 
-            <p className="text-[11px] font-semibold text-[#854d0e] pt-0.5">
+            <p className="text-[11px] font-semibold text-[#D4AF37] pt-0.5">
               Requires licensed broker representation. Not available in all states.
             </p>
           </div>
