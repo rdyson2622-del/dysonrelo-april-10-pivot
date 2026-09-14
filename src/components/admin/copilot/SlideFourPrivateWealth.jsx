@@ -187,7 +187,8 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
                 type="button"
                 onClick={() => {
                   setAddress(chip);
-                  handleSubmit(null, chip);
+                  setIsAuditing(false);
+                  setAuditComplete(false);
                 }}
                 className="text-xs px-3 py-1.5 rounded-full bg-[#ede0cc] hover:bg-[#e4d4bd] text-[#0a0a0a] font-semibold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 border border-[#c4b59f]"
               >
