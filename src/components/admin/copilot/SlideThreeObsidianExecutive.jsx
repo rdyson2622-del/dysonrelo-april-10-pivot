@@ -75,7 +75,7 @@ export default function SlideThreeObsidianExecutive({ onRunAudit }) {
               </span>
             </span>
             <span className="block text-base sm:text-xl lg:text-[20px] text-white/90 font-normal tracking-normal mt-2">
-              The First Human Driven Personal AI Real Estate Assistant
+              A Human Driven Personal Real Estate AI Assistant
             </span>
           </h1>
 
