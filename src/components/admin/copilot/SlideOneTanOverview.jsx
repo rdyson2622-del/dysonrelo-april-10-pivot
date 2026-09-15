@@ -96,7 +96,7 @@ export default function SlideOneTanOverview({ onRunAudit }) {
               </span>
             </span>
             <span className="block text-base sm:text-xl lg:text-[20px] text-[#4a4237] font-normal tracking-normal mt-2">
-              The First Human Driven &amp; Personal AI Real Estate Assistant
+              The First Human Driven Personal AI Real Estate Assistant
             </span>
           </h1>
 
