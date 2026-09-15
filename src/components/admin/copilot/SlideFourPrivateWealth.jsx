@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ShieldCheck, Plus } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 
@@ -11,16 +11,20 @@ const SAMPLE_SEARCHES = [
   '4220 Oak Hollow Terrace, Austin, TX 78746'
 ];
 
+const SCROLL_COPY = "Paste any address or MLS # you obtain from Realtor.com, Zillow, Redfin or Homes.com and we will take a deep dive into that property for you";
+
 function normalizeAddress(raw) {
   if (!raw) return '';
   return raw.trim().replace(/\s+/g, ' ');
 }
 
 export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGoToChatCanvas }) {
-  const [address, setAddress] = useState('742 Vista Del Mar, La Jolla, CA 92037');
+  const [address, setAddress] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
+  const inputRef = useRef(null);
 
   const handleSend = (targetAddr) => {
-    const cleanAddr = normalizeAddress(targetAddr || address);
+    const cleanAddr = normalizeAddress(targetAddr || address || '742 Vista Del Mar, La Jolla, CA 92037');
     if (!cleanAddr) return;
     if (onRunAudit) onRunAudit(cleanAddr);
     if (onOpenDossier) onOpenDossier(cleanAddr);
@@ -75,20 +79,43 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
               }}
             >
               <div 
-                className="max-w-[560px] w-full flex items-center rounded-full border border-[#D4AF37] p-1.5 pl-4 transition-all"
+                className="max-w-[560px] w-full flex items-center rounded-full border border-[#D4AF37] p-1.5 pl-4 transition-all relative overflow-hidden shadow-lg cursor-text"
                 style={{ backgroundColor: '#ede0cc' }}
+                onClick={() => inputRef.current?.focus()}
               >
-                <input
-                  type="text"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  placeholder="742 Vista Del Mar, La Jolla, CA 92037"
-                  className="flex-1 bg-transparent text-[#0a0a0a] text-xs sm:text-sm outline-none placeholder:text-[#171717]/60 font-normal min-w-0"
-                  style={{ color: '#0a0a0a' }}
-                />
+                <div className="relative flex-1 min-w-0 flex items-center h-8 sm:h-9 overflow-hidden">
+                  {!address && !isFocused && (
+                    <div 
+                      className="absolute inset-0 flex items-center overflow-hidden pointer-events-none select-none text-xs sm:text-sm whitespace-nowrap"
+                      style={{ color: '#0a0a0a' }}
+                    >
+                      <div className="inline-flex animate-marquee whitespace-nowrap">
+                        <span className="mr-14 font-normal" style={{ color: '#0a0a0a' }}>
+                          {SCROLL_COPY}
+                        </span>
+                        <span className="mr-14 font-normal" style={{ color: '#0a0a0a' }}>
+                          {SCROLL_COPY}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={address}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    onChange={(e) => setAddress(e.target.value)}
+                    placeholder={isFocused && !address ? "Paste address or MLS #..." : ""}
+                    className="w-full bg-transparent text-[#0a0a0a] text-xs sm:text-sm outline-none font-normal min-w-0 z-10"
+                    style={{ color: '#0a0a0a' }}
+                  />
+                </div>
+
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-full bg-[#0a0a0a] hover:bg-[#171717] text-[#D4AF37] hover:text-[#ede0cc] font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all cursor-pointer shrink-0 border border-[#D4AF37]/50"
+                  className="px-6 py-2.5 rounded-full bg-[#0a0a0a] hover:bg-[#171717] text-[#D4AF37] hover:text-[#ede0cc] font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all cursor-pointer shrink-0 border border-[#D4AF37]/50 ml-2 z-10"
                 >
                   <span>Send</span>
                   <span className="text-[#D4AF37]">→</span>
