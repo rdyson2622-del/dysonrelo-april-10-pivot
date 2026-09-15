@@ -203,7 +203,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         <div className="w-full lg:w-[480px] xl:w-[520px] p-3 sm:p-4 flex flex-col justify-between bg-[#0b0b0b] border-b lg:border-b-0 lg:border-r border-white/10 relative shrink-0">
           
           {/* Scrollable Conversation Container */}
-          <div className="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[560px]">
+          <div className="flex-1 overflow-y-auto space-y-3 pr-1 min-h-[420px] max-h-[580px]">
 
             {/* ── HEADER: COPILOT + COMMAND CENTER ── */}
             <div className="flex items-baseline justify-center gap-2.5 pb-1 px-0.5">
@@ -313,112 +313,6 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             </div>
           </div>
 
-          {/* ── PINNED BOTTOM DIALOGUE BAR: Grok-plain input, thin borders, no rings ── */}
-          <div className="pt-2 mt-auto border-t border-white/10 sticky bottom-0 bg-[#0b0b0b] z-20 space-y-2">
-            
-            {/* Plain Grok-Style Input (Tan #ede0cc background) */}
-            <form onSubmit={handleSendMessage} className="space-y-1">
-              <div 
-                className="flex items-center rounded-xl px-3 py-2 transition-all border border-[#ede0cc]"
-                style={{ backgroundColor: '#ede0cc', color: '#000000' }}
-              >
-                <Paperclip className="w-4 h-4 text-black mr-2 shrink-0 cursor-pointer" title="Attach file or pre-approval" />
-                
-                <input
-                  type="text"
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  placeholder="Ask anything real estate—compliance, Prop 19, escrow traps, comps..."
-                  className="flex-1 bg-transparent text-black text-xs sm:text-sm outline-none font-normal min-w-0 placeholder:text-black/60"
-                  style={{ color: '#000000' }}
-                />
-
-                <div className="flex items-center gap-1.5 ml-2 shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => handlePillClick('Talk Live with Charlie')}
-                    className="p-1 rounded-md text-black transition-all cursor-pointer"
-                    title="Voice input (Charlie Live)"
-                  >
-                    <Mic className="w-4 h-4 text-black" />
-                  </button>
-
-                  <button
-                    type="submit"
-                    className="px-3.5 py-1 rounded-md hover:brightness-125 font-semibold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm"
-                    style={{ backgroundColor: '#000000', color: '#ffffff', opacity: inputText.trim() ? 1 : 0.7 }}
-                    title="Send message"
-                  >
-                    <span style={{ color: '#ffffff', fontWeight: 600 }}>Send</span>
-                  </button>
-                </div>
-              </div>
-            </form>
-
-            {/* Plain prompt chips with thin borders placed below Ask Anything search bar and above mini apps */}
-            <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-              <button
-                type="button"
-                onClick={() => {
-                  setRightPanelView('solutions');
-                  handlePillClick("What solutions and playbooks do you offer for home buyers?");
-                }}
-                className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-              >
-                <span>Solutions Vault</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setRightPanelView('solutions');
-                  handlePillClick("Bob, how does Dyson & Dyson handle transaction discovery and lender compliance?");
-                }}
-                className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-              >
-                <span>Lender Compliance</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setRightPanelView('solutions');
-                  handlePillClick("Bob, what are the biggest escrow traps and how do we protect our earnest money deposit?");
-                }}
-                className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-              >
-                <span>Ask Bob: Escrow Traps</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setRightPanelView('solutions');
-                  handlePillClick("How does Prop 19 tax base portability work when relocating in California?");
-                }}
-                className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-              >
-                <span>Prop 19 Tax</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setRightPanelView('solutions');
-                  handlePillClick("What are the coastal bluff setback and soil stability risks in California?");
-                }}
-                className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-              >
-                <span>Bluff Setbacks</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setRightPanelView('news');
-                  handlePillClick("Charlie, summarize this broadcast in bullet points");
-                }}
-                className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-              >
-                <span>Daily News</span>
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* ── RIGHT COLUMN: PROPERTY AUDIT, SOLUTIONS VAULT & DAILY NEWS ── */}
@@ -444,6 +338,112 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
           />
         </div>
 
+      </div>
+
+      {/* ── TWO ROWS DIRECTLY OVER MINI APPS: INPUT BAR + PROMPT CHIPS ── */}
+      <div className="px-3 sm:px-4 py-3 bg-[#0a0a0a] border-t border-white/10 space-y-2.5">
+        {/* Plain Grok-Style Input (Tan #ede0cc background) */}
+        <form onSubmit={handleSendMessage} className="space-y-1">
+          <div 
+            className="flex items-center rounded-xl px-3 py-2 transition-all border border-[#ede0cc]"
+            style={{ backgroundColor: '#ede0cc', color: '#000000' }}
+          >
+            <Paperclip className="w-4 h-4 text-black mr-2 shrink-0 cursor-pointer" title="Attach file or pre-approval" />
+            
+            <input
+              type="text"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              placeholder="Ask anything real estate—compliance, Prop 19, escrow traps, comps..."
+              className="flex-1 bg-transparent text-black text-xs sm:text-sm outline-none font-normal min-w-0 placeholder:text-black/60"
+              style={{ color: '#000000' }}
+            />
+
+            <div className="flex items-center gap-1.5 ml-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => handlePillClick('Talk Live with Charlie')}
+                className="p-1 rounded-md text-black transition-all cursor-pointer"
+                title="Voice input (Charlie Live)"
+              >
+                <Mic className="w-4 h-4 text-black" />
+              </button>
+
+              <button
+                type="submit"
+                className="px-3.5 py-1 rounded-md hover:brightness-125 font-semibold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm"
+                style={{ backgroundColor: '#000000', color: '#ffffff', opacity: inputText.trim() ? 1 : 0.7 }}
+                title="Send message"
+              >
+                <span style={{ color: '#ffffff', fontWeight: 600 }}>Send</span>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        {/* Plain prompt chips with thin borders placed below Ask Anything search bar and above mini apps */}
+        <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+          <button
+            type="button"
+            onClick={() => {
+              setRightPanelView('solutions');
+              handlePillClick("What solutions and playbooks do you offer for home buyers?");
+            }}
+            className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
+          >
+            <span>Solutions Vault</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setRightPanelView('solutions');
+              handlePillClick("Bob, how does Dyson & Dyson handle transaction discovery and lender compliance?");
+            }}
+            className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
+          >
+            <span>Lender Compliance</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setRightPanelView('solutions');
+              handlePillClick("Bob, what are the biggest escrow traps and how do we protect our earnest money deposit?");
+            }}
+            className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
+          >
+            <span>Ask Bob: Escrow Traps</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setRightPanelView('solutions');
+              handlePillClick("How does Prop 19 tax base portability work when relocating in California?");
+            }}
+            className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
+          >
+            <span>Prop 19 Tax</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setRightPanelView('solutions');
+              handlePillClick("What are the coastal bluff setback and soil stability risks in California?");
+            }}
+            className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
+          >
+            <span>Bluff Setbacks</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setRightPanelView('news');
+              handlePillClick("Charlie, summarize this broadcast in bullet points");
+            }}
+            className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
+          >
+            <span>Daily News</span>
+          </button>
+        </div>
       </div>
 
       {/* ── BOTTOM HORIZONTAL AI MINIONS RAIL ── */}

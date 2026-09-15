@@ -403,7 +403,7 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
                 <div className="w-full lg:w-[480px] xl:w-[520px] p-3 sm:p-4 flex flex-col justify-between bg-[#0b0b0b] border-b lg:border-b-0 lg:border-r border-white/10 relative shrink-0">
                   
                   {/* Scrollable Conversation Container */}
-                  <div className="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[560px]">
+                  <div className="flex-1 overflow-y-auto space-y-3 pr-1 min-h-[420px] max-h-[580px]">
 
                     {/* ── HEADER: COPILOT + COMMAND CENTER ── */}
                     <div className="flex items-baseline justify-center gap-2.5 pb-1 px-0.5">
@@ -520,129 +520,6 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
                       <div ref={messagesEndRef} />
                     </div>
                   </div>
-
-                  {/* ── PINNED BOTTOM DIALOGUE BAR: Grok-plain input, wired InvokeLLM + Talk Live ── */}
-                  <div className="pt-2 mt-auto border-t border-white/10 sticky bottom-0 bg-[#0b0b0b] z-20 space-y-2">
-                    
-                    {/* Plain Input Bar (Tan #ede0cc background) */}
-                    <form 
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        executeSendMessage();
-                      }} 
-                      className="space-y-1"
-                    >
-                      <div 
-                        className="flex items-center rounded-xl px-3 py-2 transition-all border border-[#ede0cc]"
-                        style={{ backgroundColor: '#ede0cc', color: '#000000' }}
-                      >
-                        <Paperclip className="w-4 h-4 text-black mr-2 shrink-0 cursor-pointer" title="Attach file or pre-approval" />
-                        
-                        <input
-                          type="text"
-                          value={inputText}
-                          onChange={(e) => setInputText(e.target.value)}
-                          placeholder="Ask anything real estate—compliance, Prop 19, escrow traps, comps..."
-                          className="flex-1 bg-transparent text-black text-xs sm:text-sm outline-none font-normal min-w-0 placeholder:text-black/60"
-                          style={{ color: '#000000' }}
-                        />
-
-                        <div className="flex items-center gap-1.5 ml-2 shrink-0">
-                          <button
-                            type="button"
-                            onClick={handleToggleTalkLive}
-                            className={`p-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1 ${
-                              isTalkLiveActive 
-                                ? 'bg-red-600 text-white animate-pulse' 
-                                : 'text-black hover:bg-black/10'
-                            }`}
-                            title={isTalkLiveActive ? "End live Gemini duplex session" : "Talk Live with Charlie (Gemini Live Algieba)"}
-                          >
-                            <Mic className="w-4 h-4" />
-                            {isTalkLiveActive && (
-                              <span className="text-[10px] font-bold uppercase tracking-wider">
-                                {liveStatus === 'connecting' ? 'Connecting...' : liveStatus === 'speaking' ? 'Speaking' : 'Listening'}
-                              </span>
-                            )}
-                          </button>
-
-                          <button
-                            type="submit"
-                            disabled={isSending || !inputText.trim()}
-                            className="px-3.5 py-1 rounded-md font-semibold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm disabled:opacity-50"
-                            style={{ backgroundColor: '#000000', color: '#ffffff' }}
-                            title="Send message to Charlie"
-                          >
-                            <span>{isSending ? 'Sending...' : 'Send'}</span>
-                          </button>
-                        </div>
-                      </div>
-                    </form>
-
-                    {/* Plain prompt chips with thin borders placed below Ask Anything search bar */}
-                    <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setRightPanelView('solutions');
-                          executeSendMessage("What solutions and playbooks do you offer for home buyers?");
-                        }}
-                        className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-                      >
-                        <span>Solutions Vault</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setRightPanelView('solutions');
-                          executeSendMessage("Bob, how does Dyson & Dyson handle transaction discovery and lender compliance?");
-                        }}
-                        className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-                      >
-                        <span>Lender Compliance</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setRightPanelView('solutions');
-                          executeSendMessage("Bob, what are the biggest escrow traps and how do we protect our earnest money deposit?");
-                        }}
-                        className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-                      >
-                        <span>Ask Bob: Escrow Traps</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setRightPanelView('solutions');
-                          executeSendMessage("How does Prop 19 tax base portability work when relocating in California?");
-                        }}
-                        className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-                      >
-                        <span>Prop 19 Tax</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setRightPanelView('solutions');
-                          executeSendMessage("What are the coastal bluff setback and soil stability risks in California?");
-                        }}
-                        className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-                      >
-                        <span>Bluff Setbacks</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setRightPanelView('news');
-                          executeSendMessage("Charlie, summarize this broadcast in bullet points");
-                        }}
-                        className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-                      >
-                        <span>Daily News</span>
-                      </button>
-                    </div>
-                  </div>
                 </div>
 
                 {/* ── RIGHT COLUMN: PROPERTY AUDIT, SOLUTIONS VAULT & DAILY NEWS ── */}
@@ -668,6 +545,129 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
                   />
                 </div>
 
+              </div>
+
+              {/* ── TWO ROWS DIRECTLY OVER MINI APPS: INPUT BAR + PROMPT CHIPS ── */}
+              <div className="px-3 sm:px-4 py-3 bg-[#0a0a0a] border-t border-white/10 space-y-2.5">
+                
+                {/* Row 1: Plain Input Bar (Tan #ede0cc background) */}
+                <form 
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    executeSendMessage();
+                  }} 
+                  className="space-y-1"
+                >
+                  <div 
+                    className="flex items-center rounded-xl px-3 py-2 transition-all border border-[#ede0cc]"
+                    style={{ backgroundColor: '#ede0cc', color: '#000000' }}
+                  >
+                    <Paperclip className="w-4 h-4 text-black mr-2 shrink-0 cursor-pointer" title="Attach file or pre-approval" />
+                    
+                    <input
+                      type="text"
+                      value={inputText}
+                      onChange={(e) => setInputText(e.target.value)}
+                      placeholder="Ask anything real estate—compliance, Prop 19, escrow traps, comps..."
+                      className="flex-1 bg-transparent text-black text-xs sm:text-sm outline-none font-normal min-w-0 placeholder:text-black/60"
+                      style={{ color: '#000000' }}
+                    />
+
+                    <div className="flex items-center gap-1.5 ml-2 shrink-0">
+                      <button
+                        type="button"
+                        onClick={handleToggleTalkLive}
+                        className={`p-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1 ${
+                          isTalkLiveActive 
+                            ? 'bg-red-600 text-white animate-pulse' 
+                            : 'text-black hover:bg-black/10'
+                        }`}
+                        title={isTalkLiveActive ? "End live Gemini duplex session" : "Talk Live with Charlie (Gemini Live Algieba)"}
+                      >
+                        <Mic className="w-4 h-4" />
+                        {isTalkLiveActive && (
+                          <span className="text-[10px] font-bold uppercase tracking-wider">
+                            {liveStatus === 'connecting' ? 'Connecting...' : liveStatus === 'speaking' ? 'Speaking' : 'Listening'}
+                          </span>
+                        )}
+                      </button>
+
+                      <button
+                        type="submit"
+                        disabled={isSending || !inputText.trim()}
+                        className="px-3.5 py-1 rounded-md font-semibold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm disabled:opacity-50"
+                        style={{ backgroundColor: '#000000', color: '#ffffff' }}
+                        title="Send message to Charlie"
+                      >
+                        <span>{isSending ? 'Sending...' : 'Send'}</span>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+
+                {/* Row 2: Plain prompt chips with thin borders placed below Ask Anything search bar */}
+                <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRightPanelView('solutions');
+                      executeSendMessage("What solutions and playbooks do you offer for home buyers?");
+                    }}
+                    className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
+                  >
+                    <span>Solutions Vault</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRightPanelView('solutions');
+                      executeSendMessage("Bob, how does Dyson & Dyson handle transaction discovery and lender compliance?");
+                    }}
+                    className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
+                  >
+                    <span>Lender Compliance</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRightPanelView('solutions');
+                      executeSendMessage("Bob, what are the biggest escrow traps and how do we protect our earnest money deposit?");
+                    }}
+                    className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
+                  >
+                    <span>Ask Bob: Escrow Traps</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRightPanelView('solutions');
+                      executeSendMessage("How does Prop 19 tax base portability work when relocating in California?");
+                    }}
+                    className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
+                  >
+                    <span>Prop 19 Tax</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRightPanelView('solutions');
+                      executeSendMessage("What are the coastal bluff setback and soil stability risks in California?");
+                    }}
+                    className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
+                  >
+                    <span>Bluff Setbacks</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRightPanelView('news');
+                      executeSendMessage("Charlie, summarize this broadcast in bullet points");
+                    }}
+                    className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
+                  >
+                    <span>Daily News</span>
+                  </button>
+                </div>
               </div>
 
               {/* ── BOTTOM HORIZONTAL AI MINIONS RAIL ── */}
