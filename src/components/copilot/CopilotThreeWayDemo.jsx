@@ -313,7 +313,7 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
           className={`px-3.5 py-1.5 rounded-full text-[10.5px] font-bold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer ${
             isPlaying 
               ? 'bg-rose-500/20 text-rose-300 border border-rose-500/50 hover:bg-rose-500/30'
-              : 'bg-black hover:bg-[#1a1a1a] text-white border border-[#D4AF37]'
+              : 'bg-black hover:bg-[#1a1a1a] text-white border border-[#666666]'
           }`}
           style={{ backgroundColor: isPlaying ? undefined : '#000000', color: isPlaying ? undefined : '#ffffff' }}
         >

@@ -803,7 +803,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                         className="w-full"
                       >
                         <div 
-                          className="flex items-center rounded-full px-3.5 py-1.5 transition-all border border-[#D4AF37] w-full relative overflow-hidden shadow-lg bg-black"
+                          className="flex items-center rounded-full px-3.5 py-1.5 transition-all border border-[#666666] w-full relative overflow-hidden shadow-lg bg-black"
                           style={{ backgroundColor: '#000000', color: '#ffffff' }}
                         >
                           <Paperclip className="w-4 h-4 text-white hover:text-[#D4AF37] mr-2 shrink-0 cursor-pointer z-10 transition-colors" title="Attach file or pre-approval" />
@@ -852,7 +852,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                             <button
                               type="submit"
                               disabled={isSending}
-                              className="px-5 py-2 rounded-full font-bold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm bg-[#0a0a0a] hover:bg-[#1a1a1a] text-[#D4AF37] hover:text-white border border-[#D4AF37] active:scale-95"
+                              className="px-5 py-2 rounded-full font-bold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm bg-[#0a0a0a] hover:bg-[#1a1a1a] text-[#D4AF37] hover:text-white border border-[#666666] active:scale-95"
                               style={{ backgroundColor: '#000000', color: '#D4AF37' }}
                               title="Send message to Charlie"
                             >

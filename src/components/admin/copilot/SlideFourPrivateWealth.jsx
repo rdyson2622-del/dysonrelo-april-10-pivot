@@ -138,7 +138,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
               }}
             >
               <div 
-                className="max-w-[560px] w-full flex items-center rounded-full border border-[#D4AF37] p-1.5 pl-4 transition-all relative overflow-hidden shadow-lg cursor-text bg-black"
+                className="max-w-[560px] w-full flex items-center rounded-full border border-[#666666] p-1.5 pl-4 transition-all relative overflow-hidden shadow-lg cursor-text bg-black"
                 style={{ backgroundColor: '#000000', color: '#ffffff' }}
                 onClick={() => inputRef.current?.focus()}
               >
@@ -184,7 +184,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-6 py-2.5 rounded-full bg-[#141414] hover:bg-[#202020] text-[#D4AF37] hover:text-white font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all cursor-pointer shrink-0 border border-[#D4AF37] ml-2 z-10"
+                  className="px-6 py-2.5 rounded-full bg-[#141414] hover:bg-[#202020] text-[#D4AF37] hover:text-white font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all cursor-pointer shrink-0 border border-[#666666] ml-2 z-10"
                 >
                   <span>{isSubmitting ? 'Auditing...' : 'Send'}</span>
                   <span className="text-[#D4AF37]">→</span>
@@ -250,7 +250,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
           {/* Step 1: MLS browse + pills */}
           <div className="space-y-3.5 text-center">
             <div className="flex items-center justify-center gap-3 text-center">
-              <div className="w-6 h-6 rounded-full border border-[#D4AF37] flex items-center justify-center text-xs font-sans font-normal text-[#D4AF37] shrink-0">
+              <div className="w-6 h-6 rounded-full border border-[#666666] flex items-center justify-center text-xs font-sans font-normal text-stone-300 shrink-0">
                 1
               </div>
               <h3 className="text-xs sm:text-sm font-normal text-white font-sans text-center">
@@ -263,7 +263,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
                 href="https://www.realtor.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-32 sm:w-36 py-2 rounded-full bg-black hover:bg-[#1a1a1a] text-white text-xs font-normal transition-colors border border-[#D4AF37] inline-flex items-center justify-center text-center shadow-sm"
+                className="w-32 sm:w-36 py-2 rounded-full bg-black hover:bg-[#1a1a1a] text-white text-xs font-normal transition-colors border border-[#666666] inline-flex items-center justify-center text-center shadow-sm"
               >
                 <span className="underline decoration-white/40 underline-offset-2">Realtor.com</span>
               </a>
@@ -271,7 +271,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
                 href="https://www.homes.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-32 sm:w-36 py-2 rounded-full bg-black hover:bg-[#1a1a1a] text-white text-xs font-normal transition-colors border border-[#D4AF37] inline-flex items-center justify-center text-center shadow-sm"
+                className="w-32 sm:w-36 py-2 rounded-full bg-black hover:bg-[#1a1a1a] text-white text-xs font-normal transition-colors border border-[#666666] inline-flex items-center justify-center text-center shadow-sm"
               >
                 <span className="underline decoration-white/40 underline-offset-2">Homes.com</span>
               </a>
@@ -279,7 +279,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
                 href="https://www.redfin.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-32 sm:w-36 py-2 rounded-full bg-black hover:bg-[#1a1a1a] text-white text-xs font-normal transition-colors border border-[#D4AF37] inline-flex items-center justify-center text-center shadow-sm"
+                className="w-32 sm:w-36 py-2 rounded-full bg-black hover:bg-[#1a1a1a] text-white text-xs font-normal transition-colors border border-[#666666] inline-flex items-center justify-center text-center shadow-sm"
               >
                 <span className="underline decoration-white/40 underline-offset-2">Redfin.com</span>
               </a>
@@ -287,7 +287,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
                 href="https://www.zillow.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-32 sm:w-36 py-2 rounded-full bg-black hover:bg-[#1a1a1a] text-white text-xs font-normal transition-colors border border-[#D4AF37] inline-flex items-center justify-center text-center shadow-sm"
+                className="w-32 sm:w-36 py-2 rounded-full bg-black hover:bg-[#1a1a1a] text-white text-xs font-normal transition-colors border border-[#666666] inline-flex items-center justify-center text-center shadow-sm"
               >
                 <span className="underline decoration-white/40 underline-offset-2">Zillow</span>
               </a>
@@ -303,7 +303,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
             {/* Step 2 */}
             <div className="space-y-2">
               <div className="flex items-center gap-2.5">
-                <div className="w-5 h-5 rounded-full border border-[#D4AF37] flex items-center justify-center text-[11px] font-sans font-normal text-[#D4AF37] shrink-0">
+                <div className="w-5 h-5 rounded-full border border-[#666666] flex items-center justify-center text-[11px] font-sans font-normal text-stone-300 shrink-0">
                   2
                 </div>
                 <h4 className="text-xs sm:text-[13px] font-normal text-white font-sans">
@@ -318,7 +318,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
             {/* Step 3 */}
             <div className="space-y-2">
               <div className="flex items-center gap-2.5">
-                <div className="w-5 h-5 rounded-full border border-[#D4AF37] flex items-center justify-center text-[11px] font-sans font-normal text-[#D4AF37] shrink-0">
+                <div className="w-5 h-5 rounded-full border border-[#666666] flex items-center justify-center text-[11px] font-sans font-normal text-stone-300 shrink-0">
                   3
                 </div>
                 <h4 className="text-xs sm:text-[13px] font-normal text-white font-sans">
@@ -333,7 +333,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
             {/* Step 4 */}
             <div className="space-y-2">
               <div className="flex items-center gap-2.5">
-                <div className="w-5 h-5 rounded-full border border-[#D4AF37] flex items-center justify-center text-[11px] font-sans font-normal text-[#D4AF37] shrink-0">
+                <div className="w-5 h-5 rounded-full border border-[#666666] flex items-center justify-center text-[11px] font-sans font-normal text-stone-300 shrink-0">
                   4
                 </div>
                 <h4 className="text-xs sm:text-[13px] font-normal text-white font-sans">
@@ -348,7 +348,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
             {/* Step 5 */}
             <div className="space-y-2">
               <div className="flex items-center gap-2.5">
-                <div className="w-5 h-5 rounded-full border border-[#D4AF37] flex items-center justify-center text-[11px] font-sans font-normal text-[#D4AF37] shrink-0">
+                <div className="w-5 h-5 rounded-full border border-[#666666] flex items-center justify-center text-[11px] font-sans font-normal text-stone-300 shrink-0">
                   5
                 </div>
                 <h4 className="text-xs sm:text-[13px] font-normal text-white font-sans">
