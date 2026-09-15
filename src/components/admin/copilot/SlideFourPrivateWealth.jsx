@@ -163,25 +163,25 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
                 href="https://www.realtor.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-1.5 rounded-full border border-white/25 hover:border-[#D4AF37] text-white hover:text-[#D4AF37] text-xs font-medium transition-colors bg-white/5 hover:bg-white/10"
+                className="px-4 py-1.5 rounded-full bg-[#ede0cc] hover:bg-[#e2d3bd] text-black text-xs font-semibold transition-colors border border-[#ede0cc]"
               >
-                <span className="underline decoration-white/40 underline-offset-2">Realtor.com</span>
+                <span className="underline decoration-black/40 underline-offset-2">Realtor.com</span>
               </a>
               <a
                 href="https://www.homes.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-1.5 rounded-full border border-white/25 hover:border-[#D4AF37] text-white hover:text-[#D4AF37] text-xs font-medium transition-colors bg-white/5 hover:bg-white/10"
+                className="px-4 py-1.5 rounded-full bg-[#ede0cc] hover:bg-[#e2d3bd] text-black text-xs font-semibold transition-colors border border-[#ede0cc]"
               >
-                <span className="underline decoration-white/40 underline-offset-2">Homes.com</span>
+                <span className="underline decoration-black/40 underline-offset-2">Homes.com</span>
               </a>
               <a
                 href="https://www.zillow.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-1.5 rounded-full border border-white/25 hover:border-[#D4AF37] text-white hover:text-[#D4AF37] text-xs font-medium transition-colors bg-white/5 hover:bg-white/10"
+                className="px-4 py-1.5 rounded-full bg-[#ede0cc] hover:bg-[#e2d3bd] text-black text-xs font-semibold transition-colors border border-[#ede0cc]"
               >
-                <span className="underline decoration-white/40 underline-offset-2">Zillow</span>
+                <span className="underline decoration-black/40 underline-offset-2">Zillow</span>
               </a>
             </div>
           </div>
