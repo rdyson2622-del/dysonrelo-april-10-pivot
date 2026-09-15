@@ -301,7 +301,7 @@ export default function CopilotExplodedSubjectModal({
           <div className="space-y-6 animate-in fade-in duration-150">
             {/* Full 16:9 Cinema Player */}
             <div
-              className="relative w-full overflow-hidden rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.9)] border-2 border-[#D4AF37] group bg-black"
+              className="relative w-full overflow-hidden rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.9)] border border-[#D4AF37]/50 group bg-black"
               style={{ aspectRatio: '16/9' }}
             >
               {/* Top Badges */}

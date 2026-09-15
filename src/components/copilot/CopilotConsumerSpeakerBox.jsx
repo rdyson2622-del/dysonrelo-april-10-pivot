@@ -68,7 +68,7 @@ export default function CopilotConsumerSpeakerBox({
   // ── 2. RESTING STATE ──
   return (
     <div 
-      className={`w-full rounded-xl bg-[#0c0c0c] border border-stone-700/60 hover:border-stone-500 shadow-[0_6px_20px_rgba(0,0,0,0.8)] p-2.5 flex flex-col items-center text-center space-y-1.5 transition-all duration-300 shrink-0 relative group cursor-default min-h-[175px] justify-between ${className}`}
+      className={`w-full rounded-xl bg-[#0c0c0c] border border-[#D4AF37]/50 hover:border-[#D4AF37] shadow-[0_6px_20px_rgba(0,0,0,0.8)] p-2.5 flex flex-col items-center text-center space-y-1.5 transition-all duration-300 shrink-0 relative group cursor-default min-h-[175px] justify-between ${className}`}
     >
       <div className="relative shrink-0 pt-0.5">
         <div className="w-12 h-12 aspect-square rounded-full border-2 border-stone-400 p-0.5 overflow-hidden bg-black shadow-md ring-1.5 ring-white/10 group-hover:scale-105 transition-all">
