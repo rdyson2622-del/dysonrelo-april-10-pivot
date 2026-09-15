@@ -256,7 +256,7 @@ export default function CopilotDossierNewsPanel({
             }`}
           >
             <Scale className="w-3 h-3" />
-            <span>Audit</span>
+            <span>Saved Audits</span>
           </button>
 
           <button

@@ -151,7 +151,7 @@ export default function CopilotExplodedSubjectModal({
             }`}
           >
             <Scale className="w-3.5 h-3.5" />
-            <span>Property Audit</span>
+            <span>Saved Audits</span>
           </button>
 
           <button
