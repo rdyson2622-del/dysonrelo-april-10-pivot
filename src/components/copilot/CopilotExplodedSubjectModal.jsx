@@ -167,7 +167,7 @@ export default function CopilotExplodedSubjectModal({
             }`}
           >
             <BookOpen className="w-3.5 h-3.5" />
-            <span>Solutions Vault</span>
+            <span>Saved Solutions</span>
           </button>
 
           <button

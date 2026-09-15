@@ -63,7 +63,7 @@ export default function DysonHomesCopilot({ initialPage }) {
 
   // Discussion history stack state (stacked as added, retained on 40% side)
   const [discussionChips, setDiscussionChips] = useState([
-    { id: 'solutions', label: 'Solutions Vault', query: 'What solutions and playbooks do you offer for home buyers?', view: 'solutions' },
+    { id: 'solutions', label: 'Saved Solutions', query: 'What solutions and playbooks do you offer for home buyers?', view: 'solutions' },
     { id: 'compliance', label: 'Lender Compliance', query: 'Bob, how does Dyson & Dyson handle transaction discovery and lender compliance?', view: 'solutions' },
     { id: 'escrow', label: 'Ask Bob: Escrow Traps', query: 'Bob, what are the biggest escrow traps and how do we protect our earnest money deposit?', view: 'solutions' },
     { id: 'prop19', label: 'Prop 19 Tax', query: 'How does Prop 19 tax base portability work when relocating in California?', view: 'solutions' },

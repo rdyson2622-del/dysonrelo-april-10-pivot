@@ -41,7 +41,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
 
   // Discussion history stack state (stacked as added, retained on 40% side)
   const [discussionChips, setDiscussionChips] = useState([
-    { id: 'solutions', label: 'Solutions Vault', query: 'What solutions and playbooks do you offer for home buyers?', view: 'solutions' },
+    { id: 'solutions', label: 'Saved Solutions', query: 'What solutions and playbooks do you offer for home buyers?', view: 'solutions' },
     { id: 'compliance', label: 'Lender Compliance', query: 'Bob, how does Dyson & Dyson handle transaction discovery and lender compliance?', view: 'solutions' },
     { id: 'escrow', label: 'Ask Bob: Escrow Traps', query: 'Bob, what are the biggest escrow traps and how do we protect our earnest money deposit?', view: 'solutions' },
     { id: 'prop19', label: 'Prop 19 Tax', query: 'How does Prop 19 tax base portability work when relocating in California?', view: 'solutions' },
@@ -142,7 +142,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         } else if (isBobQuery) {
           answerText = `Bob Dyson: Regarding "${query}" — in California contracts, we never allow premature contingency waivers. We draft appraisal and title contingency shields to verify soil stability and structure comprehensive contract shields tailored to your specific lender and property requirements.`;
         } else {
-          answerText = `Charlie: I've opened the corresponding playbook in the Solutions Vault on the right. With ${dossierData.shortAddress}, our fiduciary protocol protects you with zero added broker fees and independent comps.`;
+          answerText = `Charlie: I've opened the corresponding playbook in Saved Solutions on the right. With ${dossierData.shortAddress}, our fiduciary protocol protects you with zero added broker fees and independent comps.`;
         }
 
         setMessages(prev => [

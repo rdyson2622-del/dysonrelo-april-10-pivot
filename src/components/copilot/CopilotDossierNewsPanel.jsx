@@ -269,7 +269,7 @@ export default function CopilotDossierNewsPanel({
             }`}
           >
             <FileText className="w-3 h-3" />
-            <span>Solutions Vault</span>
+            <span>Saved Solutions</span>
           </button>
 
           <button
