@@ -1,5 +1,5 @@
 import React from 'react';
-import { Eye, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import { ADMIN_DEPT_MINI_APPS } from '@/components/admin/AdminMiniAppsGrid';
 
 /**
@@ -11,20 +11,6 @@ import { ADMIN_DEPT_MINI_APPS } from '@/components/admin/AdminMiniAppsGrid';
 export default function CopilotMiniAppsRail({ className = '', onSelectApp }) {
   return (
     <aside className={`w-full bg-[#0c0c0c] border-t border-white/10 p-3 sm:p-4 select-none relative z-30 ${className}`}>
-      {/* Top Header: Active Desks counter */}
-      <div className="flex items-center justify-end pb-2 border-b border-white/10 text-xs mb-2">
-        <div className="flex items-center gap-2">
-          <div className="px-2 py-0.5 rounded bg-white/5 border border-white/10 flex items-center gap-1.5 text-[9px] text-stone-300">
-            <Eye className="w-3 h-3 text-[#D4AF37] shrink-0" />
-            <span className="font-semibold">Active Desks</span>
-            <span className="px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 font-mono font-bold text-[8px]">
-              {ADMIN_DEPT_MINI_APPS.length} LIVE
-            </span>
-          </div>
-          <span className="text-[8px] text-stone-500 font-mono hidden sm:inline">STANDBY</span>
-        </div>
-      </div>
-
       {/* Horizontal Scrollable Strip: Mini Apps with Copy Below */}
       <div className="flex items-start gap-3 sm:gap-4 overflow-x-auto pb-1.5 pt-1 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
         {ADMIN_DEPT_MINI_APPS.map((app) => {
