@@ -562,51 +562,18 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
                         </div>
                       </form>
 
-                      {/* Discussion History & Saved Discussions Stack directly below Command Bar */}
-                      <div className="flex flex-wrap items-center justify-between gap-2 pt-0.5">
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          <button
-                            type="button"
-                            onClick={() => setIsSavedDiscussionsOpen(true)}
-                            className="px-2.5 py-1 rounded-md text-[10px] font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm shrink-0"
-                            title="Open Saved Discussions"
-                          >
-                            <Bookmark className="w-3 h-3 text-[#D4AF37]" />
-                            <span>Saved Discussions</span>
-                            {savedCount > 0 && (
-                              <span className="px-1.5 py-0.2 rounded-full bg-[#D4AF37] text-black text-[9px] font-bold">
-                                {savedCount}
-                              </span>
-                            )}
-                          </button>
-
-                          {discussionChips.map((chip) => (
-                            <button
-                              key={chip.id}
-                              type="button"
-                              onClick={() => {
-                                if (chip.view) setRightPanelView(chip.view);
-                                executeSendMessage(chip.query);
-                              }}
-                              className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer shrink-0"
-                              title={chip.query}
-                            >
-                              <span>{chip.label}</span>
-                            </button>
-                          ))}
-                        </div>
-
-                        {(messages.length > 0 || isTalkLiveActive) && (
+                      {(messages.length > 0 || isTalkLiveActive) && (
+                        <div className="flex justify-end pt-0.5">
                           <button
                             type="button"
                             onClick={resetToBlank}
-                            className="px-2 py-1 rounded-md text-[10px] font-medium bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white border border-white/15 transition-all cursor-pointer whitespace-nowrap shrink-0 ml-auto"
+                            className="px-2 py-1 rounded-md text-[10px] font-medium bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white border border-white/15 transition-all cursor-pointer whitespace-nowrap"
                             title="Clear all messages and reset screen to blank"
                           >
                             Clear Session
                           </button>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </div>
 
                     {/* ── 3-WAY INTERACTIVE DIALOGUE FEED (COLOR-CODED DURING SPEECH & AT REST) ── */}
