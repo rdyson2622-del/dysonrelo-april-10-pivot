@@ -16,7 +16,7 @@ import { findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { GeminiLiveSessionClient } from '@/lib/geminiLiveClient';
 import { KNOWN_PROPERTY_DOSSIERS } from '@/components/admin/copilot/propertyDossierData';
 
-// Sanctioned lookup helper: uses ONLY mlsListingLookup for URLs and searchListingsForSkipTrace for city/state listings.
+// Sanctioned lookup helper: uses searchListingsForSkipTrace for MLS# & addresses, mlsListingLookup for URLs.
 // Strictly maps ONLY fields actually returned by these sanctioned backend functions.
 // Never uses SimplyRETS, never scrapes, and never fabricates fake prices, fake owners, fake comps, or fake risks.
 export async function resolveSanctionedDossier(rawInput) {
@@ -38,7 +38,7 @@ export async function resolveSanctionedDossier(rawInput) {
     };
   }
 
-  // 1. Detect MLS# FIRST (before URL or street address)
+  // 1. MLS# regex first -> call searchListingsForSkipTrace({mls_number: input})
   const isMlsPattern = /^(mls\s*#?\s*)?[A-Za-z]{0,4}\d{5,10}$/i.test(input) ||
                        /^mls\s*#?\s*([a-z0-9]+)/i.test(input) ||
                        (/^SD\d{6,10}$/i.test(input));
@@ -46,61 +46,69 @@ export async function resolveSanctionedDossier(rawInput) {
   if (isMlsPattern) {
     const cleanMls = input.replace(/^mls\s*#?\s*/i, '').trim().toUpperCase();
     try {
-      const res = await base44.functions.invoke('mlsListingLookup', {
-        mls_id: cleanMls,
-        query: input
+      const res = await base44.functions.invoke('searchListingsForSkipTrace', {
+        mls_number: cleanMls
       });
 
-      const listing = res?.data?.listing;
-      if (res?.data?.success && res?.data?.found && listing) {
-        const addr = listing.listing_address || cleanMls;
-        const short = addr.split(',')[0] || addr;
-        const val = Number(listing.listing_value);
-        const priceStr = listing.price_formatted || (val && !isNaN(val) && val > 0 
-          ? (val >= 1000000 ? `$${(val / 1000000).toFixed(2)}M` : `$${val.toLocaleString()}`)
-          : 'Could not resolve / unlisted');
+      const data = res?.data;
+      const properties = Array.isArray(data?.properties) ? data.properties : [];
 
-        const compsList = Array.isArray(listing.comps) && listing.comps.length > 0 ? listing.comps : [];
+      if (data?.success && properties.length > 0) {
+        const primary = properties[0];
+        const addr = primary.street ? `${primary.street}, ${primary.city || ''} ${primary.state || ''}`.trim() : `MLS# ${cleanMls}`;
+        const short = primary.street || `MLS# ${cleanMls}`;
+        const listP = Number(primary.list_price);
+        const priceStr = listP && !isNaN(listP) ? `$${listP.toLocaleString()}` : 'Price unlisted';
+
+        const compsList = properties.slice(1, 4).map(p => {
+          const lp = Number(p.list_price);
+          const pStr = lp && !isNaN(lp) ? `$${lp.toLocaleString()}` : 'Price unlisted';
+          const specs = [p.beds ? `${p.beds} bd` : null, p.baths ? `${p.baths} ba` : null, p.sqft ? `${Number(p.sqft).toLocaleString()} sf` : null].filter(Boolean).join(' | ') || 'Specs unlisted';
+          return {
+            address: [p.street, p.city].filter(Boolean).join(', ') || 'Unlisted Address',
+            distance: p.days_on_market ? `${p.days_on_market} DOM` : (p.state || 'Active'),
+            specs,
+            soldPrice: pStr,
+            adjPrice: `List ${pStr}`
+          };
+        });
 
         return {
           shortAddress: short,
-          city: listing.city || 'California',
-          fullAddress: listing.listing_address ? `${listing.listing_address}, ${listing.city || ''} ${listing.state || ''}`.trim() : `MLS# ${cleanMls}`,
+          city: `${primary.city || 'California'}, ${primary.state || 'CA'} ${primary.zip || ''}`.trim(),
+          fullAddress: addr,
           listPrice: priceStr,
-          marketSummary: listing.listing_description 
-            ? `${listing.listing_description.slice(0, 200)}...`
-            : `Verified listing records resolved via mlsListingLookup for MLS# ${cleanMls}.`,
+          marketSummary: `searchListingsForSkipTrace resolved ${properties.length} verified listing records for MLS# ${cleanMls}.`,
           comps: compsList,
           compsSummary: compsList.length > 0
-            ? `Returned ${compsList.length} verified comparable properties from mlsListingLookup.`
-            : 'No comparable sales returned for this MLS ID. No synthetic comps fabricated.',
-          risks: Array.isArray(listing.risks) ? listing.risks : [],
-          risksSummary: (listing.risks && listing.risks.length > 0)
-            ? `Identified ${listing.risks.length} location/property risk flags.`
-            : 'No verified risk records returned by sanctioned functions.',
+            ? `Returned ${compsList.length} verified comparable properties from searchListingsForSkipTrace.`
+            : 'No comparable properties returned by provider for this MLS record.',
+          risks: [],
+          risksSummary: 'No verified risk records returned by sanctioned provider.',
           complianceBasis: 'Listing agent & underwriting discovery required.',
           complianceProtocol: 'Case-by-Case Discovery',
           complianceStatus: 'Checked Against State, Fed & Lender Regs',
-          providerStatus: 'mlsListingLookup: verified real record'
+          providerStatus: 'searchListingsForSkipTrace: verified provider record'
         };
       }
 
-      // Explicit structured honest failure for MLS#
-      const failureReason = res?.data?.failure_reason || `MLS# ${cleanMls} was not found in public MLS indexes or active search results.`;
+      // Honest failure with provider/config/auth reason
+      const reason = data?.error || data?.failure_reason || (data?.configured === false ? 'BATCHDATA_API_KEY secret not configured in workspace settings' : `MLS# ${cleanMls} returned 0 records from provider`);
+      const providerName = data?.provider || 'searchListingsForSkipTrace (BatchData)';
       return {
         shortAddress: `MLS# ${cleanMls}`,
-        city: 'Unresolved (San Diego / Southern California)',
+        city: 'Unresolved',
         fullAddress: `MLS# ${cleanMls}`,
         listPrice: 'Could not resolve',
-        marketSummary: `Provider mlsListingLookup: ${failureReason}`,
+        marketSummary: `Provider ${providerName} lookup failed: ${reason}.`,
         comps: [],
-        compsSummary: 'No verified comparable listings returned for this MLS number. No synthetic data fabricated.',
+        compsSummary: `No verified comparable listings returned. Provider: ${providerName}. Status: ${reason}.`,
         risks: [],
         risksSummary: 'No verified risk records returned by sanctioned functions.',
-        complianceBasis: 'Individual broker discovery required to verify off-market/private listing status.',
+        complianceBasis: 'Individual broker discovery required to verify listing status.',
         complianceProtocol: 'Case-by-Case Discovery',
-        complianceStatus: 'Provider: mlsListingLookup (Honest Failure: Not Indexed)',
-        providerStatus: `mlsListingLookup: not found (${failureReason})`
+        complianceStatus: `Provider: ${providerName} (Honest Failure: ${reason})`,
+        providerStatus: `${providerName}: ${reason}`
       };
     } catch (err) {
       return {
@@ -108,262 +116,217 @@ export async function resolveSanctionedDossier(rawInput) {
         city: 'Unresolved',
         fullAddress: `MLS# ${cleanMls}`,
         listPrice: 'Could not resolve',
-        marketSummary: `Provider error calling mlsListingLookup: ${err.message || 'Lookup failed'}.`,
+        marketSummary: `Provider error calling searchListingsForSkipTrace: ${err.message || 'Lookup failed'}. Check provider auth and configuration.`,
         comps: [],
         compsSummary: 'No verified comps returned. No synthetic data fabricated.',
         risks: [],
         risksSummary: 'No verified risk records returned.',
         complianceBasis: 'Transaction-specific legal & underwriting discovery required.',
         complianceProtocol: 'Case-by-Case Discovery',
-        complianceStatus: 'Checked Against State, Fed & Lender Regs'
+        complianceStatus: `Auth/Provider Error: ${err.message || 'Failed'}`
       };
     }
   }
 
-  // 2. Detect URL
+  // Check if input is a listing URL
   const isUrl = /^(https?:\/\/|www\.|\w+\.(com|org|net))/i.test(input) || /zillow\.com|redfin\.com|realtor\.com|homes\.com/i.test(input);
-  if (isUrl) {
-    try {
-      const res = await base44.functions.invoke('mlsListingLookup', { url: input });
-      const listing = res?.data?.listing;
-      if (res?.data?.success && res?.data?.found && listing) {
-        const addr = listing.listing_address || input;
-        const short = addr.split(',')[0] || addr;
-        const val = Number(listing.listing_value);
-        const priceStr = listing.price_formatted || (val && !isNaN(val) && val > 0 
-          ? (val >= 1000000 ? `$${(val / 1000000).toFixed(2)}M` : `$${val.toLocaleString()}`)
-          : 'Could not resolve / unlisted');
 
-        const compsList = Array.isArray(listing.comps) && listing.comps.length > 0 ? listing.comps : [];
+  // 2. Full street address parse city/state/ZIP -> call searchListingsForSkipTrace({street,city,state,zip})
+  if (!isUrl) {
+    let streetPart = '';
+    let cityPart = '';
+    let statePart = '';
+    let zipPart = '';
 
-        return {
-          shortAddress: short,
-          city: listing.city || 'California',
-          fullAddress: addr,
-          listPrice: priceStr,
-          marketSummary: listing.listing_description 
-            ? `${listing.listing_description.slice(0, 180)}...`
-            : `Listing records resolved via mlsListingLookup for ${short}. Individual discovery required.`,
-          comps: compsList,
-          compsSummary: compsList.length > 0 
-            ? `Returned ${compsList.length} verified comparable sales.`
-            : 'Listing URL resolved via mlsListingLookup. No comparable sales data returned by listing lookup.',
-          risks: Array.isArray(listing.risks) ? listing.risks : [],
-          risksSummary: (listing.risks && listing.risks.length > 0)
-            ? `Identified ${listing.risks.length} property risk flags.`
-            : 'No verified risk records returned by listing lookup.',
-          complianceBasis: 'Listing agent & underwriting discovery required.',
-          complianceProtocol: 'Case-by-Case Discovery',
-          complianceStatus: 'Checked Against State, Fed & Lender Regs',
-          rawListing: listing
-        };
+    const commaParts = input.split(',').map(s => s.trim());
+    if (commaParts.length >= 2) {
+      streetPart = commaParts[0] || '';
+      cityPart = commaParts[1] || '';
+      if (commaParts[2]) {
+        const stateZip = commaParts[2].trim();
+        const szMatch = stateZip.match(/^([A-Za-z]{2})(?:\s+(\d{5}(?:-\d{4})?))?/);
+        if (szMatch) {
+          statePart = szMatch[1].toUpperCase();
+          zipPart = szMatch[2] || '';
+        } else {
+          statePart = stateZip.slice(0, 2).toUpperCase();
+        }
       }
-
-      const failMsg = res?.data?.failure_reason || `mlsListingLookup could not resolve active records for listing URL: ${input}.`;
-      return {
-        shortAddress: input.split('?')[0].split('/').filter(Boolean).pop() || 'Listing URL',
-        city: 'Unresolved',
-        fullAddress: input,
-        listPrice: 'Could not resolve',
-        marketSummary: failMsg,
-        comps: [],
-        compsSummary: 'No verified comparable listings returned. No synthetic data fabricated.',
-        risks: [],
-        risksSummary: 'No verified risk records returned by sanctioned functions.',
-        complianceBasis: 'Listing URL discovery required.',
-        complianceProtocol: 'Case-by-Case Discovery',
-        complianceStatus: 'Provider: mlsListingLookup (Honest Failure)'
-      };
-    } catch (err) {
-      console.warn('mlsListingLookup error:', err);
-      return {
-        shortAddress: 'Listing URL',
-        city: 'Unresolved',
-        fullAddress: input,
-        listPrice: 'Could not resolve',
-        marketSummary: `Provider error calling mlsListingLookup: ${err.message || 'Lookup failed'}.`,
-        comps: [],
-        compsSummary: 'No verified comps returned.',
-        risks: [],
-        risksSummary: 'No verified risk records returned.',
-        complianceBasis: 'Listing agent & underwriting discovery required.',
-        complianceProtocol: 'Case-by-Case Discovery',
-        complianceStatus: 'Checked Against State, Fed & Lender Regs'
-      };
-    }
-  }
-
-  // 3. Full Street Address: robustly parse street, city, state, zip
-  let streetPart = '';
-  let cityPart = '';
-  let statePart = '';
-  let zipPart = '';
-
-  const commaParts = input.split(',').map(s => s.trim());
-  if (commaParts.length >= 2) {
-    streetPart = commaParts[0] || '';
-    cityPart = commaParts[1] || '';
-    if (commaParts[2]) {
-      const stateZip = commaParts[2].trim();
-      const szMatch = stateZip.match(/^([A-Za-z]{2})(?:\s+(\d{5}(?:-\d{4})?))?/);
-      if (szMatch) {
-        statePart = szMatch[1].toUpperCase();
-        zipPart = szMatch[2] || '';
-      } else {
-        statePart = stateZip.slice(0, 2).toUpperCase();
-      }
-    }
-  } else {
-    const addrRegex = /^(.+?)\s+([A-Za-z\s]+?)\s+([A-Za-z]{2})(?:\s+(\d{5}))?$/;
-    const m = input.match(addrRegex);
-    if (m) {
-      streetPart = m[1].trim();
-      cityPart = m[2].trim();
-      statePart = m[3].trim().toUpperCase();
-      zipPart = m[4] || '';
     } else {
-      streetPart = input;
-    }
-  }
-
-  // Invoke searchListingsForSkipTrace as specified
-  let batchDataResult = null;
-  let batchDataError = null;
-  try {
-    const bdRes = await base44.functions.invoke('searchListingsForSkipTrace', {
-      city: cityPart || undefined,
-      state: statePart || undefined,
-      street: streetPart || undefined,
-      address: input,
-      max_results: 5,
-      days_listed: 30
-    });
-    batchDataResult = bdRes?.data;
-  } catch (err) {
-    batchDataError = err.message;
-  }
-
-  // Also query mlsListingLookup for property & comps verification
-  let mlsLookupResult = null;
-  try {
-    const mlsRes = await base44.functions.invoke('mlsListingLookup', {
-      address: streetPart,
-      city: cityPart,
-      state: statePart,
-      zip: zipPart,
-      query: input
-    });
-    mlsLookupResult = mlsRes?.data;
-  } catch (err) {
-    console.warn('mlsListingLookup address error:', err);
-  }
-
-  // Check if BatchData returned verified property records
-  const bdProps = Array.isArray(batchDataResult?.properties) ? batchDataResult.properties : [];
-  const matchedBdProp = bdProps.find(p =>
-    p.street && streetPart.toLowerCase().includes(p.street.toLowerCase())
-  );
-
-  // Check if mlsListingLookup returned verified listing data
-  const mlsListing = mlsLookupResult?.found ? mlsLookupResult.listing : null;
-
-  if (mlsListing) {
-    const addr = mlsListing.listing_address || streetPart;
-    const short = addr.split(',')[0] || addr;
-    const val = Number(mlsListing.listing_value);
-    const priceStr = mlsListing.price_formatted || (val && !isNaN(val) && val > 0 
-      ? (val >= 1000000 ? `$${(val / 1000000).toFixed(2)}M` : `$${val.toLocaleString()}`)
-      : 'Could not resolve / unlisted');
-
-    const compsList = Array.isArray(mlsListing.comps) && mlsListing.comps.length > 0 ? mlsListing.comps : [];
-    const risksList = Array.isArray(mlsListing.risks) && mlsListing.risks.length > 0 ? mlsListing.risks : [];
-
-    const providerNotes = [];
-    providerNotes.push('mlsListingLookup: verified real property listing record');
-    if (batchDataResult && batchDataResult.configured === false) {
-      providerNotes.push('BatchData: unconfigured (BATCHDATA_API_KEY secret not configured in workspace)');
+      const addrRegex = /^(.+?)\s+([A-Za-z\s]+?)\s+([A-Za-z]{2})(?:\s+(\d{5}))?$/;
+      const m = input.match(addrRegex);
+      if (m) {
+        streetPart = m[1].trim();
+        cityPart = m[2].trim();
+        statePart = m[3].trim().toUpperCase();
+        zipPart = m[4] || '';
+      } else {
+        streetPart = input;
+      }
     }
 
-    return {
-      shortAddress: short,
-      city: `${mlsListing.city || cityPart || 'San Diego'}, ${mlsListing.state || statePart || 'CA'} ${mlsListing.zip || zipPart || ''}`.trim(),
-      fullAddress: input,
-      listPrice: priceStr,
-      marketSummary: mlsListing.listing_description 
-        ? `${mlsListing.listing_description.slice(0, 220)}...`
-        : `Verified listing records resolved via mlsListingLookup for ${short}. Status: ${mlsListing.status || 'Active'}.`,
-      comps: compsList,
-      compsSummary: compsList.length > 0 
-        ? `Returned ${compsList.length} verified comparable properties from provider lookup.`
-        : 'No comparable sales returned by live provider. No synthetic comps fabricated.',
-      risks: risksList,
-      risksSummary: risksList.length > 0 
-        ? `Identified ${risksList.length} verified property/geotechnical risk flags.`
-        : 'No verified risk records returned by live provider.',
-      complianceBasis: 'Individual legal & lender discovery required.',
-      complianceProtocol: 'Case-by-Case Discovery',
-      complianceStatus: 'Checked Against State, Fed & Lender Regs',
-      providerStatus: providerNotes.join(' | ')
-    };
-  }
-
-  if (matchedBdProp) {
-    const listP = Number(matchedBdProp.list_price);
-    const mainPrice = listP && !isNaN(listP) ? `$${listP.toLocaleString()}` : 'Could not resolve';
-    const compsList = bdProps
-      .filter(p => p !== matchedBdProp)
-      .slice(0, 3)
-      .map(p => {
-        const lp = Number(p.list_price);
-        const pStr = lp && !isNaN(lp) ? `$${lp.toLocaleString()}` : 'Price unlisted';
-        const specs = [p.beds ? `${p.beds} bd` : null, p.baths ? `${p.baths} ba` : null, p.sqft ? `${Number(p.sqft).toLocaleString()} sf` : null].filter(Boolean).join(' | ') || 'Specs unlisted';
-        return {
-          address: [p.street, p.city].filter(Boolean).join(', ') || 'Unlisted Address',
-          distance: p.days_on_market ? `${p.days_on_market} DOM` : 'Active',
-          specs,
-          soldPrice: pStr,
-          adjPrice: `List ${pStr}`
-        };
+    try {
+      const res = await base44.functions.invoke('searchListingsForSkipTrace', {
+        street: streetPart || undefined,
+        city: cityPart || undefined,
+        state: statePart || undefined,
+        zip: zipPart || undefined
       });
 
-    return {
-      shortAddress: streetPart,
-      city: `${cityPart}, ${statePart}`,
-      fullAddress: input,
-      listPrice: mainPrice,
-      marketSummary: `searchListingsForSkipTrace resolved active property records in ${cityPart}, ${statePart}.`,
-      comps: compsList,
-      compsSummary: compsList.length > 0
-        ? `Returned ${compsList.length} verified listings from searchListingsForSkipTrace.`
-        : 'No comparable sales returned. No synthetic comps fabricated.',
-      risks: [],
-      risksSummary: 'No verified risk records returned by sanctioned functions.',
-      complianceBasis: 'Individual legal & lender discovery required.',
-      complianceProtocol: 'Case-by-Case Discovery',
-      complianceStatus: 'Checked Against State, Fed & Lender Regs',
-      providerStatus: 'searchListingsForSkipTrace: verified BatchData record'
-    };
+      const data = res?.data;
+      const properties = Array.isArray(data?.properties) ? data.properties : [];
+
+      if (data?.success && properties.length > 0) {
+        const matchedProp = properties.find(p =>
+          p.street && streetPart.toLowerCase().includes(p.street.toLowerCase())
+        ) || properties[0];
+
+        const listP = matchedProp ? Number(matchedProp.list_price) : null;
+        const mainPrice = listP && !isNaN(listP) ? `$${listP.toLocaleString()}` : 'Could not resolve';
+
+        const compsList = properties
+          .filter(p => p !== matchedProp)
+          .slice(0, 3)
+          .map(p => {
+            const lp = Number(p.list_price);
+            const pStr = lp && !isNaN(lp) ? `$${lp.toLocaleString()}` : 'Price unlisted';
+            const specs = [p.beds ? `${p.beds} bd` : null, p.baths ? `${p.baths} ba` : null, p.sqft ? `${Number(p.sqft).toLocaleString()} sf` : null].filter(Boolean).join(' | ') || 'Specs unlisted';
+            return {
+              address: [p.street, p.city].filter(Boolean).join(', ') || 'Unlisted Address',
+              distance: p.days_on_market ? `${p.days_on_market} DOM` : (p.state || 'Active'),
+              specs,
+              soldPrice: pStr,
+              adjPrice: `List ${pStr}`
+            };
+          });
+
+        return {
+          shortAddress: matchedProp.street || streetPart,
+          city: `${matchedProp.city || cityPart}, ${matchedProp.state || statePart} ${matchedProp.zip || zipPart}`.trim(),
+          fullAddress: input,
+          listPrice: mainPrice,
+          marketSummary: `searchListingsForSkipTrace resolved ${properties.length} active property records in ${cityPart || matchedProp.city}, ${statePart || matchedProp.state}.`,
+          comps: compsList,
+          compsSummary: compsList.length > 0
+            ? `Returned ${compsList.length} verified listings from searchListingsForSkipTrace.`
+            : 'No comparable sales returned by provider for this search.',
+          risks: [],
+          risksSummary: 'No verified risk records returned by sanctioned functions.',
+          complianceBasis: 'Individual legal & lender discovery required.',
+          complianceProtocol: 'Case-by-Case Discovery',
+          complianceStatus: 'Checked Against State, Fed & Lender Regs',
+          providerStatus: 'searchListingsForSkipTrace: verified BatchData record'
+        };
+      }
+
+      // Honest failure with provider/config/auth reason
+      const reason = data?.error || data?.failure_reason || (data?.configured === false ? 'BATCHDATA_API_KEY secret not configured in workspace settings' : `No records returned for ${streetPart || input}`);
+      const providerName = data?.provider || 'searchListingsForSkipTrace (BatchData)';
+
+      return {
+        shortAddress: streetPart || input,
+        city: cityPart ? `${cityPart}${statePart ? ', ' + statePart : ''}` : 'Unresolved',
+        fullAddress: input,
+        listPrice: 'Could not resolve',
+        marketSummary: `Provider ${providerName} lookup failed: ${reason}.`,
+        comps: [],
+        compsSummary: `No verified comparable listings returned. Provider: ${providerName}. Status: ${reason}.`,
+        risks: [],
+        risksSummary: 'No verified risk records returned by sanctioned functions.',
+        complianceBasis: 'Individual broker discovery required directly with listing agent.',
+        complianceProtocol: 'Case-by-Case Discovery',
+        complianceStatus: `Provider: ${providerName} (Honest Failure: ${reason})`,
+        providerStatus: `${providerName}: ${reason}`
+      };
+    } catch (err) {
+      return {
+        shortAddress: streetPart || input,
+        city: cityPart ? `${cityPart}${statePart ? ', ' + statePart : ''}` : 'Unresolved',
+        fullAddress: input,
+        listPrice: 'Could not resolve',
+        marketSummary: `Provider error calling searchListingsForSkipTrace: ${err.message || 'Lookup failed'}. Check provider auth and configuration.`,
+        comps: [],
+        compsSummary: 'No verified comps returned. No synthetic data fabricated.',
+        risks: [],
+        risksSummary: 'No verified risk records returned.',
+        complianceBasis: 'Transaction-specific legal & underwriting discovery required.',
+        complianceProtocol: 'Case-by-Case Discovery',
+        complianceStatus: `Auth/Provider Error: ${err.message || 'Failed'}`
+      };
+    }
   }
 
-  // Clear structured honest failure if neither provider returned records
-  const batchDataStatus = batchDataResult?.error || (batchDataResult?.configured === false ? 'BATCHDATA_API_KEY secret not configured in workspace' : (batchDataError || 'No records returned'));
-  const mlsStatus = mlsLookupResult?.failure_reason || (mlsLookupResult?.found === false ? 'Address not indexed in public MLS search' : 'No records returned');
+  // 3. URL -> call mlsListingLookup({url})
+  try {
+    const res = await base44.functions.invoke('mlsListingLookup', { url: input });
+    const listing = res?.data?.listing;
+    if (res?.data?.success && res?.data?.found && listing) {
+      const addr = listing.listing_address || input;
+      const short = addr.split(',')[0] || addr;
+      const val = Number(listing.listing_value);
+      const priceStr = listing.price_formatted || (val && !isNaN(val) && val > 0 
+        ? (val >= 1000000 ? `$${(val / 1000000).toFixed(2)}M` : `$${val.toLocaleString()}`)
+        : 'Could not resolve / unlisted');
 
-  return {
-    shortAddress: streetPart || input,
-    city: cityPart ? `${cityPart}${statePart ? ', ' + statePart : ''}` : 'Unresolved',
-    fullAddress: input,
-    listPrice: 'Could not resolve',
-    marketSummary: `Could not resolve verified listing records for ${streetPart}. Providers checked:\n1. searchListingsForSkipTrace (BatchData): ${batchDataStatus}\n2. mlsListingLookup (Gemini Web Search): ${mlsStatus}`,
-    comps: [],
-    compsSummary: 'No verified comparable listings returned by providers. No synthetic comps fabricated.',
-    risks: [],
-    risksSummary: 'No verified risk records returned by sanctioned functions.',
-    complianceBasis: 'Individual broker discovery required directly with listing agent.',
-    complianceProtocol: 'Case-by-Case Discovery',
-    complianceStatus: 'Provider Status: Honest Failure (Unresolved)',
-    providerStatus: `BatchData: ${batchDataStatus} | mlsListingLookup: ${mlsStatus}`
-  };
+      const compsList = Array.isArray(listing.comps) && listing.comps.length > 0 ? listing.comps : [];
+
+      return {
+        shortAddress: short,
+        city: listing.city || 'California',
+        fullAddress: addr,
+        listPrice: priceStr,
+        marketSummary: listing.listing_description 
+          ? `${listing.listing_description.slice(0, 180)}...`
+          : `Listing records resolved via mlsListingLookup for ${short}. Individual discovery required.`,
+        comps: compsList,
+        compsSummary: compsList.length > 0 
+          ? `Returned ${compsList.length} verified comparable sales.`
+          : 'Listing URL resolved via mlsListingLookup. No comparable sales data returned by listing lookup.',
+        risks: Array.isArray(listing.risks) ? listing.risks : [],
+        risksSummary: (listing.risks && listing.risks.length > 0)
+          ? `Identified ${listing.risks.length} property risk flags.`
+          : 'No verified risk records returned by listing lookup.',
+        complianceBasis: 'Listing agent & underwriting discovery required.',
+        complianceProtocol: 'Case-by-Case Discovery',
+        complianceStatus: 'Checked Against State, Fed & Lender Regs',
+        rawListing: listing,
+        providerStatus: 'mlsListingLookup: verified real record'
+      };
+    }
+
+    const failMsg = res?.data?.failure_reason || res?.data?.error || `mlsListingLookup could not resolve active records for listing URL: ${input}.`;
+    const providerName = res?.data?.provider || 'mlsListingLookup';
+    return {
+      shortAddress: input.split('?')[0].split('/').filter(Boolean).pop() || 'Listing URL',
+      city: 'Unresolved',
+      fullAddress: input,
+      listPrice: 'Could not resolve',
+      marketSummary: `Provider ${providerName} lookup failed: ${failMsg}.`,
+      comps: [],
+      compsSummary: `No verified comparable listings returned. Provider: ${providerName}. Status: ${failMsg}.`,
+      risks: [],
+      risksSummary: 'No verified risk records returned by sanctioned functions.',
+      complianceBasis: 'Listing URL discovery required.',
+      complianceProtocol: 'Case-by-Case Discovery',
+      complianceStatus: `Provider: ${providerName} (Honest Failure)`,
+      providerStatus: `${providerName}: ${failMsg}`
+    };
+  } catch (err) {
+    return {
+      shortAddress: 'Listing URL',
+      city: 'Unresolved',
+      fullAddress: input,
+      listPrice: 'Could not resolve',
+      marketSummary: `Provider error calling mlsListingLookup: ${err.message || 'Lookup failed'}. Check provider auth and configuration.`,
+      comps: [],
+      compsSummary: 'No verified comps returned.',
+      risks: [],
+      risksSummary: 'No verified risk records returned.',
+      complianceBasis: 'Listing agent & underwriting discovery required.',
+      complianceProtocol: 'Case-by-Case Discovery',
+      complianceStatus: 'Checked Against State, Fed & Lender Regs'
+    };
+  }
 }
 
 const TAN_BG = '#ede0cc';
