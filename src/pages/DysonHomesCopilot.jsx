@@ -718,10 +718,10 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
 
               </div>
 
-              {/* ── FOOTER ROW DIRECTLY OVER MINI APPS: DISCUSSION STACK & BRANDING ── */}
-              <div className="px-3 sm:px-4 py-2.5 bg-[#0a0a0a] border-t border-white/10 flex flex-col items-end gap-2.5">
-                {/* Discussion History & Saved Discussions Stack (Moved to lower right just above mini apps) */}
-                <div className="flex flex-wrap items-center justify-end gap-1.5 w-full">
+              {/* ── FOOTER ROW DIRECTLY OVER MINI APPS: DISCUSSION STACK (LOWER LEFT <= 40% SCREEN) & BRANDING (FAR RIGHT) ── */}
+              <div className="px-3 sm:px-4 py-2.5 bg-[#0a0a0a] border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                {/* Discussion History & Saved Discussions Stack (Lower Left Stacked, <= 40% Screen Width) */}
+                <div className="w-full sm:max-w-[40%] flex flex-wrap items-center gap-1.5">
                   <button
                     type="button"
                     onClick={() => setIsSavedDiscussionsOpen(true)}
@@ -754,7 +754,7 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
                 </div>
 
                 {/* Footer Branding: stacked vertically on the far right */}
-                <div className="flex flex-col items-end text-right font-normal text-white">
+                <div className="flex flex-col items-end text-right font-normal text-white shrink-0 self-end sm:self-center ml-auto">
                   <span className="text-[12px] sm:text-[12.5px] font-normal text-white tracking-normal whitespace-nowrap">
                     The Dyson &amp; Dyson Companies, Inc. Ca. DRE#02303118
                   </span>
