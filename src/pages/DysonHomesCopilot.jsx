@@ -32,6 +32,7 @@ export default function DysonHomesCopilot({ initialPage }) {
 
   // Copilot Command Center Interactive Wire State
   const [inputText, setInputText] = useState('');
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [messages, setMessages] = useState([]);
   const [activeExplainer, setActiveExplainer] = useState(null);
@@ -559,21 +560,35 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
                   className="space-y-1 w-full md:w-[40%]"
                 >
                   <div 
-                    className="flex items-center rounded-xl px-3 py-2 transition-all border border-[#ede0cc] w-full"
+                    className="flex items-center rounded-xl px-3 py-2 transition-all border border-[#ede0cc] w-full relative overflow-hidden"
                     style={{ backgroundColor: '#ede0cc', color: '#000000' }}
                   >
-                    <Paperclip className="w-4 h-4 text-black mr-2 shrink-0 cursor-pointer" title="Attach file or pre-approval" />
+                    <Paperclip className="w-4 h-4 text-black mr-2 shrink-0 cursor-pointer z-10" title="Attach file or pre-approval" />
                     
-                    <input
-                      type="text"
-                      value={inputText}
-                      onChange={(e) => setInputText(e.target.value)}
-                      placeholder="Ask anything real estate—compliance, Prop 19, escrow traps, comps..."
-                      className="flex-1 bg-transparent text-black text-xs sm:text-sm outline-none font-normal min-w-0 placeholder:text-black/60"
-                      style={{ color: '#000000' }}
-                    />
+                    <div className="relative flex-1 min-w-0 flex items-center h-6 overflow-hidden">
+                      {/* Continuous scrolling marquee placeholder until viewer adds a request */}
+                      {!inputText && !isInputFocused && (
+                        <div className="absolute inset-0 flex items-center overflow-hidden pointer-events-none select-none text-black/60 text-xs sm:text-sm whitespace-nowrap">
+                          <div className="inline-flex animate-marquee whitespace-nowrap">
+                            <span className="mr-12 font-normal">Ask anything real estate—compliance, Prop 19, escrow traps, comps...</span>
+                            <span className="mr-12 font-normal">Ask anything real estate—compliance, Prop 19, escrow traps, comps...</span>
+                          </div>
+                        </div>
+                      )}
 
-                    <div className="flex items-center gap-1.5 ml-2 shrink-0">
+                      <input
+                        type="text"
+                        value={inputText}
+                        onFocus={() => setIsInputFocused(true)}
+                        onBlur={() => setIsInputFocused(false)}
+                        onChange={(e) => setInputText(e.target.value)}
+                        placeholder=""
+                        className="w-full bg-transparent text-black text-xs sm:text-sm outline-none font-normal min-w-0 z-10"
+                        style={{ color: '#000000' }}
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-1.5 ml-2 shrink-0 z-10">
                       <button
                         type="button"
                         onClick={handleToggleTalkLive}
