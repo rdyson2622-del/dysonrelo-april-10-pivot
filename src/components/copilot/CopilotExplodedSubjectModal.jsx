@@ -3,7 +3,7 @@ import {
   X, Maximize2, Minimize2, Radio, Scale, BookOpen, ShieldAlert, 
   DollarSign, Waves, Clock, CheckCircle2, ArrowRight, Play, Pause, 
   Volume2, VolumeX, MessageSquare, Sparkles, Video, Headphones, 
-  FileText, ArrowLeft, Shield, Share2, HelpCircle
+  FileText, ArrowLeft, Shield, Share2, HelpCircle, RotateCcw
 } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import { SOLUTIONS_LIBRARY } from './CopilotSolutionsVault';
@@ -184,6 +184,23 @@ export default function CopilotExplodedSubjectModal({
           >
             <Radio className="w-3.5 h-3.5" />
             <span>Daily News</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (selectedItem) onSelectItem?.(null);
+              if (videoRef.current) {
+                try { videoRef.current.pause(); } catch (_) {}
+              }
+              onViewChange?.(null);
+              onClose?.();
+            }}
+            className="px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 text-stone-400 hover:text-white active:bg-white active:text-black"
+            title="Clear content from the screen"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>Clear</span>
           </button>
         </div>
 

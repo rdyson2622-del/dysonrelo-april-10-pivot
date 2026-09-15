@@ -3,7 +3,7 @@ import {
   Scale, ShieldAlert, Shield, DollarSign, Waves, Clock, Radio, 
   Maximize2, Minimize2, Newspaper, Sparkles, Play, Pause,
   Share2, Volume2, VolumeX, ChevronRight, MessageSquare, BookOpen, FileText,
-  ArrowLeft, X
+  ArrowLeft, X, RotateCcw
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -30,6 +30,7 @@ export default function CopilotDossierNewsPanel({
   isSubscriber = false,
   topOffset = 480,
   onBackToSearch,
+  onClear,
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -101,6 +102,17 @@ export default function CopilotDossierNewsPanel({
         window.location.href = '/copilot/page-1';
       }
     }
+  };
+
+  const handleClear = () => {
+    if (videoRef.current) {
+      try {
+        videoRef.current.pause();
+      } catch (_) {}
+      setIsPlaying(false);
+    }
+    onViewChange?.(null);
+    onClear?.();
   };
 
   return (
@@ -301,6 +313,16 @@ export default function CopilotDossierNewsPanel({
                 <span>Full screen</span>
               </>
             )}
+          </button>
+
+          <button
+            type="button"
+            onClick={handleClear}
+            className="px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 text-stone-400 hover:text-white hover:bg-white/10 active:bg-white active:text-black ml-0.5"
+            title="Clear content from the screen"
+          >
+            <RotateCcw className="w-3 h-3" />
+            <span>Clear</span>
           </button>
         </div>
       </div>
