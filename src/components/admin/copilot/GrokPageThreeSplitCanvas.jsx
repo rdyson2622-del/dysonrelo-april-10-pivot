@@ -301,12 +301,6 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
           
           {/* Scrollable Conversation Container */}
           <div className="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[560px]">
-            
-            {/* Stage Label */}
-            <div className="flex items-center justify-between pb-1 border-b border-white/5 text-[10px] text-stone-400 font-mono">
-              <span className="uppercase text-[#D4AF37] font-semibold">FIDUCIARY TEAM ROSTER</span>
-              <span>CHARLIE LIVE TALK ACTIVE</span>
-            </div>
 
             {/* ── ROSTER: BOB (VISUAL / READ-ONLY), CHARLIE (ONLY LIVE TALK), CONSUMER (READ-ONLY) ── */}
             <div className="grid grid-cols-3 gap-2 pt-1">
