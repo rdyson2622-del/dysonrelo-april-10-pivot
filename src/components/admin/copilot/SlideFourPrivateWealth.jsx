@@ -97,10 +97,10 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
             </p>
           </div>
 
-          {/* SAMPLE LOOKUPS: Plain text links / thin borders, no yellow dots, no badges */}
+          {/* Sample Lookups: Plain text links / thin borders, no yellow dots, no badges */}
           <div className="flex items-center gap-2 flex-wrap pt-1">
-            <span className="text-[10px] uppercase font-bold text-[#D4AF37] tracking-wider font-mono">
-              SAMPLE LOOKUPS:
+            <span className="text-xs font-semibold text-[#D4AF37] font-sans">
+              Sample Lookups:
             </span>
             {SAMPLE_SEARCHES.map((chip) => (
               <button
@@ -136,25 +136,25 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
 
       </div>
 
-      {/* ── HOW DYSON HOMES COPILOT WORKS (IMAGE 1 SPEC) ── */}
+      {/* ── HOW DYSON HOMES COPILOT WORKS ── */}
       <section className="w-full bg-[#0a0a0a] text-[#F3F0E6] border-t border-white/10 py-12 sm:py-16 px-6 sm:px-10">
-        <div className="max-w-[1240px] mx-auto space-y-8">
+        <div className="max-w-[1240px] mx-auto space-y-8 font-sans">
           
           {/* Centered Divider with Title */}
-          <div className="flex items-center justify-center gap-4 text-xs font-mono tracking-[0.25em] uppercase text-stone-400">
+          <div className="flex items-center justify-center gap-4 text-xs font-sans tracking-wider text-stone-400">
             <div className="h-[1px] bg-white/15 flex-1" />
-            <span className="shrink-0 font-medium">HOW DYSON HOMES COPILOT WORKS</span>
+            <span className="shrink-0 font-medium">How Dyson Homes CoPilot Works</span>
             <div className="h-[1px] bg-white/15 flex-1" />
           </div>
 
           {/* Step 1: MLS browse + pills */}
           <div className="space-y-3.5">
             <div className="flex items-center gap-3">
-              <div className="w-6 h-6 rounded-full border border-white/40 flex items-center justify-center text-xs font-mono font-bold text-white shrink-0">
+              <div className="w-6 h-6 rounded-full border border-[#D4AF37] flex items-center justify-center text-xs font-sans font-bold text-[#D4AF37] shrink-0">
                 1
               </div>
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-white uppercase font-mono">
-                FIRST OF ALL BROWSE YOUR PREFERRED MLS AND COPY THE MLS# OR ADDRESS:
+              <h3 className="text-xs sm:text-sm font-semibold text-white font-sans">
+                First of all browse your preferred MLS and copy the MLS# or address:
               </h3>
             </div>
 
@@ -195,14 +195,14 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
             {/* Step 2 */}
             <div className="space-y-2">
               <div className="flex items-center gap-2.5">
-                <div className="w-5 h-5 rounded-full border border-white/40 flex items-center justify-center text-[11px] font-mono font-bold text-white shrink-0">
+                <div className="w-5 h-5 rounded-full border border-[#D4AF37] flex items-center justify-center text-[11px] font-sans font-bold text-[#D4AF37] shrink-0">
                   2
                 </div>
-                <h4 className="text-xs sm:text-[13px] font-bold tracking-wider text-white uppercase font-mono">
-                  PASTE ADDRESS
+                <h4 className="text-xs sm:text-[13px] font-semibold text-white font-sans">
+                  Paste Address
                 </h4>
               </div>
-              <p className="text-xs sm:text-[13px] text-stone-400 pl-7 leading-relaxed font-normal">
+              <p className="text-xs sm:text-[13px] text-stone-400 pl-7 leading-relaxed font-normal font-sans">
                 Share the property details.
               </p>
             </div>
@@ -210,14 +210,14 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
             {/* Step 3 */}
             <div className="space-y-2">
               <div className="flex items-center gap-2.5">
-                <div className="w-5 h-5 rounded-full border border-white/40 flex items-center justify-center text-[11px] font-mono font-bold text-white shrink-0">
+                <div className="w-5 h-5 rounded-full border border-[#D4AF37] flex items-center justify-center text-[11px] font-sans font-bold text-[#D4AF37] shrink-0">
                   3
                 </div>
-                <h4 className="text-xs sm:text-[13px] font-bold tracking-wider text-white uppercase font-mono">
-                  AI + HUMAN ANALYSIS
+                <h4 className="text-xs sm:text-[13px] font-semibold text-white font-sans">
+                  AI + Human Analysis
                 </h4>
               </div>
-              <p className="text-xs sm:text-[13px] text-stone-400 pl-7 leading-relaxed font-normal">
+              <p className="text-xs sm:text-[13px] text-stone-400 pl-7 leading-relaxed font-normal font-sans">
                 CoPilot analyzes with AI precision and human expertise.
               </p>
             </div>
@@ -225,14 +225,14 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
             {/* Step 4 */}
             <div className="space-y-2">
               <div className="flex items-center gap-2.5">
-                <div className="w-5 h-5 rounded-full border border-white/40 flex items-center justify-center text-[11px] font-mono font-bold text-white shrink-0">
+                <div className="w-5 h-5 rounded-full border border-[#D4AF37] flex items-center justify-center text-[11px] font-sans font-bold text-[#D4AF37] shrink-0">
                   4
                 </div>
-                <h4 className="text-xs sm:text-[13px] font-bold tracking-wider text-white uppercase font-mono">
-                  INTELLIGENCE DELIVERED
+                <h4 className="text-xs sm:text-[13px] font-semibold text-white font-sans">
+                  Intelligence Delivered
                 </h4>
               </div>
-              <p className="text-xs sm:text-[13px] text-stone-400 pl-7 leading-relaxed font-normal">
+              <p className="text-xs sm:text-[13px] text-stone-400 pl-7 leading-relaxed font-normal font-sans">
                 Comps, risks, and rebate insights in one private report.
               </p>
             </div>
@@ -240,14 +240,14 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
             {/* Step 5 */}
             <div className="space-y-2">
               <div className="flex items-center gap-2.5">
-                <div className="w-5 h-5 rounded-full border border-white/40 flex items-center justify-center text-[11px] font-mono font-bold text-white shrink-0">
+                <div className="w-5 h-5 rounded-full border border-[#D4AF37] flex items-center justify-center text-[11px] font-sans font-bold text-[#D4AF37] shrink-0">
                   5
                 </div>
-                <h4 className="text-xs sm:text-[13px] font-bold tracking-wider text-white uppercase font-mono">
-                  BETTER DECISIONS
+                <h4 className="text-xs sm:text-[13px] font-semibold text-white font-sans">
+                  Better Decisions
                 </h4>
               </div>
-              <p className="text-xs sm:text-[13px] text-stone-400 pl-7 leading-relaxed font-normal">
+              <p className="text-xs sm:text-[13px] text-stone-400 pl-7 leading-relaxed font-normal font-sans">
                 Close with confidence. Keep more wealth.
               </p>
             </div>
