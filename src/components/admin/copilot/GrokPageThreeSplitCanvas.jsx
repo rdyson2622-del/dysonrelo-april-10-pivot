@@ -577,8 +577,19 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             </button>
           </div>
 
-          <div className="text-[10px] sm:text-[11px] text-stone-300 font-mono tracking-tight whitespace-nowrap shrink-0 self-start md:self-center pr-1">
-            The Dyson &amp; Dyson Companies, Inc. Ca. DRE#02303118
+          <div className="flex flex-col items-start md:items-end shrink-0 self-start md:self-center pr-1 text-left md:text-right">
+            <span className="text-[12.5px] sm:text-[13.5px] font-bold text-white tracking-normal whitespace-nowrap">
+              The Dyson &amp; Dyson Companies, Inc. Ca. DRE#02303118
+            </span>
+            <div className="text-[11px] sm:text-[12px] font-mono text-stone-300 flex items-center gap-2 mt-0.5 whitespace-nowrap">
+              <a href="tel:8583531200" className="hover:text-white transition-colors">
+                (858) 353 1200
+              </a>
+              <span className="text-stone-600">·</span>
+              <a href="mailto:bob@dysonrelo.com" className="hover:text-white transition-colors text-[#ede0cc]">
+                bob@dysonrelo.com
+              </a>
+            </div>
           </div>
         </div>
       </div>
