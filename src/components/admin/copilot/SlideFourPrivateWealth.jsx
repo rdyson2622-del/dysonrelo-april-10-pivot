@@ -80,8 +80,11 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
     if (!cleanAddr) return;
 
     setIsSubmitting(true);
-    if (onRunAudit) onRunAudit(cleanAddr);
-    if (onOpenDossier) onOpenDossier(cleanAddr);
+    if (onRunAudit) {
+      onRunAudit(cleanAddr);
+    } else if (onOpenDossier) {
+      onOpenDossier(cleanAddr);
+    }
 
     setTimeout(() => {
       setIsSubmitting(false);
