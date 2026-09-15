@@ -117,7 +117,7 @@ export default function CopilotDossierNewsPanel({
           aspectRatio: '16/9',
           background: '#000',
           boxShadow: '0 16px 48px rgba(0,0,0,0.7)',
-          transform: 'translateY(20%)',
+          marginTop: '20%',
         }}
       >
         {/* DNN LIVE Bug */}
