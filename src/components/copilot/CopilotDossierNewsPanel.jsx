@@ -98,9 +98,9 @@ export default function CopilotDossierNewsPanel({
           <button
             type="button"
             onClick={() => onViewChange?.('dossier')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
               activeView === 'dossier'
-                ? 'bg-[#D4AF37] text-black shadow-md'
+                ? 'bg-white/15 text-white font-medium shadow-sm'
                 : 'text-stone-400 hover:text-white'
             }`}
           >
@@ -111,16 +111,16 @@ export default function CopilotDossierNewsPanel({
           <button
             type="button"
             onClick={() => onViewChange?.('solutions')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
               activeView === 'solutions'
-                ? 'bg-[#D4AF37] text-black shadow-md'
+                ? 'bg-white/15 text-white font-medium shadow-sm'
                 : 'text-stone-400 hover:text-white'
             }`}
           >
-            <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+            <BookOpen className="w-3.5 h-3.5" />
             <span>Solutions &amp; Vault</span>
-            <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
-              activeView === 'solutions' ? 'bg-black text-[#D4AF37]' : 'bg-amber-500/20 text-amber-300'
+            <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-medium ${
+              activeView === 'solutions' ? 'bg-white/20 text-white' : 'bg-white/5 text-stone-400'
             }`}>
               LIBRARY
             </span>
@@ -132,16 +132,16 @@ export default function CopilotDossierNewsPanel({
               // WIRE: project/open today’s DNN Daily News show; Admin DNN tools remain source; do not rebuild Daily News in Copilot
               onViewChange?.('news');
             }}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
               activeView === 'news'
-                ? 'bg-[#D4AF37] text-black shadow-md'
+                ? 'bg-white/15 text-white font-medium shadow-sm'
                 : 'text-stone-400 hover:text-white'
             }`}
           >
-            <Radio className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
+            <Radio className="w-3.5 h-3.5" />
             <span>Daily News</span>
-            <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
-              activeView === 'news' ? 'bg-black text-[#D4AF37]' : 'bg-rose-500/20 text-rose-400'
+            <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-medium ${
+              activeView === 'news' ? 'bg-white/20 text-white' : 'bg-white/5 text-stone-400'
             }`}>
               LIVE
             </span>
@@ -164,18 +164,22 @@ export default function CopilotDossierNewsPanel({
               // WIRE: full-screen working content trigger; implement viewport expansion here
               onToggleExplode?.();
             }}
-            className="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-[#D4AF37]/15 border border-[#D4AF37]/60 text-[#D4AF37] font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+            className={`px-2.5 py-1.5 rounded-xl border text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer shadow-sm ${
+              isExploded
+                ? 'bg-white/15 text-white border-white/25 font-medium'
+                : 'bg-white/5 hover:bg-white/10 border-white/15 text-stone-400 hover:text-white'
+            }`}
             title={isExploded ? "Collapse to Split Screen" : "Expand chat + dossier canvas to full viewport"}
           >
             {isExploded ? (
               <>
-                <Minimize2 className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <Minimize2 className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Collapse View</span>
                 <span className="sm:hidden">Exit</span>
               </>
             ) : (
               <>
-                <Maximize2 className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <Maximize2 className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Expand Working Content</span>
                 <span className="sm:hidden">Expand</span>
               </>
@@ -189,10 +193,14 @@ export default function CopilotDossierNewsPanel({
               // WIRE: project/open today’s DNN Daily News show; Admin DNN tools remain source; do not rebuild Daily News in Copilot
               onViewChange?.('news');
             }}
-            className="px-2.5 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/30 border border-rose-500/50 text-rose-300 font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+            className={`px-2.5 py-1.5 rounded-xl border text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer shadow-sm ${
+              activeView === 'news'
+                ? 'bg-white/15 text-white border-white/25 font-medium'
+                : 'bg-white/5 hover:bg-white/10 border-white/15 text-stone-400 hover:text-white'
+            }`}
             title="Project today's DNN Daily News show"
           >
-            <Radio className="w-3 h-3 text-rose-400 animate-pulse" />
+            <Radio className="w-3 h-3" />
             <span className="hidden sm:inline">Project Daily News</span>
             <span className="sm:hidden">News</span>
           </button>

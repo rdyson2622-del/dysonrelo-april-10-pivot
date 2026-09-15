@@ -277,7 +277,11 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
           <button
             type="button"
             onClick={() => setIsPageExploded(true)}
-            className="px-2.5 py-1 rounded-md bg-white/5 hover:bg-white/10 border border-white/15 text-stone-400 hover:text-white text-xs font-normal transition-all cursor-pointer ml-1"
+            className={`px-2.5 py-1 rounded-md border text-xs font-medium transition-all cursor-pointer ml-1 ${
+              isPageExploded
+                ? 'bg-white/15 text-white border-white/20 font-medium'
+                : 'bg-white/5 hover:bg-white/10 border-white/15 text-stone-400 hover:text-white'
+            }`}
             title="Expand chat + dossier canvas to full viewport"
           >
             <span>Full screen</span>
@@ -287,7 +291,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
           <button
             type="button"
             onClick={() => setRightPanelView('news')}
-            className={`px-2.5 py-1 rounded-md border text-xs font-normal transition-all cursor-pointer ml-1 ${
+            className={`px-2.5 py-1 rounded-md border text-xs font-medium transition-all cursor-pointer ml-1 ${
               rightPanelView === 'news'
                 ? 'bg-white/15 text-white border-white/20 font-medium'
                 : 'bg-white/5 hover:bg-white/10 border-white/15 text-stone-400 hover:text-white'
