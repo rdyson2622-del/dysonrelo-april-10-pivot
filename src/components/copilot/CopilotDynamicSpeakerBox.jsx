@@ -527,14 +527,14 @@ export default function CopilotDynamicSpeakerBox({
     );
   }
 
-  // ── 4. RESTING COMPACT CARD (For Page 3 Side-by-Side Upper Left) ──
+  // ── 4. RESTING COMPACT CARD (For Page 3 Side-by-Side Upper Left - 10% reduced size) ──
   return (
     <div 
-      className={`w-full rounded-xl bg-[#0c0c0c] border border-[#D4AF37]/50 hover:border-[#D4AF37] shadow-[0_6px_20px_rgba(0,0,0,0.8)] p-2.5 flex flex-col items-center text-center space-y-1.5 transition-all duration-300 shrink-0 relative group min-h-[175px] justify-between ${className}`}
+      className={`w-full rounded-xl bg-[#0c0c0c] border border-[#D4AF37]/50 hover:border-[#D4AF37] shadow-[0_6px_20px_rgba(0,0,0,0.8)] p-2 flex flex-col items-center text-center space-y-1 transition-all duration-300 shrink-0 relative group min-h-[158px] justify-between ${className}`}
     >
       {/* Circle Photo */}
       <div className="relative shrink-0 pt-0.5">
-        <div className={`w-12 h-12 aspect-square rounded-full border-2 ${
+        <div className={`w-11 h-11 aspect-square rounded-full border-2 ${
           isBob ? 'border-[#D4AF37]' : 'border-emerald-500'
         } p-0.5 overflow-hidden bg-black shadow-md ring-1.5 ring-white/10 group-hover:scale-105 transition-transform`}>
           <img 
@@ -544,7 +544,7 @@ export default function CopilotDynamicSpeakerBox({
           />
         </div>
         <span 
-          className={`w-2.5 h-2.5 rounded-full absolute bottom-0 right-0 ring-1.5 ring-[#0c0c0c] shadow-sm ${
+          className={`w-2 h-2 rounded-full absolute bottom-0 right-0 ring-1.5 ring-[#0c0c0c] shadow-sm ${
             isBob ? 'bg-emerald-500' : 'bg-emerald-500 animate-pulse'
           }`} 
         />
@@ -552,13 +552,13 @@ export default function CopilotDynamicSpeakerBox({
 
       {/* Name + Title + Subtitle (All Pure White, Line 3 Enlarged) */}
       <div className="space-y-0.5 w-full">
-        <h4 className="text-[11px] font-bold text-white tracking-wide leading-tight truncate">
+        <h4 className="text-[10.5px] font-bold text-white tracking-wide leading-tight truncate">
           {name}
         </h4>
-        <p className="text-[9px] text-white font-medium leading-tight truncate">
+        <p className="text-[8.5px] text-white font-medium leading-tight truncate">
           {title}
         </p>
-        <span className="text-[9.5px] block leading-tight text-white font-medium truncate">
+        <span className="text-[9px] block leading-tight text-white font-medium truncate">
           {subtitle}
         </span>
       </div>
@@ -571,10 +571,10 @@ export default function CopilotDynamicSpeakerBox({
             onClick={() => {
               if (onTriggerExplainer) onTriggerExplainer("Bob's Take: Escrow & Deal Traps");
             }}
-            className="w-full py-1.5 px-1.5 rounded-md bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white text-white text-[9.5px] font-medium flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-sm group-hover:bg-white/10"
+            className="w-full py-1 px-1.5 rounded-md bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white text-white text-[9px] font-medium flex items-center justify-center gap-1 transition-all cursor-pointer shadow-sm group-hover:bg-white/10"
             title="Hear Bob Dyson's solutions take"
           >
-            <Briefcase className="w-3 h-3 text-white" />
+            <Briefcase className="w-2.5 h-2.5 text-white" />
             <span className="text-white">Bob's Take</span>
           </button>
         ) : (
@@ -582,17 +582,17 @@ export default function CopilotDynamicSpeakerBox({
             type="button"
             onClick={startVoiceSession}
             disabled={micPermissionState === 'requesting'}
-            className="w-full py-1.5 px-1.5 rounded-md bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white text-white text-[9.5px] font-medium flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-sm group-hover:bg-white/10 disabled:opacity-50"
+            className="w-full py-1 px-1.5 rounded-md bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white text-white text-[9px] font-medium flex items-center justify-center gap-1 transition-all cursor-pointer shadow-sm group-hover:bg-white/10 disabled:opacity-50"
             title="Start live 2-way Gemini voice conversation"
           >
             {micPermissionState === 'requesting' ? (
               <>
-                <RefreshCw className="w-3 h-3 text-white animate-spin" />
+                <RefreshCw className="w-2.5 h-2.5 text-white animate-spin" />
                 <span className="text-white">Checking...</span>
               </>
             ) : (
               <>
-                <Sparkles className="w-3 h-3 text-white" />
+                <Sparkles className="w-2.5 h-2.5 text-white" />
                 <span className="text-white">Talk Live</span>
               </>
             )}

@@ -65,37 +65,37 @@ export default function CopilotConsumerSpeakerBox({
     );
   }
 
-  // ── 2. RESTING STATE ──
+  // ── 2. RESTING STATE (10% reduced size) ──
   return (
     <div 
-      className={`w-full rounded-xl bg-[#0c0c0c] border border-[#D4AF37]/50 hover:border-[#D4AF37] shadow-[0_6px_20px_rgba(0,0,0,0.8)] p-2.5 flex flex-col items-center text-center space-y-1.5 transition-all duration-300 shrink-0 relative group cursor-default min-h-[175px] justify-between ${className}`}
+      className={`w-full rounded-xl bg-[#0c0c0c] border border-[#D4AF37]/50 hover:border-[#D4AF37] shadow-[0_6px_20px_rgba(0,0,0,0.8)] p-2 flex flex-col items-center text-center space-y-1 transition-all duration-300 shrink-0 relative group cursor-default min-h-[158px] justify-between ${className}`}
     >
       <div className="relative shrink-0 pt-0.5">
-        <div className="w-12 h-12 aspect-square rounded-full border-2 border-stone-400 p-0.5 overflow-hidden bg-black shadow-md ring-1.5 ring-white/10 group-hover:scale-105 transition-all">
+        <div className="w-11 h-11 aspect-square rounded-full border-2 border-stone-400 p-0.5 overflow-hidden bg-black shadow-md ring-1.5 ring-white/10 group-hover:scale-105 transition-all">
           <img 
             src={photoUrl} 
             alt={userName} 
             className="w-full h-full object-cover object-top scale-105 rounded-full" 
           />
         </div>
-        <span className="w-2.5 h-2.5 rounded-full absolute bottom-0 right-0 ring-1.5 ring-[#0c0c0c] bg-rose-500 shadow-sm" />
+        <span className="w-2 h-2 rounded-full absolute bottom-0 right-0 ring-1.5 ring-[#0c0c0c] bg-rose-500 shadow-sm" />
       </div>
 
       <div className="space-y-0.5 w-full">
-        <h4 className="text-[11px] font-bold text-white tracking-wide leading-tight truncate">
+        <h4 className="text-[10.5px] font-bold text-white tracking-wide leading-tight truncate">
           {userName}
         </h4>
-        <p className="text-[9px] text-white font-medium leading-tight truncate">
+        <p className="text-[8.5px] text-white font-medium leading-tight truncate">
           {userRole}
         </p>
-        <span className="text-[9.5px] block leading-tight text-white font-medium truncate">
+        <span className="text-[9px] block leading-tight text-white font-medium truncate">
           CLIENT · SUBSCRIBER
         </span>
       </div>
 
       <div className="w-full pt-0.5">
-        <div className="w-full py-1.5 px-1.5 rounded-md bg-white/5 border border-white/20 text-white text-[9.5px] font-medium flex items-center justify-center gap-1.5">
-          <User className="w-3 h-3 text-white" />
+        <div className="w-full py-1 px-1.5 rounded-md bg-white/5 border border-white/20 text-white text-[9px] font-medium flex items-center justify-center gap-1">
+          <User className="w-2.5 h-2.5 text-white" />
           <span className="text-white">Active Session</span>
         </div>
       </div>

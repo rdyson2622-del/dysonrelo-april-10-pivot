@@ -453,8 +453,8 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
                       </span>
                     </div>
 
-                    {/* ── ROSTER: BOB, CHARLIE, YOU SPEAKER BOXES ── */}
-                    <div className="grid grid-cols-3 gap-2 pt-1">
+                    {/* ── ROSTER: BOB, CHARLIE, YOU SPEAKER BOXES (REDUCED BY 10%) ── */}
+                    <div className="grid grid-cols-3 gap-2 pt-1 max-w-[90%] mx-auto">
                       <CopilotDynamicSpeakerBox 
                         speaker="bob"
                         variant="card"
