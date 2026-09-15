@@ -257,20 +257,6 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
         </div>
       </section>
 
-      {/* ── FLOATING BOTTOM-RIGHT PILL: REFER A FRIEND + V2V ── */}
-      <div className="fixed bottom-4 right-4 z-40 flex items-center gap-1.5 shadow-2xl">
-        <a 
-          href="/refer"
-          className="px-3.5 py-2 rounded-l-full bg-[#fce38a] hover:bg-[#fad85d] text-black font-bold text-xs flex items-center gap-1.5 transition-all shadow-lg"
-        >
-          <Plus className="w-3.5 h-3.5 text-black" strokeWidth={3} />
-          <span>Refer a Friend</span>
-        </a>
-        <div className="px-3 py-2 rounded-r-full bg-[#0a0a0a] border border-[#fce38a]/40 text-[#fce38a] font-mono text-[11px] font-bold flex items-center gap-1 shadow-lg">
-          <span>V2V</span>
-        </div>
-      </div>
-
     </div>
   );
 }
