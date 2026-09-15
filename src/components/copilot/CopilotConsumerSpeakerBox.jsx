@@ -68,10 +68,10 @@ export default function CopilotConsumerSpeakerBox({
   // ── 2. RESTING STATE ──
   return (
     <div 
-      className={`w-[132px] sm:w-[138px] rounded-xl bg-[#0c0c0c] border border-stone-700/60 hover:border-rose-500/70 shadow-[0_6px_20px_rgba(0,0,0,0.8)] p-2 flex flex-col items-center text-center space-y-1 transition-all duration-300 shrink-0 relative group cursor-default ${className}`}
+      className={`w-full rounded-xl bg-[#0c0c0c] border border-stone-700/60 hover:border-stone-500 shadow-[0_6px_20px_rgba(0,0,0,0.8)] p-2 flex flex-col items-center text-center space-y-1 transition-all duration-300 shrink-0 relative group cursor-default ${className}`}
     >
       <div className="relative shrink-0 pt-0.5">
-        <div className="w-12 h-12 aspect-square rounded-full border-2 border-rose-500 p-0.5 overflow-hidden bg-black shadow-md ring-1.5 ring-rose-500/40 group-hover:scale-105 transition-all">
+        <div className="w-12 h-12 aspect-square rounded-full border-2 border-stone-400 p-0.5 overflow-hidden bg-black shadow-md ring-1.5 ring-white/10 group-hover:scale-105 transition-all">
           <img 
             src={photoUrl} 
             alt={userName} 
@@ -82,20 +82,20 @@ export default function CopilotConsumerSpeakerBox({
       </div>
 
       <div className="space-y-0.5 w-full">
-        <h4 className="text-[11px] font-bold text-white tracking-wide leading-tight group-hover:text-rose-400 transition-colors truncate">
+        <h4 className="text-[11px] font-bold text-white tracking-wide leading-tight group-hover:text-stone-200 transition-colors truncate">
           {userName}
         </h4>
         <p className="text-[8px] text-stone-300 font-medium leading-tight truncate">
           {userRole}
         </p>
         <span className="text-[7px] block leading-none text-stone-400 font-mono">
-          CLIENT SUBSCRIBER
+          CLIENT · SUBSCRIBER
         </span>
       </div>
 
       <div className="w-full pt-1">
-        <div className="w-full py-1 px-1.5 rounded-md bg-white/5 border border-white/10 text-stone-300 text-[9px] font-semibold flex items-center justify-center gap-1 group-hover:border-rose-500/40">
-          <User className="w-2.5 h-2.5 text-stone-400 group-hover:text-rose-400" />
+        <div className="w-full py-1 px-1.5 rounded-md bg-white/5 border border-white/10 text-stone-300 text-[9px] font-semibold flex items-center justify-center gap-1 group-hover:border-stone-500">
+          <User className="w-2.5 h-2.5 text-stone-400" />
           <span>Active Session</span>
         </div>
       </div>

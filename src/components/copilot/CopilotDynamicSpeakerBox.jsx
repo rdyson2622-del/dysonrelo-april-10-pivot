@@ -519,7 +519,7 @@ export default function CopilotDynamicSpeakerBox({
   // ── 4. RESTING COMPACT CARD (For Page 3 Side-by-Side Upper Left) ──
   return (
     <div 
-      className={`w-[132px] sm:w-[138px] rounded-xl bg-[#0c0c0c] border border-[#D4AF37]/50 hover:border-[#D4AF37] shadow-[0_6px_20px_rgba(0,0,0,0.8)] p-2 flex flex-col items-center text-center space-y-1 transition-all duration-300 shrink-0 relative group ${className}`}
+      className={`w-full rounded-xl bg-[#0c0c0c] border border-[#D4AF37]/50 hover:border-[#D4AF37] shadow-[0_6px_20px_rgba(0,0,0,0.8)] p-2 flex flex-col items-center text-center space-y-1 transition-all duration-300 shrink-0 relative group ${className}`}
     >
       {/* Circle Photo */}
       <div className="relative shrink-0 pt-0.5">
@@ -583,7 +583,7 @@ export default function CopilotDynamicSpeakerBox({
               </>
             ) : (
               <>
-                <span className="text-[#10b981] font-bold text-xs leading-none">↓</span>
+                <Sparkles className="w-2.5 h-2.5 text-[#10b981]" />
                 <span>Talk Live</span>
               </>
             )}

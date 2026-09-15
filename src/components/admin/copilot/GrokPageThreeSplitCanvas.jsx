@@ -302,42 +302,29 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
           {/* Scrollable Conversation Container */}
           <div className="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[560px]">
 
-            {/* ── ROSTER: BOB (VISUAL / READ-ONLY), CHARLIE (ONLY LIVE TALK), CONSUMER (READ-ONLY) ── */}
+            {/* ── ROSTER: BOB, CHARLIE, YOU SPEAKER BOXES ── */}
             <div className="grid grid-cols-3 gap-2 pt-1">
-              
-              {/* Bob Dyson: Visual / Read-Only (no speech synthesis / no TTS) */}
-              <div className="p-2.5 rounded-lg bg-[#121212] border border-white/10 text-left space-y-1">
-                <div className="text-[10px] text-stone-400 uppercase font-mono font-medium">BROKER DESK</div>
-                <div className="text-xs font-bold text-white">Bob Dyson</div>
-                <div className="text-[10px] text-[#D4AF37] font-sans">Fiduciary Oversight</div>
-                <div className="text-[9px] text-stone-500 pt-0.5">Read-only advisor</div>
-              </div>
-
-              {/* Charlie Simmons: ONLY LIVE TALK */}
-              <div className="p-2.5 rounded-lg bg-[#14120c] border border-[#D4AF37]/50 text-left space-y-1">
-                <div className="text-[10px] text-[#D4AF37] uppercase font-mono font-bold flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  LIVE TALK
-                </div>
-                <div className="text-xs font-bold text-white">Charlie Simmons</div>
-                <div className="text-[10px] text-emerald-400 font-sans">Voice &amp; Audio</div>
-                <button
-                  type="button"
-                  onClick={() => handlePillClick('Talk Live with Charlie')}
-                  className="w-full text-center text-[9.5px] px-2 py-0.5 mt-1 rounded bg-[#D4AF37]/20 hover:bg-[#D4AF37]/30 text-[#D4AF37] font-medium border border-[#D4AF37]/40 transition-colors cursor-pointer"
-                >
-                  Talk Live
-                </button>
-              </div>
-
-              {/* Consumer / Verified Buyer: Visual Read-Only */}
-              <div className="p-2.5 rounded-lg bg-[#121212] border border-white/10 text-left space-y-1">
-                <div className="text-[10px] text-stone-400 uppercase font-mono font-medium">YOU</div>
-                <div className="text-xs font-bold text-white">Buyer Client</div>
-                <div className="text-[10px] text-stone-300 font-sans">Private Session</div>
-                <div className="text-[9px] text-stone-500 pt-0.5">Fiduciary Protected</div>
-              </div>
-
+              <CopilotDynamicSpeakerBox 
+                speaker="bob"
+                variant="card"
+                className="w-full"
+                activeExplainer={activeExplainer}
+                onClearExplainer={() => setActiveExplainer(null)}
+                onTriggerExplainer={(query) => handlePillClick(query)}
+              />
+              <CopilotDynamicSpeakerBox 
+                speaker="charlie"
+                variant="card"
+                className="w-full"
+                activeExplainer={activeExplainer}
+                onClearExplainer={() => setActiveExplainer(null)}
+                onTriggerExplainer={(query) => handlePillClick(query)}
+              />
+              <CopilotConsumerSpeakerBox 
+                className="w-full"
+                userName="You"
+                userRole="Verified Buyer"
+              />
             </div>
 
             {/* ── PLAIN GROK-STYLE TEXT CHAT (NO YELLOW DOTS, NO RINGS, CLEAN TYPOGRAPHY) ── */}
