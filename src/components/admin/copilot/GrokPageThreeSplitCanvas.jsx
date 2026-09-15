@@ -17,7 +17,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
   const [inputText, setInputText] = useState('');
   const [activeExplainer, setActiveExplainer] = useState(null);
   const [activeDemoSpeaker, setActiveDemoSpeaker] = useState(null);
-  const [rightPanelView, setRightPanelView] = useState('dossier'); // 'dossier' | 'news' | 'solutions'
+  const [rightPanelView, setRightPanelView] = useState(null); // null (blank) | 'dossier' | 'news' | 'solutions'
   const [isPageExploded, setIsPageExploded] = useState(false);
   const [selectedExplodedItem, setSelectedExplodedItem] = useState(null);
   const [isCaptureModalOpen, setIsCaptureModalOpen] = useState(false);
@@ -31,40 +31,15 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
   const canvasRef = useRef(null);
   const dossierData = getPropertyDossier(property);
 
-  const [messages, setMessages] = useState(() => {
-    const data = getPropertyDossier(property);
-    return [
-      {
-        id: 1,
-        sender: 'charlie',
-        text: `I audited ${data.shortAddress}, ${data.city}.\n${data.marketSummary} Executive audit on the right.\nWhat's your mobile so I can text this report to you?`
-      },
-      {
-        id: 2,
-        sender: 'user',
-        text: data.fullAddress,
-        time: "10:24 AM"
-      }
-    ];
-  });
+  // Command Center & Intelligence panel stay blank until the user actually
+  // asks something — no pre-seeded sample audit or conversation.
+  const [messages, setMessages] = useState([]);
 
-  // Keep chat initial messages strictly in sync whenever property prop changes
-  useEffect(() => {
-    const data = getPropertyDossier(property);
-    setMessages([
-      {
-        id: 1,
-        sender: 'charlie',
-        text: `I audited ${data.shortAddress}, ${data.city}.\n${data.marketSummary} Executive audit on the right.\nWhat's your mobile so I can text this report to you?`
-      },
-      {
-        id: 2,
-        sender: 'user',
-        text: data.fullAddress,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      }
-    ]);
-  }, [property]);
+  const resetToBlank = () => {
+    setMessages([]);
+    setRightPanelView(null);
+    setActiveExplainer(null);
+  };
 
   // Auto-scroll chat to bottom
   const scrollToBottom = () => {
@@ -448,7 +423,10 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             onPromptClick={handlePillClick}
             onOpenCaptureModal={() => setIsCaptureModalOpen(true)}
             isSubscriber={isSubscriber}
-            onBackToSearch={onBackToSearch}
+            onBackToSearch={() => {
+              resetToBlank();
+              onBackToSearch?.();
+            }}
           />
         </div>
 
