@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, ExternalLink, Plus } from 'lucide-react';
+import { ShieldCheck, Plus } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 
 // Authentic evening luxury estate villa (hero-evening-luxury-clean.png)
@@ -16,7 +16,7 @@ function normalizeAddress(raw) {
   return raw.trim().replace(/\s+/g, ' ');
 }
 
-export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
+export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGoToChatCanvas }) {
   const [address, setAddress] = useState('742 Vista Del Mar, La Jolla, CA 92037');
 
   const handleSend = (targetAddr) => {
@@ -263,7 +263,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
           href="/refer"
           className="px-3.5 py-2 rounded-l-full bg-[#fce38a] hover:bg-[#fad85d] text-black font-bold text-xs flex items-center gap-1.5 transition-all shadow-lg"
         >
-          <Plus className="w-3.5 h-3.5 text-black stroke-[3]" />
+          <Plus className="w-3.5 h-3.5 text-black" strokeWidth={3} />
           <span>Refer a Friend</span>
         </a>
         <div className="px-3 py-2 rounded-r-full bg-[#0a0a0a] border border-[#fce38a]/40 text-[#fce38a] font-mono text-[11px] font-bold flex items-center gap-1 shadow-lg">
