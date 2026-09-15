@@ -417,35 +417,25 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
                   {/* Scrollable Conversation Container */}
                   <div className="flex-1 min-h-0 overflow-y-auto space-y-3 pr-2 scrollbar-thin">
 
-                    {/* ── HEADER: COPILOT + COMMAND CENTER + SAVED DISCUSSIONS ── */}
-                    <div className="relative flex items-baseline justify-center gap-2.5 pb-1 px-0.5">
+                    {/* ── TOP UTILITY ROW: BACK BUTTON & SAVED DISCUSSIONS (ABOVE HEADER) ── */}
+                    <div className="flex items-center justify-between pb-1 px-1">
                       <button
                         type="button"
                         onClick={() => {
                           resetToBlank();
                           scrollToSection(page1Ref, 1, '/');
                         }}
-                        className="absolute left-0 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-md text-xs font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1 shadow-sm"
+                        className="px-2.5 py-1 rounded-md text-xs font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1 shadow-sm"
                         title="Back to Landing & Search"
                       >
                         <ArrowLeft className="w-3.5 h-3.5 text-[#D4AF37]" />
                         <span>Back</span>
                       </button>
 
-                      <span 
-                        className="font-serif italic font-medium text-[#D4AF37] text-[48px] sm:text-[52px] leading-none select-none"
-                        style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                      >
-                        CoPilot
-                      </span>
-                      <span className="text-white text-[28px] sm:text-[32px] font-normal tracking-wide whitespace-nowrap">
-                        Command Center
-                      </span>
-
                       <button
                         type="button"
                         onClick={() => setIsSavedDiscussionsOpen(true)}
-                        className="absolute right-0 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-md text-xs font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm"
+                        className="px-2.5 py-1 rounded-md text-xs font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm"
                         title="Open Saved Discussions"
                       >
                         <Bookmark className="w-3.5 h-3.5 text-[#D4AF37]" />
@@ -457,6 +447,19 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
                           </span>
                         )}
                       </button>
+                    </div>
+
+                    {/* ── HEADER: COPILOT + COMMAND CENTER (CLEAN & CENTERED) ── */}
+                    <div className="flex items-baseline justify-center gap-2.5 pb-2 px-0.5">
+                      <span 
+                        className="font-serif italic font-medium text-[#D4AF37] text-[48px] sm:text-[52px] leading-none select-none"
+                        style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                      >
+                        CoPilot
+                      </span>
+                      <span className="text-white text-[28px] sm:text-[32px] font-normal tracking-wide whitespace-nowrap">
+                        Command Center
+                      </span>
                     </div>
 
                     {/* ── ROSTER: BOB, CHARLIE, YOU SPEAKER BOXES ── */}
