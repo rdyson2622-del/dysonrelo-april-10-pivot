@@ -175,94 +175,38 @@ export default function CopilotDossierNewsPanel({
       )}
 
       {/* ── HEADER: aligns video top edge with the Bob/Charlie/You roster row on the left ── */}
-      <div className="h-[62px] sm:h-[70px] shrink-0 flex items-center justify-between px-1">
+      <div className="h-[62px] sm:h-[70px] shrink-0 flex items-center justify-center relative px-1">
+        <span className="text-white text-[28px] sm:text-[32px] font-normal tracking-wide whitespace-nowrap">
+          Intelligence
+        </span>
+
+        {isExploded && (
+          <button
+            type="button"
+            onClick={() => onToggleExplode?.()}
+            className="absolute right-1 px-3 py-1 rounded-lg bg-white text-black hover:bg-stone-200 font-bold text-xs flex items-center gap-1.5 shadow-md cursor-pointer transition-all"
+            title="Return from full screen to page size"
+          >
+            <X className="w-3.5 h-3.5 stroke-[2.5]" />
+            <span>Return</span>
+          </button>
+        )}
+      </div>
+
+      {/* ── NEWS BROADCAST PLACEHOLDER ABOVE ALL TEXT (SEARCH / AUDIT / CONTROLS) ── */}
+...
+      {/* ── TOP CONTROLS & VIEW SWITCHER: Back button on far left, controls grouped on the right ── */}
+      <div className="flex items-center justify-between gap-2 pb-2 border-b border-white/10 mt-4">
         <button
           type="button"
           onClick={handleIntelligenceBack}
-          className="px-2.5 py-1 rounded-md text-xs font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1 shadow-sm"
+          className="px-2.5 py-1 rounded text-[11px] font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1 shadow-sm active:bg-white active:text-black"
           title="Back"
         >
           <ArrowLeft className="w-3.5 h-3.5 text-[#D4AF37]" />
           <span>Back</span>
         </button>
 
-        <span className="text-white text-[28px] sm:text-[32px] font-normal tracking-wide whitespace-nowrap">
-          Intelligence
-        </span>
-
-        {isExploded ? (
-          <button
-            type="button"
-            onClick={() => onToggleExplode?.()}
-            className="px-3 py-1 rounded-lg bg-white text-black hover:bg-stone-200 font-bold text-xs flex items-center gap-1.5 shadow-md cursor-pointer transition-all"
-            title="Return from full screen to page size"
-          >
-            <X className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>Return</span>
-          </button>
-        ) : (
-          <div className="w-14" />
-        )}
-      </div>
-
-      {/* ── NEWS BROADCAST PLACEHOLDER ABOVE ALL TEXT (SEARCH / AUDIT / CONTROLS) ── */}
-      <div
-        className="relative w-[48%] mx-auto overflow-hidden rounded-xl shadow-2xl border-2 border-[#D4AF37]/80 group shrink-0"
-        style={{
-          aspectRatio: '16/9',
-          background: '#000',
-          boxShadow: '0 16px 48px rgba(0,0,0,0.7)',
-        }}
-      >
-        {/* DNN LIVE Bug */}
-        <div
-          className="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1.5 rounded-lg pointer-events-none"
-          style={{
-            background: 'rgba(0,0,0,0.75)',
-            border: '1px solid rgba(255,255,255,0.2)',
-            backdropFilter: 'blur(6px)',
-          }}
-        >
-          <img src={DNN_LOGO} alt="DNN" className="h-5 w-auto" />
-          <span className="text-[10px] font-black tracking-[0.2em] uppercase text-white font-bold">
-            LIVE STUDIO
-          </span>
-          <span className="w-2 h-2 rounded-full animate-pulse bg-red-500" />
-        </div>
-
-        {/* Show Name Badge */}
-        <div
-          className="absolute top-3 right-3 z-20 px-3 py-1.5 rounded-lg pointer-events-none"
-          style={{
-            background: 'rgba(0,0,0,0.75)',
-            border: '1px solid rgba(255,255,255,0.2)',
-            backdropFilter: 'blur(6px)',
-          }}
-        >
-          <span className="text-[10px] font-black tracking-[0.15em] uppercase text-white font-bold">
-            {showName}
-          </span>
-        </div>
-
-        {/* Video Player */}
-        <video
-          ref={videoRef}
-          key={playUrl}
-          src={playUrl}
-          poster={STUDIO_POSTER_URL}
-          controls
-          playsInline
-          preload="metadata"
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-          className="w-full h-full object-cover"
-          style={{ display: 'block', background: '#000' }}
-        />
-      </div>
-
-      {/* ── TOP CONTROLS & VIEW SWITCHER: Grouped to the right ── */}
-      <div className="flex items-center justify-end gap-2 pb-2 border-b border-white/10 mt-4">
-        
         {/* Unified Button Group: Search, Audit, Solutions, Daily News & Full Screen */}
         <div className="flex items-center bg-[#141414] p-0.5 rounded-md border border-white/10 gap-0.5">
           <button
