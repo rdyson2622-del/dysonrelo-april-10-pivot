@@ -140,7 +140,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
       <section className="w-full bg-[#0a0a0a] text-[#F3F0E6] border-t border-white/10 py-16 sm:py-20 px-6 sm:px-10">
         <div className="max-w-[1120px] mx-auto space-y-5">
           <h2 
-            className="text-xl sm:text-2xl font-serif font-normal text-white"
+            className="text-xl sm:text-2xl font-serif font-normal text-[#D4AF37]"
             style={{ fontFamily: 'Georgia, Cormorant Garamond, serif' }}
           >
             How Dyson Homes CoPilot Works
@@ -163,7 +163,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
           {/* Pure-Text 3-Column Value Propositions: No boxes, No cards, No backgrounds, No borders */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-white/5">
             <div className="space-y-1.5 text-left">
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-white uppercase font-mono">
+              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-[#D4AF37] uppercase font-mono">
                 WE RUN COMPS &amp; MARKET INTEL
               </h3>
               <p className="text-xs sm:text-sm text-stone-300 leading-relaxed font-normal">
@@ -172,7 +172,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
             </div>
 
             <div className="space-y-1.5 text-left">
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-white uppercase font-mono">
+              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-[#D4AF37] uppercase font-mono">
                 WE EXPLORE RISKS THRU DUE DILIGENCE
               </h3>
               <p className="text-xs sm:text-sm text-stone-300 leading-relaxed font-normal">
@@ -181,7 +181,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
             </div>
 
             <div className="space-y-1.5 text-left">
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-white uppercase font-mono">
+              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-[#D4AF37] uppercase font-mono">
                 WE AUDIT ESCROW &amp; COMPLIANCE
               </h3>
               <p className="text-xs sm:text-sm text-stone-300 leading-relaxed font-normal">
