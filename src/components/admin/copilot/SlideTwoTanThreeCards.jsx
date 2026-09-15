@@ -120,7 +120,7 @@ export default function SlideTwoTanThreeCards({ onRunAudit }) {
           </form>
 
           <p className="text-sm text-[#4a4237] leading-relaxed font-normal pt-1">
-            Paste any address to see real comps, property risks, and your closing rebate — where allowed by law.
+            Paste any address to see real comps, property risks, and potential closing cost savings where allowable by law.
           </p>
 
           <div className="space-y-2">

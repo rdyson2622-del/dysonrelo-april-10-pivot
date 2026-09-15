@@ -93,7 +93,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
             </form>
 
             <p className="text-xs sm:text-[13px] text-[#F3F0E6]/85 leading-tight font-normal px-1 whitespace-nowrap">
-              Paste any address to see real comps, property risks, and your closing rebate — where allowed by law.
+              Paste any address to see real comps, property risks, and potential closing cost savings where allowable by law.
             </p>
           </div>
 
