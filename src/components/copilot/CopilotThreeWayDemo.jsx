@@ -251,9 +251,9 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
   }, []);
 
   return (
-    <div className="rounded-xl p-2.5 bg-gradient-to-r from-[#18150c] via-[#121212] to-[#141818] border border-[#D4AF37]/50 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-left">
+    <div className="rounded-xl p-2.5 bg-[#121212] border border-white/10 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-left">
       <div className="flex items-center gap-2.5 min-w-0">
-        <div className="w-8 h-8 rounded-lg bg-[#D4AF37]/15 border border-[#D4AF37]/40 flex items-center justify-center shrink-0">
+        <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
           {isPlaying ? (
             <Volume2 className="w-4 h-4 text-[#D4AF37] animate-pulse" />
           ) : (
