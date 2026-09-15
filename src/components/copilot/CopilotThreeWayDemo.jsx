@@ -310,10 +310,10 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
         <button
           type="button"
           onClick={handleStartDemo}
-          className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer ${
+          className={`px-3.5 py-1.5 rounded-full text-[10.5px] font-bold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer ${
             isPlaying 
               ? 'bg-rose-500/20 text-rose-300 border border-rose-500/50 hover:bg-rose-500/30'
-              : 'bg-[#ede0cc] hover:bg-[#e5d6c0] text-black border border-[#ede0cc]'
+              : 'bg-white hover:bg-stone-100 text-black border border-white'
           }`}
         >
           {isPlaying ? (

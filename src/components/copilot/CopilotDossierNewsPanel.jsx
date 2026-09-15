@@ -362,7 +362,7 @@ export default function CopilotDossierNewsPanel({
                     onPromptClick?.("Text full report to my mobile");
                   }
                 }}
-                className="px-3.5 py-1.5 rounded-lg bg-[#ede0cc] hover:bg-[#e5d6c0] text-black font-bold text-xs flex items-center gap-1.5 transition-all shadow-md cursor-pointer border border-[#ede0cc]"
+                className="px-3.5 py-1.5 rounded-full bg-white hover:bg-stone-100 text-black font-bold text-xs flex items-center gap-1.5 transition-all shadow-md cursor-pointer border border-white"
               >
                 <span>Text Me Report</span>
                 <span>→</span>
