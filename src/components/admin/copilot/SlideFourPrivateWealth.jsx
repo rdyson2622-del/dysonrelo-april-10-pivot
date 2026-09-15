@@ -92,7 +92,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
               </div>
             </form>
 
-            <p className="text-xs sm:text-[13px] text-[#F3F0E6]/85 leading-tight font-normal px-1">
+            <p className="text-xs sm:text-[13px] text-[#F3F0E6]/85 leading-tight font-normal px-1 whitespace-nowrap">
               Paste any address to see real comps, property risks, and your closing rebate — where allowed by law.
             </p>
           </div>
@@ -125,8 +125,8 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
 
         </div>
 
-        {/* Right Column (5 cols): Evening Luxury Estate Photo (shifted right to give text room, no duplicate border) */}
-        <div className="lg:col-span-5 xl:col-span-5 lg:pl-4 rounded-2xl overflow-hidden aspect-[16/11] bg-transparent relative shadow-2xl">
+        {/* Right Column (5 cols): Evening Luxury Estate Photo (shifted right to give text room, moved up 4%) */}
+        <div className="lg:col-span-5 xl:col-span-5 lg:pl-4 rounded-2xl overflow-hidden aspect-[16/11] bg-transparent relative shadow-2xl -translate-y-[4%]">
           <img 
             src={HERO_EVENING} 
             alt="Dyson Homes Luxury Estate at Evening" 
