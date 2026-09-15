@@ -110,8 +110,12 @@ export default function CopilotDossierNewsPanel({
           : 'p-3 sm:p-4 pb-6 space-y-4 overflow-y-auto'
       }`}
     >
-      {/* ── SPACER: aligns video top edge with the Bob/Charlie/You roster row on the left ── */}
-      <div className="h-[62px] sm:h-[70px] shrink-0" aria-hidden="true" />
+      {/* ── HEADER: aligns video top edge with the Bob/Charlie/You roster row on the left ── */}
+      <div className="h-[62px] sm:h-[70px] shrink-0 flex items-center justify-center">
+        <span className="text-white text-[28px] sm:text-[32px] font-normal tracking-wide whitespace-nowrap">
+          Intelligence
+        </span>
+      </div>
 
       {/* ── NEWS BROADCAST PLACEHOLDER ABOVE ALL TEXT (SEARCH / AUDIT / CONTROLS) ── */}
       <div
