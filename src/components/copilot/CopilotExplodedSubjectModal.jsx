@@ -298,7 +298,27 @@ export default function CopilotExplodedSubjectModal({
         ) : currentTab === 'news' ? (
           
           /* ── OPTION B: DAILY NEWS & VIDEO THEATER (1080P WIDESCREEN) ── */
-          <div className="space-y-6 animate-in fade-in duration-150">
+          <div className="space-y-4 animate-in fade-in duration-150">
+            {/* Top Return Navigation Bar */}
+            <div className="flex items-center justify-between gap-3 bg-[#111111] border border-[#D4AF37]/50 rounded-xl px-4 py-2.5 shadow-lg">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                <span className="text-xs font-mono font-bold tracking-widest text-[#D4AF37] uppercase truncate">
+                  DNN DAILY BROADCAST · FULL-SCREEN THEATER
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => handleReturnToCommunication()}
+                className="px-4 py-1.5 rounded-xl bg-white text-black hover:bg-stone-200 font-extrabold text-xs flex items-center gap-1.5 shadow-lg transition-all cursor-pointer active:scale-95 border border-white/20 shrink-0"
+                title="Return to CoPilot Dialogue"
+              >
+                <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
+                <span>Return to Dialogue</span>
+              </button>
+            </div>
+
             {/* Full 16:9 Cinema Player */}
             <div
               className="relative w-full overflow-hidden rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.9)] border border-[#D4AF37]/50 group bg-black"
@@ -313,10 +333,20 @@ export default function CopilotExplodedSubjectModal({
                 <span className="w-2 h-2 rounded-full animate-pulse bg-red-500" />
               </div>
 
-              <div className="absolute top-3 right-3 z-20 px-3 py-1.5 rounded-lg bg-black/80 border border-[#D4AF37]/50 backdrop-blur-md pointer-events-none">
-                <span className="text-[10px] font-black tracking-[0.15em] uppercase text-[#D4AF37]">
+              {/* Top Right: Header tag + Direct Return button overlay inside video */}
+              <div className="absolute top-3 right-3 z-30 flex items-center gap-2">
+                <span className="hidden sm:inline-block px-3 py-1.5 rounded-lg bg-black/80 border border-[#D4AF37]/50 backdrop-blur-md text-[10px] font-black tracking-[0.15em] uppercase text-[#D4AF37] pointer-events-none">
                   {showName || 'DNN Daily Broadcast'}
                 </span>
+                <button
+                  type="button"
+                  onClick={() => handleReturnToCommunication()}
+                  className="px-3 py-1.5 rounded-lg bg-white text-black hover:bg-stone-200 font-bold text-xs flex items-center gap-1.5 shadow-2xl transition-all cursor-pointer active:scale-95 border border-white/30 backdrop-blur-md pointer-events-auto"
+                  title="Return to Dialogue"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <span>Return to Dialogue</span>
+                </button>
               </div>
 
               {/* Video Tag */}
@@ -381,6 +411,15 @@ export default function CopilotExplodedSubjectModal({
                   ONE-TAP ACTIONS (RETURNS TO DIALOGUE ENGINE):
                 </span>
                 <div className="flex flex-wrap items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => handleReturnToCommunication()}
+                    className="px-4 py-2 rounded-xl bg-white text-black hover:bg-stone-200 text-xs font-extrabold flex items-center gap-1.5 transition-all cursor-pointer shadow-md active:scale-95 border border-white/20"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5 stroke-[2.5]" />
+                    <span>Return to Dialogue</span>
+                  </button>
+
                   <button
                     type="button"
                     onClick={() => handleReturnToCommunication("Bob, how does today's inventory news affect our offer strategy?")}

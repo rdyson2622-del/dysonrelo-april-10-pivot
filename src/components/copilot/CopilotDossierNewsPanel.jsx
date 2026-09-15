@@ -503,6 +503,15 @@ export default function CopilotDossierNewsPanel({
               <div className="flex flex-wrap items-center gap-2">
                 <button
                   type="button"
+                  onClick={() => handleIntelligenceBack()}
+                  className="px-3 py-1.5 rounded-lg bg-white text-black hover:bg-stone-200 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-md"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5 text-black stroke-[2.5]" />
+                  <span>Return to Dialogue</span>
+                </button>
+
+                <button
+                  type="button"
                   onClick={() => onPromptClick?.("Bob, how does today's inventory news affect our offer strategy?")}
                   className="px-3 py-1.5 rounded-lg bg-[#181818] hover:bg-white/10 border border-white/20 text-white text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer"
                 >
