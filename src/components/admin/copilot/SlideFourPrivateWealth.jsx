@@ -32,6 +32,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
 
   const handleSampleClick = (chip) => {
     setAddress(chip);
+    handleSend(chip);
   };
 
   return (
@@ -138,8 +139,8 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
                 key={chip}
                 type="button"
                 onClick={() => handleSampleClick(chip)}
-                className="text-xs px-3 py-1 rounded-md bg-transparent hover:bg-white/5 text-[#F3F0E6]/90 hover:text-[#D4AF37] font-normal transition-colors cursor-pointer border border-white/20 hover:border-[#D4AF37]"
-                title="Click to fill address into search box"
+                className="text-xs px-3 py-1 rounded-md bg-white/5 hover:bg-white/15 active:bg-[#D4AF37] active:text-black text-[#F3F0E6] hover:text-[#D4AF37] font-normal transition-all cursor-pointer border border-white/20 hover:border-[#D4AF37] shadow-sm"
+                title={`Click to audit ${chip}`}
               >
                 <span>{chip.split(',')[0]}</span>
               </button>
