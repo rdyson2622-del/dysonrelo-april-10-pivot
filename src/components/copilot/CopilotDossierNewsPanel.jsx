@@ -173,7 +173,7 @@ export default function CopilotDossierNewsPanel({
       </div>
 
       {/* ── TOP CONTROLS & VIEW SWITCHER: Search as #1, Audit, Solutions & News ── */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/10 mt-4">
+      <div className="flex flex-wrap items-center justify-end gap-2 pb-2 border-b border-white/10 mt-4">
         
         {/* Quick Right-Side View Switcher: Search as #1, Audit, Solutions & News */}
         <div className="flex items-center bg-[#141414] p-0.5 rounded-md border border-white/10 gap-0.5">
