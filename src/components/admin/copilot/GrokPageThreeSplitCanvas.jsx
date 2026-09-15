@@ -332,7 +332,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             </div>
 
             {/* ── PLAIN GROK-STYLE TEXT CHAT (NO YELLOW DOTS, NO RINGS, CLEAN TYPOGRAPHY) ── */}
-            <div className="space-y-3 pt-2">
+            <div className="space-y-3 pt-[15%]">
               {messages.map((m) => {
                 const isUser = m.sender === 'user';
                 const isBob = m.sender === 'bob';
