@@ -528,18 +528,20 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
       </div>
 
       {/* ── FOOTER ROW DIRECTLY OVER MINI APPS: BRANDING & CONTACT ── */}
-      <div className="px-3 sm:px-4 py-2 bg-[#0a0a0a] border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2 text-left">
-        <span className="text-[12px] sm:text-[12.5px] font-normal text-white tracking-normal whitespace-nowrap">
-          The Dyson &amp; Dyson Companies, Inc. Ca. DRE#02303118
-        </span>
-        <div className="text-[11px] sm:text-[12px] font-mono text-stone-300 flex items-center gap-2 whitespace-nowrap">
-          <a href="tel:8583531200" className="hover:text-white transition-colors">
-            (858) 353 1200
-          </a>
-          <span className="text-stone-600">·</span>
-          <a href="mailto:bob@dysonrelo.com" className="hover:text-white transition-colors text-[#ede0cc]">
-            bob@dysonrelo.com
-          </a>
+      <div className="px-3 sm:px-4 py-2 bg-[#0a0a0a] border-t border-white/10 flex justify-end">
+        <div className="flex flex-col items-end text-right font-normal text-white">
+          <span className="text-[12px] sm:text-[12.5px] font-normal text-white tracking-normal whitespace-nowrap">
+            The Dyson &amp; Dyson Companies, Inc. Ca. DRE#02303118
+          </span>
+          <div className="text-[11.5px] sm:text-[12px] font-normal text-white flex items-center gap-2 whitespace-nowrap mt-0.5">
+            <a href="tel:8583531200" className="text-white hover:underline transition-colors font-normal">
+              (858) 353 1200
+            </a>
+            <span className="text-white">·</span>
+            <a href="mailto:bob@dysonrelo.com" className="text-white hover:underline transition-colors font-normal">
+              bob@dysonrelo.com
+            </a>
+          </div>
         </div>
       </div>
 
