@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import CopilotDynamicSpeakerBox from '@/components/copilot/CopilotDynamicSpeakerBox';
 import CopilotConsumerSpeakerBox from '@/components/copilot/CopilotConsumerSpeakerBox';
+import CopilotThreeWayDemo from '@/components/copilot/CopilotThreeWayDemo';
 import CopilotMiniAppsRail from '@/components/copilot/CopilotMiniAppsRail';
 import CopilotDossierNewsPanel from '@/components/copilot/CopilotDossierNewsPanel';
 import CopilotContactCaptureModal from '@/components/copilot/CopilotContactCaptureModal';
@@ -15,6 +16,7 @@ import { getPropertyDossier } from './propertyDossierData';
 export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, showRail = true }) {
   const [inputText, setInputText] = useState('');
   const [activeExplainer, setActiveExplainer] = useState(null);
+  const [activeDemoSpeaker, setActiveDemoSpeaker] = useState(null);
   const [rightPanelView, setRightPanelView] = useState('dossier'); // 'dossier' | 'news' | 'solutions'
   const [isPageExploded, setIsPageExploded] = useState(false);
   const [selectedExplodedItem, setSelectedExplodedItem] = useState(null);
@@ -312,6 +314,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                 speaker="bob"
                 variant="card"
                 className="w-full"
+                isSpeakingOverride={activeDemoSpeaker === 'bob'}
                 activeExplainer={activeExplainer}
                 onClearExplainer={() => setActiveExplainer(null)}
                 onTriggerExplainer={(query) => handlePillClick(query)}
@@ -320,6 +323,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                 speaker="charlie"
                 variant="card"
                 className="w-full"
+                isSpeakingOverride={activeDemoSpeaker === 'charlie'}
                 activeExplainer={activeExplainer}
                 onClearExplainer={() => setActiveExplainer(null)}
                 onTriggerExplainer={(query) => handlePillClick(query)}
@@ -328,11 +332,23 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                 className="w-full"
                 userName="You"
                 userRole="Verified Buyer"
+                isTransmitting={activeDemoSpeaker === 'consumer'}
+              />
+            </div>
+
+            {/* ── INTERACTIVE 3-WAY DIALOGUE STAGE PILL ── */}
+            <div className="pt-2">
+              <CopilotThreeWayDemo 
+                onTurnChange={setActiveDemoSpeaker}
+                onResetDemo={() => setActiveDemoSpeaker(null)}
+                onMessagePosted={(msg) => {
+                  setMessages(prev => [...prev, msg]);
+                }}
               />
             </div>
 
             {/* ── PLAIN GROK-STYLE TEXT CHAT (NO YELLOW DOTS, NO RINGS, CLEAN TYPOGRAPHY) ── */}
-            <div className="space-y-3 pt-[15%]">
+            <div className="space-y-3 pt-3">
               {messages.map((m) => {
                 const isUser = m.sender === 'user';
                 const isBob = m.sender === 'bob';
