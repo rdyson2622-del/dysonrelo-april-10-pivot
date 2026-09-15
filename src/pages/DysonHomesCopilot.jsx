@@ -716,12 +716,12 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
 
                       <button
                         type="submit"
-                        disabled={isSending || !inputText.trim()}
-                        className="px-3.5 py-1 rounded-md font-semibold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm disabled:opacity-50"
-                        style={{ backgroundColor: '#000000', color: '#ffffff' }}
+                        disabled={isSending}
+                        className="px-3.5 py-1.5 rounded-lg font-semibold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm bg-black text-white hover:bg-stone-900 border-none"
+                        style={{ backgroundColor: '#000000', color: '#ffffff', opacity: 1 }}
                         title="Send message to Charlie"
                       >
-                        <span>{isSending ? 'Sending...' : 'Send'}</span>
+                        <span style={{ color: '#ffffff' }}>{isSending ? 'Sending...' : 'Send'}</span>
                       </button>
                     </div>
                   </div>

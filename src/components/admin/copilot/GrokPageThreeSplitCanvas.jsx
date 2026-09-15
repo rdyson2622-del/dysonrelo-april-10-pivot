@@ -493,8 +493,8 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
 
               <button
                 type="submit"
-                className="px-3.5 py-1 rounded-md hover:brightness-125 font-semibold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm"
-                style={{ backgroundColor: '#000000', color: '#ffffff', opacity: inputText.trim() ? 1 : 0.7 }}
+                className="px-3.5 py-1.5 rounded-lg font-semibold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm bg-black text-white hover:bg-stone-900 border-none"
+                style={{ backgroundColor: '#000000', color: '#ffffff', opacity: 1 }}
                 title="Send message"
               >
                 <span style={{ color: '#ffffff', fontWeight: 600 }}>Send</span>
