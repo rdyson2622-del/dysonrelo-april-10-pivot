@@ -112,12 +112,11 @@ export default function CopilotDossierNewsPanel({
     >
       {/* ── NEWS BROADCAST PLACEHOLDER ABOVE ALL TEXT (SEARCH / AUDIT / CONTROLS) ── */}
       <div
-        className="relative w-[60%] mx-auto overflow-hidden rounded-xl shadow-2xl border-2 border-[#D4AF37]/80 group shrink-0"
+        className="relative w-[48%] mx-auto overflow-hidden rounded-xl shadow-2xl border-2 border-[#D4AF37]/80 group shrink-0"
         style={{
           aspectRatio: '16/9',
           background: '#000',
           boxShadow: '0 16px 48px rgba(0,0,0,0.7)',
-          marginTop: '20%',
         }}
       >
         {/* DNN LIVE Bug */}
