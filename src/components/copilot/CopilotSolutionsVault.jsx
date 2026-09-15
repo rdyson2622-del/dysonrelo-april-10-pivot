@@ -142,12 +142,12 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
     <div className="space-y-4 animate-in fade-in duration-200">
       
       {/* ── HEADER BANNER ── */}
-      <div className="rounded-xl border border-[#D4AF37]/50 bg-gradient-to-r from-[#17140b] via-[#101010] to-[#14120e] p-3.5 sm:p-4 shadow-xl">
+      <div className="rounded-xl border border-white/20 bg-gradient-to-r from-[#141414] via-[#111111] to-[#121212] p-3.5 sm:p-4 shadow-xl">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#D4AF37] font-bold">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[10px] font-mono uppercase tracking-widest text-white font-bold">
                 FIDUCIARY INTELLIGENCE &amp; SOLUTIONS VAULT
               </span>
             </div>
@@ -160,7 +160,7 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
           </div>
 
           <div className="text-[10px] text-stone-400 font-mono shrink-0 bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
-            <BookOpen className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <BookOpen className="w-3.5 h-3.5 text-white" />
             <span>{SOLUTIONS_LIBRARY.length} Active Playbooks</span>
           </div>
         </div>
@@ -197,7 +197,7 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
               onClick={() => setSelectedCategory(cat.id)}
               className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 ${
                 selectedCategory === cat.id
-                  ? 'bg-[#D4AF37] text-black shadow-md'
+                  ? 'bg-white/20 text-white shadow-md'
                   : 'bg-[#141414] text-stone-400 hover:text-white border border-white/10'
               }`}
             >
@@ -215,12 +215,12 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
           return (
             <div
               key={sol.id}
-              className="rounded-xl bg-[#121212] border border-white/10 hover:border-[#D4AF37]/60 p-3.5 space-y-2.5 flex flex-col justify-between transition-all shadow-lg group hover:bg-[#151412]"
+              className="rounded-xl bg-[#121212] border border-white/10 hover:border-white/30 p-3.5 space-y-2.5 flex flex-col justify-between transition-all shadow-lg group hover:bg-[#151412]"
             >
               <div className="space-y-1.5">
                 {/* Format & Speaker Tag */}
                 <div className="flex items-center justify-between text-[9.5px]">
-                  <span className="font-mono font-bold text-[#D4AF37] tracking-wider flex items-center gap-1">
+                  <span className="font-mono font-bold text-white tracking-wider flex items-center gap-1">
                     {sol.formatType === 'video' ? (
                       <Video className="w-3 h-3 text-red-400" />
                     ) : sol.formatType === 'audio' ? (
@@ -233,7 +233,7 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
 
                   <span className={`px-1.5 py-0.5 rounded font-mono font-bold ${
                     isBob 
-                      ? 'bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/30'
+                      ? 'bg-white/10 text-white border border-white/20'
                       : 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
                   }`}>
                     {isBob ? 'Bob Dyson (Broker)' : 'Charlie (AI Voice)'}
@@ -242,7 +242,7 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
 
                 {/* Title & Subtitle */}
                 <div>
-                  <h3 className="text-xs sm:text-[13px] font-bold text-white group-hover:text-[#D4AF37] transition-colors leading-snug">
+                  <h3 className="text-xs sm:text-[13px] font-bold text-white group-hover:text-white transition-colors leading-snug">
                     {sol.title}
                   </h3>
                   <p className="text-[10px] text-stone-400 font-mono mt-0.5">
@@ -257,7 +257,7 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
 
                 {/* Key Fiduciary Rule */}
                 <div className="bg-[#181818] border border-white/10 rounded-lg p-2 text-[10.5px] text-stone-300 font-mono flex items-start gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-white shrink-0 mt-0.5" />
                   <span><strong className="text-white">Rule:</strong> {sol.keyRule}</span>
                 </div>
               </div>
@@ -267,7 +267,7 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
                 <button
                   type="button"
                   onClick={() => onExplodePlaybook?.(sol)}
-                  className="text-[10px] text-[#D4AF37] hover:underline font-semibold flex items-center gap-1 cursor-pointer"
+                  className="text-[10px] text-white hover:underline font-semibold flex items-center gap-1 cursor-pointer"
                   title="Explode this playbook to full screen"
                 >
                   <span>⛶ Explode</span>
@@ -276,10 +276,10 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
                 <button
                   type="button"
                   onClick={() => onPromptClick?.(sol.promptQuery)}
-                  className="px-2.5 py-1 rounded-md bg-white/5 hover:bg-[#D4AF37] text-white hover:text-black border border-white/15 hover:border-[#D4AF37] text-[11px] font-semibold flex items-center gap-1 transition-all cursor-pointer shadow-sm"
+                  className="px-2.5 py-1 rounded-md bg-white/5 hover:bg-white/15 text-white border border-white/15 hover:border-white text-[11px] font-semibold flex items-center gap-1 transition-all cursor-pointer shadow-sm"
                 >
                   <span>Ask {isBob ? 'Bob' : 'Charlie'}</span>
-                  <ArrowRight className="w-3 h-3" />
+                  <ArrowRight className="w-3 h-3 text-white" />
                 </button>
               </div>
             </div>

@@ -28,6 +28,9 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
     return false;
   });
   const messagesEndRef = useRef(null);
+  const canvasRef = useRef(null);
+  const firstMessageRef = useRef(null);
+  const [textStartOffset, setTextStartOffset] = useState(480);
   const dossierData = getPropertyDossier(property);
 
   const [messages, setMessages] = useState(() => {
@@ -74,6 +77,27 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
 
   useEffect(() => {
     scrollToBottom();
+  }, [messages]);
+
+  // Synchronize text starting position so right-side dossier aligns with left-side chat text
+  useEffect(() => {
+    const measureOffset = () => {
+      if (firstMessageRef.current && canvasRef.current) {
+        const msgRect = firstMessageRef.current.getBoundingClientRect();
+        const canvasRect = canvasRef.current.getBoundingClientRect();
+        const offset = msgRect.top - canvasRect.top;
+        if (offset > 120) {
+          setTextStartOffset(Math.round(offset));
+        }
+      }
+    };
+    measureOffset();
+    const timer = setTimeout(measureOffset, 100);
+    window.addEventListener('resize', measureOffset);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', measureOffset);
+    };
   }, [messages]);
 
   const handlePillClick = (query) => {
@@ -215,7 +239,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
 
   return (
     <div 
-      className="w-full rounded-2xl border border-[#D4AF37]/40 shadow-2xl overflow-hidden select-none text-left"
+      className="w-full rounded-2xl border border-white/10 shadow-2xl overflow-hidden select-none text-left"
       style={{ background: '#080808', color: '#f5f5f5' }}
     >
       {/* ── TOP HEADER BAR: D&D badge + CoPilot wordmark (capital C+P, black/gold/white, no green) ── */}
@@ -304,7 +328,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
       </div>
 
       {/* ── MAIN CANVAS (FLEX-COL TO LG:FLEX-ROW) ── */}
-      <div className="flex flex-col lg:flex-row min-h-[640px]">
+      <div ref={canvasRef} className="flex flex-col lg:flex-row min-h-[640px]">
         
         {/* ── CENTER-LEFT COLUMN: ROSTER (VISUAL/READ-ONLY, CHARLIE ONLY LIVE TALK) + GROK-PLAIN CHAT ── */}
         <div className="w-full lg:w-[480px] xl:w-[520px] p-3 sm:p-4 flex flex-col justify-between bg-[#0b0b0b] border-b lg:border-b-0 lg:border-r border-white/10 relative shrink-0">
