@@ -301,24 +301,28 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
           {/* ── PINNED BOTTOM DIALOGUE BAR: Grok-plain input, thin borders, no rings ── */}
           <div className="pt-2 mt-auto border-t border-white/10 sticky bottom-0 bg-[#0b0b0b] z-20 space-y-2">
             
-            {/* Plain Grok-Style Input (No glow ring, thin border) */}
+            {/* Plain Grok-Style Input (Tan #ede0cc background) */}
             <form onSubmit={handleSendMessage} className="space-y-1">
-              <div className="flex items-center bg-[#ede0cc] hover:bg-[#e5d6c0] rounded-xl border border-[#ede0cc] focus-within:border-black/40 px-3 py-2 transition-all">
-                <Paperclip className="w-4 h-4 text-black/60 mr-2 shrink-0 cursor-pointer hover:text-black" title="Attach file or pre-approval" />
+              <div 
+                className="flex items-center rounded-xl px-3 py-2 transition-all border border-[#ede0cc]"
+                style={{ backgroundColor: '#ede0cc', color: '#000000' }}
+              >
+                <Paperclip className="w-4 h-4 text-black mr-2 shrink-0 cursor-pointer" title="Attach file or pre-approval" />
                 
                 <input
                   type="text"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   placeholder="Ask anything real estate—compliance, Prop 19, escrow traps, comps..."
-                  className="flex-1 bg-transparent text-black text-xs sm:text-sm outline-none placeholder:text-black/50 font-normal min-w-0"
+                  className="flex-1 bg-transparent text-black text-xs sm:text-sm outline-none font-normal min-w-0 placeholder:text-black/60"
+                  style={{ color: '#000000' }}
                 />
 
                 <div className="flex items-center gap-1.5 ml-2 shrink-0">
                   <button
                     type="button"
                     onClick={() => handlePillClick('Talk Live with Charlie')}
-                    className="p-1 rounded-md text-black/60 hover:text-black hover:bg-black/5 transition-all cursor-pointer"
+                    className="p-1 rounded-md text-black transition-all cursor-pointer"
                     title="Voice input (Charlie Live)"
                   >
                     <Mic className="w-4 h-4 text-black" />
