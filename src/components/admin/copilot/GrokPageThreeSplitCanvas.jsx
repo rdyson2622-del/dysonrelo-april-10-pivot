@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Paperclip, Send, Scale, ShieldAlert, FileText, 
-  Waves, Clock, Square, Radio, Mic, Briefcase, Shield, Sparkles
+  Waves, Clock, Radio, Mic, Briefcase, Shield, Sparkles
 } from 'lucide-react';
-import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import CopilotDynamicSpeakerBox from '@/components/copilot/CopilotDynamicSpeakerBox';
 import CopilotConsumerSpeakerBox from '@/components/copilot/CopilotConsumerSpeakerBox';
 import CopilotMiniAppsRail from '@/components/copilot/CopilotMiniAppsRail';
@@ -220,20 +219,13 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
       {/* ── TOP HEADER BAR: D&D badge + CoPilot wordmark (capital C+P, black/gold/white, no green) ── */}
       <div className="px-5 py-3 border-b border-white/10 flex flex-wrap items-center justify-between gap-3 bg-[#0a0a0a]">
         
-        {/* Left: D&D badge + Back Button + Dual View Indicator */}
+        {/* Left: Back Button + View Controls */}
         <div className="flex items-center gap-3">
-          <DysonVerticalBadge height={38} />
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] tracking-widest text-[#D4AF37] font-bold uppercase font-mono">
-              PAGE 2 · COMMAND CENTER
-            </span>
-            <Square className="w-3.5 h-3.5 text-stone-500" />
-          </div>
           {onBackToSearch && (
             <button
               type="button"
               onClick={onBackToSearch}
-              className="text-xs text-[#D4AF37] hover:underline flex items-center gap-1 font-medium px-2.5 py-1 rounded-md bg-white/5 border border-white/10 hover:border-[#D4AF37] transition-all ml-1 cursor-pointer"
+              className="text-xs text-[#D4AF37] hover:underline flex items-center gap-1 font-medium px-2.5 py-1 rounded-md bg-white/5 border border-white/10 hover:border-[#D4AF37] transition-all cursor-pointer"
             >
               ← Search
             </button>
