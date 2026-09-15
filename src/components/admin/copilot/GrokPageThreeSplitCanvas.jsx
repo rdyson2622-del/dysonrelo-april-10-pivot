@@ -301,8 +301,43 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
           {/* ── PINNED BOTTOM DIALOGUE BAR: Grok-plain input, thin borders, no rings ── */}
           <div className="pt-2 mt-auto border-t border-white/10 sticky bottom-0 bg-[#0b0b0b] z-20 space-y-2">
             
-            {/* Plain prompt chips with thin borders (no rings, no yellow dots) */}
-            <div className="flex flex-wrap items-center gap-1.5">
+            {/* Plain Grok-Style Input (No glow ring, thin border) */}
+            <form onSubmit={handleSendMessage} className="space-y-1">
+              <div className="flex items-center bg-[#ede0cc] hover:bg-[#e5d6c0] rounded-xl border border-[#ede0cc] focus-within:border-black/40 px-3 py-2 transition-all">
+                <Paperclip className="w-4 h-4 text-black/60 mr-2 shrink-0 cursor-pointer hover:text-black" title="Attach file or pre-approval" />
+                
+                <input
+                  type="text"
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  placeholder="Ask anything real estate—compliance, Prop 19, escrow traps, comps..."
+                  className="flex-1 bg-transparent text-black text-xs sm:text-sm outline-none placeholder:text-black/50 font-normal min-w-0"
+                />
+
+                <div className="flex items-center gap-1.5 ml-2 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => handlePillClick('Talk Live with Charlie')}
+                    className="p-1 rounded-md text-black/60 hover:text-black hover:bg-black/5 transition-all cursor-pointer"
+                    title="Voice input (Charlie Live)"
+                  >
+                    <Mic className="w-4 h-4 text-black" />
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={!inputText.trim()}
+                    className="px-3 py-1 rounded-md bg-black hover:brightness-125 disabled:opacity-40 text-white font-semibold text-xs flex items-center justify-center transition-all cursor-pointer"
+                    title="Send message"
+                  >
+                    <span>Send</span>
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            {/* Plain prompt chips with thin borders placed below Ask Anything search bar and above mini apps */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
               <button
                 type="button"
                 onClick={() => {
@@ -364,41 +399,6 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                 <span>Daily News</span>
               </button>
             </div>
-
-            {/* Plain Grok-Style Input (No glow ring, thin border) */}
-            <form onSubmit={handleSendMessage} className="space-y-1">
-              <div className="flex items-center bg-[#ede0cc] hover:bg-[#e5d6c0] rounded-xl border border-[#ede0cc] focus-within:border-black/40 px-3 py-2 transition-all">
-                <Paperclip className="w-4 h-4 text-black/60 mr-2 shrink-0 cursor-pointer hover:text-black" title="Attach file or pre-approval" />
-                
-                <input
-                  type="text"
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  placeholder="Ask anything real estate—compliance, Prop 19, escrow traps, comps..."
-                  className="flex-1 bg-transparent text-black text-xs sm:text-sm outline-none placeholder:text-black/50 font-normal min-w-0"
-                />
-
-                <div className="flex items-center gap-1.5 ml-2 shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => handlePillClick('Talk Live with Charlie')}
-                    className="p-1 rounded-md text-black/60 hover:text-black hover:bg-black/5 transition-all cursor-pointer"
-                    title="Voice input (Charlie Live)"
-                  >
-                    <Mic className="w-4 h-4 text-black" />
-                  </button>
-
-                  <button
-                    type="submit"
-                    disabled={!inputText.trim()}
-                    className="px-3 py-1 rounded-md bg-black hover:brightness-125 disabled:opacity-40 text-white font-semibold text-xs flex items-center justify-center transition-all cursor-pointer"
-                    title="Send message"
-                  >
-                    <span>Send</span>
-                  </button>
-                </div>
-              </div>
-            </form>
           </div>
         </div>
 
