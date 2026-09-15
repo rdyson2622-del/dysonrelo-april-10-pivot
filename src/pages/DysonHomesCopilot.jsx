@@ -852,11 +852,11 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                             <button
                               type="submit"
                               disabled={isSending}
-                              className="px-5 py-2 rounded-full font-bold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm bg-[#141414] hover:bg-[#202020] text-white border border-[#D4AF37] active:scale-95"
-                              style={{ backgroundColor: '#141414', color: '#ffffff' }}
+                              className="px-5 py-2 rounded-full font-bold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm bg-[#0a0a0a] hover:bg-[#1a1a1a] text-[#D4AF37] hover:text-white border border-[#D4AF37] active:scale-95"
+                              style={{ backgroundColor: '#000000', color: '#D4AF37' }}
                               title="Send message to Charlie"
                             >
-                              <span style={{ color: '#ffffff' }}>{isSending ? 'Sending...' : 'Send'}</span>
+                              <span style={{ color: '#D4AF37' }}>{isSending ? 'Sending...' : 'Send'}</span>
                               <span className="text-[#D4AF37] ml-1">→</span>
                             </button>
                           </div>

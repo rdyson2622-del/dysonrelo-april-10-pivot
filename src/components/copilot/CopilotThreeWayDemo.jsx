@@ -315,6 +315,7 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
               ? 'bg-rose-500/20 text-rose-300 border border-rose-500/50 hover:bg-rose-500/30'
               : 'bg-black hover:bg-[#1a1a1a] text-white border border-[#D4AF37]'
           }`}
+          style={{ backgroundColor: isPlaying ? undefined : '#000000', color: isPlaying ? undefined : '#ffffff' }}
         >
           {isPlaying ? (
             <>
