@@ -225,20 +225,20 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             <button
               type="button"
               onClick={onBackToSearch}
-              className="text-xs text-[#D4AF37] hover:underline flex items-center gap-1 font-medium px-2.5 py-1 rounded-md bg-white/5 border border-white/10 hover:border-[#D4AF37] transition-all cursor-pointer"
+              className="text-xs text-stone-400 hover:text-white flex items-center gap-1 font-medium px-2.5 py-1 rounded-md bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer"
             >
               ← Search
             </button>
           )}
 
-          {/* Quick Right-Side View Switcher: Audit, Solutions & News */}
+          {/* Quick Right-Side View Switcher: Audit, Solutions & News (All grey font, active is white, no yellow) */}
           <div className="hidden sm:flex items-center bg-[#141414] p-0.5 rounded-md border border-white/10 ml-2 gap-0.5">
             <button
               type="button"
               onClick={() => setRightPanelView('dossier')}
               className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ${
                 rightPanelView === 'dossier'
-                  ? 'bg-[#D4AF37] text-black font-semibold'
+                  ? 'bg-white/15 text-white font-medium'
                   : 'text-stone-400 hover:text-white'
               }`}
             >
@@ -250,7 +250,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
               onClick={() => setRightPanelView('solutions')}
               className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ${
                 rightPanelView === 'solutions'
-                  ? 'bg-[#D4AF37] text-black font-semibold'
+                  ? 'bg-white/15 text-white font-medium'
                   : 'text-stone-400 hover:text-white'
               }`}
             >
@@ -262,11 +262,11 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
               onClick={() => setRightPanelView('news')}
               className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ${
                 rightPanelView === 'news'
-                  ? 'bg-[#D4AF37] text-black font-semibold'
+                  ? 'bg-white/15 text-white font-medium'
                   : 'text-stone-400 hover:text-white'
               }`}
             >
-              <Radio className="w-3 h-3 text-rose-400" />
+              <Radio className="w-3 h-3" />
               <span>Daily News</span>
             </button>
           </div>
@@ -275,7 +275,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
           <button
             type="button"
             onClick={() => setIsPageExploded(true)}
-            className="px-2.5 py-1 rounded-md bg-white/5 hover:bg-white/10 border border-white/15 text-stone-300 text-xs font-normal transition-all cursor-pointer ml-1"
+            className="px-2.5 py-1 rounded-md bg-white/5 hover:bg-white/10 border border-white/15 text-stone-400 hover:text-white text-xs font-normal transition-all cursor-pointer ml-1"
             title="Expand chat + dossier canvas to full viewport"
           >
             <span>Full screen</span>
@@ -285,7 +285,11 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
           <button
             type="button"
             onClick={() => setRightPanelView('news')}
-            className="px-2.5 py-1 rounded-md bg-white/5 hover:bg-white/10 border border-white/15 text-stone-300 text-xs font-normal transition-all cursor-pointer ml-1"
+            className={`px-2.5 py-1 rounded-md border text-xs font-normal transition-all cursor-pointer ml-1 ${
+              rightPanelView === 'news'
+                ? 'bg-white/15 text-white border-white/20 font-medium'
+                : 'bg-white/5 hover:bg-white/10 border-white/15 text-stone-400 hover:text-white'
+            }`}
             title="Project today's DNN Daily News show"
           >
             <span>Project Daily News</span>

@@ -127,7 +127,7 @@ export default function CopilotExplodedSubjectModal({
           </div>
         </div>
 
-        {/* Center: Quick Switcher Tabs (Audit, Solutions, Daily News) */}
+        {/* Center: Quick Switcher Tabs (Audit, Solutions, Daily News - All grey, active white, no yellow) */}
         <div className="hidden md:flex items-center bg-[#141414] p-1 rounded-xl border border-white/10 gap-1">
           <button
             type="button"
@@ -135,9 +135,9 @@ export default function CopilotExplodedSubjectModal({
               if (selectedItem) onSelectItem?.(null);
               onViewChange?.('dossier');
             }}
-            className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
               currentTab === 'dossier' && !selectedItem
-                ? 'bg-[#D4AF37] text-black shadow-md'
+                ? 'bg-white/15 text-white font-semibold'
                 : 'text-stone-400 hover:text-white'
             }`}
           >
@@ -151,13 +151,13 @@ export default function CopilotExplodedSubjectModal({
               if (selectedItem) onSelectItem?.(null);
               onViewChange?.('solutions');
             }}
-            className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
               currentTab === 'solutions'
-                ? 'bg-[#D4AF37] text-black shadow-md'
+                ? 'bg-white/15 text-white font-semibold'
                 : 'text-stone-400 hover:text-white'
             }`}
           >
-            <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+            <BookOpen className="w-3.5 h-3.5" />
             <span>Solutions Vault</span>
           </button>
 
@@ -167,13 +167,13 @@ export default function CopilotExplodedSubjectModal({
               if (selectedItem) onSelectItem?.(null);
               onViewChange?.('news');
             }}
-            className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
               currentTab === 'news' && !selectedItem
-                ? 'bg-[#D4AF37] text-black shadow-md'
+                ? 'bg-white/15 text-white font-semibold'
                 : 'text-stone-400 hover:text-white'
             }`}
           >
-            <Radio className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
+            <Radio className="w-3.5 h-3.5" />
             <span>Daily News</span>
           </button>
         </div>
