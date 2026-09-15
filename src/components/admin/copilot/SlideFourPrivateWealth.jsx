@@ -136,59 +136,124 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
 
       </div>
 
-      {/* ── HOW DYSON HOMES COPILOT WORKS (PURE-TEXT ON DARK CANVAS) ── */}
-      <section className="w-full bg-[#0a0a0a] text-[#F3F0E6] border-t border-white/10 py-16 sm:py-20 px-6 sm:px-10">
-        <div className="max-w-[1120px] mx-auto space-y-5">
-          <h2 
-            className="text-xl sm:text-2xl font-serif font-normal text-[#D4AF37]"
-            style={{ fontFamily: 'Georgia, Cormorant Garamond, serif' }}
-          >
-            How Dyson Homes CoPilot Works
-          </h2>
-          <ol className="list-decimal list-inside space-y-3 text-stone-300 text-sm sm:text-base leading-relaxed pl-1">
-            <li>
-              <b className="text-white font-semibold">Paste Address</b> — Share the property details from your preferred MLS site.
-            </li>
-            <li>
-              <b className="text-white font-semibold">AI + Human Analysis</b> — CoPilot analyzes with AI precision and human expertise.
-            </li>
-            <li>
-              <b className="text-white font-semibold">Intelligence Delivered</b> — Comps, risks, and rebate insights in one private report.
-            </li>
-            <li>
-              <b className="text-white font-semibold">Better Decisions</b> — Close with confidence. Keep more wealth.
-            </li>
-          </ol>
+      {/* ── HOW DYSON HOMES COPILOT WORKS (IMAGE 1 SPEC) ── */}
+      <section className="w-full bg-[#0a0a0a] text-[#F3F0E6] border-t border-white/10 py-12 sm:py-16 px-6 sm:px-10">
+        <div className="max-w-[1240px] mx-auto space-y-8">
+          
+          {/* Centered Divider with Title */}
+          <div className="flex items-center justify-center gap-4 text-xs font-mono tracking-[0.25em] uppercase text-stone-400">
+            <div className="h-[1px] bg-white/15 flex-1" />
+            <span className="shrink-0 font-medium">HOW DYSON HOMES COPILOT WORKS</span>
+            <div className="h-[1px] bg-white/15 flex-1" />
+          </div>
 
-          {/* Pure-Text 3-Column Value Propositions: No boxes, No cards, No backgrounds, No borders */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-white/5">
-            <div className="space-y-1.5 text-left">
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-[#D4AF37] uppercase font-mono">
-                WE RUN COMPS &amp; MARKET INTEL
+          {/* Step 1: MLS browse + pills */}
+          <div className="space-y-3.5">
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-6 rounded-full border border-white/40 flex items-center justify-center text-xs font-mono font-bold text-white shrink-0">
+                1
+              </div>
+              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-white uppercase font-mono">
+                FIRST OF ALL BROWSE YOUR PREFERRED MLS AND COPY THE MLS# OR ADDRESS:
               </h3>
-              <p className="text-xs sm:text-sm text-stone-300 leading-relaxed font-normal">
-                AI-powered comps, trends, and valuation insights.
-              </p>
             </div>
 
-            <div className="space-y-1.5 text-left">
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-[#D4AF37] uppercase font-mono">
-                WE EXPLORE RISKS THRU DUE DILIGENCE
-              </h3>
-              <p className="text-xs sm:text-sm text-stone-300 leading-relaxed font-normal">
-                Hidden risks, title issues, zoning, and red flags—before you commit.
-              </p>
-            </div>
-
-            <div className="space-y-1.5 text-left">
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-[#D4AF37] uppercase font-mono">
-                WE AUDIT ESCROW &amp; COMPLIANCE
-              </h3>
-              <p className="text-xs sm:text-sm text-stone-300 leading-relaxed font-normal">
-                Strict escrow shields &amp; lender guidelines—protecting your deposit.
-              </p>
+            <div className="flex items-center gap-2.5 pl-9 flex-wrap">
+              <a
+                href="https://www.realtor.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-1.5 rounded-full border border-white/25 hover:border-[#D4AF37] text-white hover:text-[#D4AF37] text-xs font-medium transition-colors bg-white/5 hover:bg-white/10"
+              >
+                <span className="underline decoration-white/40 underline-offset-2">Realtor.com</span>
+              </a>
+              <a
+                href="https://www.homes.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-1.5 rounded-full border border-white/25 hover:border-[#D4AF37] text-white hover:text-[#D4AF37] text-xs font-medium transition-colors bg-white/5 hover:bg-white/10"
+              >
+                <span className="underline decoration-white/40 underline-offset-2">Homes.com</span>
+              </a>
+              <a
+                href="https://www.zillow.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-1.5 rounded-full border border-white/25 hover:border-[#D4AF37] text-white hover:text-[#D4AF37] text-xs font-medium transition-colors bg-white/5 hover:bg-white/10"
+              >
+                <span className="underline decoration-white/40 underline-offset-2">Zillow</span>
+              </a>
             </div>
           </div>
+
+          {/* Subtle horizontal rule between step 1 and steps 2-5 */}
+          <div className="h-[1px] bg-white/10" />
+
+          {/* Steps 2-5: 4-Column Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6 pt-1">
+            
+            {/* Step 2 */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2.5">
+                <div className="w-5 h-5 rounded-full border border-white/40 flex items-center justify-center text-[11px] font-mono font-bold text-white shrink-0">
+                  2
+                </div>
+                <h4 className="text-xs sm:text-[13px] font-bold tracking-wider text-white uppercase font-mono">
+                  PASTE ADDRESS
+                </h4>
+              </div>
+              <p className="text-xs sm:text-[13px] text-stone-400 pl-7 leading-relaxed font-normal">
+                Share the property details.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2.5">
+                <div className="w-5 h-5 rounded-full border border-white/40 flex items-center justify-center text-[11px] font-mono font-bold text-white shrink-0">
+                  3
+                </div>
+                <h4 className="text-xs sm:text-[13px] font-bold tracking-wider text-white uppercase font-mono">
+                  AI + HUMAN ANALYSIS
+                </h4>
+              </div>
+              <p className="text-xs sm:text-[13px] text-stone-400 pl-7 leading-relaxed font-normal">
+                CoPilot analyzes with AI precision and human expertise.
+              </p>
+            </div>
+
+            {/* Step 4 */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2.5">
+                <div className="w-5 h-5 rounded-full border border-white/40 flex items-center justify-center text-[11px] font-mono font-bold text-white shrink-0">
+                  4
+                </div>
+                <h4 className="text-xs sm:text-[13px] font-bold tracking-wider text-white uppercase font-mono">
+                  INTELLIGENCE DELIVERED
+                </h4>
+              </div>
+              <p className="text-xs sm:text-[13px] text-stone-400 pl-7 leading-relaxed font-normal">
+                Comps, risks, and rebate insights in one private report.
+              </p>
+            </div>
+
+            {/* Step 5 */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2.5">
+                <div className="w-5 h-5 rounded-full border border-white/40 flex items-center justify-center text-[11px] font-mono font-bold text-white shrink-0">
+                  5
+                </div>
+                <h4 className="text-xs sm:text-[13px] font-bold tracking-wider text-white uppercase font-mono">
+                  BETTER DECISIONS
+                </h4>
+              </div>
+              <p className="text-xs sm:text-[13px] text-stone-400 pl-7 leading-relaxed font-normal">
+                Close with confidence. Keep more wealth.
+              </p>
+            </div>
+
+          </div>
+
         </div>
       </section>
 
