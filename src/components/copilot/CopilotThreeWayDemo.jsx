@@ -49,8 +49,8 @@ export const THREE_WAY_SCRIPT = [
     // Authentic HeyGen Bob Dyson cloned studio voice (strictly answering without license reference)
     audioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/147b8f5713024fb9afc106f266e47482/id=f002a65f-b3e9-4d51-907f-88f57c2aa9f5.wav",
     backupAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/87ef3b1d1_speech.mp3",
-    voiceConfig: { pitch: 0.95, rate: 0.95, voiceType: 'bob' },
-    delayMs: 7500
+    voiceConfig: { pitch: 0.95, rate: 1.15, voiceType: 'bob' },
+    delayMs: 6500
   }
 ];
 
@@ -80,6 +80,12 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
 
         audio.src = turnData.audioUrl;
         audio.currentTime = 0;
+        const targetRate = turnData.voiceConfig?.rate || (turnData.speaker === 'bob' ? 1.15 : 1.0);
+        audio.playbackRate = targetRate;
+        audio.defaultPlaybackRate = targetRate;
+        audio.onplay = () => {
+          audio.playbackRate = targetRate;
+        };
 
         let hasFinished = false;
         const finish = () => {
@@ -139,6 +145,7 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
         
         if (turnData.speaker === 'bob') {
           utterance.pitch = 0.85; // Deep authoritative tone
+          utterance.rate = 1.15; // Sped up a notch
           const maleVoice = voices.find(v => v.lang.startsWith('en') && !isFemaleName(v.name) && /daniel|george|oliver|alex|david|guy|male|fred|lee|tom/i.test(v.name))
             || voices.find(v => v.lang.startsWith('en') && !isFemaleName(v.name));
           if (maleVoice) utterance.voice = maleVoice;

@@ -79,10 +79,11 @@ export default function CopilotDynamicSpeakerBox({
       setIsPlaying(true);
       if (videoRef.current) {
         videoRef.current.currentTime = 0;
+        videoRef.current.playbackRate = isBob ? 1.15 : 1.0;
         videoRef.current.play().catch(() => {});
       }
     }
-  }, [isThisExplainerActive]);
+  }, [isThisExplainerActive, isBob]);
 
   // Teardown
   useEffect(() => {
@@ -277,6 +278,16 @@ export default function CopilotDynamicSpeakerBox({
               autoPlay
               playsInline
               controls={false}
+              onLoadedMetadata={() => {
+                if (videoRef.current) {
+                  videoRef.current.playbackRate = isBob ? 1.15 : 1.0;
+                }
+              }}
+              onPlay={() => {
+                if (videoRef.current) {
+                  videoRef.current.playbackRate = isBob ? 1.15 : 1.0;
+                }
+              }}
               onEnded={handleFinishExplainer}
               className="w-full h-full object-cover"
             />

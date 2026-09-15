@@ -88,7 +88,7 @@ Deno.serve(async (req) => {
               voice_id: BOB_VOICE_ID,
               input_text: TEST_SCRIPT,
               emotion: 'Excited',
-              speed: 1.0,
+              speed: 1.15,
             },
             background: { type: 'color', value: '#0d0d0d' },
           },

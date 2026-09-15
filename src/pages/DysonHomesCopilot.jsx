@@ -200,6 +200,22 @@ export default function DysonHomesCopilot({ initialPage }) {
       setIsCaptureModalOpen(true);
     }
 
+    const explainer = findExplainerByQuery(clean);
+    if (explainer?.videoUrl) {
+      setActiveExplainer(explainer);
+      setMessages(prev => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          sender: explainer.speaker === 'bob' ? 'bob' : 'charlie',
+          text: explainer.textAnswer || `Playing video explainer for "${explainer.label}".`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
+      setIsSending(false);
+      return;
+    }
+
     try {
       // Build knowledge context from active rows
       const kbContext = (kbRowsRef.current || [])
