@@ -91,16 +91,36 @@ export default function CopilotDossierNewsPanel({
     setIsMuted(videoRef.current.muted);
   };
 
-  const handleBackToSearch = () => {
-    if (onBackToSearch) {
-      onBackToSearch();
+  const [viewHistory, setViewHistory] = useState(['dossier']);
+
+  // Track intelligence view navigation history
+  React.useEffect(() => {
+    if (activeView) {
+      setViewHistory(prev => {
+        if (prev[prev.length - 1] === activeView) return prev;
+        return [...prev, activeView];
+      });
+    }
+  }, [activeView]);
+
+  // Back button function strictly pertains ONLY to the Intelligence side of this page
+  const handleIntelligenceBack = () => {
+    if (isExploded) {
+      onToggleExplode?.();
+      return;
+    }
+    if (activeView === 'solutions' || activeView === 'news') {
+      onViewChange?.('dossier');
+      return;
+    }
+    if (viewHistory.length > 1) {
+      const copy = [...viewHistory];
+      copy.pop();
+      const prev = copy[copy.length - 1] || 'dossier';
+      setViewHistory(copy);
+      onViewChange?.(prev);
     } else {
-      const el = document.getElementById('search-hero') || document.querySelector('[data-page="1"]');
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        window.location.href = '/copilot/page-1';
-      }
+      onViewChange?.('dossier');
     }
   };
 
@@ -129,12 +149,12 @@ export default function CopilotDossierNewsPanel({
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={handleBackToSearch}
+              onClick={handleIntelligenceBack}
               className="px-2.5 py-1 rounded-md text-xs font-medium bg-[#1c1c1c] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1 shadow-sm"
-              title="Back to Landing & Search"
+              title="Back"
             >
               <ArrowLeft className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>Back to Search</span>
+              <span>Back</span>
             </button>
             <span className="text-stone-600 hidden sm:inline">|</span>
             <span className="text-xs font-mono font-bold tracking-widest text-[#D4AF37] uppercase hidden sm:inline">
@@ -158,9 +178,9 @@ export default function CopilotDossierNewsPanel({
       <div className="h-[62px] sm:h-[70px] shrink-0 flex items-center justify-between px-1">
         <button
           type="button"
-          onClick={handleBackToSearch}
+          onClick={handleIntelligenceBack}
           className="px-2.5 py-1 rounded-md text-xs font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1 shadow-sm"
-          title="Back to Landing & Search"
+          title="Back"
         >
           <ArrowLeft className="w-3.5 h-3.5 text-[#D4AF37]" />
           <span>Back</span>

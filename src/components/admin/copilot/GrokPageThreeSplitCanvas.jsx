@@ -272,49 +272,32 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
               />
             </div>
 
-            {/* ── CONTROLS BELOW INTERACTIVE DIALOGUE: BACK & SAVED DISCUSSIONS ── */}
-            <div className="flex items-center justify-between gap-2 pt-1 pb-1 px-0.5">
-              {onBackToSearch ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    resetToBlank();
-                    onBackToSearch?.();
-                  }}
-                  className="px-2.5 py-1.5 rounded-md text-xs font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1 shadow-sm"
-                  title="Back to Landing & Search"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5 text-[#D4AF37]" />
-                  <span>Back</span>
-                </button>
-              ) : <div />}
-
-              <div className="flex items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => setIsSavedDiscussionsOpen(true)}
-                  className="px-2.5 py-1.5 rounded-md text-xs font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm"
-                  title="Open Saved Discussions"
-                >
-                  <Bookmark className="w-3.5 h-3.5 text-[#D4AF37]" />
-                  <span>Saved Discussions</span>
-                  {savedCount > 0 && (
-                    <span className="px-1.5 py-0.2 rounded-full bg-[#D4AF37] text-black text-[9px] font-bold">
-                      {savedCount}
-                    </span>
-                  )}
-                </button>
-                {messages.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={resetToBlank}
-                    className="px-2.5 py-1.5 rounded-md text-xs font-medium bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white border border-white/15 transition-all cursor-pointer whitespace-nowrap shrink-0"
-                    title="Clear all messages and reset screen to blank"
-                  >
-                    Clear Session
-                  </button>
+            {/* ── CONTROLS BELOW INTERACTIVE DIALOGUE: SAVED DISCUSSIONS & CLEAR ── */}
+            <div className="flex items-center justify-end gap-1.5 pt-1 pb-1 px-0.5">
+              <button
+                type="button"
+                onClick={() => setIsSavedDiscussionsOpen(true)}
+                className="px-2.5 py-1.5 rounded-md text-xs font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm"
+                title="Open Saved Discussions"
+              >
+                <Bookmark className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span>Saved Discussions</span>
+                {savedCount > 0 && (
+                  <span className="px-1.5 py-0.2 rounded-full bg-[#D4AF37] text-black text-[9px] font-bold">
+                    {savedCount}
+                  </span>
                 )}
-              </div>
+              </button>
+              {messages.length > 0 && (
+                <button
+                  type="button"
+                  onClick={resetToBlank}
+                  className="px-2.5 py-1.5 rounded-md text-xs font-medium bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white border border-white/15 transition-all cursor-pointer whitespace-nowrap shrink-0"
+                  title="Clear all messages and reset screen to blank"
+                >
+                  Clear Session
+                </button>
+              )}
             </div>
 
             {/* ── 3-WAY INTERACTIVE DIALOGUE FEED (COLOR-CODED DURING SPEECH & AT REST) ── */}
