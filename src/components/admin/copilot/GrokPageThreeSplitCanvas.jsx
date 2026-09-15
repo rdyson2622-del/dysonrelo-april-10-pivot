@@ -219,10 +219,10 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
       style={{ background: '#080808', color: '#f5f5f5' }}
     >
       {/* ── TOP HEADER BAR: D&D badge + CoPilot wordmark (capital C+P, black/gold/white, no green) ── */}
-      <div className="px-5 py-3 border-b border-white/10 flex flex-wrap items-center justify-between gap-3 bg-[#0a0a0a]">
+      <div className="px-5 py-3 border-b border-white/10 flex flex-wrap items-center justify-end gap-3 bg-[#0a0a0a]">
         
-        {/* Left: Back Button + View Controls */}
-        <div className="flex items-center gap-3">
+        {/* Top Controls: Pinned to Far Right */}
+        <div className="flex items-center gap-3 ml-auto">
           {onBackToSearch && (
             <button
               type="button"
