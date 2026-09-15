@@ -194,7 +194,30 @@ export default function CopilotDossierNewsPanel({
       </div>
 
       {/* ── NEWS BROADCAST PLACEHOLDER ABOVE ALL TEXT (SEARCH / AUDIT / CONTROLS) ── */}
-...
+      <div
+        className="relative w-[39%] mx-auto overflow-hidden rounded-xl shadow-2xl border-2 border-[#D4AF37]/80 group shrink-0"
+        style={{
+          aspectRatio: '16/9',
+          background: '#000',
+          boxShadow: '0 16px 48px rgba(0,0,0,0.7)',
+        }}
+      >
+        {/* Video Player */}
+        <video
+          ref={videoRef}
+          key={playUrl}
+          src={playUrl}
+          poster={STUDIO_POSTER_URL}
+          controls
+          playsInline
+          preload="metadata"
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          className="w-full h-full object-cover"
+          style={{ display: 'block', background: '#000' }}
+        />
+      </div>
+
       {/* ── TOP CONTROLS & VIEW SWITCHER: Back button on far left, controls grouped on the right ── */}
       <div className="flex items-center justify-between gap-2 pb-2 border-b border-white/10 mt-4">
         <button
