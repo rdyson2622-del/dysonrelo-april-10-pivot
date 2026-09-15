@@ -158,12 +158,12 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
               </h3>
             </div>
 
-            <div className="flex items-center gap-2.5 pl-9 flex-wrap">
+            <div className="flex items-center justify-center gap-3.5 flex-wrap pt-1">
               <a
                 href="https://www.realtor.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-1.5 rounded-full bg-[#ede0cc] hover:bg-[#e2d3bd] text-black text-xs font-semibold transition-colors border border-[#ede0cc]"
+                className="w-32 sm:w-36 py-2 rounded-full bg-[#ede0cc] hover:bg-[#e2d3bd] text-black text-xs font-semibold transition-colors border border-[#ede0cc] inline-flex items-center justify-center text-center shadow-sm"
               >
                 <span className="underline decoration-black/40 underline-offset-2">Realtor.com</span>
               </a>
@@ -171,7 +171,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
                 href="https://www.homes.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-1.5 rounded-full bg-[#ede0cc] hover:bg-[#e2d3bd] text-black text-xs font-semibold transition-colors border border-[#ede0cc]"
+                className="w-32 sm:w-36 py-2 rounded-full bg-[#ede0cc] hover:bg-[#e2d3bd] text-black text-xs font-semibold transition-colors border border-[#ede0cc] inline-flex items-center justify-center text-center shadow-sm"
               >
                 <span className="underline decoration-black/40 underline-offset-2">Homes.com</span>
               </a>
@@ -179,7 +179,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
                 href="https://www.zillow.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-1.5 rounded-full bg-[#ede0cc] hover:bg-[#e2d3bd] text-black text-xs font-semibold transition-colors border border-[#ede0cc]"
+                className="w-32 sm:w-36 py-2 rounded-full bg-[#ede0cc] hover:bg-[#e2d3bd] text-black text-xs font-semibold transition-colors border border-[#ede0cc] inline-flex items-center justify-center text-center shadow-sm"
               >
                 <span className="underline decoration-black/40 underline-offset-2">Zillow</span>
               </a>
