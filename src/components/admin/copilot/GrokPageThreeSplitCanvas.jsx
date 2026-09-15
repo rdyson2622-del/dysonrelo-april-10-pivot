@@ -342,10 +342,10 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
 
       {/* ── TWO ROWS DIRECTLY OVER MINI APPS: INPUT BAR + PROMPT CHIPS ── */}
       <div className="px-3 sm:px-4 py-3 bg-[#0a0a0a] border-t border-white/10 space-y-2.5">
-        {/* Plain Grok-Style Input (Tan #ede0cc background) */}
-        <form onSubmit={handleSendMessage} className="space-y-1">
+        {/* Plain Grok-Style Input (Tan #ede0cc background) - Reduced to ~40% width on left */}
+        <form onSubmit={handleSendMessage} className="space-y-1 w-full md:w-[40%]">
           <div 
-            className="flex items-center rounded-xl px-3 py-2 transition-all border border-[#ede0cc]"
+            className="flex items-center rounded-xl px-3 py-2 transition-all border border-[#ede0cc] w-full"
             style={{ backgroundColor: '#ede0cc', color: '#000000' }}
           >
             <Paperclip className="w-4 h-4 text-black mr-2 shrink-0 cursor-pointer" title="Attach file or pre-approval" />
