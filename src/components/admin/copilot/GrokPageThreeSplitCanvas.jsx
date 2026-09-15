@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Paperclip, Send, Scale, ShieldAlert, FileText, 
-  Waves, Clock, Radio, Mic, Briefcase, Shield, Sparkles, ArrowLeft
+  Waves, Clock, Radio, Mic, Briefcase, Shield, Sparkles, ArrowLeft, Bookmark
 } from 'lucide-react';
 import CopilotDynamicSpeakerBox from '@/components/copilot/CopilotDynamicSpeakerBox';
 import CopilotConsumerSpeakerBox from '@/components/copilot/CopilotConsumerSpeakerBox';
@@ -10,6 +10,7 @@ import CopilotMiniAppsRail from '@/components/copilot/CopilotMiniAppsRail';
 import CopilotDossierNewsPanel from '@/components/copilot/CopilotDossierNewsPanel';
 import CopilotContactCaptureModal from '@/components/copilot/CopilotContactCaptureModal';
 import CopilotExplodedSubjectModal from '@/components/copilot/CopilotExplodedSubjectModal';
+import CopilotSavedDiscussionsModal from '@/components/copilot/CopilotSavedDiscussionsModal';
 import { findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { getPropertyDossier } from './propertyDossierData';
 
@@ -21,6 +22,16 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
   const [isPageExploded, setIsPageExploded] = useState(false);
   const [selectedExplodedItem, setSelectedExplodedItem] = useState(null);
   const [isCaptureModalOpen, setIsCaptureModalOpen] = useState(false);
+  const [isSavedDiscussionsOpen, setIsSavedDiscussionsOpen] = useState(false);
+  const [savedCount, setSavedCount] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const raw = localStorage.getItem('dyson_copilot_saved_discussions');
+        if (raw) return JSON.parse(raw).length;
+      } catch (_) {}
+    }
+    return 1;
+  });
   const [isSubscriber, setIsSubscriber] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('dyson_subscriber_unlocked') === 'true';
@@ -206,7 +217,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
           {/* Scrollable Conversation Container */}
           <div className="flex-1 min-h-0 overflow-y-auto space-y-3 pr-2 scrollbar-thin">
 
-            {/* ── HEADER: COPILOT + COMMAND CENTER ── */}
+            {/* ── HEADER: COPILOT + COMMAND CENTER + SAVED DISCUSSIONS ── */}
             <div className="relative flex items-baseline justify-center gap-2.5 pb-1 px-0.5">
               {onBackToSearch && (
                 <button
@@ -232,6 +243,22 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
               <span className="text-white text-[28px] sm:text-[32px] font-normal tracking-wide whitespace-nowrap">
                 Command Center
               </span>
+
+              <button
+                type="button"
+                onClick={() => setIsSavedDiscussionsOpen(true)}
+                className="absolute right-0 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-md text-xs font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm"
+                title="Open Saved Discussions"
+              >
+                <Bookmark className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span className="hidden sm:inline">Saved Discussions</span>
+                <span className="sm:hidden">Saved</span>
+                {savedCount > 0 && (
+                  <span className="px-1.5 py-0.2 rounded-full bg-[#D4AF37] text-black text-[9px] font-bold">
+                    {savedCount}
+                  </span>
+                )}
+              </button>
             </div>
 
             {/* ── ROSTER: BOB, CHARLIE, YOU SPEAKER BOXES ── */}
@@ -276,16 +303,27 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                   }}
                 />
               </div>
-              {messages.length > 0 && (
+              <div className="flex items-center gap-1.5 shrink-0">
                 <button
                   type="button"
-                  onClick={resetToBlank}
-                  className="px-2.5 py-1 rounded-md text-[10px] font-medium bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white border border-white/15 transition-all cursor-pointer whitespace-nowrap shrink-0"
-                  title="Clear all messages and reset screen to blank"
+                  onClick={() => setIsSavedDiscussionsOpen(true)}
+                  className="px-2.5 py-1.5 rounded-md text-[10px] font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm"
+                  title="Save this discussion or view saved records"
                 >
-                  Clear Session
+                  <Bookmark className="w-3 h-3 text-[#D4AF37]" />
+                  <span>Save Discussion</span>
                 </button>
-              )}
+                {messages.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={resetToBlank}
+                    className="px-2.5 py-1.5 rounded-md text-[10px] font-medium bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white border border-white/15 transition-all cursor-pointer whitespace-nowrap shrink-0"
+                    title="Clear all messages and reset screen to blank"
+                  >
+                    Clear Session
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* ── PLAIN GROK-STYLE TEXT CHAT (NO YELLOW DOTS, NO RINGS, CLEAN TYPOGRAPHY) ── */}
@@ -515,6 +553,23 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
               text: `I've queued the complete fiduciary property audit for ${captured.address} directly to ${captured.phone}.\n\nYou've also been granted complimentary VIP Subscriber access to our Daily DNN News broadcasts under Bob Dyson's broker desk!`
             }
           ]);
+        }}
+      />
+
+      {/* ── SAVED DISCUSSIONS MODAL ── */}
+      <CopilotSavedDiscussionsModal
+        isOpen={isSavedDiscussionsOpen}
+        onClose={() => setIsSavedDiscussionsOpen(false)}
+        currentMessages={messages}
+        currentProperty={property}
+        onRestoreDiscussion={(restoredMsgs) => {
+          setMessages(restoredMsgs);
+        }}
+        onSaveCurrent={() => {
+          try {
+            const raw = localStorage.getItem('dyson_copilot_saved_discussions');
+            if (raw) setSavedCount(JSON.parse(raw).length);
+          } catch (_) {}
         }}
       />
 
