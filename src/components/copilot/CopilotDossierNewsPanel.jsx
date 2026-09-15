@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { 
   Scale, ShieldAlert, Shield, DollarSign, Waves, Clock, Radio, 
   Maximize2, Minimize2, Newspaper, Sparkles, Play, Pause,
-  Share2, Volume2, VolumeX, ChevronRight, MessageSquare, BookOpen
+  Share2, Volume2, VolumeX, ChevronRight, MessageSquare, BookOpen, FileText
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -107,20 +107,19 @@ export default function CopilotDossierNewsPanel({
       className={`flex flex-col h-full bg-[#080808] text-white ${
         isExploded 
           ? 'fixed inset-0 z-50 p-4 sm:p-6 overflow-y-auto bg-black/95 backdrop-blur-xl' 
-          : 'px-4 sm:px-6 pb-6 space-y-4 overflow-y-auto'
+          : 'p-3 sm:p-4 pb-6 space-y-4 overflow-y-auto'
       }`}
-      style={!isExploded && topOffset ? { paddingTop: `${topOffset}px` } : undefined}
     >
       
-      {/* ── TOP CONTROLS & VIEW SWITCHER: WITH '← Search' AS NUMBER ONE PILL ── */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/10">
+      {/* ── TOP CONTROLS & VIEW SWITCHER: EXACT 6 ITEMS DIRECTLY TO THE RIGHT OF 3 VIDEO BOXES ── */}
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/10 pt-1">
         
-        {/* View Switcher Tabs: 4 Pillars with Search as #1 */}
-        <div className="flex flex-wrap items-center bg-[#141414] p-1 rounded-xl border border-white/10 gap-0.5">
+        {/* Quick Right-Side View Switcher: Search as #1, Audit, Solutions & News */}
+        <div className="flex items-center bg-[#141414] p-0.5 rounded-md border border-white/10 gap-0.5">
           <button
             type="button"
             onClick={handleBackToSearch}
-            className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 text-stone-400 hover:text-white"
+            className="px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 text-stone-400 hover:text-white"
           >
             <span>← Search</span>
           </button>
@@ -128,56 +127,44 @@ export default function CopilotDossierNewsPanel({
           <button
             type="button"
             onClick={() => onViewChange?.('dossier')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ${
               activeView === 'dossier'
-                ? 'bg-white/15 text-white font-medium shadow-sm'
+                ? 'bg-white/15 text-white font-medium'
                 : 'text-stone-400 hover:text-white'
             }`}
           >
-            <Scale className="w-3.5 h-3.5" />
-            <span>Property Audit</span>
+            <Scale className="w-3 h-3" />
+            <span>Audit</span>
           </button>
 
           <button
             type="button"
             onClick={() => onViewChange?.('solutions')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ${
               activeView === 'solutions'
-                ? 'bg-white/15 text-white font-medium shadow-sm'
+                ? 'bg-white/15 text-white font-medium'
                 : 'text-stone-400 hover:text-white'
             }`}
           >
-            <BookOpen className="w-3.5 h-3.5" />
-            <span>Solutions &amp; Vault</span>
-            <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-medium ${
-              activeView === 'solutions' ? 'bg-white/20 text-white' : 'bg-white/5 text-stone-400'
-            }`}>
-              LIBRARY
-            </span>
+            <FileText className="w-3 h-3" />
+            <span>Solutions Vault</span>
           </button>
 
           <button
             type="button"
-            onClick={() => {
-              onViewChange?.('news');
-            }}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+            onClick={() => onViewChange?.('news')}
+            className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ${
               activeView === 'news'
-                ? 'bg-white/15 text-white font-medium shadow-sm'
+                ? 'bg-white/15 text-white font-medium'
                 : 'text-stone-400 hover:text-white'
             }`}
           >
-            <Radio className="w-3.5 h-3.5" />
+            <Radio className="w-3 h-3" />
             <span>Daily News</span>
-            <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-medium ${
-              activeView === 'news' ? 'bg-white/20 text-white' : 'bg-white/5 text-stone-400'
-            }`}>
-              LIVE
-            </span>
           </button>
         </div>
 
-        {/* Action Controls: Explode to Full Page & Status */}
+        {/* Action Controls: Full screen & Project Daily News */}
         <div className="flex items-center gap-2">
           {isSubscriber && (
             <span className="text-[8.5px] px-2 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-mono font-bold flex items-center gap-1">
@@ -186,50 +173,30 @@ export default function CopilotDossierNewsPanel({
             </span>
           )}
 
-          {/* Universal Expand Working Content Action */}
           <button
             type="button"
-            onClick={() => {
-              onToggleExplode?.();
-            }}
-            className={`px-2.5 py-1.5 rounded-xl border text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer shadow-sm ${
+            onClick={() => onToggleExplode?.()}
+            className={`px-2.5 py-1 rounded-md border text-xs font-medium transition-all cursor-pointer ${
               isExploded
-                ? 'bg-white/15 text-white border-white/25 font-medium'
+                ? 'bg-white/15 text-white border-white/20 font-medium'
                 : 'bg-white/5 hover:bg-white/10 border-white/15 text-stone-400 hover:text-white'
             }`}
-            title={isExploded ? "Collapse to Split Screen" : "Expand chat + dossier canvas to full viewport"}
+            title="Expand chat + dossier canvas to full viewport"
           >
-            {isExploded ? (
-              <>
-                <Minimize2 className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Collapse View</span>
-                <span className="sm:hidden">Exit</span>
-              </>
-            ) : (
-              <>
-                <Maximize2 className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Expand Working Content</span>
-                <span className="sm:hidden">Expand</span>
-              </>
-            )}
+            <span>Full screen</span>
           </button>
 
-          {/* Project Daily News Control */}
           <button
             type="button"
-            onClick={() => {
-              onViewChange?.('news');
-            }}
-            className={`px-2.5 py-1.5 rounded-xl border text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer shadow-sm ${
+            onClick={() => onViewChange?.('news')}
+            className={`px-2.5 py-1 rounded-md border text-xs font-medium transition-all cursor-pointer ${
               activeView === 'news'
-                ? 'bg-white/15 text-white border-white/25 font-medium'
+                ? 'bg-white/15 text-white border-white/20 font-medium'
                 : 'bg-white/5 hover:bg-white/10 border-white/15 text-stone-400 hover:text-white'
             }`}
             title="Project today's DNN Daily News show"
           >
-            <Radio className="w-3 h-3" />
-            <span className="hidden sm:inline">Project Daily News</span>
-            <span className="sm:hidden">News</span>
+            <span>Project Daily News</span>
           </button>
         </div>
       </div>

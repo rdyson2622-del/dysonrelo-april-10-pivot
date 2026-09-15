@@ -29,8 +29,6 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
   });
   const messagesEndRef = useRef(null);
   const canvasRef = useRef(null);
-  const firstMessageRef = useRef(null);
-  const [textStartOffset, setTextStartOffset] = useState(480);
   const dossierData = getPropertyDossier(property);
 
   const [messages, setMessages] = useState(() => {
@@ -79,26 +77,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
     scrollToBottom();
   }, [messages]);
 
-  // Synchronize text starting position so right-side dossier aligns with left-side chat text
-  useEffect(() => {
-    const measureOffset = () => {
-      if (firstMessageRef.current && canvasRef.current) {
-        const msgRect = firstMessageRef.current.getBoundingClientRect();
-        const canvasRect = canvasRef.current.getBoundingClientRect();
-        const offset = msgRect.top - canvasRect.top;
-        if (offset > 120) {
-          setTextStartOffset(Math.round(offset));
-        }
-      }
-    };
-    measureOffset();
-    const timer = setTimeout(measureOffset, 100);
-    window.addEventListener('resize', measureOffset);
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener('resize', measureOffset);
-    };
-  }, [messages]);
+
 
   const handlePillClick = (query) => {
     const explainer = findExplainerByQuery(query);
@@ -242,90 +221,6 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
       className="w-full rounded-2xl border border-white/10 shadow-2xl overflow-hidden select-none text-left"
       style={{ background: '#080808', color: '#f5f5f5' }}
     >
-      {/* ── TOP HEADER BAR: D&D badge + CoPilot wordmark (capital C+P, black/gold/white, no green) ── */}
-      <div className="px-5 py-3 border-b border-white/10 flex flex-wrap items-center justify-end gap-3 bg-[#0a0a0a]">
-        
-        {/* Top Controls: Pinned to Far Right */}
-        <div className="flex items-center gap-3 ml-auto">
-          {/* Quick Right-Side View Switcher: Search as #1, Audit, Solutions & News */}
-          <div className="hidden sm:flex items-center bg-[#141414] p-0.5 rounded-md border border-white/10 ml-2 gap-0.5">
-            {onBackToSearch && (
-              <button
-                type="button"
-                onClick={onBackToSearch}
-                className="px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 text-stone-400 hover:text-white"
-              >
-                <span>← Search</span>
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={() => setRightPanelView('dossier')}
-              className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ${
-                rightPanelView === 'dossier'
-                  ? 'bg-white/15 text-white font-medium'
-                  : 'text-stone-400 hover:text-white'
-              }`}
-            >
-              <Scale className="w-3 h-3" />
-              <span>Audit</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setRightPanelView('solutions')}
-              className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ${
-                rightPanelView === 'solutions'
-                  ? 'bg-white/15 text-white font-medium'
-                  : 'text-stone-400 hover:text-white'
-              }`}
-            >
-              <FileText className="w-3 h-3" />
-              <span>Solutions Vault</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setRightPanelView('news')}
-              className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ${
-                rightPanelView === 'news'
-                  ? 'bg-white/15 text-white font-medium'
-                  : 'text-stone-400 hover:text-white'
-              }`}
-            >
-              <Radio className="w-3 h-3" />
-              <span>Daily News</span>
-            </button>
-          </div>
-
-          {/* Quiet Full-Screen Expand Stub */}
-          <button
-            type="button"
-            onClick={() => setIsPageExploded(true)}
-            className={`px-2.5 py-1 rounded-md border text-xs font-medium transition-all cursor-pointer ml-1 ${
-              isPageExploded
-                ? 'bg-white/15 text-white border-white/20 font-medium'
-                : 'bg-white/5 hover:bg-white/10 border-white/15 text-stone-400 hover:text-white'
-            }`}
-            title="Expand chat + dossier canvas to full viewport"
-          >
-            <span>Full screen</span>
-          </button>
-
-          {/* Quiet Project Daily News Stub */}
-          <button
-            type="button"
-            onClick={() => setRightPanelView('news')}
-            className={`px-2.5 py-1 rounded-md border text-xs font-medium transition-all cursor-pointer ml-1 ${
-              rightPanelView === 'news'
-                ? 'bg-white/15 text-white border-white/20 font-medium'
-                : 'bg-white/5 hover:bg-white/10 border-white/15 text-stone-400 hover:text-white'
-            }`}
-            title="Project today's DNN Daily News show"
-          >
-            <span>Project Daily News</span>
-          </button>
-        </div>
-      </div>
-
       {/* ── MAIN CANVAS (FLEX-COL TO LG:FLEX-ROW) ── */}
       <div ref={canvasRef} className="flex flex-col lg:flex-row min-h-[640px]">
         
