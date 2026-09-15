@@ -188,8 +188,10 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
   const playTurn = (stepIndex) => {
     if (stepIndex >= THREE_WAY_SCRIPT.length) {
       setIsPlaying(false);
-      setCurrentStep(4);
+      setCurrentStep(0);
       if (onTurnChange) onTurnChange(null);
+      // Automatically clear chat & reset presentation when session finishes
+      if (onResetDemo) onResetDemo();
       return;
     }
 
@@ -312,12 +314,12 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
           {isPlaying ? (
             <>
               <Pause className="w-3 h-3" />
-              <span>Stop Demo</span>
+              <span>End Session</span>
             </>
           ) : (
             <>
               <Play className="w-3 h-3 fill-black" />
-              <span>{currentStep === 4 ? 'Replay 3-Way Demo' : 'Play 3-Way Demo'}</span>
+              <span>{currentStep === 4 ? 'Play 3-Way Demo' : 'Play 3-Way Demo'}</span>
             </>
           )}
         </button>
@@ -326,10 +328,11 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
           <button
             type="button"
             onClick={stopDemo}
-            className="p-1.5 rounded-md text-stone-400 hover:text-white bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer"
-            title="Reset conversation"
+            className="px-2 py-1 rounded-md text-[10px] text-stone-400 hover:text-white bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer flex items-center gap-1"
+            title="End session and clear screen"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
+            <RotateCcw className="w-3 h-3" />
+            <span>Clear Session</span>
           </button>
         )}
       </div>

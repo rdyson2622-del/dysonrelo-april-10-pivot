@@ -246,15 +246,30 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
               />
             </div>
 
-            {/* ── INTERACTIVE 3-WAY DIALOGUE STAGE PILL ── */}
-            <div className="pt-2">
-              <CopilotThreeWayDemo 
-                onTurnChange={setActiveDemoSpeaker}
-                onResetDemo={() => setActiveDemoSpeaker(null)}
-                onMessagePosted={(msg) => {
-                  setMessages(prev => [...prev, msg]);
-                }}
-              />
+            {/* ── INTERACTIVE 3-WAY DIALOGUE STAGE PILL & RESET CONTROLS ── */}
+            <div className="pt-2 flex items-center justify-between gap-2">
+              <div className="flex-1">
+                <CopilotThreeWayDemo 
+                  onTurnChange={setActiveDemoSpeaker}
+                  onResetDemo={() => {
+                    setActiveDemoSpeaker(null);
+                    resetToBlank();
+                  }}
+                  onMessagePosted={(msg) => {
+                    setMessages(prev => [...prev, msg]);
+                  }}
+                />
+              </div>
+              {messages.length > 0 && (
+                <button
+                  type="button"
+                  onClick={resetToBlank}
+                  className="px-2.5 py-1 rounded-md text-[10px] font-medium bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white border border-white/15 transition-all cursor-pointer whitespace-nowrap shrink-0"
+                  title="Clear all messages and reset screen to blank"
+                >
+                  Clear Session
+                </button>
+              )}
             </div>
 
             {/* ── PLAIN GROK-STYLE TEXT CHAT (NO YELLOW DOTS, NO RINGS, CLEAN TYPOGRAPHY) ── */}
