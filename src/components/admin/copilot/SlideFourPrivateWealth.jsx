@@ -36,10 +36,10 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
       style={{ color: '#F3F0E6' }}
     >
       {/* ── BLACK HERO SECTION ── */}
-      <div className="max-w-[1180px] mx-auto px-6 sm:px-10 pt-24 sm:pt-28 lg:pt-32 pb-16 sm:pb-20 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+      <div className="max-w-[1240px] mx-auto px-6 sm:px-10 pt-24 sm:pt-28 lg:pt-32 pb-16 sm:pb-20 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
         
         {/* Left Column (7 cols): Official Logo Lockup + Title + Search + Samples + Trust */}
-        <div className="lg:col-span-7 space-y-6">
+        <div className="lg:col-span-7 xl:col-span-7 space-y-6">
           
           {/* Official Logo Badge centered directly over CoPilot (over the P); meet reduced by 15% */}
           <div className="space-y-3">
@@ -92,7 +92,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
               </div>
             </form>
 
-            <p className="text-xs sm:text-[13px] text-[#F3F0E6]/85 leading-tight font-normal px-1 whitespace-nowrap">
+            <p className="text-xs sm:text-[13px] text-[#F3F0E6]/85 leading-tight font-normal px-1">
               Paste any address to see real comps, property risks, and your closing rebate — where allowed by law.
             </p>
           </div>
@@ -125,8 +125,8 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
 
         </div>
 
-        {/* Right Column (5 cols): Evening Luxury Estate Photo (hero-evening-luxury.png) */}
-        <div className="lg:col-span-5 rounded-2xl overflow-hidden border border-[#D4AF37]/40 aspect-[16/11] bg-[#0a0a0a] relative shadow-2xl">
+        {/* Right Column (5 cols): Evening Luxury Estate Photo (shifted right to give text room, no duplicate border) */}
+        <div className="lg:col-span-5 xl:col-span-5 lg:pl-4 rounded-2xl overflow-hidden aspect-[16/11] bg-transparent relative shadow-2xl">
           <img 
             src={HERO_EVENING} 
             alt="Dyson Homes Luxury Estate at Evening" 
@@ -159,6 +159,36 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
               <b className="text-white font-semibold">Better Decisions</b> — Close with confidence. Keep more wealth.
             </li>
           </ol>
+
+          {/* Pure-Text 3-Column Value Propositions: No boxes, No cards, No backgrounds, No borders */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-white/5">
+            <div className="space-y-1.5 text-left">
+              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-white uppercase font-mono">
+                WE RUN COMPS &amp; MARKET INTEL
+              </h3>
+              <p className="text-xs sm:text-sm text-stone-300 leading-relaxed font-normal">
+                AI-powered comps, trends, and valuation insights.
+              </p>
+            </div>
+
+            <div className="space-y-1.5 text-left">
+              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-white uppercase font-mono">
+                WE EXPLORE RISKS THRU DUE DILIGENCE
+              </h3>
+              <p className="text-xs sm:text-sm text-stone-300 leading-relaxed font-normal">
+                Hidden risks, title issues, zoning, and red flags—before you commit.
+              </p>
+            </div>
+
+            <div className="space-y-1.5 text-left">
+              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-white uppercase font-mono">
+                WE AUDIT ESCROW &amp; COMPLIANCE
+              </h3>
+              <p className="text-xs sm:text-sm text-stone-300 leading-relaxed font-normal">
+                Strict escrow shields &amp; lender guidelines—protecting your deposit.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
