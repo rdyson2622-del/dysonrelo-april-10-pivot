@@ -313,7 +313,7 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
           className={`px-3.5 py-1.5 rounded-full text-[10.5px] font-bold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer ${
             isPlaying 
               ? 'bg-rose-500/20 text-rose-300 border border-rose-500/50 hover:bg-rose-500/30'
-              : 'bg-white hover:bg-stone-100 text-black border border-white'
+              : 'bg-black hover:bg-[#1a1a1a] text-white border border-[#D4AF37]'
           }`}
         >
           {isPlaying ? (
@@ -323,7 +323,7 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
             </>
           ) : (
             <>
-              <Play className="w-3 h-3 fill-black" />
+              <Play className="w-3 h-3 fill-white text-white" />
               <span>{currentStep === 4 ? 'Play 3-Way Demo' : 'Play 3-Way Demo'}</span>
             </>
           )}

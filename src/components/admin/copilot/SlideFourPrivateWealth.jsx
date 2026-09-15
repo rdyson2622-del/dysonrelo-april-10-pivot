@@ -263,33 +263,33 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
                 href="https://www.realtor.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-32 sm:w-36 py-2 rounded-full bg-white hover:bg-stone-100 text-black text-xs font-normal transition-colors border border-white inline-flex items-center justify-center text-center shadow-sm"
+                className="w-32 sm:w-36 py-2 rounded-full bg-black hover:bg-[#1a1a1a] text-white text-xs font-normal transition-colors border border-[#D4AF37] inline-flex items-center justify-center text-center shadow-sm"
               >
-                <span className="underline decoration-black/40 underline-offset-2">Realtor.com</span>
+                <span className="underline decoration-white/40 underline-offset-2">Realtor.com</span>
               </a>
               <a
                 href="https://www.homes.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-32 sm:w-36 py-2 rounded-full bg-white hover:bg-stone-100 text-black text-xs font-normal transition-colors border border-white inline-flex items-center justify-center text-center shadow-sm"
+                className="w-32 sm:w-36 py-2 rounded-full bg-black hover:bg-[#1a1a1a] text-white text-xs font-normal transition-colors border border-[#D4AF37] inline-flex items-center justify-center text-center shadow-sm"
               >
-                <span className="underline decoration-black/40 underline-offset-2">Homes.com</span>
+                <span className="underline decoration-white/40 underline-offset-2">Homes.com</span>
               </a>
               <a
                 href="https://www.redfin.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-32 sm:w-36 py-2 rounded-full bg-white hover:bg-stone-100 text-black text-xs font-normal transition-colors border border-white inline-flex items-center justify-center text-center shadow-sm"
+                className="w-32 sm:w-36 py-2 rounded-full bg-black hover:bg-[#1a1a1a] text-white text-xs font-normal transition-colors border border-[#D4AF37] inline-flex items-center justify-center text-center shadow-sm"
               >
-                <span className="underline decoration-black/40 underline-offset-2">Redfin.com</span>
+                <span className="underline decoration-white/40 underline-offset-2">Redfin.com</span>
               </a>
               <a
                 href="https://www.zillow.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-32 sm:w-36 py-2 rounded-full bg-white hover:bg-stone-100 text-black text-xs font-normal transition-colors border border-white inline-flex items-center justify-center text-center shadow-sm"
+                className="w-32 sm:w-36 py-2 rounded-full bg-black hover:bg-[#1a1a1a] text-white text-xs font-normal transition-colors border border-[#D4AF37] inline-flex items-center justify-center text-center shadow-sm"
               >
-                <span className="underline decoration-black/40 underline-offset-2">Zillow</span>
+                <span className="underline decoration-white/40 underline-offset-2">Zillow</span>
               </a>
             </div>
           </div>
