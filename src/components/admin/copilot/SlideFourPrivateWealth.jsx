@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { ShieldCheck, ExternalLink, Plus } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 
-// Authentic evening luxury estate villa (hero-evening-luxury.png, never daytime hero-estate.jpg)
-const HERO_EVENING = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/4e3495635_Screenshot2026-09-14at43057PM.png";
+// Authentic evening luxury estate villa (hero-evening-luxury-clean.png)
+const HERO_EVENING = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/efdc69af3_hero-evening-luxury-clean.png";
 
 const SAMPLE_SEARCHES = [
   '742 Vista Del Mar, La Jolla, CA 92037',
@@ -136,142 +136,31 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
 
       </div>
 
-      {/* ── DYSON SIGNATURE TAN "HOW DYSON HOMES COPILOT WORKS" BAND ── */}
-      <div className="w-full bg-[#ede0cc] text-[#0a0a0a] border-t border-b border-[#D4AF37]/40 py-16 sm:py-20 px-6 sm:px-10">
-        <div className="max-w-[1180px] mx-auto space-y-8">
-          
-          {/* Header Divider */}
-          <div className="relative flex items-center justify-center">
-            <div className="border-t border-[#D4AF37]/60 w-full" />
-            <div className="absolute px-6 bg-[#ede0cc] text-xs font-bold tracking-[0.25em] text-[#0a0a0a] uppercase whitespace-nowrap font-mono">
-              HOW DYSON HOMES COPILOT WORKS
-            </div>
-          </div>
-
-          {/* Step 1 Line: Plain "1." with thin-border MLS links */}
-          <div className="flex items-center justify-center gap-3 pb-1 flex-wrap text-center">
-            <div className="text-xs sm:text-[13px] font-bold text-[#0a0a0a] uppercase tracking-wider">
-              <span className="font-mono text-sm text-[#0a0a0a] mr-1.5 font-bold">1.</span>
-              <span>FIRST OF ALL BROWSE YOUR PREFERRED MLS AND COPY THE MLS# OR ADDRESS:</span>
-            </div>
-            
-            <div className="flex items-center gap-2 flex-wrap justify-center">
-              <a 
-                href="https://www.realtor.com" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="px-3 py-1 rounded-md bg-white hover:bg-[#0a0a0a] text-[#0a0a0a] hover:text-[#D4AF37] text-xs font-medium border border-stone-300 hover:border-[#0a0a0a] inline-flex items-center gap-1 transition-colors"
-              >
-                <span>Realtor.com</span>
-                <ExternalLink className="w-3 h-3 text-[#D4AF37]" />
-              </a>
-              <a 
-                href="https://www.homes.com" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="px-3 py-1 rounded-md bg-white hover:bg-[#0a0a0a] text-[#0a0a0a] hover:text-[#D4AF37] text-xs font-medium border border-stone-300 hover:border-[#0a0a0a] inline-flex items-center gap-1 transition-colors"
-              >
-                <span>Homes.com</span>
-                <ExternalLink className="w-3 h-3 text-[#D4AF37]" />
-              </a>
-              <a 
-                href="https://www.zillow.com" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="px-3 py-1 rounded-md bg-white hover:bg-[#0a0a0a] text-[#0a0a0a] hover:text-[#D4AF37] text-xs font-medium border border-stone-300 hover:border-[#0a0a0a] inline-flex items-center gap-1 transition-colors"
-              >
-                <span>Zillow</span>
-                <ExternalLink className="w-3 h-3 text-[#D4AF37]" />
-              </a>
-            </div>
-          </div>
-
-          {/* Steps 2 to 5: Plain 2. 3. 4. 5., No yellow dots, No clipart, Pure text direction */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-1">
-            
-            {/* Step 2 */}
-            <div className="p-4 rounded-xl bg-white/80 border border-stone-300 space-y-1">
-              <div className="text-xs font-bold text-[#0a0a0a] uppercase tracking-wider">
-                <span className="font-mono text-[#D4AF37] mr-1.5 font-bold">2.</span>
-                <span>PASTE ADDRESS</span>
-              </div>
-              <p className="text-xs text-[#171717]/80 leading-snug">
-                Share the property details.
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="p-4 rounded-xl bg-white/80 border border-stone-300 space-y-1">
-              <div className="text-xs font-bold text-[#0a0a0a] uppercase tracking-wider">
-                <span className="font-mono text-[#D4AF37] mr-1.5 font-bold">3.</span>
-                <span>AI + HUMAN ANALYSIS</span>
-              </div>
-              <p className="text-xs text-[#171717]/80 leading-snug">
-                CoPilot analyzes with AI precision and human expertise.
-              </p>
-            </div>
-
-            {/* Step 4 */}
-            <div className="p-4 rounded-xl bg-white/80 border border-stone-300 space-y-1">
-              <div className="text-xs font-bold text-[#0a0a0a] uppercase tracking-wider">
-                <span className="font-mono text-[#D4AF37] mr-1.5 font-bold">4.</span>
-                <span>INTELLIGENCE DELIVERED</span>
-              </div>
-              <p className="text-xs text-[#171717]/80 leading-snug">
-                Comps, risks, and rebate insights in one private report.
-              </p>
-            </div>
-
-            {/* Step 5 */}
-            <div className="p-4 rounded-xl bg-white/80 border border-stone-300 space-y-1">
-              <div className="text-xs font-bold text-[#0a0a0a] uppercase tracking-wider">
-                <span className="font-mono text-[#D4AF37] mr-1.5 font-bold">5.</span>
-                <span>BETTER DECISIONS</span>
-              </div>
-              <p className="text-xs text-[#171717]/80 leading-snug">
-                Close with confidence.
-              </p>
-            </div>
-
-          </div>
-
-          {/* Three Pure-Text Value Cards: No decorative SVG clipart art, clean thin borders */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-2">
-            
-            {/* Box 1: We Run Comps & Market Intel */}
-            <div className="p-6 rounded-xl bg-white border border-[#D4AF37]/70 space-y-2 text-left">
-              <h3 className="text-xs sm:text-[13px] font-bold tracking-wide text-[#0a0a0a] uppercase">
-                WE RUN COMPS &amp; MARKET INTEL
-              </h3>
-              <p className="text-xs text-[#171717]/80 leading-relaxed">
-                AI-powered comps, trends, and valuation <span className="text-[#0a0a0a] font-semibold">insights.</span>
-              </p>
-            </div>
-
-            {/* Box 2: We Explore Risks Thru Due Diligence */}
-            <div className="p-6 rounded-xl bg-white border border-[#D4AF37]/70 space-y-2 text-left">
-              <h3 className="text-xs sm:text-[13px] font-bold tracking-wide text-[#0a0a0a] uppercase">
-                WE EXPLORE RISKS THRU DUE DILIGENCE
-              </h3>
-              <p className="text-xs text-[#171717]/80 leading-relaxed">
-                Hidden risks, title issues, zoning, and red flags— <span className="text-[#0a0a0a] font-semibold">before you commit.</span>
-              </p>
-            </div>
-
-            {/* Box 3: We Audit Escrow & Compliance */}
-            <div className="p-6 rounded-xl bg-white border border-[#D4AF37]/70 space-y-2 text-left">
-              <h3 className="text-xs sm:text-[13px] font-bold tracking-wide text-[#0a0a0a] uppercase">
-                WE AUDIT ESCROW &amp; COMPLIANCE
-              </h3>
-              <p className="text-xs text-[#171717]/80 leading-relaxed">
-                Strict escrow shields &amp; lender guidelines— <span className="text-[#0a0a0a] font-semibold">protecting your deposit.</span>
-              </p>
-            </div>
-
-          </div>
-
+      {/* ── HOW DYSON HOMES COPILOT WORKS (PURE-TEXT ON DARK CANVAS) ── */}
+      <section className="w-full bg-[#0a0a0a] text-[#F3F0E6] border-t border-white/10 py-16 sm:py-20 px-6 sm:px-10">
+        <div className="max-w-[1120px] mx-auto space-y-5">
+          <h2 
+            className="text-xl sm:text-2xl font-serif font-normal text-white"
+            style={{ fontFamily: 'Georgia, Cormorant Garamond, serif' }}
+          >
+            How Dyson Homes CoPilot Works
+          </h2>
+          <ol className="list-decimal list-inside space-y-3 text-stone-300 text-sm sm:text-base leading-relaxed pl-1">
+            <li>
+              <b className="text-white font-semibold">Paste Address</b> — Share the property details from your preferred MLS site.
+            </li>
+            <li>
+              <b className="text-white font-semibold">AI + Human Analysis</b> — CoPilot analyzes with AI precision and human expertise.
+            </li>
+            <li>
+              <b className="text-white font-semibold">Intelligence Delivered</b> — Comps, risks, and rebate insights in one private report.
+            </li>
+            <li>
+              <b className="text-white font-semibold">Better Decisions</b> — Close with confidence. Keep more wealth.
+            </li>
+          </ol>
         </div>
-      </div>
+      </section>
 
       {/* ── FLOATING BOTTOM-RIGHT PILL: REFER A FRIEND + V2V ── */}
       <div className="fixed bottom-4 right-4 z-40 flex items-center gap-1.5 shadow-2xl">
