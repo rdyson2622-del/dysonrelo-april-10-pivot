@@ -110,8 +110,62 @@ export default function CopilotDossierNewsPanel({
           : 'p-3 sm:p-4 pb-6 space-y-4 overflow-y-auto'
       }`}
     >
-      
-      {/* ── TOP CONTROLS & VIEW SWITCHER: EXACT 6 ITEMS DIRECTLY TO THE RIGHT OF 3 VIDEO BOXES ── */}
+      {/* ── NEWS BROADCAST PLACEHOLDER ABOVE ALL TEXT (SEARCH / AUDIT / CONTROLS) ── */}
+      <div
+        className="relative w-full overflow-hidden rounded-2xl shadow-2xl border-2 border-[#D4AF37]/80 group shrink-0"
+        style={{
+          aspectRatio: '16/9',
+          background: '#000',
+          boxShadow: '0 16px 48px rgba(0,0,0,0.7)',
+        }}
+      >
+        {/* DNN LIVE Bug */}
+        <div
+          className="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1.5 rounded-lg pointer-events-none"
+          style={{
+            background: 'rgba(0,0,0,0.75)',
+            border: '1px solid rgba(255,255,255,0.2)',
+            backdropFilter: 'blur(6px)',
+          }}
+        >
+          <img src={DNN_LOGO} alt="DNN" className="h-5 w-auto" />
+          <span className="text-[10px] font-black tracking-[0.2em] uppercase text-white font-bold">
+            LIVE STUDIO
+          </span>
+          <span className="w-2 h-2 rounded-full animate-pulse bg-red-500" />
+        </div>
+
+        {/* Show Name Badge */}
+        <div
+          className="absolute top-3 right-3 z-20 px-3 py-1.5 rounded-lg pointer-events-none"
+          style={{
+            background: 'rgba(0,0,0,0.75)',
+            border: '1px solid rgba(255,255,255,0.2)',
+            backdropFilter: 'blur(6px)',
+          }}
+        >
+          <span className="text-[10px] font-black tracking-[0.15em] uppercase text-white font-bold">
+            {showName}
+          </span>
+        </div>
+
+        {/* Video Player */}
+        <video
+          ref={videoRef}
+          key={playUrl}
+          src={playUrl}
+          poster={STUDIO_POSTER_URL}
+          controls
+          playsInline
+          preload="metadata"
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          className="w-full h-full object-cover"
+          style={{ display: 'block', background: '#000' }}
+        />
+      </div>
+
+      {/* ── TOP CONTROLS & VIEW SWITCHER: Search as #1, Audit, Solutions & News ── */}
       <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/10 pt-1">
         
         {/* Quick Right-Side View Switcher: Search as #1, Audit, Solutions & News */}
@@ -337,66 +391,10 @@ export default function CopilotDossierNewsPanel({
       )}
 
       {/* ─────────────────────────────────────────────────────────────
-          VIEW B: DAILY NEWS & VIDEO BROADCAST
+          VIEW B: DAILY NEWS & STORY INTELLIGENCE
           ───────────────────────────────────────────────────────────── */}
       {activeView === 'news' && (
         <div className={`space-y-4 ${isExploded ? 'max-w-5xl mx-auto w-full' : ''}`}>
-          
-          {/* Main 16:9 MP4 Studio Broadcast Player */}
-          <div
-            className="relative w-full overflow-hidden rounded-2xl shadow-2xl border-2 border-[#D4AF37]/80 group"
-            style={{
-              aspectRatio: '16/9',
-              background: '#000',
-              boxShadow: '0 16px 48px rgba(0,0,0,0.7)',
-            }}
-          >
-            {/* DNN LIVE Bug */}
-            <div
-              className="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1.5 rounded-lg pointer-events-none"
-              style={{
-                background: 'rgba(0,0,0,0.75)',
-                border: '1px solid rgba(255,255,255,0.2)',
-                backdropFilter: 'blur(6px)',
-              }}
-            >
-              <img src={DNN_LOGO} alt="DNN" className="h-5 w-auto" />
-              <span className="text-[10px] font-black tracking-[0.2em] uppercase text-white font-bold">
-                LIVE STUDIO
-              </span>
-              <span className="w-2 h-2 rounded-full animate-pulse bg-red-500" />
-            </div>
-
-            {/* Show Name Badge */}
-            <div
-              className="absolute top-3 right-3 z-20 px-3 py-1.5 rounded-lg pointer-events-none"
-              style={{
-                background: 'rgba(0,0,0,0.75)',
-                border: '1px solid rgba(255,255,255,0.2)',
-                backdropFilter: 'blur(6px)',
-              }}
-            >
-              <span className="text-[10px] font-black tracking-[0.15em] uppercase text-white font-bold">
-                {showName}
-              </span>
-            </div>
-
-            {/* Video Player */}
-            <video
-              ref={videoRef}
-              key={playUrl}
-              src={playUrl}
-              poster={STUDIO_POSTER_URL}
-              controls
-              playsInline
-              preload="metadata"
-              onPlay={() => setIsPlaying(true)}
-              onPause={() => setIsPlaying(false)}
-              className="w-full h-full object-cover"
-              style={{ display: 'block', background: '#000' }}
-            />
-          </div>
-
           {/* Broadcast Story Headline & Real-Time Engagement */}
           <div className="bg-[#121212] border border-white/10 rounded-xl p-4 space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-2.5">
