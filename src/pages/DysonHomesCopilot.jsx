@@ -671,68 +671,74 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
                   </div>
                 </form>
 
-                {/* Row 2: Plain prompt chips with thin borders placed below Ask Anything search bar */}
-                <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setRightPanelView('solutions');
-                      executeSendMessage("What solutions and playbooks do you offer for home buyers?");
-                    }}
-                    className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-                  >
-                    <span>Solutions Vault</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setRightPanelView('solutions');
-                      executeSendMessage("Bob, how does Dyson & Dyson handle transaction discovery and lender compliance?");
-                    }}
-                    className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-                  >
-                    <span>Lender Compliance</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setRightPanelView('solutions');
-                      executeSendMessage("Bob, what are the biggest escrow traps and how do we protect our earnest money deposit?");
-                    }}
-                    className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-                  >
-                    <span>Ask Bob: Escrow Traps</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setRightPanelView('solutions');
-                      executeSendMessage("How does Prop 19 tax base portability work when relocating in California?");
-                    }}
-                    className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-                  >
-                    <span>Prop 19 Tax</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setRightPanelView('solutions');
-                      executeSendMessage("What are the coastal bluff setback and soil stability risks in California?");
-                    }}
-                    className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-                  >
-                    <span>Bluff Setbacks</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setRightPanelView('news');
-                      executeSendMessage("Charlie, summarize this broadcast in bullet points");
-                    }}
-                    className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-                  >
-                    <span>Daily News</span>
-                  </button>
+                {/* Row 2: Plain prompt chips on left, required company name & DRE # on far right */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 pt-0.5">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRightPanelView('solutions');
+                        executeSendMessage("What solutions and playbooks do you offer for home buyers?");
+                      }}
+                      className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
+                    >
+                      <span>Solutions Vault</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRightPanelView('solutions');
+                        executeSendMessage("Bob, how does Dyson & Dyson handle transaction discovery and lender compliance?");
+                      }}
+                      className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
+                    >
+                      <span>Lender Compliance</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRightPanelView('solutions');
+                        executeSendMessage("Bob, what are the biggest escrow traps and how do we protect our earnest money deposit?");
+                      }}
+                      className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
+                    >
+                      <span>Ask Bob: Escrow Traps</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRightPanelView('solutions');
+                        executeSendMessage("How does Prop 19 tax base portability work when relocating in California?");
+                      }}
+                      className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
+                    >
+                      <span>Prop 19 Tax</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRightPanelView('solutions');
+                        executeSendMessage("What are the coastal bluff setback and soil stability risks in California?");
+                      }}
+                      className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
+                    >
+                      <span>Bluff Setbacks</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRightPanelView('news');
+                        executeSendMessage("Charlie, summarize this broadcast in bullet points");
+                      }}
+                      className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
+                    >
+                      <span>Daily News</span>
+                    </button>
+                  </div>
+
+                  <div className="text-[10px] sm:text-[11px] text-stone-300 font-mono tracking-tight whitespace-nowrap shrink-0 self-start md:self-center pr-1">
+                    The Dyson &amp; Dyson Companies, Inc. Ca. DRE#02303118
+                  </div>
                 </div>
               </div>
 
