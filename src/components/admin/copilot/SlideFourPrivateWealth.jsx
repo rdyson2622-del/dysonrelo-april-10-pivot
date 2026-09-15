@@ -80,7 +80,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="742 Vista Del Mar, La Jolla, CA 92037"
-                  className="flex-1 bg-transparent text-[#0a0a0a] text-xs sm:text-sm outline-none placeholder:text-[#171717]/60 font-semibold min-w-0"
+                  className="flex-1 bg-transparent text-[#0a0a0a] text-xs sm:text-sm outline-none placeholder:text-[#171717]/60 font-normal min-w-0"
                 />
                 <button
                   type="submit"
@@ -99,7 +99,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
 
           {/* Sample Lookups: Plain text links / thin borders, no yellow dots, no badges */}
           <div className="flex items-center gap-2 flex-wrap pt-1">
-            <span className="text-xs font-semibold text-[#D4AF37] font-sans">
+            <span className="text-xs font-normal text-[#D4AF37] font-sans">
               Sample Lookups:
             </span>
             {SAMPLE_SEARCHES.map((chip) => (
@@ -150,10 +150,10 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
           {/* Step 1: MLS browse + pills */}
           <div className="space-y-3.5">
             <div className="flex items-center gap-3">
-              <div className="w-6 h-6 rounded-full border border-[#D4AF37] flex items-center justify-center text-xs font-sans font-bold text-[#D4AF37] shrink-0">
+              <div className="w-6 h-6 rounded-full border border-[#D4AF37] flex items-center justify-center text-xs font-sans font-normal text-[#D4AF37] shrink-0">
                 1
               </div>
-              <h3 className="text-xs sm:text-sm font-semibold text-white font-sans">
+              <h3 className="text-xs sm:text-sm font-normal text-white font-sans">
                 First of all browse your preferred MLS and copy the MLS# or address:
               </h3>
             </div>
@@ -163,7 +163,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
                 href="https://www.realtor.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-32 sm:w-36 py-2 rounded-full bg-[#ede0cc] hover:bg-[#e2d3bd] text-black text-xs font-semibold transition-colors border border-[#ede0cc] inline-flex items-center justify-center text-center shadow-sm"
+                className="w-32 sm:w-36 py-2 rounded-full bg-[#ede0cc] hover:bg-[#e2d3bd] text-black text-xs font-normal transition-colors border border-[#ede0cc] inline-flex items-center justify-center text-center shadow-sm"
               >
                 <span className="underline decoration-black/40 underline-offset-2">Realtor.com</span>
               </a>
@@ -171,7 +171,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
                 href="https://www.homes.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-32 sm:w-36 py-2 rounded-full bg-[#ede0cc] hover:bg-[#e2d3bd] text-black text-xs font-semibold transition-colors border border-[#ede0cc] inline-flex items-center justify-center text-center shadow-sm"
+                className="w-32 sm:w-36 py-2 rounded-full bg-[#ede0cc] hover:bg-[#e2d3bd] text-black text-xs font-normal transition-colors border border-[#ede0cc] inline-flex items-center justify-center text-center shadow-sm"
               >
                 <span className="underline decoration-black/40 underline-offset-2">Homes.com</span>
               </a>
@@ -179,7 +179,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
                 href="https://www.zillow.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-32 sm:w-36 py-2 rounded-full bg-[#ede0cc] hover:bg-[#e2d3bd] text-black text-xs font-semibold transition-colors border border-[#ede0cc] inline-flex items-center justify-center text-center shadow-sm"
+                className="w-32 sm:w-36 py-2 rounded-full bg-[#ede0cc] hover:bg-[#e2d3bd] text-black text-xs font-normal transition-colors border border-[#ede0cc] inline-flex items-center justify-center text-center shadow-sm"
               >
                 <span className="underline decoration-black/40 underline-offset-2">Zillow</span>
               </a>
@@ -195,10 +195,10 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
             {/* Step 2 */}
             <div className="space-y-2">
               <div className="flex items-center gap-2.5">
-                <div className="w-5 h-5 rounded-full border border-[#D4AF37] flex items-center justify-center text-[11px] font-sans font-bold text-[#D4AF37] shrink-0">
+                <div className="w-5 h-5 rounded-full border border-[#D4AF37] flex items-center justify-center text-[11px] font-sans font-normal text-[#D4AF37] shrink-0">
                   2
                 </div>
-                <h4 className="text-xs sm:text-[13px] font-semibold text-white font-sans">
+                <h4 className="text-xs sm:text-[13px] font-normal text-white font-sans">
                   Paste Address
                 </h4>
               </div>
@@ -210,10 +210,10 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
             {/* Step 3 */}
             <div className="space-y-2">
               <div className="flex items-center gap-2.5">
-                <div className="w-5 h-5 rounded-full border border-[#D4AF37] flex items-center justify-center text-[11px] font-sans font-bold text-[#D4AF37] shrink-0">
+                <div className="w-5 h-5 rounded-full border border-[#D4AF37] flex items-center justify-center text-[11px] font-sans font-normal text-[#D4AF37] shrink-0">
                   3
                 </div>
-                <h4 className="text-xs sm:text-[13px] font-semibold text-white font-sans">
+                <h4 className="text-xs sm:text-[13px] font-normal text-white font-sans">
                   AI + Human Analysis
                 </h4>
               </div>
@@ -225,10 +225,10 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
             {/* Step 4 */}
             <div className="space-y-2">
               <div className="flex items-center gap-2.5">
-                <div className="w-5 h-5 rounded-full border border-[#D4AF37] flex items-center justify-center text-[11px] font-sans font-bold text-[#D4AF37] shrink-0">
+                <div className="w-5 h-5 rounded-full border border-[#D4AF37] flex items-center justify-center text-[11px] font-sans font-normal text-[#D4AF37] shrink-0">
                   4
                 </div>
-                <h4 className="text-xs sm:text-[13px] font-semibold text-white font-sans">
+                <h4 className="text-xs sm:text-[13px] font-normal text-white font-sans">
                   Intelligence Delivered
                 </h4>
               </div>
@@ -240,10 +240,10 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
             {/* Step 5 */}
             <div className="space-y-2">
               <div className="flex items-center gap-2.5">
-                <div className="w-5 h-5 rounded-full border border-[#D4AF37] flex items-center justify-center text-[11px] font-sans font-bold text-[#D4AF37] shrink-0">
+                <div className="w-5 h-5 rounded-full border border-[#D4AF37] flex items-center justify-center text-[11px] font-sans font-normal text-[#D4AF37] shrink-0">
                   5
                 </div>
-                <h4 className="text-xs sm:text-[13px] font-semibold text-white font-sans">
+                <h4 className="text-xs sm:text-[13px] font-normal text-white font-sans">
                   Better Decisions
                 </h4>
               </div>
