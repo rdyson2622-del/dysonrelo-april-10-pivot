@@ -274,7 +274,7 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
                 : 'Interactive 3-Way Dialogue Stage'
               }
             </span>
-            <span className="text-[7.5px] px-1.5 py-0.5 rounded bg-[#D4AF37]/20 text-[#D4AF37] font-mono uppercase font-bold shrink-0">
+            <span className="text-[7.5px] px-1.5 py-0.5 rounded bg-[#ede0cc]/20 text-[#ede0cc] font-mono uppercase font-bold shrink-0">
               AUDIO &amp; VISUAL DEMO
             </span>
           </div>
@@ -306,7 +306,7 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
           className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer ${
             isPlaying 
               ? 'bg-rose-500/20 text-rose-300 border border-rose-500/50 hover:bg-rose-500/30'
-              : 'bg-[#D4AF37] hover:bg-[#e8c84a] text-black border border-[#D4AF37]'
+              : 'bg-[#ede0cc] hover:bg-[#e5d6c0] text-black border border-[#ede0cc]'
           }`}
         >
           {isPlaying ? (
