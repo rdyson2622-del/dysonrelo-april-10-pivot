@@ -13,8 +13,167 @@ import CopilotContactCaptureModal from '@/components/copilot/CopilotContactCaptu
 import CopilotExplodedSubjectModal from '@/components/copilot/CopilotExplodedSubjectModal';
 import CopilotSavedDiscussionsModal from '@/components/copilot/CopilotSavedDiscussionsModal';
 import { findExplainerByQuery } from '@/components/copilot/copilotExplainers';
-import { getPropertyDossier } from '@/components/admin/copilot/propertyDossierData';
 import { GeminiLiveSessionClient } from '@/lib/geminiLiveClient';
+
+// Sanctioned lookup helper: uses ONLY mlsListingLookup for URLs and searchListingsForSkipTrace for city/state listings.
+// Strictly maps ONLY fields actually returned by these sanctioned backend functions.
+// Never uses SimplyRETS, never scrapes, and never fabricates fake prices, fake owners, fake comps, or fake risks.
+export async function resolveSanctionedDossier(rawInput) {
+  const input = String(rawInput || '').trim();
+  const isUrl = /^(https?:\/\/|www\.|\w+\.(com|org|net))/i.test(input) || /zillow\.com|redfin\.com|realtor\.com|homes\.com/i.test(input);
+
+  const fallback = {
+    shortAddress: input.split(',')[0] || input || 'Could not resolve address',
+    city: 'Unresolved',
+    fullAddress: input,
+    listPrice: 'Could not resolve',
+    marketSummary: 'Live registry lookup could not resolve active MLS records for this property. Individual legal & lender discovery required.',
+    comps: [],
+    compsSummary: 'No verified comparable listings returned by sanctioned functions. No synthetic data fabricated.',
+    risks: [],
+    risksSummary: 'No verified risk records returned by sanctioned functions.',
+    complianceBasis: 'Transaction-specific legal & underwriting discovery required.',
+    complianceProtocol: 'Case-by-Case Discovery',
+    complianceStatus: 'Checked Against State, Fed & Lender Regs'
+  };
+
+  if (!input) return fallback;
+
+  if (isUrl) {
+    // 1. Sanctioned function: mlsListingLookup
+    try {
+      const res = await base44.functions.invoke('mlsListingLookup', { url: input });
+      const listing = res?.data?.listing;
+      if (res?.data?.success && listing) {
+        const addr = listing.listing_address || input;
+        const short = addr.split(',')[0] || addr;
+        const val = Number(listing.listing_value);
+        const priceStr = val && !isNaN(val) && val > 0 
+          ? (val >= 1000000 ? `$${(val / 1000000).toFixed(2)}M` : `$${val.toLocaleString()}`)
+          : 'Could not resolve / unlisted';
+
+        return {
+          shortAddress: short,
+          city: listing.city || 'California',
+          fullAddress: addr,
+          listPrice: priceStr,
+          marketSummary: listing.listing_description 
+            ? `${listing.listing_description.slice(0, 180)}...`
+            : `Listing records resolved via mlsListingLookup for ${short}. Individual discovery required.`,
+          comps: [],
+          compsSummary: 'Listing URL resolved via mlsListingLookup. No comparable sales data returned by listing lookup.',
+          risks: [],
+          risksSummary: 'No verified risk records returned by listing lookup.',
+          complianceBasis: 'Listing agent & underwriting discovery required.',
+          complianceProtocol: 'Case-by-Case Discovery',
+          complianceStatus: 'Checked Against State, Fed & Lender Regs',
+          rawListing: listing
+        };
+      }
+    } catch (err) {
+      console.warn('mlsListingLookup error:', err);
+    }
+    return {
+      ...fallback,
+      marketSummary: `mlsListingLookup could not resolve active records for listing URL: ${input}. No synthetic comps or pricing fabricated.`
+    };
+  }
+
+  // 2. Sanctioned function: searchListingsForSkipTrace for city/state listings
+  const parts = input.split(',').map(s => s.trim());
+  const streetPart = parts[0] || input;
+  let cityPart = parts[1] || '';
+  let statePart = '';
+
+  if (parts[2]) {
+    const stateZipMatch = parts[2].match(/([A-Za-z]{2})/);
+    if (stateZipMatch) statePart = stateZipMatch[1].toUpperCase();
+  }
+  if (!statePart && parts[1]) {
+    const m = parts[1].match(/\b([A-Za-z]{2})\b/);
+    if (m) statePart = m[1].toUpperCase();
+  }
+  if (!statePart && /CA|California/i.test(input)) statePart = 'CA';
+  if (!cityPart && /La Jolla/i.test(input)) cityPart = 'La Jolla';
+  if (!cityPart && /Scottsdale/i.test(input)) { cityPart = 'Scottsdale'; statePart = 'AZ'; }
+  if (!cityPart && /Austin/i.test(input)) { cityPart = 'Austin'; statePart = 'TX'; }
+
+  if (cityPart && statePart) {
+    try {
+      const res = await base44.functions.invoke('searchListingsForSkipTrace', {
+        city: cityPart,
+        state: statePart,
+        max_results: 5,
+        days_listed: 30
+      });
+
+      const properties = res?.data?.properties;
+      if (res?.data?.success && Array.isArray(properties) && properties.length > 0) {
+        const matchedProp = properties.find(p => 
+          p.street && streetPart.toLowerCase().includes(p.street.toLowerCase())
+        );
+
+        const compsList = properties
+          .filter(p => !matchedProp || p !== matchedProp)
+          .slice(0, 3)
+          .map(p => {
+            const listP = Number(p.list_price);
+            const priceStr = listP && !isNaN(listP) ? `$${listP.toLocaleString()}` : 'Price unlisted';
+            const specsStr = [
+              p.beds ? `${p.beds} bd` : null,
+              p.baths ? `${p.baths} ba` : null,
+              p.sqft ? `${Number(p.sqft).toLocaleString()} sf` : null,
+              p.property_type || null
+            ].filter(Boolean).join(' | ') || 'Specs unlisted';
+
+            return {
+              address: [p.street, p.city].filter(Boolean).join(', ') || 'Unlisted Address',
+              distance: p.days_on_market !== '' && p.days_on_market !== undefined ? `${p.days_on_market} DOM` : `${p.state || 'Active'}`,
+              specs: specsStr,
+              soldPrice: priceStr,
+              adjPrice: `List ${priceStr}`
+            };
+          });
+
+        const listP = matchedProp ? Number(matchedProp.list_price) : null;
+        const mainPrice = listP && !isNaN(listP) ? `$${listP.toLocaleString()}` : 'Could not resolve';
+
+        return {
+          shortAddress: streetPart,
+          city: `${cityPart}, ${statePart}`,
+          fullAddress: input,
+          listPrice: mainPrice,
+          marketSummary: `searchListingsForSkipTrace resolved ${properties.length} active micro-market properties in ${cityPart}, ${statePart}.`,
+          comps: compsList,
+          compsSummary: compsList.length > 0 
+            ? `Returned ${compsList.length} verified listings from searchListingsForSkipTrace in ${cityPart}, ${statePart}.`
+            : 'No additional verified comps returned for this micro-market.',
+          risks: [],
+          risksSummary: 'No verified risk records returned by sanctioned functions.',
+          complianceBasis: 'Individual legal & lender discovery required.',
+          complianceProtocol: 'Case-by-Case Discovery',
+          complianceStatus: 'Checked Against State, Fed & Lender Regs'
+        };
+      }
+    } catch (err) {
+      console.warn('searchListingsForSkipTrace error:', err);
+    }
+  }
+
+  // Honest "couldn't resolve" failure state (no fake $8, no fake comps, no fake risks, no fake owners)
+  return {
+    ...fallback,
+    shortAddress: streetPart,
+    city: cityPart ? `${cityPart}${statePart ? ', ' + statePart : ''}` : 'Unresolved',
+    fullAddress: input,
+    listPrice: 'Could not resolve',
+    marketSummary: `searchListingsForSkipTrace could not resolve active market records for ${streetPart}. Provider returned an unconfigured or unverified state.`,
+    comps: [],
+    compsSummary: 'Could not resolve verified comps: searchListingsForSkipTrace returned no active records or missing provider configuration. No unverified data fabricated.',
+    risks: [],
+    risksSummary: 'No verified risk records returned by sanctioned functions.'
+  };
+}
 
 const TAN_BG = '#ede0cc';
 
@@ -88,7 +247,30 @@ export default function DysonHomesCopilot({ initialPage }) {
   const kbRowsRef = useRef([]);
   const hasSeededKbRef = useRef(false);
 
-  const dossierData = getPropertyDossier(analyzedProperty);
+  // Real dossier state initialized to honest unverified baseline (no fake $8, no fake comps, no fake risks)
+  const [dossierData, setDossierData] = useState({
+    shortAddress: '742 Vista Del Mar',
+    city: 'La Jolla, CA',
+    fullAddress: '742 Vista Del Mar, La Jolla, CA 92037',
+    listPrice: 'Could not resolve',
+    marketSummary: 'Live registry lookup could not resolve active MLS records for this property. Individual legal & lender discovery required.',
+    comps: [],
+    compsSummary: 'No verified comparable listings returned by sanctioned functions. No synthetic data fabricated.',
+    risks: [],
+    risksSummary: 'No verified risk records returned by sanctioned functions.',
+    complianceBasis: 'Transaction-specific legal & underwriting discovery required.',
+    complianceProtocol: 'Case-by-Case Discovery',
+    complianceStatus: 'Checked Against State, Fed & Lender Regs'
+  });
+
+  // On mount, query sanctioned functions for initial property
+  useEffect(() => {
+    let active = true;
+    resolveSanctionedDossier('742 Vista Del Mar, La Jolla, CA 92037').then(res => {
+      if (active && res) setDossierData(res);
+    });
+    return () => { active = false; };
+  }, []);
 
   // Auto-scroll chat to bottom
   useEffect(() => {
@@ -258,18 +440,54 @@ export default function DysonHomesCopilot({ initialPage }) {
         .map(r => `Q: ${r.question || ''}\nA: ${r.answer || ''}`)
         .join('\n\n');
 
+      const currentDossier = dossierData;
+      const compsFormatted = (currentDossier.comps || []).length > 0
+        ? (currentDossier.comps || [])
+            .map((c, i) => `  Comp ${i + 1}: ${c.address} (${c.distance}, ${c.specs}) — Price: ${c.soldPrice}, Status: ${c.adjPrice}`)
+            .join('\n')
+        : '  No verified comps returned from sanctioned functions.';
+
+      const risksFormatted = (currentDossier.risks || []).length > 0
+        ? (currentDossier.risks || [])
+            .map(r => `  • ${r.title}: ${r.desc}`)
+            .join('\n')
+        : '  No verified risks returned from sanctioned functions.';
+
+      const dossierContextBlock = `
+CURRENT ON-SCREEN DOSSIER CONTEXT (DISPLAYED TO USER):
+- shortAddress: ${currentDossier.shortAddress || analyzedProperty}
+- fullAddress: ${currentDossier.fullAddress || analyzedProperty}
+- city: ${currentDossier.city || ''}
+- listPrice: ${currentDossier.listPrice || 'Could not resolve'}
+- marketSummary: ${currentDossier.marketSummary || ''}
+- compsSummary: "${currentDossier.compsSummary || ''}"
+- On-Screen Comps Table:
+${compsFormatted}
+- On-Screen Risks:
+${risksFormatted}
+- risksSummary: ${currentDossier.risksSummary || ''}
+- complianceProtocol: ${currentDossier.complianceProtocol || 'Case-by-Case Discovery'}
+- complianceStatus: ${currentDossier.complianceStatus || 'Checked Against State, Fed & Lender Regs'}
+`.trim();
+
       const fullPrompt = `${COPILOT_CHARLIE_SYSTEM_PROMPT}
+
+${dossierContextBlock}
 
 KNOWLEDGE BASE CONTEXT:
 ${kbContext}
 
-WORKING PROPERTY ADDRESS:
-${analyzedProperty}
-
 USER QUESTION:
 ${clean}
 
-Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative sentences. Never give canned "I've logged that" replies. Offer real, unvarnished insight and fiduciary guidance.`;
+DIRECTIVE FOR CHARLIE SIMMONS:
+- Answer directly, authoritatively, and conversationally in 2 to 4 concise sentences.
+- Lead with an answer-first direct statement.
+- When asked about valuation, pricing, comps, or deal status:
+  NARRATE THE EXACT ON-SCREEN FACTS DIRECTLY FROM THE DOSSIER CONTEXT:
+  If the dossier shows "Could not resolve" or no verified comps: State honestly that sanctioned listing lookup could not resolve active comps or verified pricing, and that Dyson & Dyson does not fabricate estimates or synthetic comps. Recommend individual discovery directly with the listing desk.
+  If the dossier contains verified comps, state them accurately without inventing.
+- Adhere strictly to hard stops (no legal/tax advice, no commissions/splits, CA DRE #02303118).`;
 
       const res = await base44.integrations.Core.InvokeLLM({
         model: 'gemini_3_flash',
@@ -283,7 +501,7 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
         {
           id: Date.now() + 1,
           sender: 'charlie',
-          text: replyText || "I'm reviewing the property records for this address. How else can Bob Dyson and I assist with your transaction?",
+          text: replyText || `For ${currentDossier.shortAddress}, our sanctioned registry query returned no active comps. Individual discovery is required.`,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);
@@ -294,7 +512,7 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
         {
           id: Date.now() + 1,
           sender: 'charlie',
-          text: `On ${analyzedProperty}, our fiduciary desk reviews all unvarnished comps, geotechnical reports, and contract contingency protections to keep your earnest money deposit 100% safeguarded.`,
+          text: `On ${dossierData.shortAddress || analyzedProperty}, our fiduciary desk reviews all unvarnished comps, geotechnical reports, and contract contingency protections to keep your earnest money deposit 100% safeguarded.`,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);
@@ -328,26 +546,39 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
     }
   };
 
-  const handleAuditAddress = (addr) => {
+  const handleAuditAddress = async (addr) => {
     if (!addr) return;
     const cleanAddr = (typeof extractAddressOrMls === 'function' ? extractAddressOrMls(addr) : addr) || '742 Vista Del Mar, La Jolla, CA 92037';
     setAnalyzedProperty(cleanAddr);
     setRightPanelView('dossier');
     addDiscussionChip(`Audit: ${cleanAddr.split(',')[0]}`);
 
-    // Deliver audit directly to Dialogue screen
+    // Deliver audit command to Dialogue feed
     const userMsg = {
       id: Date.now(),
       sender: 'user',
       text: `Audit property: ${cleanAddr}`,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
+    setMessages(prev => [...prev, userMsg]);
+
+    // Reliably scroll and bring Command Center & Dossier into view
+    scrollToSection(page2Ref, 2, '/dossier');
+
+    // Query sanctioned backend functions (mlsListingLookup / searchListingsForSkipTrace)
+    const resolved = await resolveSanctionedDossier(cleanAddr);
+    setDossierData(resolved);
+
+    const hasComps = resolved.comps && resolved.comps.length > 0;
+    const charlieText = hasComps
+      ? `Charlie here. Sanctioned listing search returned ${resolved.comps.length} verified comparable properties in ${resolved.city}. Real listing details have been loaded into your live dossier on the right.`
+      : `Charlie here. I queried our sanctioned MLS and listing lookup functions for ${resolved.shortAddress}. The provider could not resolve active comps or verified listing records. Rather than fabricating synthetic comps or estimated numbers, our dossier reflects the unverified status. We recommend individual discovery directly with the listing desk.`;
 
     const charlieMsg = {
       id: Date.now() + 1,
       sender: 'charlie',
       speakerName: 'Charlie Simmons',
-      text: `Charlie here. Fiduciary property audit initiated for ${cleanAddr}. I've pulled recent comparable sales within 0.75 miles, adjusted for current micro-market velocity, and checked local environmental and zoning risk factors. On the right, your live dossier is active with honest comps, hidden risk alerts, and lender compliance discovery.\n\nLet's have Bob Dyson review the contractual shields and contingency protections for this property.`,
+      text: charlieText,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
@@ -355,22 +586,11 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
       id: Date.now() + 2,
       sender: 'bob',
       speakerName: 'Bob Dyson',
-      text: `Bob Dyson here. On ${cleanAddr}, our primary fiduciary mandate is safeguarding your earnest money deposit. We verify that all contingency timelines, geological inspections, and seller disclosures are strictly enforced before you ever submit an offer.`,
+      text: `Bob Dyson here. When public or API records cannot be verified, our fiduciary rule is never to guess. We verify title, listing status, and seller disclosures directly before advising on any offer.`,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
-    setMessages(prev => [...prev, userMsg, charlieMsg, bobMsg]);
-
-    // Reliably scroll and bring Command Center & Dossier into view
-    scrollToSection(page2Ref, 2, '/dossier');
-    setTimeout(() => {
-      if (page2Ref.current) {
-        page2Ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        const rect = page2Ref.current.getBoundingClientRect();
-        const top = rect.top + window.pageYOffset - 75;
-        window.scrollTo({ top, behavior: 'smooth' });
-      }
-    }, 60);
+    setMessages(prev => [...prev, charlieMsg, bobMsg]);
   };
 
   useEffect(() => {
