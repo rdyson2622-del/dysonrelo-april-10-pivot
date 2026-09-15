@@ -13,21 +13,79 @@ const SAMPLE_SEARCHES = [
 
 const SCROLL_COPY = "Paste any address or MLS # you obtain from Realtor.com, Zillow, Redfin or Homes.com and we will take a deep dive into that property for you";
 
-function normalizeAddress(raw) {
+export function extractAddressOrMls(raw) {
   if (!raw) return '';
-  return raw.trim().replace(/\s+/g, ' ');
+  let str = String(raw).trim();
+
+  // If input is an MLS or property URL (Zillow, Realtor.com, Redfin, Homes.com, etc.)
+  if (/^(https?:\/\/|www\.|\w+\.(com|org|net))/i.test(str) || /zillow|realtor|redfin|homes\.com/i.test(str)) {
+    try {
+      const decoded = decodeURIComponent(str);
+
+      // Zillow URL: /homedetails/7414-Fay-Ave-La-Jolla-CA-92037/16843942_zpid
+      const zillowMatch = decoded.match(/homedetails\/([^/?#]+)/i);
+      if (zillowMatch && zillowMatch[1]) {
+        return zillowMatch[1].replace(/-\d+_zpid.*$/i, '').replace(/-/g, ' ').replace(/\s+/g, ' ').trim();
+      }
+
+      // Realtor.com URL: /realestateandhomes-detail/7414-Fay-Ave_La-Jolla_CA_92037_M12345
+      const realtorMatch = decoded.match(/realestateandhomes-detail\/([^/?#]+)/i);
+      if (realtorMatch && realtorMatch[1]) {
+        return realtorMatch[1].replace(/_M\d+.*$/i, '').replace(/[_-]/g, ' ').replace(/\s+/g, ' ').trim();
+      }
+
+      // Redfin URL: /CA/La-Jolla/7414-Fay-Ave-92037/home/481923
+      const redfinMatch = decoded.match(/\/([A-Z]{2})\/([^/]+)\/([^/]+)\/home/i);
+      if (redfinMatch) {
+        const state = redfinMatch[1];
+        const city = redfinMatch[2].replace(/-/g, ' ');
+        const streetAndZip = redfinMatch[3].replace(/-/g, ' ');
+        return `${streetAndZip}, ${city}, ${state}`.replace(/\s+/g, ' ').trim();
+      }
+
+      // Homes.com URL: /property/7414-fay-ave-la-jolla-ca/12345/
+      const homesMatch = decoded.match(/property\/([^/?#]+)/i);
+      if (homesMatch && homesMatch[1]) {
+        return homesMatch[1].replace(/-\d+\/?$/i, '').replace(/-/g, ' ').replace(/\s+/g, ' ').trim();
+      }
+
+      // Generic URL path fallback
+      const segments = decoded.split('/').filter(Boolean);
+      for (const seg of segments.reverse()) {
+        if (/\d+/.test(seg) && /[a-z]/i.test(seg) && seg.length > 5) {
+          return seg.replace(/[_-]/g, ' ').replace(/\s+/g, ' ').trim();
+        }
+      }
+    } catch (_) {}
+  }
+
+  // Handle MLS numbers like "MLS# 24001234" or "MLS 12345" or "NDP2401234"
+  if (/^mls\s*#?\s*([a-z0-9]+)/i.test(str)) {
+    const match = str.match(/^mls\s*#?\s*([a-z0-9]+)/i);
+    return `MLS #${match[1].toUpperCase()}`;
+  }
+
+  return str.replace(/\s+/g, ' ').trim();
 }
 
 export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGoToChatCanvas }) {
   const [address, setAddress] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const inputRef = useRef(null);
 
   const handleSend = (targetAddr) => {
-    const cleanAddr = normalizeAddress(targetAddr || address || '742 Vista Del Mar, La Jolla, CA 92037');
+    const raw = targetAddr || address;
+    const cleanAddr = extractAddressOrMls(raw) || '742 Vista Del Mar, La Jolla, CA 92037';
     if (!cleanAddr) return;
+
+    setIsSubmitting(true);
     if (onRunAudit) onRunAudit(cleanAddr);
     if (onOpenDossier) onOpenDossier(cleanAddr);
+
+    setTimeout(() => {
+      setIsSubmitting(false);
+    }, 1200);
   };
 
   const handleSampleClick = (chip) => {
@@ -108,6 +166,15 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
                     onChange={(e) => setAddress(e.target.value)}
+                    onPaste={(e) => {
+                      const pasted = e.clipboardData?.getData('text');
+                      if (pasted) {
+                        const extracted = extractAddressOrMls(pasted);
+                        if (extracted) {
+                          setAddress(extracted);
+                        }
+                      }
+                    }}
                     placeholder={isFocused && !address ? "Paste address or MLS #..." : ""}
                     className="w-full bg-transparent text-[#0a0a0a] text-xs sm:text-sm outline-none font-normal min-w-0 z-10"
                     style={{ color: '#0a0a0a' }}
@@ -116,9 +183,10 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
 
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   className="px-6 py-2.5 rounded-full bg-[#0a0a0a] hover:bg-[#171717] text-[#D4AF37] hover:text-white font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all cursor-pointer shrink-0 border border-[#D4AF37]/50 ml-2 z-10"
                 >
-                  <span>Send</span>
+                  <span>{isSubmitting ? 'Auditing...' : 'Send'}</span>
                   <span className="text-[#D4AF37]">→</span>
                 </button>
               </div>

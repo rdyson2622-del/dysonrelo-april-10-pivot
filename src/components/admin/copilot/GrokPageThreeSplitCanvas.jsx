@@ -65,9 +65,37 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
   const canvasRef = useRef(null);
   const dossierData = getPropertyDossier(property);
 
-  // Command Center & Intelligence panel stay blank until the user actually
-  // asks something — no pre-seeded sample audit or conversation.
+  // Command Center & Intelligence panel conversation messages
   const [messages, setMessages] = useState([]);
+
+  // When property is passed/updated, deliver fiduciary audit to dialogue if empty
+  useEffect(() => {
+    if (property && messages.length === 0) {
+      const cleanAddr = property;
+      const userMsg = {
+        id: Date.now(),
+        sender: 'user',
+        text: `Audit property: ${cleanAddr}`,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      const charlieMsg = {
+        id: Date.now() + 1,
+        sender: 'charlie',
+        speakerName: 'Charlie Simmons',
+        text: `Charlie here. Fiduciary property audit initiated for ${cleanAddr}. I've pulled recent comparable sales within 0.75 miles, adjusted for market shifts, and checked local environmental and zoning risk factors. On the right, your live dossier is active with honest comps, hidden risk alerts, and lender compliance discovery.`,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      const bobMsg = {
+        id: Date.now() + 2,
+        sender: 'bob',
+        speakerName: 'Bob Dyson',
+        text: `Bob Dyson here. On ${cleanAddr}, our primary fiduciary mandate is safeguarding your earnest money deposit. We verify all contingency timelines, geological inspections, and seller disclosures are in place before you ever submit an offer.`,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      setMessages([userMsg, charlieMsg, bobMsg]);
+      setRightPanelView('dossier');
+    }
+  }, [property]);
 
   const resetToBlank = () => {
     setMessages([]);

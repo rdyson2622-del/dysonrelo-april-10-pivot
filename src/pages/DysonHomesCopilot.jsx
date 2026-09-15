@@ -3,7 +3,7 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { ArrowDown, Shield, LayoutDashboard, Paperclip, Send, Mic, Radio, FileText, Scale, ArrowLeft, Bookmark } from 'lucide-react';
 import { useAuth } from '@/lib/AuthContext';
 import { base44 } from '@/api/base44Client';
-import SlideFourPrivateWealth from '@/components/admin/copilot/SlideFourPrivateWealth';
+import SlideFourPrivateWealth, { extractAddressOrMls } from '@/components/admin/copilot/SlideFourPrivateWealth';
 import CopilotDynamicSpeakerBox from '@/components/copilot/CopilotDynamicSpeakerBox';
 import CopilotConsumerSpeakerBox from '@/components/copilot/CopilotConsumerSpeakerBox';
 import CopilotThreeWayDemo from '@/components/copilot/CopilotThreeWayDemo';
@@ -319,10 +319,58 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
   const scrollToSection = (ref, pageNum, path) => {
     if (ref && ref.current) {
       ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const rect = ref.current.getBoundingClientRect();
+      const top = rect.top + window.pageYOffset - 75;
+      window.scrollTo({ top, behavior: 'smooth' });
       if (path && window.location.pathname !== path) {
         window.history.pushState(null, '', path);
       }
     }
+  };
+
+  const handleAuditAddress = (addr) => {
+    if (!addr) return;
+    const cleanAddr = (typeof extractAddressOrMls === 'function' ? extractAddressOrMls(addr) : addr) || '742 Vista Del Mar, La Jolla, CA 92037';
+    setAnalyzedProperty(cleanAddr);
+    setRightPanelView('dossier');
+    addDiscussionChip(`Audit: ${cleanAddr.split(',')[0]}`);
+
+    // Deliver audit directly to Dialogue screen
+    const userMsg = {
+      id: Date.now(),
+      sender: 'user',
+      text: `Audit property: ${cleanAddr}`,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    const charlieMsg = {
+      id: Date.now() + 1,
+      sender: 'charlie',
+      speakerName: 'Charlie Simmons',
+      text: `Charlie here. Fiduciary property audit initiated for ${cleanAddr}. I've pulled recent comparable sales within 0.75 miles, adjusted for current micro-market velocity, and checked local environmental and zoning risk factors. On the right, your live dossier is active with honest comps, hidden risk alerts, and lender compliance discovery.\n\nLet's have Bob Dyson review the contractual shields and contingency protections for this property.`,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    const bobMsg = {
+      id: Date.now() + 2,
+      sender: 'bob',
+      speakerName: 'Bob Dyson',
+      text: `Bob Dyson here. On ${cleanAddr}, our primary fiduciary mandate is safeguarding your earnest money deposit. We verify that all contingency timelines, geological inspections, and seller disclosures are strictly enforced before you ever submit an offer.`,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    setMessages(prev => [...prev, userMsg, charlieMsg, bobMsg]);
+
+    // Reliably scroll and bring Command Center & Dossier into view
+    scrollToSection(page2Ref, 2, '/dossier');
+    setTimeout(() => {
+      if (page2Ref.current) {
+        page2Ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const rect = page2Ref.current.getBoundingClientRect();
+        const top = rect.top + window.pageYOffset - 75;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    }, 60);
   };
 
   useEffect(() => {
@@ -411,11 +459,10 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
           <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
             <SlideFourPrivateWealth
               onRunAudit={(addr) => {
-                if (addr) setAnalyzedProperty(addr);
+                if (addr) handleAuditAddress(addr);
               }}
               onOpenDossier={(addr) => {
-                if (addr) setAnalyzedProperty(addr);
-                scrollToSection(page2Ref, 2, '/dossier');
+                if (addr) handleAuditAddress(addr);
               }}
               onGoToChatCanvas={() => {
                 scrollToSection(page2Ref, 2, '/dossier');

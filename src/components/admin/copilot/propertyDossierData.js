@@ -157,12 +157,79 @@ export const KNOWN_PROPERTY_DOSSIERS = {
     complianceBasis: 'Transaction-specific legal & underwriting discovery required.',
     complianceProtocol: 'Case-by-Case Discovery',
     complianceStatus: 'Checked Against State, Fed & Lender Regs'
+  },
+  '7414 fay ave': {
+    shortAddress: '7414 Fay Ave',
+    city: 'La Jolla, CA',
+    fullAddress: '7414 Fay Ave, La Jolla, CA 92037',
+    listPrice: '$4.85M',
+    marketSummary: '18% premium vs coastal comps; mandatory 25-ft bluff setback & geotechnical soil review required.',
+    comps: [
+      {
+        address: '7350 Fay Ave',
+        distance: '0.15 mi',
+        specs: '4 bd | 4 ba | 3,420 sf',
+        soldPrice: 'Sold $3.95M',
+        adjPrice: 'Adj. $4.10M'
+      },
+      {
+        address: '7520 Draper Ave',
+        distance: '0.28 mi',
+        specs: '4 bd | 3.5 ba | 3,650 sf',
+        soldPrice: 'Sold $4.20M',
+        adjPrice: 'Adj. $4.15M'
+      },
+      {
+        address: '7210 Eads Ave',
+        distance: '0.35 mi',
+        specs: '5 bd | 4.5 ba | 3,890 sf',
+        soldPrice: 'Sold $4.40M',
+        adjPrice: 'Adj. $4.30M'
+      }
+    ],
+    compsSummary: 'Subject at $4.85M list sits at an 18% premium over recent neighborhood sales.',
+    risks: [
+      {
+        id: 'bluff',
+        title: 'Coastal bluff setback',
+        desc: 'Mandatory 25-foot bluff setback and updated geotechnical soil stability report required.'
+      },
+      {
+        id: 'geological',
+        title: 'Geological fault lines',
+        desc: 'Rose Canyon fault influence zone; un-waivable geological inspection contingency recommended.'
+      },
+      {
+        id: 'permits',
+        title: 'Municipal permit records',
+        desc: 'Coastal development permit (CDP) on record for second-story addition; verify certificate of occupancy.'
+      }
+    ],
+    risksSummary: 'Mandate strict geotechnical soil stability inspections and escrow contingency shields.',
+    complianceBasis: 'California coastal commission setback & lender underwriting discovery required.',
+    complianceProtocol: 'Case-by-Case Discovery',
+    complianceStatus: 'Checked Against State, Fed & Lender Regs'
   }
 };
 
 export function getPropertyDossier(rawAddress) {
   if (!rawAddress) return KNOWN_PROPERTY_DOSSIERS['742 vista del mar'];
-  const lower = rawAddress.toLowerCase().trim();
+  let cleaned = String(rawAddress).trim();
+
+  // If input is an MLS link or URL, extract address snippet
+  if (/^(https?:\/\/|www\.|\w+\.(com|org|net))/i.test(cleaned) || /zillow|realtor|redfin|homes\.com/i.test(cleaned)) {
+    try {
+      const decoded = decodeURIComponent(cleaned);
+      const m = decoded.match(/homedetails\/([^/?#]+)/i) || 
+                decoded.match(/realestateandhomes-detail\/([^/?#]+)/i) ||
+                decoded.match(/property\/([^/?#]+)/i);
+      if (m && m[1]) {
+        cleaned = m[1].replace(/-\d+_zpid.*$/i, '').replace(/_M\d+.*$/i, '').replace(/-\d+\/?$/i, '').replace(/[_-]/g, ' ').trim();
+      }
+    } catch (_) {}
+  }
+
+  const lower = cleaned.toLowerCase().trim();
 
   for (const [key, dossier] of Object.entries(KNOWN_PROPERTY_DOSSIERS)) {
     if (lower.includes(key) || key.split(' ').every(w => lower.includes(w))) {
@@ -171,14 +238,14 @@ export function getPropertyDossier(rawAddress) {
   }
 
   // Parse custom address
-  const parts = rawAddress.split(',').map(s => s.trim());
-  const street = parts[0] || rawAddress;
+  const parts = cleaned.split(',').map(s => s.trim());
+  const street = parts[0] || cleaned;
   const city = parts[1] ? `${parts[1]}${parts[2] ? `, ${parts[2].split(' ')[1] || parts[2]}` : ''}` : 'Local Market';
 
   return {
     shortAddress: street,
     city: city,
-    fullAddress: rawAddress,
+    fullAddress: cleaned,
     listPrice: '$1.50M',
     marketSummary: `Micro-market analysis complete for ${street}; individual legal & lender discovery required.`,
     comps: [

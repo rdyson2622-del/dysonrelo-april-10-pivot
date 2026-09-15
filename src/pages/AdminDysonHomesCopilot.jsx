@@ -278,11 +278,16 @@ export default function AdminDysonHomesCopilot() {
 
               <SlideFourPrivateWealth
                 onRunAudit={(addr) => {
-                  if (addr) setAnalyzedProperty(addr);
+                  if (addr) {
+                    setAnalyzedProperty(addr);
+                    scrollToSection(page2Ref);
+                  }
                 }}
                 onOpenDossier={(addr) => {
-                  if (addr) setAnalyzedProperty(addr);
-                  scrollToSection(page2Ref);
+                  if (addr) {
+                    setAnalyzedProperty(addr);
+                    scrollToSection(page2Ref);
+                  }
                 }}
                 onGoToChatCanvas={() => {
                   scrollToSection(page2Ref);
