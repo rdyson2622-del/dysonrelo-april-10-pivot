@@ -492,19 +492,122 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
                       />
                     </div>
 
-                    {/* ── CONTROLS BELOW INTERACTIVE DIALOGUE: CLEAR SESSION ── */}
-                    {(messages.length > 0 || isTalkLiveActive) && (
-                      <div className="flex items-center justify-end gap-1.5 pt-1 pb-1 px-0.5">
-                        <button
-                          type="button"
-                          onClick={resetToBlank}
-                          className="px-2.5 py-1.5 rounded-md text-xs font-medium bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white border border-white/15 transition-all cursor-pointer whitespace-nowrap shrink-0"
-                          title="Clear all messages and reset screen to blank"
+                    {/* ── COMMAND BAR: POSITIONED DIRECTLY UNDER DEMO BOX MATCHING PAGE 1 SEARCH STYLE ── */}
+                    <div className="pt-2.5 pb-1 space-y-2">
+                      <form 
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          executeSendMessage();
+                        }} 
+                        className="w-full"
+                      >
+                        <div 
+                          className="flex items-center rounded-full px-3.5 py-1.5 transition-all border border-[#D4AF37] w-full relative overflow-hidden shadow-lg"
+                          style={{ backgroundColor: '#ede0cc', color: '#000000' }}
                         >
-                          Clear Session
-                        </button>
+                          <Paperclip className="w-4 h-4 text-black mr-2 shrink-0 cursor-pointer z-10" title="Attach file or pre-approval" />
+                          
+                          <div className="relative flex-1 min-w-0 flex items-center h-7 overflow-hidden">
+                            {!inputText && !isInputFocused && (
+                              <div className="absolute inset-0 flex items-center overflow-hidden pointer-events-none select-none text-black/65 text-xs sm:text-sm whitespace-nowrap">
+                                <div className="inline-flex animate-marquee whitespace-nowrap">
+                                  <span className="mr-12 font-normal">Ask anything real estate—compliance, Prop 19, escrow traps, comps...</span>
+                                  <span className="mr-12 font-normal">Ask anything real estate—compliance, Prop 19, escrow traps, comps...</span>
+                                </div>
+                              </div>
+                            )}
+
+                            <input
+                              type="text"
+                              value={inputText}
+                              onFocus={() => setIsInputFocused(true)}
+                              onBlur={() => setIsInputFocused(false)}
+                              onChange={(e) => setInputText(e.target.value)}
+                              placeholder=""
+                              className="w-full bg-transparent text-black text-xs sm:text-sm outline-none font-normal min-w-0 z-10"
+                              style={{ color: '#000000' }}
+                            />
+                          </div>
+
+                          <div className="flex items-center gap-1.5 ml-2 shrink-0 z-10">
+                            <button
+                              type="button"
+                              onClick={handleToggleTalkLive}
+                              className={`p-1.5 rounded-full transition-all cursor-pointer flex items-center gap-1 ${
+                                isTalkLiveActive 
+                                  ? 'bg-red-600 text-white animate-pulse' 
+                                  : 'text-black hover:bg-black/10'
+                              }`}
+                              title={isTalkLiveActive ? "End live Gemini duplex session" : "Talk Live with Charlie (Gemini Live Algieba)"}
+                            >
+                              <Mic className="w-4 h-4" />
+                              {isTalkLiveActive && (
+                                <span className="text-[10px] font-bold uppercase tracking-wider">
+                                  {liveStatus === 'connecting' ? 'Connecting...' : liveStatus === 'speaking' ? 'Speaking' : 'Listening'}
+                                </span>
+                              )}
+                            </button>
+
+                            <button
+                              type="submit"
+                              disabled={isSending}
+                              className="px-5 py-2 rounded-full font-bold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm bg-black text-white hover:bg-stone-900 border-none active:scale-95"
+                              style={{ backgroundColor: '#000000', color: '#ffffff', opacity: 1 }}
+                              title="Send message to Charlie"
+                            >
+                              <span style={{ color: '#ffffff' }}>{isSending ? 'Sending...' : 'Send'}</span>
+                              <span className="text-[#D4AF37] ml-1">→</span>
+                            </button>
+                          </div>
+                        </div>
+                      </form>
+
+                      {/* Discussion History & Saved Discussions Stack directly below Command Bar */}
+                      <div className="flex flex-wrap items-center justify-between gap-2 pt-0.5">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => setIsSavedDiscussionsOpen(true)}
+                            className="px-2.5 py-1 rounded-md text-[10px] font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm shrink-0"
+                            title="Open Saved Discussions"
+                          >
+                            <Bookmark className="w-3 h-3 text-[#D4AF37]" />
+                            <span>Saved Discussions</span>
+                            {savedCount > 0 && (
+                              <span className="px-1.5 py-0.2 rounded-full bg-[#D4AF37] text-black text-[9px] font-bold">
+                                {savedCount}
+                              </span>
+                            )}
+                          </button>
+
+                          {discussionChips.map((chip) => (
+                            <button
+                              key={chip.id}
+                              type="button"
+                              onClick={() => {
+                                if (chip.view) setRightPanelView(chip.view);
+                                executeSendMessage(chip.query);
+                              }}
+                              className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer shrink-0"
+                              title={chip.query}
+                            >
+                              <span>{chip.label}</span>
+                            </button>
+                          ))}
+                        </div>
+
+                        {(messages.length > 0 || isTalkLiveActive) && (
+                          <button
+                            type="button"
+                            onClick={resetToBlank}
+                            className="px-2 py-1 rounded-md text-[10px] font-medium bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white border border-white/15 transition-all cursor-pointer whitespace-nowrap shrink-0 ml-auto"
+                            title="Clear all messages and reset screen to blank"
+                          >
+                            Clear Session
+                          </button>
+                        )}
                       </div>
-                    )}
+                    </div>
 
                     {/* ── 3-WAY INTERACTIVE DIALOGUE FEED (COLOR-CODED DURING SPEECH & AT REST) ── */}
                     <div className="space-y-3 pt-3">
@@ -648,128 +751,19 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
 
               </div>
 
-              {/* ── TWO ROWS DIRECTLY OVER MINI APPS: INPUT BAR + PROMPT CHIPS ── */}
-              <div className="px-3 sm:px-4 py-3 bg-[#0a0a0a] border-t border-white/10 space-y-2.5">
-                
-                {/* Row 1: Plain Input Bar (Tan #ede0cc background) - Reduced to ~40% width on left */}
-                <form 
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    executeSendMessage();
-                  }} 
-                  className="space-y-1 w-full md:w-[40%]"
-                >
-                  <div 
-                    className="flex items-center rounded-xl px-3 py-2 transition-all border border-[#ede0cc] w-full relative overflow-hidden"
-                    style={{ backgroundColor: '#ede0cc', color: '#000000' }}
-                  >
-                    <Paperclip className="w-4 h-4 text-black mr-2 shrink-0 cursor-pointer z-10" title="Attach file or pre-approval" />
-                    
-                    <div className="relative flex-1 min-w-0 flex items-center h-6 overflow-hidden">
-                      {/* Continuous scrolling marquee placeholder until viewer adds a request */}
-                      {!inputText && !isInputFocused && (
-                        <div className="absolute inset-0 flex items-center overflow-hidden pointer-events-none select-none text-black/60 text-xs sm:text-sm whitespace-nowrap">
-                          <div className="inline-flex animate-marquee whitespace-nowrap">
-                            <span className="mr-12 font-normal">Ask anything real estate—compliance, Prop 19, escrow traps, comps...</span>
-                            <span className="mr-12 font-normal">Ask anything real estate—compliance, Prop 19, escrow traps, comps...</span>
-                          </div>
-                        </div>
-                      )}
-
-                      <input
-                        type="text"
-                        value={inputText}
-                        onFocus={() => setIsInputFocused(true)}
-                        onBlur={() => setIsInputFocused(false)}
-                        onChange={(e) => setInputText(e.target.value)}
-                        placeholder=""
-                        className="w-full bg-transparent text-black text-xs sm:text-sm outline-none font-normal min-w-0 z-10"
-                        style={{ color: '#000000' }}
-                      />
-                    </div>
-
-                    <div className="flex items-center gap-1.5 ml-2 shrink-0 z-10">
-                      <button
-                        type="button"
-                        onClick={handleToggleTalkLive}
-                        className={`p-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1 ${
-                          isTalkLiveActive 
-                            ? 'bg-red-600 text-white animate-pulse' 
-                            : 'text-black hover:bg-black/10'
-                        }`}
-                        title={isTalkLiveActive ? "End live Gemini duplex session" : "Talk Live with Charlie (Gemini Live Algieba)"}
-                      >
-                        <Mic className="w-4 h-4" />
-                        {isTalkLiveActive && (
-                          <span className="text-[10px] font-bold uppercase tracking-wider">
-                            {liveStatus === 'connecting' ? 'Connecting...' : liveStatus === 'speaking' ? 'Speaking' : 'Listening'}
-                          </span>
-                        )}
-                      </button>
-
-                      <button
-                        type="submit"
-                        disabled={isSending}
-                        className="px-3.5 py-1.5 rounded-lg font-semibold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm bg-black text-white hover:bg-stone-900 border-none"
-                        style={{ backgroundColor: '#000000', color: '#ffffff', opacity: 1 }}
-                        title="Send message to Charlie"
-                      >
-                        <span style={{ color: '#ffffff' }}>{isSending ? 'Sending...' : 'Send'}</span>
-                      </button>
-                    </div>
-                  </div>
-                </form>
-
-                {/* Row 2: Discussion history stack retained on 40% side of screen, required company name & DRE # on far right */}
-                <div className="flex flex-col md:flex-row md:items-start justify-between gap-2.5 pt-0.5">
-                  <div className="flex flex-wrap items-center gap-1.5 w-full md:w-[40%]">
-                    {/* Saved Discussions Pill (Moved down to this stack) */}
-                    <button
-                      type="button"
-                      onClick={() => setIsSavedDiscussionsOpen(true)}
-                      className="px-2.5 py-1 rounded-md text-[10px] font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm shrink-0"
-                      title="Open Saved Discussions"
-                    >
-                      <Bookmark className="w-3 h-3 text-[#D4AF37]" />
-                      <span>Saved Discussions</span>
-                      {savedCount > 0 && (
-                        <span className="px-1.5 py-0.2 rounded-full bg-[#D4AF37] text-black text-[9px] font-bold">
-                          {savedCount}
-                        </span>
-                      )}
-                    </button>
-
-                    {/* Stacked Discussion History Chips */}
-                    {discussionChips.map((chip) => (
-                      <button
-                        key={chip.id}
-                        type="button"
-                        onClick={() => {
-                          if (chip.view) setRightPanelView(chip.view);
-                          executeSendMessage(chip.query);
-                        }}
-                        className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer shrink-0"
-                        title={chip.query}
-                      >
-                        <span>{chip.label}</span>
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="flex flex-col items-start md:items-end shrink-0 self-start md:self-center pr-1 text-left md:text-right">
-                    <span className="text-[12.5px] sm:text-[13.5px] font-normal text-white tracking-normal whitespace-nowrap">
-                      The Dyson &amp; Dyson Companies, Inc. Ca. DRE#02303118
-                    </span>
-                    <div className="text-[11px] sm:text-[12px] font-mono text-stone-300 flex items-center gap-2 mt-0.5 whitespace-nowrap">
-                      <a href="tel:8583531200" className="hover:text-white transition-colors">
-                        (858) 353 1200
-                      </a>
-                      <span className="text-stone-600">·</span>
-                      <a href="mailto:bob@dysonrelo.com" className="hover:text-white transition-colors text-[#ede0cc]">
-                        bob@dysonrelo.com
-                      </a>
-                    </div>
-                  </div>
+              {/* ── FOOTER ROW DIRECTLY OVER MINI APPS: BRANDING & CONTACT ── */}
+              <div className="px-3 sm:px-4 py-2 bg-[#0a0a0a] border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2 text-left">
+                <span className="text-[12px] sm:text-[12.5px] font-normal text-white tracking-normal whitespace-nowrap">
+                  The Dyson &amp; Dyson Companies, Inc. Ca. DRE#02303118
+                </span>
+                <div className="text-[11px] sm:text-[12px] font-mono text-stone-300 flex items-center gap-2 whitespace-nowrap">
+                  <a href="tel:8583531200" className="hover:text-white transition-colors">
+                    (858) 353 1200
+                  </a>
+                  <span className="text-stone-600">·</span>
+                  <a href="mailto:bob@dysonrelo.com" className="hover:text-white transition-colors text-[#ede0cc]">
+                    bob@dysonrelo.com
+                  </a>
                 </div>
               </div>
 
