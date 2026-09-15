@@ -578,7 +578,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
           </div>
 
           <div className="flex flex-col items-start md:items-end shrink-0 self-start md:self-center pr-1 text-left md:text-right">
-            <span className="text-[12.5px] sm:text-[13.5px] font-bold text-white tracking-normal whitespace-nowrap">
+            <span className="text-[12.5px] sm:text-[13.5px] font-normal text-white tracking-normal whitespace-nowrap">
               The Dyson &amp; Dyson Companies, Inc. Ca. DRE#02303118
             </span>
             <div className="text-[11px] sm:text-[12px] font-mono text-stone-300 flex items-center gap-2 mt-0.5 whitespace-nowrap">
