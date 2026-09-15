@@ -521,35 +521,100 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
                       </div>
                     </div>
 
-                    {/* ── PLAIN GROK-STYLE TEXT CHAT (CONNECTED REAL LLM REPLIES) ── */}
-                    <div className="space-y-3 pt-4">
+                    {/* ── 3-WAY INTERACTIVE DIALOGUE FEED (COLOR-CODED DURING SPEECH & AT REST) ── */}
+                    <div className="space-y-3 pt-3">
                       {messages.map((m) => {
-                        const isUser = m.sender === 'user';
+                        const isConsumer = m.sender === 'consumer';
+                        const isCharlie = m.sender === 'charlie';
                         const isBob = m.sender === 'bob';
+                        const isPlainUser = m.sender === 'user';
+
+                        // Active speaking state driven by 3-Way Dialogue Demo
+                        const isSpeakingNow = (
+                          (activeDemoSpeaker === 'consumer' && isConsumer) ||
+                          (activeDemoSpeaker === 'charlie' && isCharlie) ||
+                          (activeDemoSpeaker === 'bob' && isBob)
+                        );
+
+                        // Speaker border and glow styles based on designated colors:
+                        // Buyer = RED (#ef4444) | Charlie = GREEN (#10b981) | Bob = GOLD (#D4AF37)
+                        let bubbleClasses = 'bg-[#141414] border border-white/15 text-stone-200';
+                        if (isSpeakingNow) {
+                          if (isConsumer) {
+                            bubbleClasses = 'bg-[#1c0f0f] border-2 border-rose-500 ring-2 ring-rose-500/60 shadow-[0_0_22px_rgba(239,68,68,0.5)] text-white scale-[1.01]';
+                          } else if (isCharlie) {
+                            bubbleClasses = 'bg-[#0c1a14] border-2 border-emerald-500 ring-2 ring-emerald-500/60 shadow-[0_0_22px_rgba(16,185,129,0.5)] text-white scale-[1.01]';
+                          } else if (isBob) {
+                            bubbleClasses = 'bg-[#211c0f] border-2 border-[#D4AF37] ring-2 ring-[#D4AF37]/60 shadow-[0_0_22px_rgba(212,175,55,0.55)] text-white scale-[1.01]';
+                          }
+                        } else {
+                          if (isConsumer) {
+                            bubbleClasses = 'bg-[#161111] border-l-4 border-l-rose-500 border-white/10 text-white';
+                          } else if (isCharlie) {
+                            bubbleClasses = 'bg-[#0f1512] border-l-4 border-l-emerald-500 border-white/10 text-stone-200';
+                          } else if (isBob) {
+                            bubbleClasses = 'bg-[#16140e] border-l-4 border-l-[#D4AF37] border-[#D4AF37]/30 text-stone-200';
+                          } else if (isPlainUser) {
+                            bubbleClasses = 'bg-[#1e1e1e] border border-white/15 text-white';
+                          }
+                        }
 
                         return (
                           <div 
                             key={m.id} 
-                            className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}
+                            className={`flex flex-col ${isPlainUser ? 'items-end' : 'items-start'} transition-all duration-300`}
                           >
-                            <div className="mb-0.5 px-1 text-[11px] font-medium text-stone-400">
-                              {isUser ? 'You' : isBob ? 'Bob Dyson (Broker)' : 'Charlie Simmons (Voice)'}
+                            {/* Color-Coded Speaker Name & Status Indicator */}
+                            <div className="mb-1 px-1 text-[11px] font-medium flex items-center gap-1.5">
+                              {isConsumer ? (
+                                <>
+                                  <span className={`w-2 h-2 rounded-full bg-rose-500 ${isSpeakingNow ? 'animate-ping' : ''}`} />
+                                  <span className="text-rose-400 font-bold">
+                                    {m.speakerName || 'You (Buyer)'}
+                                  </span>
+                                  {isSpeakingNow && (
+                                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-mono font-bold uppercase tracking-wider animate-pulse">
+                                      Speaking Live
+                                    </span>
+                                  )}
+                                </>
+                              ) : isCharlie ? (
+                                <>
+                                  <span className={`w-2 h-2 rounded-full bg-emerald-400 ${isSpeakingNow ? 'animate-ping' : ''}`} />
+                                  <span className="text-emerald-400 font-bold">
+                                    {m.speakerName || 'Charlie Simmons (Voice)'}
+                                  </span>
+                                  {isSpeakingNow && (
+                                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold uppercase tracking-wider animate-pulse">
+                                      Speaking Live
+                                    </span>
+                                  )}
+                                </>
+                              ) : isBob ? (
+                                <>
+                                  <span className={`w-2 h-2 rounded-full bg-[#D4AF37] ${isSpeakingNow ? 'animate-ping' : ''}`} />
+                                  <span className="text-[#D4AF37] font-bold">
+                                    {m.speakerName || 'Bob Dyson (Broker)'}
+                                  </span>
+                                  {isSpeakingNow && (
+                                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-[#D4AF37]/25 text-[#D4AF37] font-mono font-bold uppercase tracking-wider animate-pulse">
+                                      Directing Live
+                                    </span>
+                                  )}
+                                </>
+                              ) : (
+                                <span className="text-stone-300 font-semibold">You</span>
+                              )}
                             </div>
 
                             <div 
-                              className={`rounded-lg px-3.5 py-2.5 text-xs sm:text-[13px] leading-relaxed max-w-[94%] ${
-                                isUser
-                                  ? 'bg-[#1e1e1e] border border-white/15 text-white'
-                                  : isBob
-                                  ? 'bg-[#141414] border border-[#D4AF37]/40 text-stone-200'
-                                  : 'bg-[#141414] border border-white/15 text-stone-200'
-                              }`}
+                              className={`rounded-xl px-4 py-3 text-xs sm:text-[13px] leading-relaxed max-w-[96%] transition-all duration-300 ${bubbleClasses}`}
                             >
                               <p className="whitespace-pre-line font-normal">{m.text}</p>
                             </div>
 
                             {m.time && (
-                              <span className="text-[9px] text-stone-500 mt-0.5 px-1 font-mono">
+                              <span className="text-[9px] text-stone-500 mt-1 px-1 font-mono">
                                 {m.time}
                               </span>
                             )}
@@ -559,11 +624,11 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
 
                       {isSending && (
                         <div className="flex flex-col items-start">
-                          <div className="mb-0.5 px-1 text-[11px] font-medium text-stone-400">
-                            Charlie Simmons (Voice)
+                          <div className="mb-0.5 px-1 text-[11px] font-medium text-emerald-400 flex items-center gap-1.5">
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                            <span>Charlie Simmons (Voice)</span>
                           </div>
-                          <div className="rounded-lg px-3.5 py-2 bg-[#141414] border border-white/15 text-stone-400 text-xs flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-[#10b981] animate-ping" />
+                          <div className="rounded-xl px-3.5 py-2 bg-[#0c1a14] border border-emerald-500/40 text-stone-300 text-xs flex items-center gap-2">
                             <span>Charlie is consulting property records &amp; fiduciary directives...</span>
                           </div>
                         </div>

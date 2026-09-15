@@ -195,10 +195,8 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
   const playTurn = (stepIndex) => {
     if (stepIndex >= THREE_WAY_SCRIPT.length) {
       setIsPlaying(false);
-      setCurrentStep(0);
+      setCurrentStep(4);
       if (onTurnChange) onTurnChange(null);
-      // Automatically clear chat & reset presentation when session finishes
-      if (onResetDemo) onResetDemo();
       return;
     }
 
