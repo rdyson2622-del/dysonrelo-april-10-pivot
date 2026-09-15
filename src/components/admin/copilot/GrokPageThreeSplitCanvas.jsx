@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import CopilotDynamicSpeakerBox from '@/components/copilot/CopilotDynamicSpeakerBox';
 import CopilotConsumerSpeakerBox from '@/components/copilot/CopilotConsumerSpeakerBox';
+import CopilotSweepLogo from '@/components/brand/CopilotSweepLogo';
 import CopilotThreeWayDemo from '@/components/copilot/CopilotThreeWayDemo';
 import CopilotMiniAppsRail from '@/components/copilot/CopilotMiniAppsRail';
 import CopilotDossierNewsPanel from '@/components/copilot/CopilotDossierNewsPanel';
@@ -229,6 +230,14 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
           
           {/* Scrollable Conversation Container */}
           <div className="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[560px]">
+
+            {/* ── HEADER: COPILOT LOGO + COMMAND CENTER ── */}
+            <div className="flex items-center gap-2 pb-0.5 px-0.5">
+              <CopilotSweepLogo size="sm" />
+              <span className="text-white text-sm sm:text-[15px] font-normal tracking-wide whitespace-nowrap">
+                Command Center
+              </span>
+            </div>
 
             {/* ── ROSTER: BOB, CHARLIE, YOU SPEAKER BOXES ── */}
             <div className="grid grid-cols-3 gap-2 pt-1">
