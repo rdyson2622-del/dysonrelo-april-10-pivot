@@ -38,6 +38,28 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
     }
     return false;
   });
+
+  // Discussion history stack state (stacked as added, retained on 40% side)
+  const [discussionChips, setDiscussionChips] = useState([
+    { id: 'solutions', label: 'Solutions Vault', query: 'What solutions and playbooks do you offer for home buyers?', view: 'solutions' },
+    { id: 'compliance', label: 'Lender Compliance', query: 'Bob, how does Dyson & Dyson handle transaction discovery and lender compliance?', view: 'solutions' },
+    { id: 'escrow', label: 'Ask Bob: Escrow Traps', query: 'Bob, what are the biggest escrow traps and how do we protect our earnest money deposit?', view: 'solutions' },
+    { id: 'prop19', label: 'Prop 19 Tax', query: 'How does Prop 19 tax base portability work when relocating in California?', view: 'solutions' },
+    { id: 'bluff', label: 'Bluff Setbacks', query: 'What are the coastal bluff setback and soil stability risks in California?', view: 'solutions' },
+    { id: 'news', label: 'Daily News', query: 'Charlie, summarize this broadcast in bullet points', view: 'news' },
+  ]);
+
+  const addDiscussionChip = (text, view = 'solutions') => {
+    if (!text || text.trim().length === 0) return;
+    const trimmed = text.trim();
+    setDiscussionChips(prev => {
+      if (prev.some(c => c.query.toLowerCase() === trimmed.toLowerCase() || c.label.toLowerCase() === trimmed.toLowerCase())) {
+        return prev;
+      }
+      const label = trimmed.length > 24 ? trimmed.slice(0, 24) + '...' : trimmed;
+      return [...prev, { id: `disc-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`, label, query: trimmed, view }];
+    });
+  };
   const [isInputFocused, setIsInputFocused] = useState(false);
   const messagesEndRef = useRef(null);
   const canvasRef = useRef(null);
@@ -148,6 +170,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
     };
     setMessages(prev => [...prev, userMsg]);
     setInputText('');
+    addDiscussionChip(text);
 
     const explainer = findExplainerByQuery(text);
     const isBobQuery = /bob|trap|escrow|bluff|contract|legal|fee|disclosure|title|broker|compliance|regulations|offer strategy|hud-1/i.test(text);
@@ -272,23 +295,9 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
               />
             </div>
 
-            {/* ── CONTROLS BELOW INTERACTIVE DIALOGUE: SAVED DISCUSSIONS & CLEAR ── */}
-            <div className="flex items-center justify-end gap-1.5 pt-1 pb-1 px-0.5">
-              <button
-                type="button"
-                onClick={() => setIsSavedDiscussionsOpen(true)}
-                className="px-2.5 py-1.5 rounded-md text-xs font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm"
-                title="Open Saved Discussions"
-              >
-                <Bookmark className="w-3.5 h-3.5 text-[#D4AF37]" />
-                <span>Saved Discussions</span>
-                {savedCount > 0 && (
-                  <span className="px-1.5 py-0.2 rounded-full bg-[#D4AF37] text-black text-[9px] font-bold">
-                    {savedCount}
-                  </span>
-                )}
-              </button>
-              {messages.length > 0 && (
+            {/* ── CONTROLS BELOW INTERACTIVE DIALOGUE: CLEAR SESSION ── */}
+            {messages.length > 0 && (
+              <div className="flex items-center justify-end gap-1.5 pt-1 pb-1 px-0.5">
                 <button
                   type="button"
                   onClick={resetToBlank}
@@ -297,8 +306,8 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                 >
                   Clear Session
                 </button>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* ── 3-WAY INTERACTIVE DIALOGUE FEED (COLOR-CODED DURING SPEECH & AT REST) ── */}
             <div className="space-y-3 pt-3">
@@ -486,69 +495,40 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
           </div>
         </form>
 
-        {/* Plain prompt chips on left, required company name & DRE # on far right */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 pt-0.5">
-          <div className="flex flex-wrap items-center gap-1.5">
+        {/* Row 2: Discussion history stack retained on 40% side of screen, required company name & DRE # on far right */}
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-2.5 pt-0.5">
+          <div className="flex flex-wrap items-center gap-1.5 w-full md:w-[40%]">
+            {/* Saved Discussions Pill (Moved down to this stack) */}
             <button
               type="button"
-              onClick={() => {
-                setRightPanelView('solutions');
-                handlePillClick("What solutions and playbooks do you offer for home buyers?");
-              }}
-              className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
+              onClick={() => setIsSavedDiscussionsOpen(true)}
+              className="px-2.5 py-1 rounded-md text-[10px] font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm shrink-0"
+              title="Open Saved Discussions"
             >
-              <span>Solutions Vault</span>
+              <Bookmark className="w-3 h-3 text-[#D4AF37]" />
+              <span>Saved Discussions</span>
+              {savedCount > 0 && (
+                <span className="px-1.5 py-0.2 rounded-full bg-[#D4AF37] text-black text-[9px] font-bold">
+                  {savedCount}
+                </span>
+              )}
             </button>
-            <button
-              type="button"
-              onClick={() => {
-                setRightPanelView('solutions');
-                handlePillClick("Bob, how does Dyson & Dyson handle transaction discovery and lender compliance?");
-              }}
-              className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-            >
-              <span>Lender Compliance</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setRightPanelView('solutions');
-                handlePillClick("Bob, what are the biggest escrow traps and how do we protect our earnest money deposit?");
-              }}
-              className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-            >
-              <span>Ask Bob: Escrow Traps</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setRightPanelView('solutions');
-                handlePillClick("How does Prop 19 tax base portability work when relocating in California?");
-              }}
-              className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-            >
-              <span>Prop 19 Tax</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setRightPanelView('solutions');
-                handlePillClick("What are the coastal bluff setback and soil stability risks in California?");
-              }}
-              className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-            >
-              <span>Bluff Setbacks</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setRightPanelView('news');
-                handlePillClick("Charlie, summarize this broadcast in bullet points");
-              }}
-              className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
-            >
-              <span>Daily News</span>
-            </button>
+
+            {/* Stacked Discussion History Chips */}
+            {discussionChips.map((chip) => (
+              <button
+                key={chip.id}
+                type="button"
+                onClick={() => {
+                  if (chip.view) setRightPanelView(chip.view);
+                  handlePillClick(chip.query);
+                }}
+                className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer shrink-0"
+                title={chip.query}
+              >
+                <span>{chip.label}</span>
+              </button>
+            ))}
           </div>
 
           <div className="flex flex-col items-start md:items-end shrink-0 self-start md:self-center pr-1 text-left md:text-right">
