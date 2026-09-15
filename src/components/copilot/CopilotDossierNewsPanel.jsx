@@ -111,7 +111,7 @@ export default function CopilotDossierNewsPanel({
       }`}
     >
       {/* ── SPACER: aligns video top edge with the Bob/Charlie/You roster row on the left ── */}
-      <div className="h-[68px] sm:h-[76px] shrink-0" aria-hidden="true" />
+      <div className="h-[62px] sm:h-[70px] shrink-0" aria-hidden="true" />
 
       {/* ── NEWS BROADCAST PLACEHOLDER ABOVE ALL TEXT (SEARCH / AUDIT / CONTROLS) ── */}
       <div
@@ -169,7 +169,7 @@ export default function CopilotDossierNewsPanel({
       </div>
 
       {/* ── TOP CONTROLS & VIEW SWITCHER: Search as #1, Audit, Solutions & News ── */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/10 mt-6">
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/10 mt-4">
         
         {/* Quick Right-Side View Switcher: Search as #1, Audit, Solutions & News */}
         <div className="flex items-center bg-[#141414] p-0.5 rounded-md border border-white/10 gap-0.5">
