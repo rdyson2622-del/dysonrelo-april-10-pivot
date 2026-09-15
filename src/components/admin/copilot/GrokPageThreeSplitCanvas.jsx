@@ -316,16 +316,11 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         </div>
       </div>
 
-      {/* ── PORTRAIT-FIRST IPAD-PRIORITY MAIN CANVAS (FLEX-COL TO LG:FLEX-ROW) ── */}
-      <div className="flex flex-col lg:flex-row min-h-[700px]">
+      {/* ── MAIN CANVAS (FLEX-COL TO LG:FLEX-ROW) ── */}
+      <div className="flex flex-col lg:flex-row min-h-[640px]">
         
-        {/* ── FAR-LEFT STREAMLINED AI MINIONS RAIL ── */}
-        {showRail && (
-          <CopilotMiniAppsRail />
-        )}
-
         {/* ── CENTER-LEFT COLUMN: ROSTER (VISUAL/READ-ONLY, CHARLIE ONLY LIVE TALK) + GROK-PLAIN CHAT ── */}
-        <div className="w-full lg:w-[480px] xl:w-[500px] p-3 sm:p-4 flex flex-col justify-between bg-[#0b0b0b] border-b lg:border-b-0 lg:border-r border-white/10 relative shrink-0">
+        <div className="w-full lg:w-[480px] xl:w-[520px] p-3 sm:p-4 flex flex-col justify-between bg-[#0b0b0b] border-b lg:border-b-0 lg:border-r border-white/10 relative shrink-0">
           
           {/* Scrollable Conversation Container */}
           <div className="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[560px]">
@@ -544,6 +539,11 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         </div>
 
       </div>
+
+      {/* ── BOTTOM HORIZONTAL AI MINIONS RAIL ── */}
+      {showRail && (
+        <CopilotMiniAppsRail />
+      )}
 
       {/* ── FULL-PAGE EXPLODED SUBJECT THEATER ── */}
       <CopilotExplodedSubjectModal

@@ -134,7 +134,7 @@ export default function CopilotPublicReadOnlyTeamRail({ onAskAddress, onBackToLa
 
         {/* Footer Notice */}
         <div className="pt-2 mt-3 border-t border-white/10 text-[7.5px] text-stone-500 leading-tight text-center">
-          Under Bob Dyson's CA Broker License #00609384.
+          Under Bob Dyson · CA Broker Supervision.
         </div>
       </aside>
 
