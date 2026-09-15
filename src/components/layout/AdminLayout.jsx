@@ -18,7 +18,8 @@ export default function AdminLayout() {
   const location = useLocation();
   const { user: authUser, isAuthenticated, isLoadingAuth } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [access, setAccess] = useState('loading'); // 'loading' | 'allowed' | 'denied'
+  const isCopilotRoute = location.pathname.includes('copilot') || location.pathname.startsWith('/admin/dysonhomes-copilot');
+  const [access, setAccess] = useState(() => isCopilotRoute ? 'allowed' : 'loading');
 
   useEffect(() => {
     // Immediate allow for Copilot pages and lab so they can be previewed without login barriers
@@ -54,7 +55,7 @@ export default function AdminLayout() {
       });
   }, [authUser]);
 
-  if (isLoadingAuth || access === 'loading') {
+  if (!isCopilotRoute && (isLoadingAuth || access === 'loading')) {
     return (
       <div className="fixed inset-0 flex items-center justify-center" style={{ background: '#0a0a0a' }}>
         <div className="w-8 h-8 border-4 rounded-full animate-spin"
