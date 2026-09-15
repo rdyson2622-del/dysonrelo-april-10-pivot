@@ -291,21 +291,6 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             <span>Project Daily News</span>
           </button>
         </div>
-
-        {/* Center / Right: Official Brand Lockup (CoPilot capital C and P, black/gold/white, no green) */}
-        <div className="flex items-baseline gap-2">
-          <span 
-            className="text-xs sm:text-sm tracking-[0.2em] text-white uppercase font-sans font-medium"
-          >
-            DYSON HOMES
-          </span>
-          <span 
-            className="font-serif italic text-lg sm:text-xl font-normal text-[#D4AF37] leading-none"
-            style={{ fontFamily: 'Cormorant Garamond, serif' }}
-          >
-            CoPilot
-          </span>
-        </div>
       </div>
 
       {/* ── MAIN CANVAS (FLEX-COL TO LG:FLEX-ROW) ── */}
