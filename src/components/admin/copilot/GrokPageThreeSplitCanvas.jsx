@@ -247,18 +247,17 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         
         {/* Top Controls: Pinned to Far Right */}
         <div className="flex items-center gap-3 ml-auto">
-          {onBackToSearch && (
-            <button
-              type="button"
-              onClick={onBackToSearch}
-              className="text-xs text-stone-400 hover:text-white flex items-center gap-1 font-medium px-2.5 py-1 rounded-md bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer"
-            >
-              ← Search
-            </button>
-          )}
-
-          {/* Quick Right-Side View Switcher: Audit, Solutions & News (All grey font, active is white, no yellow) */}
+          {/* Quick Right-Side View Switcher: Search as #1, Audit, Solutions & News */}
           <div className="hidden sm:flex items-center bg-[#141414] p-0.5 rounded-md border border-white/10 ml-2 gap-0.5">
+            {onBackToSearch && (
+              <button
+                type="button"
+                onClick={onBackToSearch}
+                className="px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 text-stone-400 hover:text-white"
+              >
+                <span>← Search</span>
+              </button>
+            )}
             <button
               type="button"
               onClick={() => setRightPanelView('dossier')}
@@ -541,6 +540,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             onPromptClick={handlePillClick}
             onOpenCaptureModal={() => setIsCaptureModalOpen(true)}
             isSubscriber={isSubscriber}
+            onBackToSearch={onBackToSearch}
           />
         </div>
 

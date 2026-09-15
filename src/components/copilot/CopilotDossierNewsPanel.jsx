@@ -28,6 +28,7 @@ export default function CopilotDossierNewsPanel({
   onOpenCaptureModal,
   isSubscriber = false,
   topOffset = 480,
+  onBackToSearch,
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -88,6 +89,19 @@ export default function CopilotDossierNewsPanel({
     setIsMuted(videoRef.current.muted);
   };
 
+  const handleBackToSearch = () => {
+    if (onBackToSearch) {
+      onBackToSearch();
+    } else {
+      const el = document.getElementById('search-hero') || document.querySelector('[data-page="1"]');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.location.href = '/copilot/page-1';
+      }
+    }
+  };
+
   return (
     <div 
       className={`flex flex-col h-full bg-[#080808] text-white ${
@@ -98,89 +112,127 @@ export default function CopilotDossierNewsPanel({
       style={!isExploded && topOffset ? { paddingTop: `${topOffset}px` } : undefined}
     >
       
-      {/* ── TOP CONTROLS & DUAL TAB SELECTOR (Exploded Theater View Only) ── */}
-      {isExploded && (
-        <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/10">
-          
-          {/* View Switcher Tabs: 3 Pillars */}
-          <div className="flex flex-wrap items-center bg-[#141414] p-1 rounded-xl border border-white/10 gap-0.5">
-            <button
-              type="button"
-              onClick={() => onViewChange?.('dossier')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
-                activeView === 'dossier'
-                  ? 'bg-white/15 text-white font-medium shadow-sm'
-                  : 'text-stone-400 hover:text-white'
-              }`}
-            >
-              <Scale className="w-3.5 h-3.5" />
-              <span>Property Audit</span>
-            </button>
+      {/* ── TOP CONTROLS & VIEW SWITCHER: WITH '← Search' AS NUMBER ONE PILL ── */}
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/10">
+        
+        {/* View Switcher Tabs: 4 Pillars with Search as #1 */}
+        <div className="flex flex-wrap items-center bg-[#141414] p-1 rounded-xl border border-white/10 gap-0.5">
+          <button
+            type="button"
+            onClick={handleBackToSearch}
+            className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 text-stone-400 hover:text-white"
+          >
+            <span>← Search</span>
+          </button>
 
-            <button
-              type="button"
-              onClick={() => onViewChange?.('solutions')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
-                activeView === 'solutions'
-                  ? 'bg-white/15 text-white font-medium shadow-sm'
-                  : 'text-stone-400 hover:text-white'
-              }`}
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              <span>Solutions &amp; Vault</span>
-              <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-medium ${
-                activeView === 'solutions' ? 'bg-white/20 text-white' : 'bg-white/5 text-stone-400'
-              }`}>
-                LIBRARY
-              </span>
-            </button>
+          <button
+            type="button"
+            onClick={() => onViewChange?.('dossier')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+              activeView === 'dossier'
+                ? 'bg-white/15 text-white font-medium shadow-sm'
+                : 'text-stone-400 hover:text-white'
+            }`}
+          >
+            <Scale className="w-3.5 h-3.5" />
+            <span>Property Audit</span>
+          </button>
 
-            <button
-              type="button"
-              onClick={() => {
-                onViewChange?.('news');
-              }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
-                activeView === 'news'
-                  ? 'bg-white/15 text-white font-medium shadow-sm'
-                  : 'text-stone-400 hover:text-white'
-              }`}
-            >
-              <Radio className="w-3.5 h-3.5" />
-              <span>Daily News</span>
-              <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-medium ${
-                activeView === 'news' ? 'bg-white/20 text-white' : 'bg-white/5 text-stone-400'
-              }`}>
-                LIVE
-              </span>
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => onViewChange?.('solutions')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+              activeView === 'solutions'
+                ? 'bg-white/15 text-white font-medium shadow-sm'
+                : 'text-stone-400 hover:text-white'
+            }`}
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>Solutions &amp; Vault</span>
+            <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-medium ${
+              activeView === 'solutions' ? 'bg-white/20 text-white' : 'bg-white/5 text-stone-400'
+            }`}>
+              LIBRARY
+            </span>
+          </button>
 
-          {/* Action Controls: Explode to Full Page & Status */}
-          <div className="flex items-center gap-2">
-            {isSubscriber && (
-              <span className="text-[8.5px] px-2 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-mono font-bold flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                VIP SUBSCRIBER TIER
-              </span>
-            )}
-
-            {/* Universal Expand Working Content Action */}
-            <button
-              type="button"
-              onClick={() => {
-                onToggleExplode?.();
-              }}
-              className="px-2.5 py-1.5 rounded-xl border text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer shadow-sm bg-white/15 text-white border-white/25"
-              title="Collapse to Split Screen"
-            >
-              <Minimize2 className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Collapse View</span>
-              <span className="sm:hidden">Exit</span>
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => {
+              onViewChange?.('news');
+            }}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+              activeView === 'news'
+                ? 'bg-white/15 text-white font-medium shadow-sm'
+                : 'text-stone-400 hover:text-white'
+            }`}
+          >
+            <Radio className="w-3.5 h-3.5" />
+            <span>Daily News</span>
+            <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-medium ${
+              activeView === 'news' ? 'bg-white/20 text-white' : 'bg-white/5 text-stone-400'
+            }`}>
+              LIVE
+            </span>
+          </button>
         </div>
-      )}
+
+        {/* Action Controls: Explode to Full Page & Status */}
+        <div className="flex items-center gap-2">
+          {isSubscriber && (
+            <span className="text-[8.5px] px-2 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-mono font-bold flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              VIP SUBSCRIBER TIER
+            </span>
+          )}
+
+          {/* Universal Expand Working Content Action */}
+          <button
+            type="button"
+            onClick={() => {
+              onToggleExplode?.();
+            }}
+            className={`px-2.5 py-1.5 rounded-xl border text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer shadow-sm ${
+              isExploded
+                ? 'bg-white/15 text-white border-white/25 font-medium'
+                : 'bg-white/5 hover:bg-white/10 border-white/15 text-stone-400 hover:text-white'
+            }`}
+            title={isExploded ? "Collapse to Split Screen" : "Expand chat + dossier canvas to full viewport"}
+          >
+            {isExploded ? (
+              <>
+                <Minimize2 className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Collapse View</span>
+                <span className="sm:hidden">Exit</span>
+              </>
+            ) : (
+              <>
+                <Maximize2 className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Expand Working Content</span>
+                <span className="sm:hidden">Expand</span>
+              </>
+            )}
+          </button>
+
+          {/* Project Daily News Control */}
+          <button
+            type="button"
+            onClick={() => {
+              onViewChange?.('news');
+            }}
+            className={`px-2.5 py-1.5 rounded-xl border text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer shadow-sm ${
+              activeView === 'news'
+                ? 'bg-white/15 text-white border-white/25 font-medium'
+                : 'bg-white/5 hover:bg-white/10 border-white/15 text-stone-400 hover:text-white'
+            }`}
+            title="Project today's DNN Daily News show"
+          >
+            <Radio className="w-3 h-3" />
+            <span className="hidden sm:inline">Project Daily News</span>
+            <span className="sm:hidden">News</span>
+          </button>
+        </div>
+      </div>
 
       {/* ─────────────────────────────────────────────────────────────
           VIEW: REAL ESTATE SOLUTIONS & INTELLIGENCE VAULT

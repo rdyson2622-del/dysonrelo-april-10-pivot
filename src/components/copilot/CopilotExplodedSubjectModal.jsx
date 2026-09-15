@@ -127,8 +127,16 @@ export default function CopilotExplodedSubjectModal({
           </div>
         </div>
 
-        {/* Center: Quick Switcher Tabs (Audit, Solutions, Daily News - All grey, active white, no yellow) */}
+        {/* Center: Quick Switcher Tabs (Search as #1, Audit, Solutions, Daily News) */}
         <div className="hidden md:flex items-center bg-[#141414] p-1 rounded-xl border border-white/10 gap-1">
+          <button
+            type="button"
+            onClick={() => handleReturnToCommunication()}
+            className="px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 text-stone-400 hover:text-white"
+          >
+            <span>← Search</span>
+          </button>
+
           <button
             type="button"
             onClick={() => {
