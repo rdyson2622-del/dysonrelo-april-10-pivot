@@ -282,7 +282,7 @@ export default function CopilotDossierNewsPanel({
             }`}
           >
             <Radio className="w-3 h-3" />
-            <span>Daily News</span>
+            <span>Saved DNN News</span>
           </button>
 
           <button

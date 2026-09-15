@@ -183,7 +183,7 @@ export default function CopilotExplodedSubjectModal({
             }`}
           >
             <Radio className="w-3.5 h-3.5" />
-            <span>Daily News</span>
+            <span>Saved DNN News</span>
           </button>
 
           <button
