@@ -164,7 +164,7 @@ export default function CopilotDossierNewsPanel({
           </button>
         </div>
 
-        {/* Action Controls: Full screen & Project Daily News */}
+        {/* Action Controls: Full screen */}
         <div className="flex items-center gap-2">
           {isSubscriber && (
             <span className="text-[8.5px] px-2 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-mono font-bold flex items-center gap-1">
@@ -184,19 +184,6 @@ export default function CopilotDossierNewsPanel({
             title="Expand chat + dossier canvas to full viewport"
           >
             <span>Full screen</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onViewChange?.('news')}
-            className={`px-2.5 py-1 rounded-md border text-xs font-medium transition-all cursor-pointer ${
-              activeView === 'news'
-                ? 'bg-white/15 text-white border-white/20 font-medium'
-                : 'bg-white/5 hover:bg-white/10 border-white/15 text-stone-400 hover:text-white'
-            }`}
-            title="Project today's DNN Daily News show"
-          >
-            <span>Project Daily News</span>
           </button>
         </div>
       </div>
