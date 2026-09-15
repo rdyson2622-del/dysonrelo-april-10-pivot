@@ -175,12 +175,12 @@ export default function CopilotDossierNewsPanel({
       {/* ── TOP CONTROLS & VIEW SWITCHER: Search as #1, Audit, Solutions & News ── */}
       <div className="flex flex-wrap items-center justify-end gap-2 pb-2 border-b border-white/10 mt-4">
         
-        {/* Quick Right-Side View Switcher: Search as #1, Audit, Solutions & News */}
+        {/* Unified Button Group: Search, Audit, Solutions, Daily News & Full Screen */}
         <div className="flex items-center bg-[#141414] p-0.5 rounded-md border border-white/10 gap-0.5">
           <button
             type="button"
             onClick={handleBackToSearch}
-            className="px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 text-stone-400 hover:text-white"
+            className="px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 text-stone-400 hover:text-white hover:bg-white/10 active:bg-white active:text-black"
           >
             <span>← Search</span>
           </button>
@@ -190,8 +190,8 @@ export default function CopilotDossierNewsPanel({
             onClick={() => onViewChange?.('dossier')}
             className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ${
               activeView === 'dossier'
-                ? 'bg-white/15 text-white font-medium'
-                : 'text-stone-400 hover:text-white'
+                ? 'bg-white text-black font-semibold shadow-sm'
+                : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
           >
             <Scale className="w-3 h-3" />
@@ -203,8 +203,8 @@ export default function CopilotDossierNewsPanel({
             onClick={() => onViewChange?.('solutions')}
             className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ${
               activeView === 'solutions'
-                ? 'bg-white/15 text-white font-medium'
-                : 'text-stone-400 hover:text-white'
+                ? 'bg-white text-black font-semibold shadow-sm'
+                : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
           >
             <FileText className="w-3 h-3" />
@@ -216,31 +216,21 @@ export default function CopilotDossierNewsPanel({
             onClick={() => onViewChange?.('news')}
             className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ${
               activeView === 'news'
-                ? 'bg-white/15 text-white font-medium'
-                : 'text-stone-400 hover:text-white'
+                ? 'bg-white text-black font-semibold shadow-sm'
+                : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
           >
             <Radio className="w-3 h-3" />
             <span>Daily News</span>
           </button>
-        </div>
-
-        {/* Action Controls: Full screen */}
-        <div className="flex items-center gap-2">
-          {isSubscriber && (
-            <span className="text-[8.5px] px-2 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-mono font-bold flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              VIP SUBSCRIBER TIER
-            </span>
-          )}
 
           <button
             type="button"
             onClick={() => onToggleExplode?.()}
-            className={`px-2.5 py-1 rounded-md border text-xs font-medium transition-all cursor-pointer ${
+            className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ml-0.5 ${
               isExploded
-                ? 'bg-white/15 text-white border-white/20 font-medium'
-                : 'bg-white/5 hover:bg-white/10 border-white/15 text-stone-400 hover:text-white'
+                ? 'bg-white text-black font-semibold shadow-sm'
+                : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
             title="Expand chat + dossier canvas to full viewport"
           >

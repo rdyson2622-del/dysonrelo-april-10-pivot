@@ -326,11 +326,11 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
 
                   <button
                     type="submit"
-                    disabled={!inputText.trim()}
-                    className="px-3 py-1 rounded-md bg-black hover:brightness-125 disabled:opacity-40 text-white font-semibold text-xs flex items-center justify-center transition-all cursor-pointer"
+                    className="px-3.5 py-1 rounded-md hover:brightness-125 font-semibold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm"
+                    style={{ backgroundColor: '#000000', color: '#ffffff', opacity: inputText.trim() ? 1 : 0.7 }}
                     title="Send message"
                   >
-                    <span>Send</span>
+                    <span style={{ color: '#ffffff', fontWeight: 600 }}>Send</span>
                   </button>
                 </div>
               </div>
@@ -344,7 +344,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                   setRightPanelView('solutions');
                   handlePillClick("What solutions and playbooks do you offer for home buyers?");
                 }}
-                className="px-2.5 py-1 rounded-md text-[10px] bg-white/5 hover:bg-white/10 text-[#D4AF37] border border-white/15 hover:border-[#D4AF37] transition-colors cursor-pointer"
+                className="px-2.5 py-1 rounded-md text-[10px] bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-colors cursor-pointer"
               >
                 <span>Solutions Vault</span>
               </button>
