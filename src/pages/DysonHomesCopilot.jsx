@@ -803,17 +803,17 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                         className="w-full"
                       >
                         <div 
-                          className="flex items-center rounded-full px-3.5 py-1.5 transition-all border border-[#D4AF37] w-full relative overflow-hidden shadow-lg bg-white"
-                          style={{ backgroundColor: '#ffffff', color: '#000000' }}
+                          className="flex items-center rounded-full px-3.5 py-1.5 transition-all border border-[#D4AF37] w-full relative overflow-hidden shadow-lg bg-black"
+                          style={{ backgroundColor: '#000000', color: '#ffffff' }}
                         >
-                          <Paperclip className="w-4 h-4 text-black mr-2 shrink-0 cursor-pointer z-10" title="Attach file or pre-approval" />
+                          <Paperclip className="w-4 h-4 text-white hover:text-[#D4AF37] mr-2 shrink-0 cursor-pointer z-10 transition-colors" title="Attach file or pre-approval" />
                           
                           <div className="relative flex-1 min-w-0 flex items-center h-7 overflow-hidden">
                             {!inputText && !isInputFocused && (
-                              <div className="absolute inset-0 flex items-center overflow-hidden pointer-events-none select-none text-black/65 text-xs sm:text-sm whitespace-nowrap">
+                              <div className="absolute inset-0 flex items-center overflow-hidden pointer-events-none select-none text-white/70 text-xs sm:text-sm whitespace-nowrap">
                                 <div className="inline-flex animate-marquee whitespace-nowrap">
-                                  <span className="mr-12 font-normal">Ask anything real estate—compliance, Prop 19, escrow traps, comps...</span>
-                                  <span className="mr-12 font-normal">Ask anything real estate—compliance, Prop 19, escrow traps, comps...</span>
+                                  <span className="mr-12 font-normal text-white">Ask anything real estate—compliance, Prop 19, escrow traps, comps...</span>
+                                  <span className="mr-12 font-normal text-white">Ask anything real estate—compliance, Prop 19, escrow traps, comps...</span>
                                 </div>
                               </div>
                             )}
@@ -825,8 +825,8 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                               onBlur={() => setIsInputFocused(false)}
                               onChange={(e) => setInputText(e.target.value)}
                               placeholder=""
-                              className="w-full bg-transparent text-black text-xs sm:text-sm outline-none font-normal min-w-0 z-10"
-                              style={{ color: '#000000' }}
+                              className="w-full bg-transparent text-white text-xs sm:text-sm outline-none font-normal min-w-0 z-10 placeholder:text-white/60"
+                              style={{ color: '#ffffff' }}
                             />
                           </div>
 
@@ -837,7 +837,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                               className={`p-1.5 rounded-full transition-all cursor-pointer flex items-center gap-1 ${
                                 isTalkLiveActive 
                                   ? 'bg-red-600 text-white animate-pulse' 
-                                  : 'text-black hover:bg-black/10'
+                                  : 'text-white hover:bg-white/10'
                               }`}
                               title={isTalkLiveActive ? "End live Gemini duplex session" : "Talk Live with Charlie (Gemini Live Algieba)"}
                             >
@@ -852,8 +852,8 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                             <button
                               type="submit"
                               disabled={isSending}
-                              className="px-5 py-2 rounded-full font-bold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm bg-black text-white hover:bg-stone-900 border-none active:scale-95"
-                              style={{ backgroundColor: '#000000', color: '#ffffff', opacity: 1 }}
+                              className="px-5 py-2 rounded-full font-bold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm bg-[#141414] hover:bg-[#202020] text-white border border-[#D4AF37] active:scale-95"
+                              style={{ backgroundColor: '#141414', color: '#ffffff' }}
                               title="Send message to Charlie"
                             >
                               <span style={{ color: '#ffffff' }}>{isSending ? 'Sending...' : 'Send'}</span>

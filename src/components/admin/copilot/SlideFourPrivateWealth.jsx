@@ -138,21 +138,21 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
               }}
             >
               <div 
-                className="max-w-[560px] w-full flex items-center rounded-full border border-[#D4AF37] p-1.5 pl-4 transition-all relative overflow-hidden shadow-lg cursor-text bg-white"
-                style={{ backgroundColor: '#ffffff' }}
+                className="max-w-[560px] w-full flex items-center rounded-full border border-[#D4AF37] p-1.5 pl-4 transition-all relative overflow-hidden shadow-lg cursor-text bg-black"
+                style={{ backgroundColor: '#000000', color: '#ffffff' }}
                 onClick={() => inputRef.current?.focus()}
               >
                 <div className="relative flex-1 min-w-0 flex items-center h-8 sm:h-9 overflow-hidden">
                   {!address && !isFocused && (
                     <div 
                       className="absolute inset-0 flex items-center overflow-hidden pointer-events-none select-none text-xs sm:text-sm whitespace-nowrap"
-                      style={{ color: '#0a0a0a' }}
+                      style={{ color: '#ffffff' }}
                     >
                       <div className="inline-flex animate-marquee whitespace-nowrap">
-                        <span className="mr-14 font-normal" style={{ color: '#0a0a0a' }}>
+                        <span className="mr-14 font-normal" style={{ color: '#ffffff' }}>
                           {SCROLL_COPY}
                         </span>
-                        <span className="mr-14 font-normal" style={{ color: '#0a0a0a' }}>
+                        <span className="mr-14 font-normal" style={{ color: '#ffffff' }}>
                           {SCROLL_COPY}
                         </span>
                       </div>
@@ -176,15 +176,15 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
                       }
                     }}
                     placeholder={isFocused && !address ? "Paste address or MLS #..." : ""}
-                    className="w-full bg-transparent text-[#0a0a0a] text-xs sm:text-sm outline-none font-normal min-w-0 z-10"
-                    style={{ color: '#0a0a0a' }}
+                    className="w-full bg-transparent text-white text-xs sm:text-sm outline-none font-normal min-w-0 z-10 placeholder:text-white/60"
+                    style={{ color: '#ffffff' }}
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-6 py-2.5 rounded-full bg-[#0a0a0a] hover:bg-[#171717] text-[#D4AF37] hover:text-white font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all cursor-pointer shrink-0 border border-[#D4AF37]/50 ml-2 z-10"
+                  className="px-6 py-2.5 rounded-full bg-[#141414] hover:bg-[#202020] text-[#D4AF37] hover:text-white font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all cursor-pointer shrink-0 border border-[#D4AF37] ml-2 z-10"
                 >
                   <span>{isSubmitting ? 'Auditing...' : 'Send'}</span>
                   <span className="text-[#D4AF37]">→</span>
