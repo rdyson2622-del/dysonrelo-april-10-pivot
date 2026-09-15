@@ -344,7 +344,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                   setRightPanelView('solutions');
                   handlePillClick("What solutions and playbooks do you offer for home buyers?");
                 }}
-                className="px-2.5 py-1 rounded-md text-[10px] bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-colors cursor-pointer"
+                className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
               >
                 <span>Solutions Vault</span>
               </button>
@@ -354,7 +354,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                   setRightPanelView('solutions');
                   handlePillClick("Bob, how does Dyson & Dyson handle transaction discovery and lender compliance?");
                 }}
-                className="px-2.5 py-1 rounded-md text-[10px] bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-colors cursor-pointer"
+                className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
               >
                 <span>Lender Compliance</span>
               </button>
@@ -364,7 +364,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                   setRightPanelView('solutions');
                   handlePillClick("Bob, what are the biggest escrow traps and how do we protect our earnest money deposit?");
                 }}
-                className="px-2.5 py-1 rounded-md text-[10px] bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-colors cursor-pointer"
+                className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
               >
                 <span>Ask Bob: Escrow Traps</span>
               </button>
@@ -374,7 +374,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                   setRightPanelView('solutions');
                   handlePillClick("How does Prop 19 tax base portability work when relocating in California?");
                 }}
-                className="px-2.5 py-1 rounded-md text-[10px] bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-colors cursor-pointer"
+                className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
               >
                 <span>Prop 19 Tax</span>
               </button>
@@ -384,7 +384,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                   setRightPanelView('solutions');
                   handlePillClick("What are the coastal bluff setback and soil stability risks in California?");
                 }}
-                className="px-2.5 py-1 rounded-md text-[10px] bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-colors cursor-pointer"
+                className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
               >
                 <span>Bluff Setbacks</span>
               </button>
@@ -394,7 +394,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                   setRightPanelView('news');
                   handlePillClick("Charlie, summarize this broadcast in bullet points");
                 }}
-                className="px-2.5 py-1 rounded-md text-[10px] bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-colors cursor-pointer"
+                className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer"
               >
                 <span>Daily News</span>
               </button>
