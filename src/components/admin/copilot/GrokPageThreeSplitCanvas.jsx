@@ -231,14 +231,14 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
           <div className="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[560px]">
 
             {/* ── HEADER: COPILOT + COMMAND CENTER ── */}
-            <div className="flex items-baseline gap-2.5 pb-1 px-0.5">
+            <div className="flex items-baseline justify-center gap-2.5 pb-1 px-0.5">
               <span 
-                className="font-serif italic font-medium text-[#D4AF37] text-2xl sm:text-[26px] leading-none select-none"
+                className="font-serif italic font-medium text-[#D4AF37] text-[48px] sm:text-[52px] leading-none select-none"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
                 CoPilot
               </span>
-              <span className="text-white text-sm sm:text-base font-normal tracking-wide whitespace-nowrap">
+              <span className="text-white text-[28px] sm:text-[32px] font-normal tracking-wide whitespace-nowrap">
                 Command Center
               </span>
             </div>
