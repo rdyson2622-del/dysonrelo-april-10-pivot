@@ -148,12 +148,12 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
           </div>
 
           {/* Step 1: MLS browse + pills */}
-          <div className="space-y-3.5">
-            <div className="flex items-center gap-3">
+          <div className="space-y-3.5 text-center">
+            <div className="flex items-center justify-center gap-3 text-center">
               <div className="w-6 h-6 rounded-full border border-[#D4AF37] flex items-center justify-center text-xs font-sans font-normal text-[#D4AF37] shrink-0">
                 1
               </div>
-              <h3 className="text-xs sm:text-sm font-normal text-white font-sans">
+              <h3 className="text-xs sm:text-sm font-normal text-white font-sans text-center">
                 First of all browse your preferred MLS and copy the MLS# or address:
               </h3>
             </div>
