@@ -502,8 +502,8 @@ Respond as Charlie Simmons directly to the user in 2 to 3 concise, authoritative
                         className="w-full"
                       >
                         <div 
-                          className="flex items-center rounded-full px-3.5 py-1.5 transition-all border border-[#D4AF37] w-full relative overflow-hidden shadow-lg"
-                          style={{ backgroundColor: '#ede0cc', color: '#000000' }}
+                          className="flex items-center rounded-full px-3.5 py-1.5 transition-all border border-[#D4AF37] w-full relative overflow-hidden shadow-lg bg-white"
+                          style={{ backgroundColor: '#ffffff', color: '#000000' }}
                         >
                           <Paperclip className="w-4 h-4 text-black mr-2 shrink-0 cursor-pointer z-10" title="Attach file or pre-approval" />
                           

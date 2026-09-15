@@ -79,8 +79,8 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
               }}
             >
               <div 
-                className="max-w-[560px] w-full flex items-center rounded-full border border-[#D4AF37] p-1.5 pl-4 transition-all relative overflow-hidden shadow-lg cursor-text"
-                style={{ backgroundColor: '#ede0cc' }}
+                className="max-w-[560px] w-full flex items-center rounded-full border border-[#D4AF37] p-1.5 pl-4 transition-all relative overflow-hidden shadow-lg cursor-text bg-white"
+                style={{ backgroundColor: '#ffffff' }}
                 onClick={() => inputRef.current?.focus()}
               >
                 <div className="relative flex-1 min-w-0 flex items-center h-8 sm:h-9 overflow-hidden">
@@ -115,7 +115,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
 
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-full bg-[#0a0a0a] hover:bg-[#171717] text-[#D4AF37] hover:text-[#ede0cc] font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all cursor-pointer shrink-0 border border-[#D4AF37]/50 ml-2 z-10"
+                  className="px-6 py-2.5 rounded-full bg-[#0a0a0a] hover:bg-[#171717] text-[#D4AF37] hover:text-white font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all cursor-pointer shrink-0 border border-[#D4AF37]/50 ml-2 z-10"
                 >
                   <span>Send</span>
                   <span className="text-[#D4AF37]">→</span>
