@@ -74,17 +74,21 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
                 handleSend(address);
               }}
             >
-              <div className="max-w-[560px] w-full flex items-center bg-[#F3F0E6] rounded-full border border-[#D4AF37] p-1.5 pl-4 transition-all">
+              <div 
+                className="max-w-[560px] w-full flex items-center rounded-full border border-[#D4AF37] p-1.5 pl-4 transition-all"
+                style={{ backgroundColor: '#ede0cc' }}
+              >
                 <input
                   type="text"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="742 Vista Del Mar, La Jolla, CA 92037"
                   className="flex-1 bg-transparent text-[#0a0a0a] text-xs sm:text-sm outline-none placeholder:text-[#171717]/60 font-normal min-w-0"
+                  style={{ color: '#0a0a0a' }}
                 />
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-full bg-[#0a0a0a] hover:bg-[#171717] text-[#D4AF37] hover:text-[#F3F0E6] font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all cursor-pointer shrink-0 border border-[#D4AF37]/50"
+                  className="px-6 py-2.5 rounded-full bg-[#0a0a0a] hover:bg-[#171717] text-[#D4AF37] hover:text-[#ede0cc] font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all cursor-pointer shrink-0 border border-[#D4AF37]/50"
                 >
                   <span>Send</span>
                   <span className="text-[#D4AF37]">→</span>
