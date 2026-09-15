@@ -1,6 +1,5 @@
 import React from 'react';
 import { Eye, Lock } from 'lucide-react';
-import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import { ADMIN_DEPT_MINI_APPS } from '@/components/admin/AdminMiniAppsGrid';
 
 /**
@@ -12,23 +11,8 @@ import { ADMIN_DEPT_MINI_APPS } from '@/components/admin/AdminMiniAppsGrid';
 export default function CopilotMiniAppsRail({ className = '', onSelectApp }) {
   return (
     <aside className={`w-full bg-[#0c0c0c] border-t border-white/10 p-3 sm:p-4 select-none relative z-30 ${className}`}>
-      {/* Top Header: Brand + Active Desks counter */}
-      <div className="flex items-center justify-between pb-2 border-b border-white/10 text-xs mb-2">
-        <div className="flex items-center gap-3">
-          <DysonVerticalBadge height={24} />
-          <div className="flex items-baseline gap-2">
-            <h2 
-              className="text-xs sm:text-sm font-serif font-normal text-white tracking-wider leading-none" 
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
-            >
-              DYSON &amp; DYSON
-            </h2>
-            <span className="text-[8px] uppercase tracking-widest text-[#D4AF37] font-mono font-semibold">
-              AI MINIONS ENGINE · {ADMIN_DEPT_MINI_APPS.length} MINI APPS
-            </span>
-          </div>
-        </div>
-
+      {/* Top Header: Active Desks counter */}
+      <div className="flex items-center justify-end pb-2 border-b border-white/10 text-xs mb-2">
         <div className="flex items-center gap-2">
           <div className="px-2 py-0.5 rounded bg-white/5 border border-white/10 flex items-center gap-1.5 text-[9px] text-stone-300">
             <Eye className="w-3 h-3 text-[#D4AF37] shrink-0" />
