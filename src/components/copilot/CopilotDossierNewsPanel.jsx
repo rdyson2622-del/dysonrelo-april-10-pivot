@@ -2,7 +2,8 @@ import React, { useState, useRef } from 'react';
 import { 
   Scale, ShieldAlert, Shield, DollarSign, Waves, Clock, Radio, 
   Maximize2, Minimize2, Newspaper, Sparkles, Play, Pause,
-  Share2, Volume2, VolumeX, ChevronRight, MessageSquare, BookOpen, FileText
+  Share2, Volume2, VolumeX, ChevronRight, MessageSquare, BookOpen, FileText,
+  ArrowLeft, X
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -104,17 +105,72 @@ export default function CopilotDossierNewsPanel({
 
   return (
     <div 
-      className={`flex flex-col h-full bg-[#080808] text-white ${
+      className={`flex flex-col h-full bg-[#080808] text-white scrollbar-thin ${
         isExploded 
           ? 'fixed inset-0 z-50 p-4 sm:p-6 overflow-y-auto bg-black/95 backdrop-blur-xl' 
           : 'p-3 sm:p-4 pb-6 space-y-4 overflow-y-auto'
       }`}
     >
+      {/* ── FULL SCREEN FLOATING RETURN TO DIALOGUE BAR ── */}
+      {isExploded && (
+        <div className="sticky top-0 z-50 -mx-4 -mt-4 sm:-mx-6 sm:-mt-6 px-4 py-2.5 bg-[#0a0a0a]/95 border-b border-[#D4AF37]/40 backdrop-blur-xl flex items-center justify-between gap-3 shadow-2xl mb-2">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleBackToSearch}
+              className="px-2.5 py-1 rounded-md text-xs font-medium bg-[#1c1c1c] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1 shadow-sm"
+              title="Back to Landing & Search"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 text-[#D4AF37]" />
+              <span>Back to Search</span>
+            </button>
+            <span className="text-stone-600 hidden sm:inline">|</span>
+            <span className="text-xs font-mono font-bold tracking-widest text-[#D4AF37] uppercase hidden sm:inline">
+              FULL SCREEN THEATER
+            </span>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => onToggleExplode?.()}
+            className="px-3.5 py-1.5 rounded-xl bg-white text-black hover:bg-stone-200 font-bold text-xs flex items-center gap-1.5 shadow-lg transition-all cursor-pointer active:scale-95 border border-white/20"
+            title="Return from full screen to page size"
+          >
+            <X className="w-4 h-4 stroke-[2.5]" />
+            <span>Return to Dialogue</span>
+          </button>
+        </div>
+      )}
+
       {/* ── HEADER: aligns video top edge with the Bob/Charlie/You roster row on the left ── */}
-      <div className="h-[62px] sm:h-[70px] shrink-0 flex items-center justify-center">
+      <div className="h-[62px] sm:h-[70px] shrink-0 flex items-center justify-between px-1">
+        <button
+          type="button"
+          onClick={handleBackToSearch}
+          className="px-2.5 py-1 rounded-md text-xs font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1 shadow-sm"
+          title="Back to Landing & Search"
+        >
+          <ArrowLeft className="w-3.5 h-3.5 text-[#D4AF37]" />
+          <span>Back</span>
+        </button>
+
         <span className="text-white text-[28px] sm:text-[32px] font-normal tracking-wide whitespace-nowrap">
           Intelligence
         </span>
+
+        {isExploded ? (
+          <button
+            type="button"
+            onClick={() => onToggleExplode?.()}
+            className="px-3 py-1 rounded-lg bg-white text-black hover:bg-stone-200 font-bold text-xs flex items-center gap-1.5 shadow-md cursor-pointer transition-all"
+            title="Return from full screen to page size"
+          >
+            <X className="w-3.5 h-3.5 stroke-[2.5]" />
+            <span>Return</span>
+          </button>
+        ) : (
+          <div className="w-14" />
+        )}
       </div>
 
       {/* ── NEWS BROADCAST PLACEHOLDER ABOVE ALL TEXT (SEARCH / AUDIT / CONTROLS) ── */}
@@ -232,9 +288,19 @@ export default function CopilotDossierNewsPanel({
                 ? 'bg-white text-black font-semibold shadow-sm'
                 : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
-            title="Expand chat + dossier canvas to full viewport"
+            title={isExploded ? "Return from full screen to page size" : "Expand chat + dossier canvas to full viewport"}
           >
-            <span>Full screen</span>
+            {isExploded ? (
+              <>
+                <X className="w-3 h-3 text-black stroke-[2.5]" />
+                <span>Return to Dialogue</span>
+              </>
+            ) : (
+              <>
+                <Maximize2 className="w-3 h-3" />
+                <span>Full screen</span>
+              </>
+            )}
           </button>
         </div>
       </div>

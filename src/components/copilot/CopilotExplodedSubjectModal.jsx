@@ -11,6 +11,7 @@ import { SOLUTIONS_LIBRARY } from './CopilotSolutionsVault';
 const GOLD = '#D4AF37';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
 const STUDIO_POSTER_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/d5e0cb3f1_Screenshot2026-09-14at81551PM.png';
+const DEFAULT_SHOW_URL = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/75165cedb_san-diego-housing-inventory-remains-constrained-amid-sustained-price-resilience.mp4';
 
 /**
  * CopilotExplodedSubjectModal
@@ -304,8 +305,8 @@ export default function CopilotExplodedSubjectModal({
               {/* Video Tag */}
               <video
                 ref={videoRef}
-                key={videoUrl}
-                src={videoUrl}
+                key={videoUrl || DEFAULT_SHOW_URL}
+                src={videoUrl || DEFAULT_SHOW_URL}
                 poster={STUDIO_POSTER_URL}
                 controls
                 autoPlay

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Paperclip, Send, Scale, ShieldAlert, FileText, 
-  Waves, Clock, Radio, Mic, Briefcase, Shield, Sparkles
+  Waves, Clock, Radio, Mic, Briefcase, Shield, Sparkles, ArrowLeft
 } from 'lucide-react';
 import CopilotDynamicSpeakerBox from '@/components/copilot/CopilotDynamicSpeakerBox';
 import CopilotConsumerSpeakerBox from '@/components/copilot/CopilotConsumerSpeakerBox';
@@ -198,16 +198,31 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
       style={{ background: '#080808', color: '#f5f5f5' }}
     >
       {/* ── MAIN CANVAS (FLEX-COL TO LG:FLEX-ROW) ── */}
-      <div ref={canvasRef} className="flex flex-col lg:flex-row min-h-[640px]">
+      <div ref={canvasRef} className="flex flex-col lg:flex-row h-auto lg:h-[720px] xl:h-[750px] overflow-hidden">
         
         {/* ── CENTER-LEFT COLUMN: ROSTER (VISUAL/READ-ONLY, CHARLIE ONLY LIVE TALK) + GROK-PLAIN CHAT ── */}
-        <div className="w-full lg:w-[480px] xl:w-[520px] p-3 sm:p-4 flex flex-col justify-between bg-[#0b0b0b] border-b lg:border-b-0 lg:border-r border-white/10 relative shrink-0">
+        <div className="w-full lg:w-[480px] xl:w-[520px] p-3 sm:p-4 flex flex-col bg-[#0b0b0b] border-b lg:border-b-0 lg:border-r border-white/10 relative shrink-0 h-full overflow-hidden">
           
           {/* Scrollable Conversation Container */}
-          <div className="flex-1 overflow-y-auto space-y-3 pr-1 min-h-[420px] max-h-[580px]">
+          <div className="flex-1 min-h-0 overflow-y-auto space-y-3 pr-2 scrollbar-thin">
 
             {/* ── HEADER: COPILOT + COMMAND CENTER ── */}
-            <div className="flex items-baseline justify-center gap-2.5 pb-1 px-0.5">
+            <div className="relative flex items-baseline justify-center gap-2.5 pb-1 px-0.5">
+              {onBackToSearch && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    resetToBlank();
+                    onBackToSearch?.();
+                  }}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-md text-xs font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1 shadow-sm"
+                  title="Back to Landing & Search"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5 text-[#D4AF37]" />
+                  <span>Back</span>
+                </button>
+              )}
+
               <span 
                 className="font-serif italic font-medium text-[#D4AF37] text-[48px] sm:text-[52px] leading-none select-none"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
@@ -317,7 +332,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         </div>
 
         {/* ── RIGHT COLUMN: PROPERTY AUDIT, SOLUTIONS VAULT & DAILY NEWS ── */}
-        <div className="flex-1 min-w-0 bg-[#080808]">
+        <div className="flex-1 min-w-0 bg-[#080808] h-full overflow-hidden flex flex-col">
           <CopilotDossierNewsPanel
             property={property}
             dossierData={dossierData}
