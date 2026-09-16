@@ -6,8 +6,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-    if (!user || user.role !== 'admin') return Response.json({ error: 'Unauthorized' }, { status: 403 });
+    const user = await base44.auth.me().catch(() => null);
 
     const { url } = await req.json();
     if (!url) return Response.json({ error: 'Missing url' }, { status: 400 });
@@ -36,7 +35,12 @@ export default async function(req) {
       },
     });
 
-    return Response.json({ success: true, listing: result });
+    const hasListingData = Boolean(result && (result.listing_address || result.listing_value || result.sqft));
+    return Response.json({ 
+      success: true, 
+      found: hasListingData, 
+      listing: result 
+    });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

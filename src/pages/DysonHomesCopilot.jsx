@@ -272,6 +272,19 @@ export default function DysonHomesCopilot({ initialPage }) {
     const clean = (textToSend || inputText).trim();
     if (!clean || isSending) return;
 
+    // Route address queries, MLS numbers, or listing URLs directly to handleAuditAddress
+    const isAddressOrMlsOrUrl = (
+      /^\d+[\w-]*\s+/.test(clean) || 
+      /^mls\s*#?\s*[a-z0-9]+/i.test(clean) ||
+      /^(https?:\/\/|www\.|\w+\.(com|org|net))/i.test(clean) ||
+      /^audit:\s*/i.test(clean)
+    );
+    if (isAddressOrMlsOrUrl) {
+      setInputText('');
+      handleAuditAddress(clean.replace(/^audit:\s*/i, ''));
+      return;
+    }
+
     const userMsg = {
       id: Date.now(),
       sender: 'user',
@@ -509,6 +522,12 @@ DIRECTIVE FOR CHARLIE SIMMONS:
       pathname === '/copilot-chat'
     ) {
       scrollToSection(page2Ref, 2);
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const auditAddr = params.get('address') || params.get('audit') || params.get('property');
+    if (auditAddr) {
+      handleAuditAddress(auditAddr);
     }
   }, [initialPage, location.pathname]);
 
@@ -918,6 +937,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                       setIsPageExploded(true);
                     }}
                     onPromptClick={(query) => executeSendMessage(query)}
+                    onAuditAddress={(addr) => handleAuditAddress(addr)}
                     onOpenCaptureModal={() => setIsCaptureModalOpen(true)}
                     isSubscriber={isSubscriber}
                     onBackToSearch={() => {

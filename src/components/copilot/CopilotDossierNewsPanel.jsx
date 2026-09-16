@@ -26,6 +26,7 @@ export default function CopilotDossierNewsPanel({
   onToggleExplode,
   onExplodeItem,
   onPromptClick,
+  onAuditAddress,
   onOpenCaptureModal,
   isSubscriber = false,
   topOffset = 480,
@@ -399,7 +400,13 @@ export default function CopilotDossierNewsPanel({
                   <button
                     key={oIdx}
                     type="button"
-                    onClick={() => onPromptClick?.(opt.fullAddress)}
+                    onClick={() => {
+                      if (onAuditAddress) {
+                        onAuditAddress(opt.fullAddress);
+                      } else {
+                        onPromptClick?.(opt.fullAddress);
+                      }
+                    }}
                     className="p-2.5 rounded-lg bg-[#1c1c1c] hover:bg-[#282828] border border-white/15 hover:border-[#D4AF37] text-left transition-all cursor-pointer group"
                   >
                     <div className="text-xs font-bold text-white group-hover:text-[#D4AF37] font-mono">

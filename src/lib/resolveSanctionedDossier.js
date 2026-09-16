@@ -183,7 +183,7 @@ export async function resolveSanctionedDossier(rawInput) {
     try {
       const res = await base44.functions.invoke('mlsListingLookup', { url: input });
       const listing = res?.data?.listing;
-      if (res?.data?.success && res?.data?.found && listing) {
+      if (res?.data?.success && (res?.data?.found || listing?.listing_address || listing?.listing_value) && listing) {
         const addr = listing.listing_address || input;
         const short = addr.split(',')[0] || addr;
         const val = Number(listing.listing_value);
