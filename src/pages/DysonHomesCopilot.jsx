@@ -94,6 +94,8 @@ export default function DysonHomesCopilot({ initialPage }) {
   const liveClientRef = useRef(null);
   const kbRowsRef = useRef([]);
   const hasSeededKbRef = useRef(false);
+  const lastAuditedAddressRef = useRef(null);
+  const isAuditingRef = useRef(false);
 
   // Real dossier state initialized to 742 Vista Del Mar verified baseline
   const [dossierData, setDossierData] = useState(() => {
@@ -430,8 +432,23 @@ DIRECTIVE FOR CHARLIE SIMMONS:
   };
 
   const handleAuditAddress = async (addr) => {
-    if (!addr) return;
-    const cleanAddr = (typeof extractAddressOrMls === 'function' ? extractAddressOrMls(addr) : addr) || '742 Vista Del Mar, La Jolla, CA 92037';
+    if (!addr || typeof addr !== 'string' || !addr.trim()) return;
+    const rawTrimmed = addr.trim();
+
+    // Guard: Prevent duplicate overlapping audit requests
+    if (isAuditingRef.current && lastAuditedAddressRef.current === rawTrimmed) {
+      return;
+    }
+    isAuditingRef.current = true;
+    lastAuditedAddressRef.current = rawTrimmed;
+
+    const isListingUrl = /^(https?:\/\/|www\.|\w+\.(com|org|net))/i.test(rawTrimmed) || 
+                         /zillow\.com|redfin\.com|realtor\.com|homes\.com/i.test(rawTrimmed);
+
+    const cleanAddr = isListingUrl
+      ? rawTrimmed
+      : ((typeof extractAddressOrMls === 'function' ? extractAddressOrMls(rawTrimmed) : rawTrimmed) || rawTrimmed);
+
     setAnalyzedProperty(cleanAddr);
     setRightPanelView('dossier');
     addDiscussionChip(`Audit: ${cleanAddr.split(',')[0]}`);
@@ -448,58 +465,62 @@ DIRECTIVE FOR CHARLIE SIMMONS:
     // Reliably scroll and bring Command Center & Dossier into view
     scrollToSection(page2Ref, 2, '/dossier');
 
-    // Query sanctioned backend functions (mlsListingLookup / searchListingsForSkipTrace)
-    const resolved = await resolveSanctionedDossier(cleanAddr);
-    setDossierData(resolved);
+    try {
+      // Query sanctioned backend functions (mlsListingLookup / searchListingsForSkipTrace)
+      const resolved = await resolveSanctionedDossier(cleanAddr);
+      setDossierData(resolved);
 
-    const hasComps = resolved.comps && resolved.comps.length > 0;
-    const isMlsEmpty = resolved.isMlsEmpty || (resolved.inputType === 'mls' && resolved.comps?.length === 0);
+      const hasComps = resolved.comps && resolved.comps.length > 0;
+      const isMlsEmpty = resolved.isMlsEmpty || (resolved.inputType === 'mls' && resolved.comps?.length === 0);
 
-    let charlieText = '';
-    let bobMsgText = '';
+      let charlieText = '';
+      let bobMsgText = '';
 
-    if (resolved.isAmbiguous) {
-      charlieText = `Charlie here. Multiple properties found on ${resolved.shortAddress}. Which property would you like to audit? Select an address below or in your dossier to proceed:`;
-      bobMsgText = `Bob Dyson here. When an entire street is searched without a house number, we verify each parcel individually. Please select your specific address.`;
-    } else if (resolved.isVerified) {
-      const bldg = resolved.building || {};
-      const listInfo = resolved.listing || {};
-      const valInfo = resolved.valuation || {};
-      const statusStr = [listInfo.status || 'Active', listInfo.propertyType || ''].filter(Boolean).join(' ');
-      const valStr = valInfo.estimatedValue ? `$${Number(valInfo.estimatedValue).toLocaleString()}` : (resolved.listPrice || '');
-      const areaStr = bldg.livingArea ? `${Number(bldg.livingArea).toLocaleString()} sf` : '';
-      const yearStr = bldg.yearBuilt ? `built in ${bldg.yearBuilt}` : '';
-      const apnStr = resolved.ids?.apn ? `APN ${resolved.ids.apn}` : '';
-      const details = [statusStr, areaStr, yearStr, apnStr].filter(Boolean).join(' • ');
+      if (resolved.isAmbiguous) {
+        charlieText = `Charlie here. Multiple properties found on ${resolved.shortAddress}. Which property would you like to audit? Select an address below or in your dossier to proceed:`;
+        bobMsgText = `Bob Dyson here. When an entire street is searched without a house number, we verify each parcel individually. Please select your specific address.`;
+      } else if (resolved.isVerified) {
+        const bldg = resolved.building || {};
+        const listInfo = resolved.listing || {};
+        const valInfo = resolved.valuation || {};
+        const statusStr = [listInfo.status || 'Active', listInfo.propertyType || ''].filter(Boolean).join(' ');
+        const valStr = valInfo.estimatedValue ? `$${Number(valInfo.estimatedValue).toLocaleString()}` : (resolved.listPrice || '');
+        const areaStr = bldg.livingArea ? `${Number(bldg.livingArea).toLocaleString()} sf` : '';
+        const yearStr = bldg.yearBuilt ? `built in ${bldg.yearBuilt}` : '';
+        const apnStr = resolved.ids?.apn ? `APN ${resolved.ids.apn}` : '';
+        const details = [statusStr, areaStr, yearStr, apnStr].filter(Boolean).join(' • ');
 
-      charlieText = `Charlie here. Verified property records for ${resolved.fullAddress || resolved.shortAddress} have been loaded into your dossier: ${details}${valStr ? ` (estimated value ~${valStr})` : ''}. ${resolved.compsSummary}`;
-      bobMsgText = `Bob Dyson here. Property attributes and valuation for ${resolved.shortAddress} are confirmed from public records. We verify physical disclosures, permit histories, and title contingencies before advising on any purchase agreement.`;
-    } else if (isMlsEmpty) {
-      charlieText = `Charlie here. No listing records found for this MLS#. Try the full street address or paste the listing URL for a more reliable lookup.`;
-      bobMsgText = `Bob Dyson here. When an MLS number doesn't match an active record, we recommend pasting the full street address or listing URL so we can pull the verified property details directly.`;
-    } else {
-      charlieText = `Charlie here. Our sanctioned property search could not resolve verified records for ${resolved.shortAddress}. We recommend individual discovery directly with the listing desk.`;
-      bobMsgText = `Bob Dyson here. When public or API records cannot be verified, our fiduciary rule is never to guess. We verify title, listing status, and seller disclosures directly before advising on any offer.`;
+        charlieText = `Charlie here. Verified property records for ${resolved.fullAddress || resolved.shortAddress} have been loaded into your dossier: ${details}${valStr ? ` (estimated value ~${valStr})` : ''}. ${resolved.compsSummary}`;
+        bobMsgText = `Bob Dyson here. Property attributes and valuation for ${resolved.shortAddress} are confirmed from public records. We verify physical disclosures, permit histories, and title contingencies before advising on any purchase agreement.`;
+      } else if (isMlsEmpty) {
+        charlieText = `Charlie here. No listing records found for this MLS#. Try the full street address or paste the listing URL for a more reliable lookup.`;
+        bobMsgText = `Bob Dyson here. When an MLS number doesn't match an active record, we recommend pasting the full street address or listing URL so we can pull the verified property details directly.`;
+      } else {
+        charlieText = `Charlie here. Our sanctioned property search could not resolve verified records for ${resolved.shortAddress}. We recommend individual discovery directly with the listing desk.`;
+        bobMsgText = `Bob Dyson here. When public or API records cannot be verified, our fiduciary rule is never to guess. We verify title, listing status, and seller disclosures directly before advising on any offer.`;
+      }
+
+      const charlieMsg = {
+        id: Date.now() + 1,
+        sender: 'charlie',
+        speakerName: 'Charlie Simmons',
+        text: charlieText,
+        options: resolved.ambiguousOptions || null,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      const bobMsg = {
+        id: Date.now() + 2,
+        sender: 'bob',
+        speakerName: 'Bob Dyson',
+        text: bobMsgText,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      setMessages(prev => [...prev, charlieMsg, bobMsg]);
+    } finally {
+      isAuditingRef.current = false;
     }
-
-    const charlieMsg = {
-      id: Date.now() + 1,
-      sender: 'charlie',
-      speakerName: 'Charlie Simmons',
-      text: charlieText,
-      options: resolved.ambiguousOptions || null,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-
-    const bobMsg = {
-      id: Date.now() + 2,
-      sender: 'bob',
-      speakerName: 'Bob Dyson',
-      text: bobMsgText,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-
-    setMessages(prev => [...prev, charlieMsg, bobMsg]);
   };
 
   useEffect(() => {
@@ -526,8 +547,8 @@ DIRECTIVE FOR CHARLIE SIMMONS:
 
     const params = new URLSearchParams(window.location.search);
     const auditAddr = params.get('address') || params.get('audit') || params.get('property');
-    if (auditAddr) {
-      handleAuditAddress(auditAddr);
+    if (auditAddr && auditAddr.trim() && lastAuditedAddressRef.current !== auditAddr.trim()) {
+      handleAuditAddress(auditAddr.trim());
     }
   }, [initialPage, location.pathname]);
 

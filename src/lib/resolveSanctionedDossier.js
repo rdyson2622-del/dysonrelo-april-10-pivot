@@ -296,14 +296,20 @@ export async function resolveSanctionedDossier(rawInput) {
   const hasLeadingHouseNumber = /^\d+[\w-]*\s+/.test(streetPart.trim());
 
   try {
-    const res = await base44.functions.invoke('searchListingsForSkipTrace', {
-      street: streetPart || undefined,
-      city: cityPart || undefined,
-      state: statePart || undefined,
-      zip: zipPart || undefined,
-      query: !hasLeadingHouseNumber ? input : undefined,
-      max_results: !hasLeadingHouseNumber ? 10 : 5
-    });
+    const payload = hasLeadingHouseNumber
+      ? {
+          street: streetPart.trim(),
+          city: cityPart ? cityPart.trim() : undefined,
+          state: statePart ? statePart.trim() : undefined,
+          zip: zipPart ? zipPart.trim() : undefined,
+          max_results: 5
+        }
+      : {
+          query: input.trim(),
+          max_results: 10
+        };
+
+    const res = await base44.functions.invoke('searchListingsForSkipTrace', payload);
 
     const data = res?.data;
     // Normalize everywhere: results is DICT { meta, properties: [...] } or data.properties

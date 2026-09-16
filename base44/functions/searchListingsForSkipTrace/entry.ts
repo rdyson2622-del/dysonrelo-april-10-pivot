@@ -112,7 +112,18 @@ Deno.serve(async (req) => {
     // A street is only suitable for lookup/all-attributes if it begins with a street/house number
     const hasStreetNumber = /^\d+[\w-]*\s+/.test(rawStreet);
     const hasParsedAddress = Boolean(rawStreet && hasStreetNumber);
-    const searchTarget = mls_number || query || address || rawStreet || `${city || ''} ${state || ''}`.trim();
+    const searchTarget = String(mls_number || query || address || rawStreet || `${city || ''} ${state || ''}`.trim()).trim();
+
+    // Guard: never send empty requests to BatchData
+    if (!hasParsedAddress && !searchTarget) {
+      return Response.json({
+        success: true,
+        provider: "BatchData",
+        count: 0,
+        properties: [],
+        listings: []
+      });
+    }
 
     let targetUrl = '';
     let requestBody = null;
@@ -170,8 +181,8 @@ Deno.serve(async (req) => {
       ? rawResults
       : (rawResults?.properties || data?.properties || data?.data || []);
 
-    // Fallback: if lookup/all-attributes returned 0 matches, retry via property/search with searchTarget
-    if (hasParsedAddress && rawItems.length === 0 && searchTarget) {
+    // Fallback: if lookup/all-attributes returned 0 matches or was not ok, retry via property/search with searchTarget
+    if ((!response.ok || rawItems.length === 0) && searchTarget) {
       const fallbackUrl = "https://api.batchdata.com/api/v1/property/search";
       const fallbackBody = {
         searchCriteria: {
