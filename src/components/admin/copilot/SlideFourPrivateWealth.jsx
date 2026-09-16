@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { ShieldCheck, Plus } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
+import CopilotLegalDisclosuresModal from '@/components/copilot/CopilotLegalDisclosuresModal';
 
 // Authentic evening luxury estate villa (hero-evening-luxury-clean.png)
 const HERO_EVENING = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/efdc69af3_hero-evening-luxury-clean.png";
@@ -72,6 +73,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
   const [address, setAddress] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLegalModalOpen, setIsLegalModalOpen] = useState(false);
   const inputRef = useRef(null);
 
   const handleSend = (targetAddr) => {
@@ -365,8 +367,24 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
 
           </div>
 
+          {/* Quiet Footer Link */}
+          <div className="pt-8 border-t border-white/10 flex justify-center items-center">
+            <button
+              type="button"
+              onClick={() => setIsLegalModalOpen(true)}
+              className="text-stone-400 hover:text-white text-xs font-normal transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 font-sans cursor-pointer"
+            >
+              Legal &amp; disclosures
+            </button>
+          </div>
+
         </div>
       </section>
+
+      <CopilotLegalDisclosuresModal 
+        isOpen={isLegalModalOpen} 
+        onClose={() => setIsLegalModalOpen(false)} 
+      />
 
     </div>
   );

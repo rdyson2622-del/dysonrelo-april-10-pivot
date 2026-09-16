@@ -12,6 +12,7 @@ import CopilotDossierNewsPanel from '@/components/copilot/CopilotDossierNewsPane
 import CopilotContactCaptureModal from '@/components/copilot/CopilotContactCaptureModal';
 import CopilotExplodedSubjectModal from '@/components/copilot/CopilotExplodedSubjectModal';
 import CopilotSavedDiscussionsModal from '@/components/copilot/CopilotSavedDiscussionsModal';
+import CopilotLegalDisclosuresModal from '@/components/copilot/CopilotLegalDisclosuresModal';
 import { findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { GeminiLiveSessionClient } from '@/lib/geminiLiveClient';
 import { KNOWN_PROPERTY_DOSSIERS } from '@/components/admin/copilot/propertyDossierData';
@@ -382,6 +383,7 @@ export default function DysonHomesCopilot({ initialPage }) {
   const [isTalkLiveActive, setIsTalkLiveActive] = useState(false);
   const [liveStatus, setLiveStatus] = useState('ready'); // ready, connecting, listening, speaking
   const [isSavedDiscussionsOpen, setIsSavedDiscussionsOpen] = useState(false);
+  const [isLegalModalOpen, setIsLegalModalOpen] = useState(false);
   const [savedCount, setSavedCount] = useState(() => {
     if (typeof window !== 'undefined') {
       try {
@@ -1243,6 +1245,14 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                     <a href="mailto:bob@dysonrelo.com" className="text-white hover:underline transition-colors font-normal">
                       bob@dysonrelo.com
                     </a>
+                    <span className="text-white">·</span>
+                    <button
+                      type="button"
+                      onClick={() => setIsLegalModalOpen(true)}
+                      className="text-stone-400 hover:text-white transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 cursor-pointer font-normal text-[11.5px] sm:text-[12px]"
+                    >
+                      Legal &amp; disclosures
+                    </button>
                   </div>
                 </div>
               </div>
@@ -1302,6 +1312,12 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                     if (raw) setSavedCount(JSON.parse(raw).length);
                   } catch (_) {}
                 }}
+              />
+
+              {/* ── LEGAL & DISCLOSURES MODAL ── */}
+              <CopilotLegalDisclosuresModal
+                isOpen={isLegalModalOpen}
+                onClose={() => setIsLegalModalOpen(false)}
               />
 
             </div>
