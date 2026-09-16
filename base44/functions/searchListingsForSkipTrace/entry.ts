@@ -2,63 +2,96 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 
 const BATCHDATA_API_KEY = Deno.env.get("BATCHDATA_API_KEY");
 
+function normalizePropertyRecord(p) {
+  if (!p || typeof p !== 'object') return null;
+
+  const street = p.address?.street || p.street || p.street_address || '';
+  const city = p.address?.city || p.city || '';
+  const state = p.address?.state || p.state || '';
+  const zip = p.address?.zip || p.zip || p.zip_code || '';
+
+  const beds = p.building?.bedroomCount ?? p.property?.bedrooms ?? p.listing?.bedroomCount ?? p.beds ?? p.bedrooms ?? '';
+  const baths = p.building?.bathroomCount ?? p.property?.bathrooms ?? p.listing?.bathroomCount ?? p.baths ?? p.bathrooms ?? '';
+  const sqft = p.building?.livingAreaSquareFeet ?? p.building?.totalBuildingAreaSquareFeet ?? p.property?.squareFeet ?? p.listing?.livingArea ?? p.sqft ?? p.square_feet ?? '';
+  const apn = p.ids?.apn || p.apn || '';
+
+  const listPrice = p.listing?.price ?? p.listing?.listPrice ?? p.list_price ?? '';
+  const value = p.valuation?.estimatedValue ?? p.valuation?.price ?? p.listing?.price ?? p.listing?.soldPrice ?? listPrice ?? '';
+
+  const daysOnMarket = p.listing?.daysOnMarket ?? p.days_on_market ?? '';
+  const propType = p.general?.propertyTypeDetail || p.general?.propertyTypeCategory || p.listing?.propertyType || p.property?.propertyType || '';
+
+  return {
+    street,
+    city,
+    state,
+    zip,
+    beds,
+    baths,
+    sqft,
+    apn,
+    list_price: listPrice,
+    value,
+    days_on_market: daysOnMarket,
+    property_type: propType,
+    mls_number: p.listing?.listingNumber || p.mls_number || ''
+  };
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-
-    if (user?.role !== 'admin') {
-      return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
-    }
 
     if (!BATCHDATA_API_KEY) {
-      return Response.json({ error: 'BATCHDATA_API_KEY not configured' }, { status: 500 });
+      return Response.json({
+        success: false,
+        configured: false,
+        provider: "BatchData",
+        error: "BATCHDATA_API_KEY not configured in workspace settings.",
+        properties: [],
+        listings: []
+      }, { status: 500 });
     }
 
-    const { city, state, min_price, max_results = 10, days_listed = 1 } = await req.json();
+    const payload = await req.json().catch(() => ({}));
+    const { street, city, state, zip, mls_number, query, address, options, max_results } = payload;
 
-    if (!city || !state) {
-      return Response.json({ error: 'city and state are required' }, { status: 400 });
-    }
+    const hasParsedAddress = Boolean(street && String(street).trim().length > 0);
+    const searchTarget = mls_number || query || address || (hasParsedAddress ? '' : `${city || ''} ${state || ''}`.trim());
 
-    // BatchData Property Search API
-    const requestBody = {
-      filters: {
-        location: {
-          city: city,
-          state: state
-        },
-        listing: {
-          status: ["active"],
-          listPrice: {
-            min: min_price || 0
-          },
-          daysOnMarket: {
-            max: days_listed
+    let targetUrl = '';
+    let requestBody = null;
+
+    if (hasParsedAddress) {
+      // 1. Parsed address -> lookup/all-attributes
+      targetUrl = "https://api.batchdata.com/api/v1/property/lookup/all-attributes";
+      requestBody = {
+        requests: [
+          {
+            address: {
+              street: String(street).trim(),
+              city: city ? String(city).trim() : '',
+              state: state ? String(state).trim() : '',
+              zip: zip ? String(zip).trim() : ''
+            }
           }
+        ]
+      };
+    } else {
+      // 2. MLS# or unparsed/full street string -> property/search
+      targetUrl = "https://api.batchdata.com/api/v1/property/search";
+      requestBody = {
+        searchCriteria: {
+          query: String(searchTarget || '').trim()
+        },
+        options: {
+          skip: options?.skip || 0,
+          take: options?.take || max_results || 1
         }
-      },
-      size: max_results,
-      fields: [
-        "address.street",
-        "address.city",
-        "address.state",
-        "address.zip",
-        "listing.listPrice",
-        "listing.listDate",
-        "listing.daysOnMarket",
-        "listing.status",
-        "property.bedrooms",
-        "property.bathrooms",
-        "property.squareFeet",
-        "property.propertyType",
-        "owner.name"
-      ]
-    };
+      };
+    }
 
-    console.log("Searching BatchData for listings:", JSON.stringify(requestBody));
-
-    const response = await fetch("https://api.batchdata.com/api/v1/property/search", {
+    const response = await fetch(targetUrl, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${BATCHDATA_API_KEY}`,
@@ -69,47 +102,69 @@ Deno.serve(async (req) => {
     });
 
     const responseText = await response.text();
-    console.log("BatchData search response status:", response.status);
-    console.log("BatchData search response (first 3000 chars):", responseText.substring(0, 3000));
 
     if (!response.ok) {
       return Response.json({
+        success: false,
+        provider: "BatchData",
+        endpoint: targetUrl,
         error: `BatchData API error: ${response.status} ${response.statusText}`,
-        details: responseText.substring(0, 500)
-      }, { status: 502 });
+        details: responseText.substring(0, 500),
+        count: 0,
+        properties: [],
+        listings: []
+      }, { status: response.status >= 500 ? 502 : response.status });
     }
 
     let data;
     try {
       data = JSON.parse(responseText);
     } catch {
-      return Response.json({ error: 'Failed to parse BatchData response', raw: responseText.substring(0, 500) }, { status: 502 });
+      return Response.json({
+        success: false,
+        provider: "BatchData",
+        error: 'Failed to parse BatchData JSON response',
+        raw: responseText.substring(0, 500),
+        count: 0,
+        properties: [],
+        listings: []
+      }, { status: 502 });
     }
 
-    // Normalize results
-    const properties = (data?.results || data?.properties || data?.data || []).map(p => ({
-      street: p.address?.street || p.street_address || '',
-      city: p.address?.city || p.city || city,
-      state: p.address?.state || p.state || state,
-      zip: p.address?.zip || p.zip_code || '',
-      list_price: p.listing?.listPrice || p.list_price || '',
-      list_date: p.listing?.listDate || p.list_date || '',
-      days_on_market: p.listing?.daysOnMarket ?? p.days_on_market ?? '',
-      beds: p.property?.bedrooms || p.bedrooms || '',
-      baths: p.property?.bathrooms || p.bathrooms || '',
-      sqft: p.property?.squareFeet || p.square_feet || '',
-      property_type: p.property?.propertyType || p.property_type || '',
-      owner_name: p.owner?.name || p.owner_name || '',
-    }));
+    // Extract raw records whether array or dictionary
+    let rawItems = [];
+    if (Array.isArray(data?.results?.properties)) {
+      rawItems = data.results.properties;
+    } else if (Array.isArray(data?.results)) {
+      rawItems = data.results;
+    } else if (Array.isArray(data?.properties)) {
+      rawItems = data.properties;
+    } else if (Array.isArray(data?.data)) {
+      rawItems = data.data;
+    } else if (data?.results && typeof data.results === 'object') {
+      // Object dict of properties e.g. { "0": {...} }
+      rawItems = Object.values(data.results).filter(v => v && typeof v === 'object' && !Array.isArray(v) && (v.address || v.building || v.ids));
+    }
+
+    const properties = rawItems.map(normalizePropertyRecord).filter(Boolean);
 
     return Response.json({
       success: true,
+      provider: "BatchData",
+      endpoint: targetUrl,
       count: properties.length,
-      properties
+      properties,
+      listings: properties
     });
 
   } catch (error) {
-    console.error("searchListingsForSkipTrace error:", error.message);
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({
+      success: false,
+      provider: "BatchData",
+      error: error.message,
+      count: 0,
+      properties: [],
+      listings: []
+    }, { status: 500 });
   }
 });
