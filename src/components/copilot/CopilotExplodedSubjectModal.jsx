@@ -630,8 +630,16 @@ export default function CopilotExplodedSubjectModal({
                 </>
               ) : (
                 <div className="py-3 px-4 rounded-lg bg-[#181818] border border-white/10 text-xs text-stone-300 space-y-1">
-                  <p className="text-white font-medium">No listing records found for this MLS#.</p>
-                  <p className="text-stone-400 text-[11px]">Try the full street address or paste the listing URL for a more reliable lookup.</p>
+                  <p className="text-white font-medium">
+                    {dossierData?.inputType === 'mls' || dossierData?.isMlsEmpty
+                      ? "No listing records found for this MLS#."
+                      : "Property and listing verified. Comparable sales currently unavailable."}
+                  </p>
+                  <p className="text-stone-400 text-[11px]">
+                    {dossierData?.inputType === 'mls' || dossierData?.isMlsEmpty
+                      ? "Try the full street address or paste the listing URL for a more reliable lookup."
+                      : (dossierData?.compsSummary || "Subject property record verified via BatchData registry. Independent discovery with local desk recommended.")}
+                  </p>
                 </div>
               )}
             </div>

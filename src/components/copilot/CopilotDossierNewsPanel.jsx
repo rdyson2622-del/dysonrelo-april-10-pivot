@@ -374,12 +374,122 @@ export default function CopilotDossierNewsPanel({
             </div>
           </div>
 
-          {/* Property Audit Header Label */}
+          {/* Property Audit Header Label (no duplicate city copy) */}
           <div className="pb-1 flex items-center justify-between">
-            <span className="text-[10.5px] font-bold tracking-widest text-white uppercase font-mono">
-              PROPERTY AUDIT • {dossierData.shortAddress.toUpperCase()} {dossierData.city ? `(${dossierData.city.toUpperCase()})` : ''}
+            <span className="text-[10.5px] font-bold tracking-widest text-white uppercase font-mono truncate">
+              PROPERTY AUDIT • {dossierData.shortAddress?.toUpperCase()}
+              {dossierData.city && !dossierData.shortAddress?.toLowerCase().includes(dossierData.city.toLowerCase().split(',')[0]) ? ` (${dossierData.city.toUpperCase()})` : ''}
             </span>
           </div>
+
+          {/* Ambiguous Property Selector ("Which property?") */}
+          {dossierData.isAmbiguous && dossierData.ambiguousOptions && dossierData.ambiguousOptions.length > 0 && (
+            <div className="rounded-xl border border-[#D4AF37]/50 bg-[#141414] p-4 space-y-3 shadow-lg">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-ping" />
+                <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-white">
+                  WHICH PROPERTY ON {dossierData.shortAddress?.toUpperCase()}?
+                </h3>
+              </div>
+              <p className="text-xs text-stone-300">
+                Multiple verified street records found. Select an address to load its full fiduciary dossier:
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 max-h-56 overflow-y-auto pr-1 scrollbar-thin">
+                {dossierData.ambiguousOptions.map((opt, oIdx) => (
+                  <button
+                    key={oIdx}
+                    type="button"
+                    onClick={() => onPromptClick?.(opt.fullAddress)}
+                    className="p-2.5 rounded-lg bg-[#1c1c1c] hover:bg-[#282828] border border-white/15 hover:border-[#D4AF37] text-left transition-all cursor-pointer group"
+                  >
+                    <div className="text-xs font-bold text-white group-hover:text-[#D4AF37] font-mono">
+                      {opt.street}
+                    </div>
+                    <div className="text-[11px] text-stone-400">
+                      {opt.city}, {opt.state} {opt.zip}
+                    </div>
+                    {opt.apn && (
+                      <div className="text-[10px] text-stone-500 font-mono mt-0.5">
+                        APN: {opt.apn}
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Verified Property Attributes Card */}
+          {dossierData.isVerified && (
+            <div className="rounded-xl border border-white/15 bg-[#121212] p-4 space-y-3 shadow-lg">
+              <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-xs font-bold text-white font-mono uppercase tracking-wide">
+                    {dossierData.listing?.status || 'Active'} {dossierData.listing?.propertyType || ''}
+                  </span>
+                </div>
+                {dossierData.listPrice && (
+                  <span className="text-sm font-bold font-mono text-[#D4AF37]">
+                    {dossierData.listPrice}
+                  </span>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-xs font-mono">
+                {dossierData.ids?.apn && (
+                  <div className="p-2 rounded bg-white/5 border border-white/5">
+                    <span className="text-[10px] text-stone-400 block font-sans">APN / PARCEL</span>
+                    <span className="text-white font-bold">{dossierData.ids.apn}</span>
+                  </div>
+                )}
+                {(dossierData.building?.livingArea || dossierData.sqft) && (
+                  <div className="p-2 rounded bg-white/5 border border-white/5">
+                    <span className="text-[10px] text-stone-400 block font-sans">LIVING AREA</span>
+                    <span className="text-white font-bold">
+                      {Number(dossierData.building?.livingArea || dossierData.sqft).toLocaleString()} sf
+                    </span>
+                  </div>
+                )}
+                {(dossierData.building?.yearBuilt || dossierData.yearBuilt) && (
+                  <div className="p-2 rounded bg-white/5 border border-white/5">
+                    <span className="text-[10px] text-stone-400 block font-sans">YEAR BUILT</span>
+                    <span className="text-white font-bold">{dossierData.building?.yearBuilt || dossierData.yearBuilt}</span>
+                  </div>
+                )}
+                {dossierData.valuation?.estimatedValue && (
+                  <div className="p-2 rounded bg-white/5 border border-white/5">
+                    <span className="text-[10px] text-stone-400 block font-sans">EST. VALUE</span>
+                    <span className="text-white font-bold">
+                      ~${Number(dossierData.valuation.estimatedValue).toLocaleString()}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {(dossierData.listing?.listingNumber || dossierData.listing?.daysOnMarket !== undefined || dossierData.listing?.listingUrl) && (
+                <div className="flex flex-wrap items-center gap-3 text-[11px] text-stone-400 pt-1 border-t border-white/5">
+                  {dossierData.listing?.listingNumber && (
+                    <span>MLS#: <strong className="text-white">{dossierData.listing.listingNumber}</strong></span>
+                  )}
+                  {dossierData.listing?.daysOnMarket !== undefined && dossierData.listing?.daysOnMarket !== '' && (
+                    <span>DOM: <strong className="text-white">{dossierData.listing.daysOnMarket} days</strong></span>
+                  )}
+                  {dossierData.listing?.listingUrl && (
+                    <a 
+                      href={dossierData.listing.listingUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-[#D4AF37] hover:underline flex items-center gap-1 ml-auto"
+                    >
+                      <span>Public Listing</span>
+                      <span>↗</span>
+                    </a>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Card 1: Honest Comps */}
           <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-lg">
@@ -407,8 +517,16 @@ export default function CopilotDossierNewsPanel({
               </div>
             ) : (
               <div className="py-2.5 px-3 rounded-lg bg-[#181818] border border-white/10 text-xs text-stone-300 space-y-1">
-                <p className="text-white font-medium">No listing records found for this MLS#.</p>
-                <p className="text-stone-400 text-[11px]">Try the full street address or paste the listing URL for a more reliable lookup.</p>
+                <p className="text-white font-medium">
+                  {dossierData.inputType === 'mls' || dossierData.isMlsEmpty
+                    ? "No listing records found for this MLS#."
+                    : "Property and listing verified. Comparable sales currently unavailable."}
+                </p>
+                <p className="text-stone-400 text-[11px]">
+                  {dossierData.inputType === 'mls' || dossierData.isMlsEmpty
+                    ? "Try the full street address or paste the listing URL for a more reliable lookup."
+                    : (dossierData.compsSummary || "Subject property record verified via BatchData registry. Independent discovery with local desk recommended.")}
+                </p>
               </div>
             )}
 
