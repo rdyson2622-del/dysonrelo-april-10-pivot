@@ -22,49 +22,25 @@ export default function CopilotContactCaptureModal({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const cleanPhone = phone.trim();
-    if (!cleanPhone) return;
+    const digitsOnly = phone.replace(/[^\d+]/g, '');
+    if (!digitsOnly || digitsOnly.replace(/\D/g, '').length < 10) {
+      return;
+    }
 
     setIsSubmitting(true);
     try {
-      // 1. Persist OptIn record
-      const optInData = {
-        source: 'relocation_intake',
-        phone: cleanPhone,
+      // Persist to CopilotReportRequest (Held status, zero outbound sends)
+      await base44.entities.CopilotReportRequest.create({
+        phone: digitsOnly,
         email: email.trim() || undefined,
-        full_name: fullName.trim() || 'Verified Buyer',
-        opted_in_at: new Date().toISOString(),
-        status: 'new',
-        initial_data: {
-          property_address: propertyAddress,
-          timestamp: new Date().toISOString(),
-          tier: 'complimentary_subscriber',
-          legal_disclaimer_accepted: true,
-          recontact_consent: true,
-          requested_item: 'Property Audit & Daily News',
-        },
-        notes: `Consumer requested property audit for ${propertyAddress} via CoPilot Command Center. TCPA disclaimer accepted.`
-      };
-
-      try {
-        await base44.entities.OptIn.create(optInData);
-      } catch (err) {
-        console.warn('OptIn save notice (proceeding with local session unlock):', err);
-      }
-
-      // 2. Persist in localStorage to establish subscriber tier
-      if (typeof window !== 'undefined') {
-        const subscriberProfile = {
-          name: fullName.trim() || 'Verified Buyer',
-          phone: cleanPhone,
-          email: email.trim() || '',
-          tier: 'Complimentary Fiduciary Subscriber',
-          joinedAt: new Date().toISOString(),
-          unlockedNews: true,
-        };
-        localStorage.setItem('dyson_copilot_subscriber', JSON.stringify(subscriberProfile));
-        localStorage.setItem('dyson_subscriber_unlocked', 'true');
-      }
+        full_name: fullName.trim() || undefined,
+        address: propertyAddress,
+        status: 'held',
+        delivery_held: true,
+        source: 'copilot_command_center',
+        requested_at: new Date().toISOString(),
+        notes: 'Direct mobile report request held pending concierge verification. Outbound delivery held.'
+      });
 
       setIsSuccess(true);
       setTimeout(() => {
@@ -72,12 +48,12 @@ export default function CopilotContactCaptureModal({
         setIsSuccess(false);
         onCaptureSuccess?.({
           name: fullName.trim() || 'Verified Buyer',
-          phone: cleanPhone,
+          phone: digitsOnly,
           email: email.trim() || '',
           address: propertyAddress,
         });
         onClose();
-      }, 1500);
+      }, 2000);
     } catch (e) {
       console.error('Error submitting contact capture:', e);
       setIsSubmitting(false);
@@ -109,15 +85,15 @@ export default function CopilotContactCaptureModal({
             </div>
             <div className="space-y-1">
               <h3 className="text-xl font-bold font-serif text-white tracking-wide">
-                Audit Queued &amp; Access Unlocked
+                Report Request Recorded
               </h3>
               <p className="text-xs text-stone-300 max-w-sm mx-auto">
-                We've routed the complete fiduciary report for <span className="text-[#D4AF37] font-semibold">{propertyAddress}</span> to your phone.
+                Your fiduciary property report request for <span className="text-[#D4AF37] font-semibold">{propertyAddress}</span> has been logged with our research desk. Delivery is queued for mobile verification.
               </p>
             </div>
-            <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center gap-2 text-xs text-[#D4AF37]">
-              <Radio className="w-4 h-4 animate-pulse text-rose-500" />
-              <span>You now have subscriber access to our Daily DNN News broadcasts!</span>
+            <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center gap-2 text-xs text-stone-300">
+              <ShieldCheck className="w-4 h-4 text-[#D4AF37]" />
+              <span>Zero obligation · No marketing spam · Fiduciary research</span>
             </div>
           </div>
         ) : (

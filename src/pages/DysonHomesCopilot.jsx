@@ -1122,6 +1122,20 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                     >
                       Legal &amp; disclosures
                     </button>
+                    <span className="text-white">·</span>
+                    <Link
+                      to="/copilot/stop-contact"
+                      className="text-stone-400 hover:text-white transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 cursor-pointer font-normal text-[11.5px] sm:text-[12px]"
+                    >
+                      Stop contacting me
+                    </Link>
+                    <span className="text-white">·</span>
+                    <Link
+                      to="/unsubscribe"
+                      className="text-stone-400 hover:text-white transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 cursor-pointer font-normal text-[11.5px] sm:text-[12px]"
+                    >
+                      Unsubscribe
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -1154,13 +1168,12 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                 onClose={() => setIsCaptureModalOpen(false)}
                 propertyAddress={dossierData.fullAddress || analyzedProperty}
                 onCaptureSuccess={(captured) => {
-                  setIsSubscriber(true);
                   setMessages(prev => [
                     ...prev,
                     {
                       id: Date.now(),
                       sender: 'charlie',
-                      text: `I've queued the complete fiduciary property audit for ${captured.address} directly to ${captured.phone}.\n\nYou've also been granted complimentary VIP Subscriber access to our Daily DNN News broadcasts under Bob Dyson's broker desk!`
+                      text: `Your report request for ${captured.address} has been recorded with our fiduciary desk. Delivery is held pending verification. No broker pressure or unsolicited outreach.`
                     }
                   ]);
                 }}

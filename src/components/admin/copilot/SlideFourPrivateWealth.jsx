@@ -449,6 +449,20 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
             >
               Legal &amp; disclosures
             </button>
+            <span className="text-stone-600">·</span>
+            <Link
+              to="/copilot/stop-contact"
+              className="text-stone-400 hover:text-white text-xs font-normal transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 font-sans cursor-pointer"
+            >
+              Stop contacting me
+            </Link>
+            <span className="text-stone-600">·</span>
+            <Link
+              to="/unsubscribe"
+              className="text-stone-400 hover:text-white text-xs font-normal transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 font-sans cursor-pointer"
+            >
+              Unsubscribe
+            </Link>
           </div>
 
         </div>

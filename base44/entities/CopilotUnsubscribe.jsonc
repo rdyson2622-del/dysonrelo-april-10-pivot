@@ -1,0 +1,77 @@
+{
+  "name": "CopilotUnsubscribe",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "description": "Normalized email address requesting unsubscribe or stop contact"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Normalized phone number requesting unsubscribe or stop contact"
+    },
+    "token": {
+      "type": "string",
+      "description": "Opaque token for 1-click unsubscribe links and verification"
+    },
+    "request_type": {
+      "type": "string",
+      "enum": [
+        "unsubscribe",
+        "stop_contact",
+        "marketing_complaint"
+      ],
+      "default": "unsubscribe",
+      "description": "Classification of suppression request"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Optional user-supplied reason or complaint notes"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "unsubscribed"
+      ],
+      "default": "unsubscribed",
+      "description": "Unsubscribe status"
+    },
+    "marketing_suppressed": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether marketing communications are suppressed"
+    },
+    "transactional_allowed": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether critical transactional/fiduciary communications remain permitted"
+    },
+    "source": {
+      "type": "string",
+      "default": "copilot_footer",
+      "description": "Origin of the unsubscribe request (e.g. copilot_footer, email_link, copilot_stop_contact, direct_entry)"
+    },
+    "unsubscribed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when unsubscribe was confirmed"
+    },
+    "token_created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the opaque token was generated"
+    }
+  },
+  "required": [],
+  "rls": {
+    "read": {},
+    "create": {},
+    "update": {},
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

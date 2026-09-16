@@ -200,6 +200,8 @@ import SubscriberVendorFinder from './pages/SubscriberVendorFinder';
 import FrontDoor from './pages/FrontDoor';
 import ClientMoveRoadmap from './pages/ClientMoveRoadmap';
 import MiniAppPage from './pages/MiniAppPage';
+import CopilotUnsubscribe from './pages/CopilotUnsubscribe';
+import CopilotStopContact from './pages/CopilotStopContact';
 
 // On boot: ?visitor=1 sets dyson_viewer_mode=guest
 if (typeof window !== 'undefined') {
@@ -251,6 +253,12 @@ const AuthenticatedApp = () => {
       <Route path="/referral-agent-explainer" element={<ReferralAgentExplainer />} />
       <Route path="/referral-process" element={<ReferralProcessExplainer />} />
       <Route path="/referral-forms" element={<ReferralFormsExplainer />} />
+
+      {/* Public Unsubscribe & Stop Contact routes — completely unauthenticated, no login redirect */}
+      <Route path="/unsubscribe" element={<CopilotUnsubscribe />} />
+      <Route path="/copilot/unsubscribe" element={<CopilotUnsubscribe />} />
+      <Route path="/stop-contact" element={<CopilotStopContact />} />
+      <Route path="/copilot/stop-contact" element={<CopilotStopContact />} />
 
       {/* Public marketing/legal pages & Concierge Exploration Routes — no auth required,
           wrapped in AppLayout so visitors can explore directories & services without hitting a login wall. */}

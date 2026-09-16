@@ -1,0 +1,78 @@
+{
+  "name": "CopilotReportRequest",
+  "type": "object",
+  "properties": {
+    "phone": {
+      "type": "string",
+      "description": "Normalized phone number for report delivery"
+    },
+    "email": {
+      "type": "string",
+      "description": "Optional email address"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Full name of the requesting buyer"
+    },
+    "address": {
+      "type": "string",
+      "description": "Subject property address being audited"
+    },
+    "report_snapshot": {
+      "type": "object",
+      "description": "Snapshot of comps, risks, and valuation metadata at time of request"
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the request was initiated"
+    },
+    "source": {
+      "type": "string",
+      "default": "copilot_command_center",
+      "description": "Origin of the report request"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "held",
+        "pending",
+        "delivered",
+        "cancelled"
+      ],
+      "default": "held",
+      "description": "Status of the report delivery (held until explicitly released)"
+    },
+    "delivery_held": {
+      "type": "boolean",
+      "default": true,
+      "description": "Strict flag ensuring automated outbound delivery is held"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes or audit context"
+    }
+  },
+  "required": [
+    "phone",
+    "address"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
