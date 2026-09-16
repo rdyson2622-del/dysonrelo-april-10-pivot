@@ -4,6 +4,7 @@ import { ShieldCheck, Plus } from 'lucide-react';
 import { useAuth } from '@/lib/AuthContext';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import CopilotLegalDisclosuresModal from '@/components/copilot/CopilotLegalDisclosuresModal';
+import CopilotReferAFriendModal from '@/components/copilot/CopilotReferAFriendModal';
 
 // Authentic evening luxury estate villa (hero-evening-luxury-clean.png)
 const HERO_EVENING = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/efdc69af3_hero-evening-luxury-clean.png";
@@ -77,6 +78,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
   const [isFocused, setIsFocused] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLegalModalOpen, setIsLegalModalOpen] = useState(false);
+  const [isReferModalOpen, setIsReferModalOpen] = useState(false);
   const inputRef = useRef(null);
 
   const handleSend = (targetAddr) => {
@@ -434,6 +436,14 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
             <span className="text-stone-600">·</span>
             <button
               type="button"
+              onClick={() => setIsReferModalOpen(true)}
+              className="text-stone-400 hover:text-white text-xs font-normal transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 font-sans cursor-pointer"
+            >
+              Refer a Friend
+            </button>
+            <span className="text-stone-600">·</span>
+            <button
+              type="button"
               onClick={() => setIsLegalModalOpen(true)}
               className="text-stone-400 hover:text-white text-xs font-normal transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 font-sans cursor-pointer"
             >
@@ -443,6 +453,11 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
 
         </div>
       </section>
+
+      <CopilotReferAFriendModal
+        isOpen={isReferModalOpen}
+        onClose={() => setIsReferModalOpen(false)}
+      />
 
       <CopilotLegalDisclosuresModal 
         isOpen={isLegalModalOpen} 

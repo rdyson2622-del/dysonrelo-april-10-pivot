@@ -1,0 +1,66 @@
+{
+  "name": "CopilotReferral",
+  "type": "object",
+  "properties": {
+    "friend_name": {
+      "type": "string",
+      "description": "Name of the referred friend"
+    },
+    "friend_email": {
+      "type": "string",
+      "description": "Email address of the friend (optional)"
+    },
+    "friend_phone": {
+      "type": "string",
+      "description": "Phone number of the friend (optional)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Short note or property/area of interest (optional)"
+    },
+    "source": {
+      "type": "string",
+      "default": "copilot_command_center",
+      "description": "Origin of referral submission"
+    },
+    "referrer_name": {
+      "type": "string",
+      "description": "Name of the person referring (optional)"
+    },
+    "referrer_email": {
+      "type": "string",
+      "description": "Email of the person referring (optional)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "received",
+        "reviewed",
+        "archived"
+      ],
+      "default": "received",
+      "description": "Internal status of this referral"
+    }
+  },
+  "required": [
+    "friend_name"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

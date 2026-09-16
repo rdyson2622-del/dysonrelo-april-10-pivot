@@ -13,6 +13,7 @@ import CopilotContactCaptureModal from '@/components/copilot/CopilotContactCaptu
 import CopilotExplodedSubjectModal from '@/components/copilot/CopilotExplodedSubjectModal';
 import CopilotSavedDiscussionsModal from '@/components/copilot/CopilotSavedDiscussionsModal';
 import CopilotLegalDisclosuresModal from '@/components/copilot/CopilotLegalDisclosuresModal';
+import CopilotReferAFriendModal from '@/components/copilot/CopilotReferAFriendModal';
 import { findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { GeminiLiveSessionClient } from '@/lib/geminiLiveClient';
 import { KNOWN_PROPERTY_DOSSIERS } from '@/components/admin/copilot/propertyDossierData';
@@ -53,6 +54,7 @@ export default function DysonHomesCopilot({ initialPage }) {
   const [liveStatusText, setLiveStatusText] = useState('');
   const [isSavedDiscussionsOpen, setIsSavedDiscussionsOpen] = useState(false);
   const [isLegalModalOpen, setIsLegalModalOpen] = useState(false);
+  const [isReferModalOpen, setIsReferModalOpen] = useState(false);
   const [savedCount, setSavedCount] = useState(() => {
     if (typeof window !== 'undefined') {
       try {
@@ -1107,6 +1109,14 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                     <span className="text-white">·</span>
                     <button
                       type="button"
+                      onClick={() => setIsReferModalOpen(true)}
+                      className="text-stone-400 hover:text-white transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 cursor-pointer font-normal text-[11.5px] sm:text-[12px]"
+                    >
+                      Refer a Friend
+                    </button>
+                    <span className="text-white">·</span>
+                    <button
+                      type="button"
                       onClick={() => setIsLegalModalOpen(true)}
                       className="text-stone-400 hover:text-white transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 cursor-pointer font-normal text-[11.5px] sm:text-[12px]"
                     >
@@ -1171,6 +1181,12 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                     if (raw) setSavedCount(JSON.parse(raw).length);
                   } catch (_) {}
                 }}
+              />
+
+              {/* ── REFER A FRIEND MODAL ── */}
+              <CopilotReferAFriendModal
+                isOpen={isReferModalOpen}
+                onClose={() => setIsReferModalOpen(false)}
               />
 
               {/* ── LEGAL & DISCLOSURES MODAL ── */}
