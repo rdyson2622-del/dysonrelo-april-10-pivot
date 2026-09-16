@@ -598,33 +598,42 @@ export default function CopilotExplodedSubjectModal({
                   HONEST COMPS MATRIX (UNVARNISHED DATA)
                 </h3>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs sm:text-sm font-mono text-stone-300">
-                  <thead>
-                    <tr className="border-b border-white/20 text-[#D4AF37] uppercase text-[10px]">
-                      <th className="py-2">Address</th>
-                      <th className="py-2">Distance</th>
-                      <th className="py-2">Specs</th>
-                      <th className="py-2">Sold Price</th>
-                      <th className="py-2 text-right">Adjusted Price</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dossierData?.comps?.map((comp, idx) => (
-                      <tr key={idx} className="border-b border-white/5 hover:bg-white/5">
-                        <td className="py-2 font-bold text-white">{comp.address}</td>
-                        <td className="py-2 text-stone-400">{comp.distance}</td>
-                        <td className="py-2 text-stone-400">{comp.specs}</td>
-                        <td className="py-2 text-stone-300">{comp.soldPrice}</td>
-                        <td className="py-2 text-right text-[#D4AF37] font-bold">{comp.adjPrice}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <p className="text-xs font-semibold text-[#D4AF37] pt-2">
-                {dossierData?.compsSummary}
-              </p>
+              {dossierData?.comps && dossierData.comps.length > 0 ? (
+                <>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs sm:text-sm font-mono text-stone-300">
+                      <thead>
+                        <tr className="border-b border-white/20 text-[#D4AF37] uppercase text-[10px]">
+                          <th className="py-2">Address</th>
+                          <th className="py-2">Distance</th>
+                          <th className="py-2">Specs</th>
+                          <th className="py-2">Sold Price</th>
+                          <th className="py-2 text-right">Adjusted Price</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {dossierData.comps.map((comp, idx) => (
+                          <tr key={idx} className="border-b border-white/5 hover:bg-white/5">
+                            <td className="py-2 font-bold text-white">{comp.address}</td>
+                            <td className="py-2 text-stone-400">{comp.distance}</td>
+                            <td className="py-2 text-stone-400">{comp.specs}</td>
+                            <td className="py-2 text-stone-300">{comp.soldPrice}</td>
+                            <td className="py-2 text-right text-[#D4AF37] font-bold">{comp.adjPrice}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <p className="text-xs font-semibold text-[#D4AF37] pt-2">
+                    {dossierData?.compsSummary}
+                  </p>
+                </>
+              ) : (
+                <div className="py-3 px-4 rounded-lg bg-[#181818] border border-white/10 text-xs text-stone-300 space-y-1">
+                  <p className="text-white font-medium">No listing records found for this MLS#.</p>
+                  <p className="text-stone-400 text-[11px]">Try the full street address or paste the listing URL for a more reliable lookup.</p>
+                </div>
+              )}
             </div>
 
             {/* Hidden Risks and Rebate Grid */}

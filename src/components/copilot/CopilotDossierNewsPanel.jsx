@@ -343,14 +343,16 @@ export default function CopilotDossierNewsPanel({
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                 <span className="text-[10px] font-mono uppercase tracking-widest text-white font-bold">
-                  FIDUCIARY AUDIT COMPLETE
+                  {dossierData.isMlsEmpty ? "MLS RECORD NOT FOUND" : "FIDUCIARY AUDIT COMPLETE"}
                 </span>
               </div>
               <h2 className="text-sm sm:text-base font-bold text-white tracking-wide">
-                I've audited {dossierData.shortAddress}. Can we help?
+                {dossierData.isMlsEmpty
+                  ? `No listing records found for ${dossierData.shortAddress}`
+                  : `I've audited ${dossierData.shortAddress}. Can we help?`}
               </h2>
               <p className="text-xs text-stone-300">
-                {dossierData.marketSummary} Ask questions on the left or tap below to text the full report to your mobile.
+                {dossierData.marketSummary}
               </p>
             </div>
             
@@ -391,21 +393,30 @@ export default function CopilotDossierNewsPanel({
               Sold 30–90 days | Within 0.75 mi | Adjusted to current market
             </p>
 
-            <div className="space-y-1.5 pt-1 text-[11.5px] font-mono">
-              {dossierData.comps.map((comp, idx) => (
-                <div key={idx} className="flex flex-wrap items-center justify-between text-stone-300 py-1 border-b border-white/10 gap-2">
-                  <span className="font-bold text-white w-32 sm:w-36 truncate">{comp.address}</span>
-                  <span className="text-stone-400">{comp.distance}</span>
-                  <span className="text-stone-400">{comp.specs}</span>
-                  <span className="text-stone-300">{comp.soldPrice}</span>
-                  <span className="text-white font-bold">{comp.adjPrice}</span>
-                </div>
-              ))}
-            </div>
+            {dossierData.comps && dossierData.comps.length > 0 ? (
+              <div className="space-y-1.5 pt-1 text-[11.5px] font-mono">
+                {dossierData.comps.map((comp, idx) => (
+                  <div key={idx} className="flex flex-wrap items-center justify-between text-stone-300 py-1 border-b border-white/10 gap-2">
+                    <span className="font-bold text-white w-32 sm:w-36 truncate">{comp.address}</span>
+                    <span className="text-stone-400">{comp.distance}</span>
+                    <span className="text-stone-400">{comp.specs}</span>
+                    <span className="text-stone-300">{comp.soldPrice}</span>
+                    <span className="text-white font-bold">{comp.adjPrice}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="py-2.5 px-3 rounded-lg bg-[#181818] border border-white/10 text-xs text-stone-300 space-y-1">
+                <p className="text-white font-medium">No listing records found for this MLS#.</p>
+                <p className="text-stone-400 text-[11px]">Try the full street address or paste the listing URL for a more reliable lookup.</p>
+              </div>
+            )}
 
-            <p className="text-[11px] font-semibold text-white pt-1">
-              {dossierData.compsSummary}
-            </p>
+            {dossierData.comps && dossierData.comps.length > 0 && (
+              <p className="text-[11px] font-semibold text-white pt-1">
+                {dossierData.compsSummary}
+              </p>
+            )}
           </div>
 
           {/* Card 2: Hidden Risks */}

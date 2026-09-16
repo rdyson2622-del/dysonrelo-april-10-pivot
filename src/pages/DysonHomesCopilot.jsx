@@ -92,6 +92,27 @@ export async function resolveSanctionedDossier(rawInput) {
         };
       }
 
+      // Clean zero records for MLS# query (not an API failure or unconfigured secret)
+      const isCleanZero = (data?.success && properties.length === 0 && !data?.error) || data?.count === 0;
+      if (isCleanZero) {
+        return {
+          shortAddress: `MLS# ${cleanMls}`,
+          city: 'Unresolved',
+          fullAddress: `MLS# ${cleanMls}`,
+          listPrice: 'Unlisted',
+          marketSummary: 'No listing records found for this MLS#. Try the full street address or paste the listing URL for a more reliable lookup.',
+          comps: [],
+          compsSummary: 'No listing records found for this MLS#. Try the full street address or paste the listing URL for a more reliable lookup.',
+          risks: [],
+          risksSummary: 'No verified risk records on file for this unverified MLS#.',
+          complianceBasis: 'Individual broker discovery required to verify listing status.',
+          complianceProtocol: 'Case-by-Case Discovery',
+          complianceStatus: 'Checked Against State, Fed & Lender Regs',
+          providerStatus: 'No listing records found for this MLS#',
+          isMlsEmpty: true
+        };
+      }
+
       // Honest failure with provider/config/auth reason
       const reason = data?.error || data?.failure_reason || (data?.configured === false ? 'BATCHDATA_API_KEY secret not configured in workspace settings' : `MLS# ${cleanMls} returned 0 records from provider`);
       const providerName = data?.provider || 'searchListingsForSkipTrace (BatchData)';
@@ -749,8 +770,12 @@ DIRECTIVE FOR CHARLIE SIMMONS:
     setDossierData(resolved);
 
     const hasComps = resolved.comps && resolved.comps.length > 0;
+    const isMlsEmpty = resolved.isMlsEmpty || (resolved.comps?.length === 0 && resolved.shortAddress?.toLowerCase().includes('mls'));
+
     const charlieText = hasComps
       ? `Charlie here. Sanctioned listing search returned ${resolved.comps.length} verified comparable properties in ${resolved.city}. Real listing details have been loaded into your live dossier on the right.`
+      : isMlsEmpty
+      ? `Charlie here. No listing records found for this MLS#. Try the full street address or paste the listing URL for a more reliable lookup.`
       : `Charlie here. I queried our sanctioned MLS and listing lookup functions for ${resolved.shortAddress}. The provider could not resolve active comps or verified listing records. Rather than fabricating synthetic comps or estimated numbers, our dossier reflects the unverified status. We recommend individual discovery directly with the listing desk.`;
 
     const charlieMsg = {
@@ -761,11 +786,15 @@ DIRECTIVE FOR CHARLIE SIMMONS:
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
+    const bobMsgText = isMlsEmpty
+      ? `Bob Dyson here. When an MLS number doesn't match an active record, we recommend pasting the full street address or listing URL so we can pull the verified property details directly.`
+      : `Bob Dyson here. When public or API records cannot be verified, our fiduciary rule is never to guess. We verify title, listing status, and seller disclosures directly before advising on any offer.`;
+
     const bobMsg = {
       id: Date.now() + 2,
       sender: 'bob',
       speakerName: 'Bob Dyson',
-      text: `Bob Dyson here. When public or API records cannot be verified, our fiduciary rule is never to guess. We verify title, listing status, and seller disclosures directly before advising on any offer.`,
+      text: bobMsgText,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
