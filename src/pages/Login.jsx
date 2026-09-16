@@ -26,6 +26,11 @@ export default function Login() {
     if (isAuthenticated) {
       base44.auth.me().then(me => {
         const isLisa = me?.email?.toLowerCase() === 'lisa@lisahurt.com';
+        // If a specific returnTo was requested (e.g. /dossier from Copilot), always honor it first
+        if (returnTo && returnTo !== '/portal') {
+          window.location.href = returnTo;
+          return;
+        }
         if (me?.portal_role === 'relocation_agent' || isLisa) {
           sessionStorage.setItem('dyson_role', 'relocation_agent');
           sessionStorage.setItem('dyson_viewer_mode', 'subscriber');
@@ -55,6 +60,12 @@ export default function Login() {
       const normalizedEmail = email.trim().toLowerCase();
       await base44.auth.loginViaEmailPassword(email, password);
       
+      // If a specific returnTo was requested (e.g. /dossier from Copilot), honor it immediately
+      if (returnTo && returnTo !== '/portal') {
+        window.location.href = returnTo;
+        return;
+      }
+
       if (normalizedEmail === 'lisa@lisahurt.com') {
         sessionStorage.setItem('dyson_role', 'relocation_agent');
         sessionStorage.setItem('dyson_viewer_mode', 'subscriber');

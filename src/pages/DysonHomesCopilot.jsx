@@ -362,7 +362,7 @@ const COPILOT_SEED_FAQS = [{question:"What is DysonHomes Copilot? / What do you 
 export default function DysonHomesCopilot({ initialPage }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const isAdmin = user?.role === 'admin';
 
   const page1Ref = useRef(null);
@@ -920,16 +920,40 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                   <div className="flex-1 min-h-0 overflow-y-auto space-y-3 pr-2 scrollbar-thin">
 
                     {/* ── HEADER: COPILOT + COMMAND CENTER (EXACTLY WHERE IT WAS) ── */}
-                    <div className="flex items-baseline justify-center gap-2.5 pb-2 px-0.5">
-                      <span 
-                        className="font-serif italic font-medium text-[#D4AF37] text-[48px] sm:text-[52px] leading-none select-none"
-                        style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                      >
-                        CoPilot
-                      </span>
-                      <span className="text-white text-[28px] sm:text-[32px] font-normal tracking-wide whitespace-nowrap">
-                        Command Center
-                      </span>
+                    <div className="flex flex-col items-center pb-2 px-0.5">
+                      <div className="flex items-baseline justify-center gap-2.5">
+                        <span 
+                          className="font-serif italic font-medium text-[#D4AF37] text-[48px] sm:text-[52px] leading-none select-none"
+                          style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                        >
+                          CoPilot
+                        </span>
+                        <span className="text-white text-[28px] sm:text-[32px] font-normal tracking-wide whitespace-nowrap">
+                          Command Center
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-[11px] text-stone-400 font-sans pt-0.5">
+                        {isAuthenticated ? (
+                          <>
+                            <span className="text-stone-300">Welcome back{user?.full_name ? `, ${user.full_name.split(' ')[0]}` : ''}</span>
+                            <span className="text-stone-600">·</span>
+                            <button
+                              type="button"
+                              onClick={() => logout()}
+                              className="text-stone-500 hover:text-stone-300 underline cursor-pointer"
+                            >
+                              Sign out
+                            </button>
+                          </>
+                        ) : (
+                          <Link
+                            to="/login?returnTo=%2Fdossier"
+                            className="text-stone-400 hover:text-white transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 cursor-pointer"
+                          >
+                            Sign in
+                          </Link>
+                        )}
+                      </div>
                     </div>
 
                     {/* ── ROSTER: BOB, CHARLIE, YOU SPEAKER BOXES (REDUCED BY 10%) ── */}
@@ -1245,6 +1269,29 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                     <a href="mailto:bob@dysonrelo.com" className="text-white hover:underline transition-colors font-normal">
                       bob@dysonrelo.com
                     </a>
+                    <span className="text-white">·</span>
+                    {isAuthenticated ? (
+                      <>
+                        <span className="text-stone-300">
+                          Welcome back{user?.full_name ? `, ${user.full_name.split(' ')[0]}` : ''}
+                        </span>
+                        <span className="text-white">·</span>
+                        <button
+                          type="button"
+                          onClick={() => logout()}
+                          className="text-stone-400 hover:text-white transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 cursor-pointer font-normal text-[11.5px] sm:text-[12px]"
+                        >
+                          Sign out
+                        </button>
+                      </>
+                    ) : (
+                      <Link
+                        to="/login?returnTo=%2Fdossier"
+                        className="text-stone-400 hover:text-white transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 cursor-pointer font-normal text-[11.5px] sm:text-[12px]"
+                      >
+                        Sign in
+                      </Link>
+                    )}
                     <span className="text-white">·</span>
                     <button
                       type="button"

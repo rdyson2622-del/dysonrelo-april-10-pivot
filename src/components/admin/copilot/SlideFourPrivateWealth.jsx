@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { ShieldCheck, Plus } from 'lucide-react';
+import { useAuth } from '@/lib/AuthContext';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import CopilotLegalDisclosuresModal from '@/components/copilot/CopilotLegalDisclosuresModal';
 
@@ -70,6 +72,7 @@ export function extractAddressOrMls(raw) {
 }
 
 export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGoToChatCanvas }) {
+  const { user, isAuthenticated, logout } = useAuth();
   const [address, setAddress] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -103,6 +106,38 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
       className="w-full text-left select-none relative overflow-hidden bg-[#0a0a0a]" 
       style={{ color: '#F3F0E6' }}
     >
+      {/* ── SUBTLE CLIENT SIGN-IN / RETURN VISIT HEADER LINK ── */}
+      <div className="absolute top-5 right-6 sm:right-10 z-20 flex items-center gap-2 text-xs font-sans">
+        {isAuthenticated ? (
+          <div className="flex items-center gap-2 text-stone-300 font-normal">
+            <span className="text-stone-400">Welcome back{user?.full_name ? `, ${user.full_name.split(' ')[0]}` : ''}</span>
+            <span className="text-stone-600">·</span>
+            <button
+              type="button"
+              onClick={onGoToChatCanvas}
+              className="text-[#D4AF37] hover:underline cursor-pointer"
+            >
+              Command Center
+            </button>
+            <span className="text-stone-600">·</span>
+            <button
+              type="button"
+              onClick={() => logout()}
+              className="text-stone-500 hover:text-stone-300 cursor-pointer"
+            >
+              Sign out
+            </button>
+          </div>
+        ) : (
+          <Link
+            to="/login?returnTo=%2Fdossier"
+            className="text-stone-400 hover:text-white transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 cursor-pointer font-normal"
+          >
+            Sign in
+          </Link>
+        )}
+      </div>
+
       {/* ── BLACK HERO SECTION ── */}
       <div className="max-w-[1240px] mx-auto px-6 sm:px-10 pt-24 sm:pt-28 lg:pt-32 pb-16 sm:pb-20 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
         
@@ -368,7 +403,35 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
           </div>
 
           {/* Quiet Footer Link */}
-          <div className="pt-8 border-t border-white/10 flex justify-center items-center">
+          <div className="pt-8 border-t border-white/10 flex justify-center items-center gap-3 text-xs font-sans">
+            {isAuthenticated ? (
+              <span className="text-stone-400 font-normal">
+                Welcome back{user?.full_name ? `, ${user.full_name.split(' ')[0]}` : ''} ·{' '}
+                <button
+                  type="button"
+                  onClick={onGoToChatCanvas}
+                  className="text-stone-300 hover:text-white underline underline-offset-4 cursor-pointer"
+                >
+                  Command Center
+                </button>
+                {' · '}
+                <button
+                  type="button"
+                  onClick={() => logout()}
+                  className="text-stone-500 hover:text-stone-300 underline underline-offset-4 cursor-pointer"
+                >
+                  Sign out
+                </button>
+              </span>
+            ) : (
+              <Link
+                to="/login?returnTo=%2Fdossier"
+                className="text-stone-400 hover:text-white transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 cursor-pointer font-normal"
+              >
+                Sign in
+              </Link>
+            )}
+            <span className="text-stone-600">·</span>
             <button
               type="button"
               onClick={() => setIsLegalModalOpen(true)}
