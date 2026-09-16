@@ -10,6 +10,8 @@ export default function CopilotContactCaptureModal({
   isOpen,
   onClose,
   propertyAddress = '742 Vista Del Mar, La Jolla, CA',
+  dossierSnapshot = null,
+  mlsId = null,
   onCaptureSuccess
 }) {
   const [fullName, setFullName] = useState('');
@@ -29,27 +31,95 @@ export default function CopilotContactCaptureModal({
 
     setIsSubmitting(true);
     try {
-      // Persist to CopilotReportRequest (Held status, zero outbound sends)
+      const now = new Date().toISOString();
+      const normalizedEmail = email ? email.trim().toLowerCase() : '';
+      const trimmedName = fullName ? fullName.trim() : '';
+      const consentText = 'Free subscription for personal research and report storage. By entering your number, you agree to receive requested reports. Reply STOP anytime. We never sell personal data.';
+
+      // 1. Persist to CopilotReportRequest (Held status, zero outbound sends)
       await base44.entities.CopilotReportRequest.create({
         phone: digitsOnly,
-        email: email.trim() || undefined,
-        full_name: fullName.trim() || undefined,
+        email: normalizedEmail || undefined,
+        full_name: trimmedName || undefined,
         address: propertyAddress,
         status: 'held',
         delivery_held: true,
         source: 'copilot_command_center',
-        requested_at: new Date().toISOString(),
+        requested_at: now,
         notes: 'Direct mobile report request held pending concierge verification. Outbound delivery held.'
       });
+
+      // 2. Upsert CopilotVisitor (match on normalized phone or email)
+      let visitor = null;
+      try {
+        if (digitsOnly) {
+          const byPhone = await base44.entities.CopilotVisitor.filter({ phone: digitsOnly }, '-created_date', 1);
+          if (byPhone && byPhone.length > 0) {
+            visitor = byPhone[0];
+          }
+        }
+        if (!visitor && normalizedEmail) {
+          const byEmail = await base44.entities.CopilotVisitor.filter({ email: normalizedEmail }, '-created_date', 1);
+          if (byEmail && byEmail.length > 0) {
+            visitor = byEmail[0];
+          }
+        }
+
+        if (visitor) {
+          await base44.entities.CopilotVisitor.update(visitor.id, {
+            last_seen_at: now,
+            consent_text: consentText,
+            consent_at: now,
+            ...(trimmedName && !visitor.name ? { name: trimmedName } : {}),
+            ...(normalizedEmail && !visitor.email ? { email: normalizedEmail } : {}),
+            ...(digitsOnly && !visitor.phone ? { phone: digitsOnly } : {})
+          });
+        } else {
+          visitor = await base44.entities.CopilotVisitor.create({
+            name: trimmedName || undefined,
+            phone: digitsOnly || undefined,
+            email: normalizedEmail || undefined,
+            source: 'copilot',
+            last_seen_at: now,
+            consent_text: consentText,
+            consent_at: now
+          });
+        }
+      } catch (vErr) {
+        console.warn('Visitor upsert non-blocking error:', vErr);
+      }
+
+      // 3. Create CopilotPropertyTouch
+      try {
+        const smallSnapshot = dossierSnapshot ? {
+          shortAddress: dossierSnapshot.shortAddress || propertyAddress.split(',')[0],
+          listPrice: dossierSnapshot.listPrice || null,
+          compsSummary: dossierSnapshot.compsSummary ? String(dossierSnapshot.compsSummary).slice(0, 160) : null,
+          risksSummary: dossierSnapshot.risksSummary ? String(dossierSnapshot.risksSummary).slice(0, 160) : null
+        } : {
+          address: propertyAddress
+        };
+
+        await base44.entities.CopilotPropertyTouch.create({
+          visitor_id: visitor?.id || undefined,
+          address: propertyAddress,
+          mls_id: mlsId || undefined,
+          dossier_snapshot_json: smallSnapshot,
+          report_requested: true,
+          created_at: now
+        });
+      } catch (tErr) {
+        console.warn('Property touch non-blocking error:', tErr);
+      }
 
       setIsSuccess(true);
       setTimeout(() => {
         setIsSubmitting(false);
         setIsSuccess(false);
         onCaptureSuccess?.({
-          name: fullName.trim() || 'Verified Buyer',
+          name: trimmedName || 'Verified Buyer',
           phone: digitsOnly,
-          email: email.trim() || '',
+          email: normalizedEmail || '',
           address: propertyAddress,
         });
         onClose();

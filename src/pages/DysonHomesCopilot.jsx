@@ -1167,6 +1167,8 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                 isOpen={isCaptureModalOpen}
                 onClose={() => setIsCaptureModalOpen(false)}
                 propertyAddress={dossierData.fullAddress || analyzedProperty}
+                dossierSnapshot={dossierData}
+                mlsId={dossierData?.mlsId || dossierData?.mls_id || undefined}
                 onCaptureSuccess={(captured) => {
                   setMessages(prev => [
                     ...prev,

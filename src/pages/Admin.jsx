@@ -10,6 +10,7 @@ import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, R
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
 import VoiceGreetingWidget from '@/components/portal/VoiceGreetingWidget';
 import DepartmentSubChoicesView from '@/components/admin/DepartmentSubChoicesView';
+import CopilotPastUsersTable from '@/components/admin/CopilotPastUsersTable';
 
 const GOLD = '#D4AF37';
 
@@ -410,6 +411,11 @@ export default function Admin() {
             </motion.div>
           </div>
         )}
+
+        {/* ── COPILOT PAST USERS (READ-ONLY ADMIN TABLE STUB) ── */}
+        <div className="pt-2">
+          <CopilotPastUsersTable />
+        </div>
       </div>
     </div>
   );

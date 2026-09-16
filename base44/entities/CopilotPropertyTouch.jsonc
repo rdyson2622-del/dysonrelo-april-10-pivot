@@ -1,0 +1,53 @@
+{
+  "name": "CopilotPropertyTouch",
+  "type": "object",
+  "properties": {
+    "visitor_id": {
+      "type": "string",
+      "description": "Reference to CopilotVisitor ID"
+    },
+    "address": {
+      "type": "string",
+      "description": "Subject property address"
+    },
+    "mls_id": {
+      "type": "string",
+      "description": "Optional MLS ID if applicable"
+    },
+    "dossier_snapshot_json": {
+      "type": "object",
+      "description": "Small summary of comps/risks at touch time"
+    },
+    "report_requested": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether a report was requested on this touch"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of the property touch"
+    }
+  },
+  "required": [
+    "address"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

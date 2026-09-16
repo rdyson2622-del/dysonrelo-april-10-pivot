@@ -1,0 +1,57 @@
+{
+  "name": "CopilotVisitor",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "description": "Optional normalized email of visitor"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Optional normalized phone number of visitor"
+    },
+    "name": {
+      "type": "string",
+      "description": "Optional name of visitor"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "copilot",
+        "preferred_claim",
+        "past_user"
+      ],
+      "default": "copilot",
+      "description": "Visitor source classification"
+    },
+    "last_seen_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of most recent activity or touch"
+    },
+    "consent_text": {
+      "type": "string",
+      "description": "Text of consent statement agreed to"
+    },
+    "consent_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when consent was recorded"
+    }
+  },
+  "required": [],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {},
+    "update": {},
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
