@@ -330,32 +330,39 @@ export class GeminiLiveSessionClient {
           }
           const msg = JSON.parse(rawData);
 
-          // Handle setupComplete first
+          // Handle setupComplete first: setupComplete happens BEFORE requesting/starting mic
           if (msg.setupComplete) {
             this._setupDone = true;
-            await this.startMicrophoneStream();
-            this.onStatusChange?.('listening');
-            this.dispatchGlobalState('listening', true);
+            try {
+              await this.startMicrophoneStream();
+              if (this.micStream) {
+                this.onStatusChange?.('listening');
+                this.dispatchGlobalState('listening', true);
 
-            // Optional passive speech recognition solely for user-side text transcript
-            this.startPassiveSpeechRecognition();
+                // Optional passive speech recognition solely for user-side text transcript
+                this.startPassiveSpeechRecognition();
 
-            // Prompt Charlie in Algieba voice
-            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-              const initialTurn = {
-                clientContent: {
-                  turns: [
-                    {
-                      role: 'user',
-                      parts: [
-                        { text: 'Hello Charlie. In one short friendly sentence, introduce yourself as Charlie Simmons, fiduciary AI relocation concierge at DysonRelo, and ask how you can assist.' },
+                // Prompt Charlie in Algieba voice
+                if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                  const initialTurn = {
+                    clientContent: {
+                      turns: [
+                        {
+                          role: 'user',
+                          parts: [
+                            { text: 'Hello Charlie. In one short friendly sentence, introduce yourself as Charlie Simmons, fiduciary AI concierge for DysonHomes Copilot, and ask how you can assist.' },
+                          ],
+                        },
                       ],
+                      turnComplete: true,
                     },
-                  ],
-                  turnComplete: true,
-                },
-              };
-              this.ws.send(JSON.stringify(initialTurn));
+                  };
+                  this.ws.send(JSON.stringify(initialTurn));
+                }
+              }
+            } catch (micErr) {
+              console.warn('Microphone start aborted or denied:', micErr);
+              // startMicrophoneStream handles onError and onStatusChange
             }
             return;
           }
@@ -488,7 +495,27 @@ export class GeminiLiveSessionClient {
       processor.connect(ctx.destination);
     } catch (err) {
       console.warn('Microphone stream setup error:', err);
-      this.onError?.('Microphone access was denied or unavailable.');
+      const isDenied = err?.name === 'NotAllowedError' || 
+                       err?.name === 'PermissionDeniedError' || 
+                       String(err?.message || err).toLowerCase().includes('denied') ||
+                       String(err?.message || err).toLowerCase().includes('blocked');
+      if (isDenied) {
+        this.onError?.({
+          code: 'mic_denied',
+          message: 'Mic blocked. Allow microphone for this site, then tap Talk Live again.'
+        });
+        this.onStatusChange?.('mic_denied');
+        this.dispatchGlobalState('mic_denied', false);
+      } else {
+        this.onError?.({
+          code: 'mic_error',
+          message: 'Couldn’t start voice. Tap Talk Live to retry.'
+        });
+        this.onStatusChange?.('error');
+        this.dispatchGlobalState('error', false);
+      }
+      this.stop();
+      throw err;
     }
   }
 

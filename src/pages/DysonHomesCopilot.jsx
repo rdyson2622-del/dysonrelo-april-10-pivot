@@ -49,7 +49,8 @@ export default function DysonHomesCopilot({ initialPage }) {
   const [selectedExplodedItem, setSelectedExplodedItem] = useState(null);
   const [isCaptureModalOpen, setIsCaptureModalOpen] = useState(false);
   const [isTalkLiveActive, setIsTalkLiveActive] = useState(false);
-  const [liveStatus, setLiveStatus] = useState('ready'); // ready, connecting, listening, speaking
+  const [liveStatus, setLiveStatus] = useState('ready'); // ready, connecting, listening, speaking, mic_denied, error
+  const [liveStatusText, setLiveStatusText] = useState('');
   const [isSavedDiscussionsOpen, setIsSavedDiscussionsOpen] = useState(false);
   const [isLegalModalOpen, setIsLegalModalOpen] = useState(false);
   const [savedCount, setSavedCount] = useState(() => {
@@ -213,12 +214,14 @@ export default function DysonHomesCopilot({ initialPage }) {
       liveClientRef.current = null;
       setIsTalkLiveActive(false);
       setLiveStatus('ready');
+      setLiveStatusText('');
       setActiveDemoSpeaker(null);
       return;
     }
 
     try {
       setLiveStatus('connecting');
+      setLiveStatusText('Connecting…');
       setIsTalkLiveActive(true);
 
       const client = new GeminiLiveSessionClient({
@@ -227,9 +230,25 @@ export default function DysonHomesCopilot({ initialPage }) {
         language: 'en-US',
         onStatusChange: (st) => {
           setLiveStatus(st);
-          if (st === 'speaking') {
-            setActiveDemoSpeaker('charlie');
+          if (st === 'connecting') {
+            setLiveStatusText('Connecting…');
           } else if (st === 'listening') {
+            setLiveStatusText('Listening — interrupt anytime');
+            setActiveDemoSpeaker(null);
+          } else if (st === 'speaking') {
+            setLiveStatusText('Speaking — interrupt anytime');
+            setActiveDemoSpeaker('charlie');
+          } else if (st === 'mic_denied') {
+            setLiveStatusText('Mic blocked. Allow microphone for this site, then tap Talk Live again.');
+            setIsTalkLiveActive(false);
+            setActiveDemoSpeaker(null);
+          } else if (st === 'error') {
+            setLiveStatusText('Couldn’t start voice. Tap Talk Live to retry.');
+            setIsTalkLiveActive(false);
+            setActiveDemoSpeaker(null);
+          } else if (st === 'ready') {
+            setLiveStatusText('');
+            setIsTalkLiveActive(false);
             setActiveDemoSpeaker(null);
           }
         },
@@ -253,7 +272,16 @@ export default function DysonHomesCopilot({ initialPage }) {
         },
         onError: (err) => {
           console.warn('Gemini Live session error:', err);
-          setLiveStatus('ready');
+          const isDenied = err?.code === 'mic_denied' || 
+                           String(err?.message || err).toLowerCase().includes('denied') || 
+                           String(err?.message || err).toLowerCase().includes('blocked');
+          if (isDenied) {
+            setLiveStatus('mic_denied');
+            setLiveStatusText('Mic blocked. Allow microphone for this site, then tap Talk Live again.');
+          } else {
+            setLiveStatus('error');
+            setLiveStatusText('Couldn’t start voice. Tap Talk Live to retry.');
+          }
           setIsTalkLiveActive(false);
           setActiveDemoSpeaker(null);
         }
@@ -263,7 +291,14 @@ export default function DysonHomesCopilot({ initialPage }) {
       await client.start();
     } catch (e) {
       console.warn('Failed to start Gemini Live session:', e);
-      setLiveStatus('ready');
+      const isDenied = e?.name === 'NotAllowedError' || e?.name === 'PermissionDeniedError';
+      if (isDenied) {
+        setLiveStatus('mic_denied');
+        setLiveStatusText('Mic blocked. Allow microphone for this site, then tap Talk Live again.');
+      } else {
+        setLiveStatus('error');
+        setLiveStatusText('Couldn’t start voice. Tap Talk Live to retry.');
+      }
       setIsTalkLiveActive(false);
       setActiveDemoSpeaker(null);
     }
@@ -697,10 +732,14 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                         speaker="charlie"
                         variant="card"
                         className="w-full"
-                        isSpeakingOverride={activeDemoSpeaker === 'charlie' || isTalkLiveActive}
+                        isSpeakingOverride={activeDemoSpeaker === 'charlie'}
                         activeExplainer={activeExplainer}
                         onClearExplainer={() => setActiveExplainer(null)}
                         onTriggerExplainer={() => handleToggleTalkLive()}
+                        onToggleTalkLive={handleToggleTalkLive}
+                        liveStatus={liveStatus}
+                        liveStatusText={liveStatusText}
+                        isLiveActive={isTalkLiveActive}
                       />
                       <CopilotConsumerSpeakerBox 
                         className="w-full"
@@ -762,19 +801,14 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                             <button
                               type="button"
                               onClick={handleToggleTalkLive}
-                              className={`p-1.5 rounded-full transition-all cursor-pointer flex items-center gap-1 ${
+                              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer flex items-center justify-center ${
                                 isTalkLiveActive 
                                   ? 'bg-red-600 text-white animate-pulse' 
-                                  : 'text-white hover:bg-white/10'
+                                  : 'bg-white/10 text-white hover:bg-white/20 border border-white/20'
                               }`}
-                              title={isTalkLiveActive ? "End live Gemini duplex session" : "Talk Live with Charlie (Gemini Live Algieba)"}
+                              title={isTalkLiveActive ? "End live Gemini duplex session" : "Talk Live with Charlie"}
                             >
-                              <Mic className="w-4 h-4" />
-                              {isTalkLiveActive && (
-                                <span className="text-[10px] font-bold uppercase tracking-wider">
-                                  {liveStatus === 'connecting' ? 'Connecting...' : liveStatus === 'speaking' ? 'Speaking' : 'Listening'}
-                                </span>
-                              )}
+                              <span>{isTalkLiveActive ? (liveStatus === 'connecting' ? 'Connecting…' : 'End Voice') : 'Talk Live'}</span>
                             </button>
 
                             <button
@@ -791,18 +825,48 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                         </div>
                       </form>
 
-                      {(messages.length > 0 || isTalkLiveActive) && (
-                        <div className="flex justify-end pt-0.5">
-                          <button
-                            type="button"
-                            onClick={resetToBlank}
-                            className="px-2 py-1 rounded-md text-[10px] font-medium bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white border border-white/15 transition-all cursor-pointer whitespace-nowrap"
-                            title="Clear all messages and reset screen to blank"
-                          >
-                            Clear Session
-                          </button>
+                      {/* Talk Live Helper & Exact Status Bar */}
+                      <div className="flex items-center justify-between text-[11px] px-2 py-0.5 min-h-[22px]">
+                        <span className="text-stone-300 font-sans truncate">
+                          {liveStatus === 'connecting' ? (
+                            <span className="text-[#D4AF37] font-semibold animate-pulse">Connecting…</span>
+                          ) : liveStatus === 'listening' ? (
+                            <span className="text-emerald-400 font-semibold">Listening — interrupt anytime</span>
+                          ) : liveStatus === 'speaking' ? (
+                            <span className="text-[#D4AF37] font-semibold">Speaking — interrupt anytime</span>
+                          ) : liveStatus === 'mic_denied' ? (
+                            <span className="text-rose-400 font-semibold">Mic blocked. Allow microphone for this site, then tap Talk Live again.</span>
+                          ) : liveStatus === 'error' ? (
+                            <span className="text-rose-400 font-semibold">Couldn’t start voice. Tap Talk Live to retry.</span>
+                          ) : (
+                            <span className="text-stone-400">Tap once — then just talk. No typing.</span>
+                          )}
+                        </span>
+
+                        <div className="flex items-center gap-2 shrink-0 ml-2">
+                          {isTalkLiveActive && (
+                            <button
+                              type="button"
+                              onClick={handleToggleTalkLive}
+                              className="px-2 py-0.5 rounded bg-red-950/80 hover:bg-red-900 border border-red-500/50 text-red-200 text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-all"
+                            >
+                              <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                              <span>End</span>
+                            </button>
+                          )}
+
+                          {messages.length > 0 && (
+                            <button
+                              type="button"
+                              onClick={resetToBlank}
+                              className="px-2 py-0.5 rounded text-[10px] font-medium bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white border border-white/15 transition-all cursor-pointer whitespace-nowrap"
+                              title="Clear all messages and reset screen to blank"
+                            >
+                              Clear Session
+                            </button>
+                          )}
                         </div>
-                      )}
+                      </div>
                     </div>
 
                     {/* ── 3-WAY INTERACTIVE DIALOGUE FEED (COLOR-CODED DURING SPEECH & AT REST) ── */}

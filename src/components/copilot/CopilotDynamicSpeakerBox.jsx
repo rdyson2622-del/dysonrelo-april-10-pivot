@@ -34,6 +34,10 @@ export default function CopilotDynamicSpeakerBox({
   variant = 'card', // 'card' (Page 3) | 'rail' (Team Sidebar Rail)
   isSpeakingOverride = false,
   className = '',
+  onToggleTalkLive,
+  liveStatus = 'ready',
+  liveStatusText = '',
+  isLiveActive = false,
 }) {
   const isBob = speaker === 'bob';
   const headshot = isBob ? BOB_HEADSHOT : CHARLIE_HEADSHOT;
@@ -64,7 +68,7 @@ export default function CopilotDynamicSpeakerBox({
     (activeExplainer.speaker === speaker || (!activeExplainer.speaker && !isBob))
   );
 
-  const isLiveVoiceActive = !isBob && (voiceStatus === 'connecting' || voiceStatus === 'listening' || voiceStatus === 'speaking');
+  const isLiveVoiceActive = !isBob && (isLiveActive || voiceStatus === 'connecting' || voiceStatus === 'listening' || voiceStatus === 'speaking');
   
   // Total enlarged state
   const isEnlarged = isThisExplainerActive || isLiveVoiceActive || isSpeakingOverride;
@@ -338,16 +342,16 @@ export default function CopilotDynamicSpeakerBox({
         className={`relative z-40 transition-all duration-300 ease-out ${
           variant === 'rail' 
             ? 'w-[220px] sm:w-[240px] -ml-2 -mr-28 my-1' 
-            : 'w-full sm:w-[260px] lg:w-[270px]'
+            : 'w-full'
         } ${className}`}
       >
-        <div className="w-full rounded-xl bg-[#0c0c0c] border-2 border-[#D4AF37] shadow-[0_12px_40px_rgba(212,175,55,0.3)] p-2.5 flex flex-col items-center text-center space-y-2 animate-in fade-in zoom-in-95 duration-200">
+        <div className="w-full rounded-xl bg-[#0c0c0c] border-2 border-[#D4AF37] shadow-[0_12px_40px_rgba(212,175,55,0.3)] p-2 flex flex-col items-center text-center space-y-2 animate-in fade-in zoom-in-95 duration-200">
           {/* Header Live Timer */}
           <div className="w-full flex items-center justify-between text-[10px] px-1 font-mono">
             <div className="flex items-center gap-1.5">
               <span className={`w-2 h-2 rounded-full ${isSpeaking ? 'bg-[#D4AF37] animate-ping' : 'bg-[#10b981] animate-pulse'}`} />
               <span className="text-[#D4AF37] font-bold tracking-wider uppercase text-[9.5px]">
-                {isConnecting ? 'CONNECTING...' : isSpeaking ? 'CHARLIE SPEAKING' : 'CHARLIE LISTENING'}
+                {isConnecting ? 'CONNECTING…' : isSpeaking ? 'CHARLIE SPEAKING' : 'CHARLIE LISTENING'}
               </span>
             </div>
             <span className="text-stone-400 font-semibold">
@@ -414,7 +418,10 @@ export default function CopilotDynamicSpeakerBox({
 
             <button
               type="button"
-              onClick={() => endVoiceSession()}
+              onClick={() => {
+                if (onToggleTalkLive) onToggleTalkLive();
+                else endVoiceSession();
+              }}
               className="py-1 px-1 rounded-md bg-red-950/80 hover:bg-red-900 border border-red-500/50 text-red-200 text-[10px] font-bold flex items-center justify-center gap-0.5 transition-all cursor-pointer shadow-md"
             >
               <Square className="w-2.5 h-2.5 fill-current text-red-400" />
@@ -580,21 +587,18 @@ export default function CopilotDynamicSpeakerBox({
         ) : (
           <button
             type="button"
-            onClick={startVoiceSession}
-            disabled={micPermissionState === 'requesting'}
-            className="w-full py-1 px-1.5 rounded-md bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white text-white text-[9px] font-medium flex items-center justify-center gap-1 transition-all cursor-pointer shadow-sm group-hover:bg-white/10 disabled:opacity-50"
+            onClick={() => {
+              if (onToggleTalkLive) onToggleTalkLive();
+              else startVoiceSession();
+            }}
+            disabled={liveStatus === 'connecting' || micPermissionState === 'requesting'}
+            className="w-full py-1 px-1.5 rounded-md bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white text-white text-[9px] font-medium flex items-center justify-center transition-all cursor-pointer shadow-sm group-hover:bg-white/10 disabled:opacity-50"
             title="Start live 2-way Gemini voice conversation"
           >
-            {micPermissionState === 'requesting' ? (
-              <>
-                <RefreshCw className="w-2.5 h-2.5 text-white animate-spin" />
-                <span className="text-white">Checking...</span>
-              </>
+            {isLiveActive ? (
+              <span className="text-[#D4AF37] font-semibold">{liveStatus === 'connecting' ? 'Connecting…' : 'End Voice'}</span>
             ) : (
-              <>
-                <Sparkles className="w-2.5 h-2.5 text-white" />
-                <span className="text-white">Talk Live</span>
-              </>
+              <span className="text-white">Talk Live</span>
             )}
           </button>
         )}
