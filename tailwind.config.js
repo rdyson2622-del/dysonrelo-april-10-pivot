@@ -10,6 +10,11 @@ module.exports = {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
+        status: {
+          complete: 'hsl(var(--status-complete))',
+          progress: 'hsl(var(--status-progress))',
+          stop: 'hsl(var(--status-stop))'
+        },
   			dyson: {
   				black: 'var(--dyson-black)',
   				charcoal: 'var(--dyson-charcoal)',

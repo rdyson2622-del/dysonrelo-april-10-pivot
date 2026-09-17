@@ -7,6 +7,7 @@ import {
 import { getDoorAudioBriefing } from './doorAudioBriefings';
 import { stopAllCopilotAudio, subscribeToStopAllAudio, registerActiveMedia } from '@/lib/copilotAudioController';
 import CopilotScriptRewriteModal from './CopilotScriptRewriteModal';
+import CopilotRoadmapPreview from '@/components/copilot/CopilotRoadmapPreview';
 
 /**
  * CopilotDoorAudioBriefingStage
@@ -432,35 +433,8 @@ export default function CopilotDoorAudioBriefingStage({
             </div>
           )}
 
-          {/* 2. MOVE ROADMAP SEQUENCE */}
-          {activeDoor === 'roadmap' && (
-            <div className="flex items-center justify-between text-[9px] sm:text-[10px] gap-1 px-1 font-mono">
-              <div className="text-center">
-                <span className="w-5 h-5 rounded-full bg-[#D4AF37] text-black font-bold flex items-center justify-center mx-auto text-[9px]">1</span>
-                <span className="text-stone-400 block mt-1 text-[8.5px]">Audit</span>
-              </div>
-              <span className="text-stone-600 text-xs">➔</span>
-              <div className="text-center">
-                <span className="w-5 h-5 rounded-full bg-white/10 text-white font-bold flex items-center justify-center mx-auto text-[9px]">2</span>
-                <span className="text-stone-400 block mt-1 text-[8.5px]">Agent</span>
-              </div>
-              <span className="text-stone-600 text-xs">➔</span>
-              <div className="text-center">
-                <span className="w-5 h-5 rounded-full bg-white/10 text-white font-bold flex items-center justify-center mx-auto text-[9px]">3</span>
-                <span className="text-stone-400 block mt-1 text-[8.5px]">Offer</span>
-              </div>
-              <span className="text-stone-600 text-xs">➔</span>
-              <div className="text-center">
-                <span className="w-5 h-5 rounded-full bg-white/10 text-white font-bold flex items-center justify-center mx-auto text-[9px]">4</span>
-                <span className="text-stone-400 block mt-1 text-[8.5px]">Escrow</span>
-              </div>
-              <span className="text-stone-600 text-xs">➔</span>
-              <div className="text-center">
-                <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold flex items-center justify-center mx-auto text-[9px]">7</span>
-                <span className="text-emerald-400 block mt-1 text-[8.5px]">Close</span>
-              </div>
-            </div>
-          )}
+          {/* 2. CONNECTED DEMO ROADMAP — ILLUSTRATIVE, NOT LIVE CLIENT DATA */}
+          {activeDoor === 'roadmap' && <CopilotRoadmapPreview />}
 
           {/* 3. ESCROW DEPOSIT SHIELD */}
           {activeDoor === 'escrow' && (

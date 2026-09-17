@@ -17,6 +17,9 @@
     --dyson-taupe: #d8cab6;
     --dyson-text: #ffffff;
     --dyson-text-dark: #0a0a0a;
+    --status-complete: 142 60% 45%;
+    --status-progress: 48 90% 55%;
+    --status-stop: 0 72% 58%;
     --background: 37 43% 86%; /* #ede0cc Dyson Signature Tan */
     --foreground: 0 0% 5%;
     --card: 0 0% 100%;
@@ -53,6 +56,9 @@
   }
 
   .dark {
+    --status-complete: 142 60% 45%;
+    --status-progress: 48 90% 55%;
+    --status-stop: 0 72% 58%;
     --background: 37 43% 86%; /* #ede0cc Dyson Signature Tan - All backdrops tan! */
     --foreground: 0 0% 5%;
     --card: 0 0% 3.9%;
