@@ -7,6 +7,9 @@ import {
 } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import { SOLUTIONS_LIBRARY } from './CopilotSolutionsVault';
+import CopilotVettingView from './CopilotVettingView';
+import CopilotRoadmapView from './CopilotRoadmapView';
+import CopilotEscrowView from './CopilotEscrowView';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
@@ -555,9 +558,42 @@ export default function CopilotExplodedSubjectModal({
             </div>
           </div>
 
+        ) : currentTab === 'vetting' ? (
+
+          /* ── OPTION D1: AGENT VETTING DESK IN EXPLODED THEATER ── */
+          <div className="space-y-6 animate-in fade-in duration-150">
+            <CopilotVettingView
+              propertyAddress={dossierData?.fullAddress || property}
+              onPromptClick={handleReturnToCommunication}
+              onOpenCaptureModal={onOpenCaptureModal}
+            />
+          </div>
+
+        ) : currentTab === 'roadmap' ? (
+
+          /* ── OPTION D2: MOVE ROADMAP IN EXPLODED THEATER ── */
+          <div className="space-y-6 animate-in fade-in duration-150">
+            <CopilotRoadmapView
+              propertyAddress={dossierData?.fullAddress || property}
+              onPromptClick={handleReturnToCommunication}
+              onOpenCaptureModal={onOpenCaptureModal}
+            />
+          </div>
+
+        ) : currentTab === 'escrow' ? (
+
+          /* ── OPTION D3: ESCROW & TITLE WATCH IN EXPLODED THEATER ── */
+          <div className="space-y-6 animate-in fade-in duration-150">
+            <CopilotEscrowView
+              propertyAddress={dossierData?.fullAddress || property}
+              onPromptClick={handleReturnToCommunication}
+              onOpenCaptureModal={onOpenCaptureModal}
+            />
+          </div>
+
         ) : (
 
-          /* ── OPTION D: PROPERTY AUDIT & INTELLIGENCE IN EXPLODED THEATER ── */
+          /* ── OPTION D4: PROPERTY AUDIT & INTELLIGENCE IN EXPLODED THEATER ── */
           <div className="space-y-6 animate-in fade-in duration-150">
             {/* Header Banner */}
             <div className="rounded-2xl border-2 border-[#D4AF37] bg-gradient-to-r from-[#17140b] via-[#101010] to-[#121212] p-5 sm:p-6 shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">

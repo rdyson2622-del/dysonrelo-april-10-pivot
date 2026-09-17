@@ -73,12 +73,12 @@ export default function DysonHomesCopilot({ initialPage }) {
 
   // Discussion history stack state (stacked as added, retained on 40% side)
   const [discussionChips, setDiscussionChips] = useState([
-    { id: 'solutions', label: 'Saved Solutions', query: 'What solutions and playbooks do you offer for home buyers?', view: 'solutions' },
-    { id: 'compliance', label: 'Lender Compliance', query: 'Bob, how does Dyson & Dyson handle transaction discovery and lender compliance?', view: 'solutions' },
-    { id: 'escrow', label: 'Ask Bob: Escrow Traps', query: 'Bob, what are the biggest escrow traps and how do we protect our earnest money deposit?', view: 'solutions' },
-    { id: 'prop19', label: 'Prop 19 Tax', query: 'How does Prop 19 tax base portability work when relocating in California?', view: 'solutions' },
-    { id: 'bluff', label: 'Bluff Setbacks', query: 'What are the coastal bluff setback and soil stability risks in California?', view: 'solutions' },
+    { id: 'audit', label: 'Property Audit', query: 'Charlie, walk me through how this home sits against adjusted comps', view: 'dossier' },
+    { id: 'vetting', label: 'Agent Vetting', query: 'Bob, what are the top 3 traps when a buyer uses the listing agent?', view: 'vetting' },
+    { id: 'roadmap', label: 'Move Roadmap', query: 'Charlie, what are the next milestones after an offer is accepted?', view: 'roadmap' },
+    { id: 'escrow', label: 'Escrow Watch', query: 'Bob, how do we protect our earnest money deposit from forfeiture?', view: 'escrow' },
     { id: 'news', label: 'Daily News', query: 'Charlie, summarize this broadcast in bullet points', view: 'news' },
+    { id: 'prop19', label: 'Prop 19 Tax', query: 'How does Prop 19 tax base portability work when relocating in California?', view: 'solutions' },
   ]);
 
   const addDiscussionChip = (text, view = 'solutions') => {
@@ -338,6 +338,12 @@ export default function DysonHomesCopilot({ initialPage }) {
     // Route views if matching keywords
     if (/news|broadcast|dnn/i.test(clean)) {
       setRightPanelView('news');
+    } else if (/vetting|agent vetting|dual agency|hire agent/i.test(clean)) {
+      setRightPanelView('vetting');
+    } else if (/roadmap|milestone|steps to buy|timeline|phase/i.test(clean)) {
+      setRightPanelView('roadmap');
+    } else if (/escrow|deposit|emd|contingency|title exception|liquidated damages/i.test(clean)) {
+      setRightPanelView('escrow');
     } else if (/solution|vault|playbook/i.test(clean)) {
       setRightPanelView('solutions');
     } else if (/audit|comps|risk/i.test(clean)) {
@@ -440,6 +446,69 @@ DIRECTIVE FOR CHARLIE SIMMONS:
       ]);
     } finally {
       setIsSending(false);
+    }
+  };
+
+  const handleSelectMiniApp = (appId, isParked = false) => {
+    if (isParked) {
+      setMessages(prev => [
+        ...prev,
+        {
+          id: Date.now(),
+          sender: 'charlie',
+          speakerName: 'Charlie Simmons',
+          text: `This back-office execution module is managed by our licensed fiduciary transaction desk. I've left the 4 core execution doors open in your dock — tap Property Audit, Agent Vetting, Move Roadmap, or Escrow Watch to run live checks.`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
+      return;
+    }
+
+    if (appId === 'dossier' || appId === 'audit') {
+      setRightPanelView('dossier');
+      addDiscussionChip('Property Audit', 'dossier');
+    } else if (appId === 'vetting') {
+      setRightPanelView('vetting');
+      addDiscussionChip('Agent Vetting', 'vetting');
+      setMessages(prev => [
+        ...prev,
+        {
+          id: Date.now(),
+          sender: 'charlie',
+          speakerName: 'Charlie Simmons',
+          text: `I've opened the Agent Vetting Desk on your right for ${dossierData.shortAddress || analyzedProperty}. Review the 4 non-negotiable standards before hiring an agent, or ask me or Bob how to challenge dual agency.`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
+    } else if (appId === 'roadmap' || appId === 'workflows') {
+      setRightPanelView('roadmap');
+      addDiscussionChip('Move Roadmap', 'roadmap');
+      setMessages(prev => [
+        ...prev,
+        {
+          id: Date.now(),
+          sender: 'charlie',
+          speakerName: 'Charlie Simmons',
+          text: `Here is the 7-Phase Move Roadmap for ${dossierData.shortAddress || analyzedProperty}. You're currently in Phase 1 (Discovery & Risk Audit). Tap any milestone to explore contingency deadlines and inspection traps.`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
+    } else if (appId === 'escrow' || appId === 'operations') {
+      setRightPanelView('escrow');
+      addDiscussionChip('Escrow Watch', 'escrow');
+      setMessages(prev => [
+        ...prev,
+        {
+          id: Date.now(),
+          sender: 'bob',
+          speakerName: 'Bob Dyson',
+          text: `Bob Dyson here. I've engaged our Escrow & Title Contingency Shield on your right. Never sign form CR or wire deposits without verifying active contingency release rules and Schedule B title exceptions.`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
+    } else if (appId === 'dnn') {
+      setRightPanelView('news');
+      addDiscussionChip('DNN News', 'news');
     }
   };
 
@@ -1141,7 +1210,10 @@ DIRECTIVE FOR CHARLIE SIMMONS:
               </div>
 
               {/* ── BOTTOM HORIZONTAL AI MINIONS RAIL ── */}
-              <CopilotMiniAppsRail />
+              <CopilotMiniAppsRail 
+                onSelectApp={handleSelectMiniApp} 
+                activeApp={rightPanelView || 'dossier'} 
+              />
 
               {/* ── FULL-PAGE EXPLODED SUBJECT THEATER ── */}
               <CopilotExplodedSubjectModal

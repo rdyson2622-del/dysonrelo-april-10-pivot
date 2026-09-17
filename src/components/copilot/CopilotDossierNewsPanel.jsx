@@ -3,11 +3,14 @@ import {
   Scale, ShieldAlert, Shield, DollarSign, Waves, Clock, Radio, 
   Maximize2, Minimize2, Newspaper, Sparkles, Play, Pause,
   Share2, Volume2, VolumeX, ChevronRight, MessageSquare, BookOpen, FileText,
-  ArrowLeft, X, RotateCcw
+  ArrowLeft, X, RotateCcw, GitBranch, ShieldCheck
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import CopilotSolutionsVault from './CopilotSolutionsVault';
+import CopilotVettingView from './CopilotVettingView';
+import CopilotRoadmapView from './CopilotRoadmapView';
+import CopilotEscrowView from './CopilotEscrowView';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
@@ -112,7 +115,7 @@ export default function CopilotDossierNewsPanel({
       onToggleExplode?.();
       return;
     }
-    if (currentView === 'solutions' || currentView === 'news') {
+    if (currentView !== 'dossier') {
       onViewChange?.('dossier');
       return;
     }
@@ -233,8 +236,8 @@ export default function CopilotDossierNewsPanel({
           <span>Back</span>
         </button>
 
-        {/* Unified Button Group: Search, Audit, Solutions, Daily News & Full Screen */}
-        <div className="flex items-center bg-[#141414] p-0.5 rounded-md border border-white/10 gap-0.5">
+        {/* Unified Button Group: 4 Execution Doors + Solutions, News, Full Screen */}
+        <div className="flex items-center bg-[#141414] p-0.5 rounded-md border border-white/10 gap-0.5 overflow-x-auto scrollbar-thin">
           <button
             type="button"
             onClick={() => {
@@ -244,7 +247,7 @@ export default function CopilotDossierNewsPanel({
                 handleIntelligenceBack();
               }
             }}
-            className="px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 text-stone-400 hover:text-white hover:bg-white/10 active:bg-white active:text-black"
+            className="px-2 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 text-stone-400 hover:text-white hover:bg-white/10 whitespace-nowrap"
           >
             <span>← Search</span>
           </button>
@@ -252,48 +255,87 @@ export default function CopilotDossierNewsPanel({
           <button
             type="button"
             onClick={() => onViewChange?.('dossier')}
-            className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ${
+            className={`px-2 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
               currentView === 'dossier'
-                ? 'bg-white text-black font-semibold shadow-sm'
+                ? 'bg-white text-black font-bold shadow-sm'
                 : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
           >
             <Scale className="w-3 h-3" />
-            <span>Saved Audits</span>
+            <span>Audit</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onViewChange?.('vetting')}
+            className={`px-2 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
+              currentView === 'vetting'
+                ? 'bg-purple-600 text-white font-bold shadow-sm'
+                : 'text-purple-300 hover:text-white hover:bg-white/10'
+            }`}
+          >
+            <Shield className="w-3 h-3" />
+            <span>Vetting</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onViewChange?.('roadmap')}
+            className={`px-2 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
+              currentView === 'roadmap'
+                ? 'bg-cyan-500 text-black font-bold shadow-sm'
+                : 'text-cyan-300 hover:text-white hover:bg-white/10'
+            }`}
+          >
+            <GitBranch className="w-3 h-3" />
+            <span>Roadmap</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onViewChange?.('escrow')}
+            className={`px-2 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
+              currentView === 'escrow'
+                ? 'bg-emerald-600 text-white font-bold shadow-sm'
+                : 'text-emerald-300 hover:text-white hover:bg-white/10'
+            }`}
+          >
+            <ShieldCheck className="w-3 h-3" />
+            <span>Escrow</span>
           </button>
 
           <button
             type="button"
             onClick={() => onViewChange?.('solutions')}
-            className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ${
+            className={`px-2 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
               currentView === 'solutions'
-                ? 'bg-white text-black font-semibold shadow-sm'
+                ? 'bg-white text-black font-bold shadow-sm'
                 : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
           >
             <FileText className="w-3 h-3" />
-            <span>Saved Solutions</span>
+            <span>Vault</span>
           </button>
 
           <button
             type="button"
             onClick={() => onViewChange?.('news')}
-            className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ${
+            className={`px-2 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
               currentView === 'news'
-                ? 'bg-white text-black font-semibold shadow-sm'
+                ? 'bg-rose-600 text-white font-bold shadow-sm'
                 : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
           >
             <Radio className="w-3 h-3" />
-            <span>Saved DNN News</span>
+            <span>News</span>
           </button>
 
           <button
             type="button"
             onClick={() => onToggleExplode?.()}
-            className={`px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 ml-0.5 ${
+            className={`px-2 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ml-0.5 ${
               isExploded
-                ? 'bg-white text-black font-semibold shadow-sm'
+                ? 'bg-white text-black font-bold shadow-sm'
                 : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
             title={isExploded ? "Return from full screen to page size" : "Expand chat + dossier canvas to full viewport"}
@@ -301,12 +343,12 @@ export default function CopilotDossierNewsPanel({
             {isExploded ? (
               <>
                 <X className="w-3 h-3 text-black stroke-[2.5]" />
-                <span>Return to Dialogue</span>
+                <span>Return</span>
               </>
             ) : (
               <>
                 <Maximize2 className="w-3 h-3" />
-                <span>Full screen</span>
+                <span>Expand</span>
               </>
             )}
           </button>
@@ -314,7 +356,7 @@ export default function CopilotDossierNewsPanel({
           <button
             type="button"
             onClick={handleClear}
-            className="px-2.5 py-1 rounded text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 text-stone-400 hover:text-white hover:bg-white/10 active:bg-white active:text-black ml-0.5"
+            className="px-2 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 text-stone-400 hover:text-white hover:bg-white/10 active:bg-white active:text-black ml-0.5"
             title="Clear content from the screen"
           >
             <RotateCcw className="w-3 h-3" />
@@ -322,6 +364,39 @@ export default function CopilotDossierNewsPanel({
           </button>
         </div>
       </div>
+
+      {/* ─────────────────────────────────────────────────────────────
+          VIEW: AGENT VETTING STANDARDS DESK
+          ───────────────────────────────────────────────────────────── */}
+      {activeView === 'vetting' && (
+        <CopilotVettingView
+          propertyAddress={dossierData?.fullAddress || property}
+          onPromptClick={onPromptClick}
+          onOpenCaptureModal={onOpenCaptureModal}
+        />
+      )}
+
+      {/* ─────────────────────────────────────────────────────────────
+          VIEW: TRANSACTION MOVE ROADMAP
+          ───────────────────────────────────────────────────────────── */}
+      {activeView === 'roadmap' && (
+        <CopilotRoadmapView
+          propertyAddress={dossierData?.fullAddress || property}
+          onPromptClick={onPromptClick}
+          onOpenCaptureModal={onOpenCaptureModal}
+        />
+      )}
+
+      {/* ─────────────────────────────────────────────────────────────
+          VIEW: ESCROW & TITLE CONTINGENCY SHIELD
+          ───────────────────────────────────────────────────────────── */}
+      {activeView === 'escrow' && (
+        <CopilotEscrowView
+          propertyAddress={dossierData?.fullAddress || property}
+          onPromptClick={onPromptClick}
+          onOpenCaptureModal={onOpenCaptureModal}
+        />
+      )}
 
       {/* ─────────────────────────────────────────────────────────────
           VIEW: REAL ESTATE SOLUTIONS & INTELLIGENCE VAULT
