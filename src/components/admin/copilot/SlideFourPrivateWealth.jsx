@@ -1,10 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ShieldCheck, Plus } from 'lucide-react';
 import { useAuth } from '@/lib/AuthContext';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import CopilotLegalDisclosuresModal from '@/components/copilot/CopilotLegalDisclosuresModal';
 import CopilotReferAFriendModal from '@/components/copilot/CopilotReferAFriendModal';
+import { getCheckedInUser, clearCheckedInContact } from '@/lib/copilotContactSession';
 
 // Authentic evening luxury estate villa (hero-evening-luxury-clean.png)
 const HERO_EVENING = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/efdc69af3_hero-evening-luxury-clean.png";
@@ -74,6 +75,28 @@ export function extractAddressOrMls(raw) {
 
 export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGoToChatCanvas }) {
   const { user, isAuthenticated, logout } = useAuth();
+  const [checkedInUser, setCheckedInUser] = useState(() => getCheckedInUser(user));
+
+  useEffect(() => {
+    setCheckedInUser(getCheckedInUser(user));
+  }, [user]);
+
+  useEffect(() => {
+    const handleContactUpdated = () => {
+      setCheckedInUser(getCheckedInUser(user));
+    };
+    window.addEventListener('dyson_copilot_contact_updated', handleContactUpdated);
+    return () => window.removeEventListener('dyson_copilot_contact_updated', handleContactUpdated);
+  }, [user]);
+
+  const handleSignOutOrClear = () => {
+    clearCheckedInContact();
+    if (isAuthenticated) {
+      logout();
+    }
+    setCheckedInUser(null);
+  };
+
   const [address, setAddress] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -108,24 +131,25 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
       className="w-full text-left select-none relative overflow-hidden bg-[#0a0a0a]" 
       style={{ color: '#F3F0E6' }}
     >
-      {/* ── SUBTLE CLIENT SIGN-IN / RETURN VISIT HEADER LINK ── */}
+      {/* ── SUBTLE CLIENT SIGN-IN / RETURN VISIT HEADER LINK (UP TOP) ── */}
       <div className="absolute top-5 right-6 sm:right-10 z-20 flex items-center gap-2 text-xs font-sans">
-        {isAuthenticated ? (
-          <div className="flex items-center gap-2 text-stone-300 font-normal">
-            <span className="text-stone-400">Welcome back{user?.full_name ? `, ${user.full_name.split(' ')[0]}` : ''}</span>
+        {checkedInUser ? (
+          <div className="flex items-center gap-2 text-stone-300 font-normal bg-black/60 px-3 py-1 rounded-full border border-white/10 backdrop-blur-sm shadow-sm">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+            <span className="text-stone-200 font-medium">Welcome back, {checkedInUser.firstName}</span>
             <span className="text-stone-600">·</span>
             <button
               type="button"
               onClick={onGoToChatCanvas}
-              className="text-[#D4AF37] hover:underline cursor-pointer"
+              className="text-[#D4AF37] hover:underline cursor-pointer font-medium"
             >
               Command Center
             </button>
             <span className="text-stone-600">·</span>
             <button
               type="button"
-              onClick={() => logout()}
-              className="text-stone-500 hover:text-stone-300 cursor-pointer"
+              onClick={handleSignOutOrClear}
+              className="text-stone-400 hover:text-white transition-colors cursor-pointer text-[11px]"
             >
               Sign out
             </button>

@@ -12,6 +12,7 @@ import CopilotContactCaptureModal from '@/components/copilot/CopilotContactCaptu
 import CopilotExplodedSubjectModal from '@/components/copilot/CopilotExplodedSubjectModal';
 import CopilotSavedDiscussionsModal from '@/components/copilot/CopilotSavedDiscussionsModal';
 import CopilotBrokerEscalationModal from '@/components/copilot/CopilotBrokerEscalationModal';
+import CopilotFooterBranding from '@/components/copilot/CopilotFooterBranding';
 import { findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { getPropertyDossier } from './propertyDossierData';
 import { 
@@ -888,57 +889,18 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
 
       </div>
 
-      {/* ── FOOTER ROW DIRECTLY OVER MINI APPS: DISCUSSION STACK (LOWER LEFT <= 40% SCREEN) & BRANDING (FAR RIGHT) ── */}
-      <div className="px-3 sm:px-4 py-2.5 bg-[#0a0a0a] border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        {/* Discussion History & Saved Discussions Stack (Lower Left Stacked, <= 40% Screen Width) */}
-        <div className="w-full sm:max-w-[40%] flex flex-wrap items-center gap-1.5">
-          <button
-            type="button"
-            onClick={() => setIsSavedDiscussionsOpen(true)}
-            className="px-2.5 py-1 rounded-md text-[10px] font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm shrink-0"
-            title="Open Saved Discussions"
-          >
-            <Bookmark className="w-3 h-3 text-[#D4AF37]" />
-            <span>Saved Discussions</span>
-            {savedCount > 0 && (
-              <span className="px-1.5 py-0.2 rounded-full bg-[#D4AF37] text-black text-[9px] font-bold">
-                {savedCount}
-              </span>
-            )}
-          </button>
-
-          {discussionChips.map((chip) => (
-            <button
-              key={chip.id}
-              type="button"
-              onClick={() => {
-                if (chip.view) setRightPanelView(chip.view);
-                handlePillClick(chip.query);
-              }}
-              className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer shrink-0"
-              title={chip.query}
-            >
-              <span>{chip.label}</span>
-            </button>
-          ))}
-        </div>
-
-        {/* Footer Branding: stacked vertically on the far right */}
-        <div className="flex flex-col items-end text-right font-normal text-white shrink-0 self-end sm:self-center ml-auto">
-          <span className="text-[12px] sm:text-[12.5px] font-normal text-white tracking-normal whitespace-nowrap">
-            The Dyson &amp; Dyson Companies, Inc. Ca. DRE#02303118
-          </span>
-          <div className="text-[11.5px] sm:text-[12px] font-normal text-white flex items-center gap-2 whitespace-nowrap mt-0.5">
-            <a href="tel:8583531200" className="text-white hover:underline transition-colors font-normal">
-              (858) 353 1200
-            </a>
-            <span className="text-white">·</span>
-            <a href="mailto:bob@dysonrelo.com" className="text-white hover:underline transition-colors font-normal">
-              bob@dysonrelo.com
-            </a>
-          </div>
-        </div>
-      </div>
+      {/* ── FOOTER ROW: SAVED DISCUSSIONS & CHIPS HORIZONTAL (LEFT) & BRANDING 3-ROW STACK (FAR RIGHT) ── */}
+      <CopilotFooterBranding
+        savedCount={savedCount}
+        onOpenSavedDiscussions={() => setIsSavedDiscussionsOpen(true)}
+        discussionChips={discussionChips}
+        onSelectChip={(chip) => {
+          if (chip.view) setRightPanelView(chip.view);
+          handlePillClick(chip.query);
+        }}
+        onOpenReferModal={() => {}}
+        onOpenLegalModal={() => {}}
+      />
 
       {/* ── BOTTOM HORIZONTAL AI MINIONS RAIL ── */}
       {showRail && (

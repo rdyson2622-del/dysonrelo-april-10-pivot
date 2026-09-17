@@ -11,9 +11,9 @@ export default function CopilotFooterBranding({
   onOpenLegalModal
 }) {
   return (
-    <div className="px-3 sm:px-4 py-3 bg-[#0a0a0a] border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-3 select-none">
-      {/* Discussion History & Saved Discussions Stack (Lower Left Stacked, <= 42% Screen Width) */}
-      <div className="w-full sm:max-w-[42%] flex flex-wrap items-center gap-1.5 self-center sm:self-end">
+    <div className="px-3 sm:px-4 py-2.5 bg-[#0a0a0a] border-t border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 select-none">
+      {/* ── LEFT: SAVED DISCUSSIONS & CHIPS STACKED HORIZONTALLY IN CLEAN ROWS ── */}
+      <div className="flex-1 min-w-0 flex flex-wrap items-center gap-1.5">
         <button
           type="button"
           onClick={onOpenSavedDiscussions}
@@ -34,7 +34,7 @@ export default function CopilotFooterBranding({
             key={chip.id}
             type="button"
             onClick={() => onSelectChip?.(chip)}
-            className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer shrink-0"
+            className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer shrink-0"
             title={chip.query}
           >
             <span>{chip.label}</span>
@@ -42,15 +42,15 @@ export default function CopilotFooterBranding({
         ))}
       </div>
 
-      {/* Footer Branding: Clean vertical stack on the right side lower (never running across the page) */}
-      <div className="flex flex-col items-end text-right shrink-0 ml-auto space-y-1">
-        {/* Tier 1: Corporate Entity & License */}
-        <div className="text-[12px] sm:text-[12.5px] font-medium text-white tracking-normal whitespace-nowrap">
+      {/* ── FAR RIGHT: PROPERLY STACKED IN 3 CLEAN ROWS ── */}
+      <div className="flex flex-col items-start md:items-end text-left md:text-right shrink-0 md:ml-auto space-y-0.5 pt-1 md:pt-0">
+        {/* Row 1: Corporate Entity & DRE License */}
+        <div className="text-[11.5px] sm:text-[12px] font-medium text-white tracking-normal whitespace-nowrap">
           The Dyson &amp; Dyson Companies, Inc. · CA DRE #02303118
         </div>
 
-        {/* Tier 2: Direct Broker Contact Line */}
-        <div className="text-[11px] sm:text-[11.5px] font-normal text-stone-300 flex items-center justify-end gap-2 whitespace-nowrap font-mono">
+        {/* Row 2: Direct Broker Telephone & Email */}
+        <div className="text-[11px] sm:text-[11.5px] font-normal text-stone-300 flex items-center md:justify-end gap-2 whitespace-nowrap font-mono">
           <a 
             href="tel:8583531200" 
             className="text-stone-300 hover:text-white hover:underline transition-colors"
@@ -66,8 +66,8 @@ export default function CopilotFooterBranding({
           </a>
         </div>
 
-        {/* Tier 3: Client Engagement & Legal Disclosures */}
-        <div className="text-[10.5px] sm:text-[11px] font-normal text-stone-400 flex items-center justify-end gap-2 whitespace-nowrap pt-0.5">
+        {/* Row 3: Client Engagement, Disclosures & Suppression */}
+        <div className="text-[10px] sm:text-[10.5px] font-normal text-stone-400 flex flex-wrap items-center md:justify-end gap-2 whitespace-nowrap">
           <button
             type="button"
             onClick={onOpenReferModal}
@@ -83,10 +83,7 @@ export default function CopilotFooterBranding({
           >
             Legal &amp; disclosures
           </button>
-        </div>
-
-        {/* Tier 4: Regulatory Compliance & Consumer Privacy Suppression */}
-        <div className="text-[10px] sm:text-[10.5px] font-normal text-stone-500 flex items-center justify-end gap-2 whitespace-nowrap">
+          <span className="text-stone-600">·</span>
           <Link
             to="/copilot/stop-contact"
             className="text-stone-500 hover:text-stone-300 transition-colors underline underline-offset-2 decoration-stone-700 hover:decoration-stone-400 cursor-pointer"

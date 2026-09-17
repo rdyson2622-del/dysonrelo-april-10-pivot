@@ -17,6 +17,7 @@ import CopilotReferAFriendModal from '@/components/copilot/CopilotReferAFriendMo
 import CopilotBrokerEscalationModal from '@/components/copilot/CopilotBrokerEscalationModal';
 import CopilotAdminHeaderNav from '@/components/copilot/CopilotAdminHeaderNav';
 import CopilotFooterBranding from '@/components/copilot/CopilotFooterBranding';
+import { getCheckedInUser, clearCheckedInContact } from '@/lib/copilotContactSession';
 import { findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { GeminiLiveSessionClient } from '@/lib/geminiLiveClient';
 import { KNOWN_PROPERTY_DOSSIERS } from '@/components/admin/copilot/propertyDossierData';
@@ -81,6 +82,29 @@ export default function DysonHomesCopilot({ initialPage }) {
     }
     return false;
   });
+
+  // User Check-In Identity (Auth User OR captured contact info)
+  const [checkedInUser, setCheckedInUser] = useState(() => getCheckedInUser(user));
+
+  useEffect(() => {
+    setCheckedInUser(getCheckedInUser(user));
+  }, [user]);
+
+  useEffect(() => {
+    const handleContactUpdated = () => {
+      setCheckedInUser(getCheckedInUser(user));
+    };
+    window.addEventListener('dyson_copilot_contact_updated', handleContactUpdated);
+    return () => window.removeEventListener('dyson_copilot_contact_updated', handleContactUpdated);
+  }, [user]);
+
+  const handleSignOutOrClear = () => {
+    clearCheckedInContact();
+    if (isAuthenticated) {
+      logout();
+    }
+    setCheckedInUser(null);
+  };
 
   // Discussion history stack state (stacked as added, retained on 40% side)
   const [discussionChips, setDiscussionChips] = useState([
@@ -815,23 +839,26 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                           Command Center
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 text-[11px] text-stone-400 font-sans pt-0.5">
-                        {isAuthenticated ? (
-                          <>
-                            <span className="text-stone-300">Welcome back{user?.full_name ? `, ${user.full_name.split(' ')[0]}` : ''}</span>
+                      <div className="flex items-center gap-2 font-sans pt-1">
+                        {checkedInUser ? (
+                          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 shadow-sm text-xs">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                            <span className="text-stone-300 font-medium">
+                              Welcome back, {checkedInUser.firstName}
+                            </span>
                             <span className="text-stone-600">·</span>
                             <button
                               type="button"
-                              onClick={() => logout()}
-                              className="text-stone-500 hover:text-stone-300 underline cursor-pointer"
+                              onClick={handleSignOutOrClear}
+                              className="text-stone-400 hover:text-white underline underline-offset-2 decoration-stone-600 hover:decoration-stone-300 cursor-pointer text-[11px]"
                             >
                               Sign out
                             </button>
-                          </>
+                          </div>
                         ) : (
                           <Link
                             to="/login?returnTo=%2Fdossier"
-                            className="text-stone-400 hover:text-white transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 cursor-pointer"
+                            className="text-stone-400 hover:text-white transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 cursor-pointer text-[11px]"
                           >
                             Sign in
                           </Link>
@@ -1208,110 +1235,18 @@ DIRECTIVE FOR CHARLIE SIMMONS:
 
               </div>
 
-              {/* ── FOOTER ROW DIRECTLY OVER MINI APPS: DISCUSSION STACK (LOWER LEFT <= 40% SCREEN) & BRANDING (FAR RIGHT) ── */}
-              <div className="px-3 sm:px-4 py-2.5 bg-[#0a0a0a] border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                {/* Discussion History & Saved Discussions Stack (Lower Left Stacked, <= 40% Screen Width) */}
-                <div className="w-full sm:max-w-[40%] flex flex-wrap items-center gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => setIsSavedDiscussionsOpen(true)}
-                    className="px-2.5 py-1 rounded-md text-[10px] font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm shrink-0"
-                    title="Open Saved Discussions"
-                  >
-                    <Bookmark className="w-3 h-3 text-[#D4AF37]" />
-                    <span>Saved Discussions</span>
-                    {savedCount > 0 && (
-                      <span className="px-1.5 py-0.2 rounded-full bg-[#D4AF37] text-black text-[9px] font-bold">
-                        {savedCount}
-                      </span>
-                    )}
-                  </button>
-
-                  {discussionChips.map((chip) => (
-                    <button
-                      key={chip.id}
-                      type="button"
-                      onClick={() => {
-                        if (chip.view) setRightPanelView(chip.view);
-                        executeSendMessage(chip.query);
-                      }}
-                      className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-400 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer shrink-0"
-                      title={chip.query}
-                    >
-                      <span>{chip.label}</span>
-                    </button>
-                  ))}
-                </div>
-
-                {/* Footer Branding: stacked vertically on the far right */}
-                <div className="flex flex-col items-end text-right font-normal text-white shrink-0 self-end sm:self-center ml-auto">
-                  <span className="text-[12px] sm:text-[12.5px] font-normal text-white tracking-normal whitespace-nowrap">
-                    The Dyson &amp; Dyson Companies, Inc. Ca. DRE#02303118
-                  </span>
-                  <div className="text-[11.5px] sm:text-[12px] font-normal text-white flex items-center gap-2 whitespace-nowrap mt-0.5">
-                    <a href="tel:8583531200" className="text-white hover:underline transition-colors font-normal">
-                      (858) 353 1200
-                    </a>
-                    <span className="text-white">·</span>
-                    <a href="mailto:bob@dysonrelo.com" className="text-white hover:underline transition-colors font-normal">
-                      bob@dysonrelo.com
-                    </a>
-                    <span className="text-white">·</span>
-                    {isAuthenticated ? (
-                      <>
-                        <span className="text-stone-300">
-                          Welcome back{user?.full_name ? `, ${user.full_name.split(' ')[0]}` : ''}
-                        </span>
-                        <span className="text-white">·</span>
-                        <button
-                          type="button"
-                          onClick={() => logout()}
-                          className="text-stone-400 hover:text-white transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 cursor-pointer font-normal text-[11.5px] sm:text-[12px]"
-                        >
-                          Sign out
-                        </button>
-                      </>
-                    ) : (
-                      <Link
-                        to="/login?returnTo=%2Fdossier"
-                        className="text-stone-400 hover:text-white transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 cursor-pointer font-normal text-[11.5px] sm:text-[12px]"
-                      >
-                        Sign in
-                      </Link>
-                    )}
-                    <span className="text-white">·</span>
-                    <button
-                      type="button"
-                      onClick={() => setIsReferModalOpen(true)}
-                      className="text-stone-400 hover:text-white transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 cursor-pointer font-normal text-[11.5px] sm:text-[12px]"
-                    >
-                      Refer a Friend
-                    </button>
-                    <span className="text-white">·</span>
-                    <button
-                      type="button"
-                      onClick={() => setIsLegalModalOpen(true)}
-                      className="text-stone-400 hover:text-white transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 cursor-pointer font-normal text-[11.5px] sm:text-[12px]"
-                    >
-                      Legal &amp; disclosures
-                    </button>
-                    <span className="text-white">·</span>
-                    <Link
-                      to="/copilot/stop-contact"
-                      className="text-stone-400 hover:text-white transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 cursor-pointer font-normal text-[11.5px] sm:text-[12px]"
-                    >
-                      Stop contacting me
-                    </Link>
-                    <span className="text-white">·</span>
-                    <Link
-                      to="/unsubscribe"
-                      className="text-stone-400 hover:text-white transition-colors underline underline-offset-4 decoration-stone-600 hover:decoration-stone-300 cursor-pointer font-normal text-[11.5px] sm:text-[12px]"
-                    >
-                      Unsubscribe
-                    </Link>
-                  </div>
-                </div>
-              </div>
+              {/* ── FOOTER ROW: SAVED DISCUSSIONS & CHIPS HORIZONTAL (LEFT) & BRANDING 3-ROW STACK (FAR RIGHT) ── */}
+              <CopilotFooterBranding
+                savedCount={savedCount}
+                onOpenSavedDiscussions={() => setIsSavedDiscussionsOpen(true)}
+                discussionChips={discussionChips}
+                onSelectChip={(chip) => {
+                  if (chip.view) setRightPanelView(chip.view);
+                  executeSendMessage(chip.query);
+                }}
+                onOpenReferModal={() => setIsReferModalOpen(true)}
+                onOpenLegalModal={() => setIsLegalModalOpen(true)}
+              />
 
               {/* ── BOTTOM HORIZONTAL AI MINIONS RAIL ── */}
               <CopilotMiniAppsRail 
