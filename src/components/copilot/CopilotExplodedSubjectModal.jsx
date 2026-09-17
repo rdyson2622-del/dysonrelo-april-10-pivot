@@ -6,7 +6,7 @@ import {
   FileText, ArrowLeft, Shield, Share2, HelpCircle, RotateCcw
 } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
-import { SOLUTIONS_LIBRARY } from './CopilotSolutionsVault';
+import CopilotSolutionsVault, { SOLUTIONS_LIBRARY } from './CopilotSolutionsVault';
 import CopilotVettingView from './CopilotVettingView';
 import CopilotRoadmapView from './CopilotRoadmapView';
 import CopilotEscrowView from './CopilotEscrowView';
@@ -496,66 +496,13 @@ export default function CopilotExplodedSubjectModal({
 
         ) : currentTab === 'solutions' ? (
 
-          /* ── OPTION C: SOLUTIONS VAULT IN EXPLODED THEATER ── */
+          /* ── OPTION C: SOLUTIONS VAULT IN EXPLODED THEATER (PROGRESSIVE ACCORDION) ── */
           <div className="space-y-6 animate-in fade-in duration-150">
-            <div className="rounded-2xl border-2 border-[#D4AF37] bg-gradient-to-r from-[#17140b] via-[#101010] to-[#121212] p-5 sm:p-6 shadow-2xl">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#D4AF37] font-bold">
-                  EXPANDED SOLUTIONS VAULT · {SOLUTIONS_LIBRARY.length} ACTIVE PLAYBOOKS
-                </span>
-              </div>
-              <h2 className="text-lg sm:text-2xl font-bold text-white tracking-wide">
-                Fiduciary Playbooks, Legal Shields &amp; Tax Portability
-              </h2>
-              <p className="text-xs sm:text-sm text-stone-300 mt-1">
-                Tap any playbook below to review its fiduciary mechanics or ask Bob Dyson and Charlie Simmons directly.
-              </p>
-            </div>
-
-            {/* Full Grid of Playbooks */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {SOLUTIONS_LIBRARY.map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() => onSelectItem?.(item)}
-                  className="rounded-xl bg-[#121212] border border-white/10 hover:border-[#D4AF37] p-4 space-y-3 cursor-pointer group transition-all shadow-lg hover:bg-[#161512]"
-                >
-                  <div className="flex items-center justify-between text-[10px]">
-                    <span className="font-mono font-bold text-[#D4AF37] flex items-center gap-1.5">
-                      <BookOpen className="w-3.5 h-3.5 text-[#D4AF37]" />
-                      <span>{item.format}</span>
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-white/5 text-stone-300 font-mono text-[9px]">
-                      {item.speaker === 'bob' ? 'Bob Dyson' : 'Charlie'}
-                    </span>
-                  </div>
-
-                  <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-[#D4AF37] transition-colors leading-snug">
-                    {item.title}
-                  </h3>
-                  <p className="text-xs text-stone-300 line-clamp-2">
-                    {item.summary}
-                  </p>
-
-                  <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
-                    <span className="text-[10px] text-[#D4AF37] font-semibold">
-                      View Full Protocol →
-                    </span>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleReturnToCommunication(item.promptQuery);
-                      }}
-                      className="px-2.5 py-1 rounded bg-white/10 hover:bg-[#D4AF37] text-white hover:text-black font-semibold text-[11px] transition-all cursor-pointer"
-                    >
-                      Ask in Chat
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <CopilotSolutionsVault
+              onPromptClick={handleReturnToCommunication}
+              onExplodePlaybook={(item) => onSelectItem?.(item)}
+              onSelectSubject={(item) => onSelectItem?.(item)}
+            />
           </div>
 
         ) : currentTab === 'vetting' ? (

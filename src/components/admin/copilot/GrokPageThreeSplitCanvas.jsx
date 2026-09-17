@@ -512,6 +512,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             onPromptClick={handlePillClick}
             onOpenCaptureModal={() => setIsCaptureModalOpen(true)}
             isSubscriber={isSubscriber}
+            activeExplainer={activeExplainer}
             onBackToSearch={() => {
               resetToBlank();
               onBackToSearch?.();

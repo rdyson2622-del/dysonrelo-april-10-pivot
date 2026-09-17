@@ -1185,6 +1185,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                     }}
                     pushedSnippet={pushedSnippet}
                     onDismissSnippet={() => setPushedSnippet(null)}
+                    activeExplainer={activeExplainer}
                   />
                 </div>
 

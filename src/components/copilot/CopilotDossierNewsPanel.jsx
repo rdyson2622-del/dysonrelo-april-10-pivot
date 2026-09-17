@@ -12,6 +12,7 @@ import CopilotVettingView from './CopilotVettingView';
 import CopilotRoadmapView from './CopilotRoadmapView';
 import CopilotEscrowView from './CopilotEscrowView';
 import CopilotVisualSnippetCard from './CopilotVisualSnippetCard';
+import CopilotDynamicStage from './CopilotDynamicStage';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
@@ -38,9 +39,11 @@ export default function CopilotDossierNewsPanel({
   onClear,
   pushedSnippet,
   onDismissSnippet,
+  activeExplainer = null,
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [selectedVaultSubject, setSelectedVaultSubject] = useState(null);
   const videoRef = useRef(null);
 
   // Fetch real broadcast data if available
@@ -140,6 +143,7 @@ export default function CopilotDossierNewsPanel({
       } catch (_) {}
       setIsPlaying(false);
     }
+    setSelectedVaultSubject(null);
     onViewChange?.(null);
     onClear?.();
   };
@@ -202,30 +206,18 @@ export default function CopilotDossierNewsPanel({
         )}
       </div>
 
-      {/* ── NEWS BROADCAST PLACEHOLDER ABOVE ALL TEXT (SEARCH / AUDIT / CONTROLS) ── */}
-      <div
-        className="relative w-[39%] mx-auto overflow-hidden rounded-xl shadow-2xl border border-[#D4AF37]/50 group shrink-0"
-        style={{
-          aspectRatio: '16/9',
-          background: '#000',
-          boxShadow: '0 16px 48px rgba(0,0,0,0.7)',
-        }}
-      >
-        {/* Video Player */}
-        <video
-          ref={videoRef}
-          key={playUrl}
-          src={playUrl}
-          poster={STUDIO_POSTER_URL}
-          controls
-          playsInline
-          preload="metadata"
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-          className="w-full h-full object-cover"
-          style={{ display: 'block', background: '#000' }}
-        />
-      </div>
+      {/* ── DYNAMIC INTELLIGENCE STAGE: CONTEXT-AWARE VISUAL / VIDEO STAGE ── */}
+      <CopilotDynamicStage
+        activeView={currentView}
+        selectedSubject={selectedVaultSubject}
+        activeExplainer={activeExplainer}
+        dossierData={dossierData}
+        property={property}
+        playUrl={playUrl}
+        headline={headline}
+        onPromptClick={onPromptClick}
+        onToggleExplode={onToggleExplode}
+      />
 
       {/* ── TOP CONTROLS & VIEW SWITCHER: Back button on far left, controls grouped on the right ── */}
       <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-white/10 mt-4">
@@ -411,12 +403,14 @@ export default function CopilotDossierNewsPanel({
       )}
 
       {/* ─────────────────────────────────────────────────────────────
-          VIEW: REAL ESTATE SOLUTIONS & INTELLIGENCE VAULT
+          VIEW: REAL ESTATE SOLUTIONS & INTELLIGENCE VAULT (PROGRESSIVE ACCORDION)
           ───────────────────────────────────────────────────────────── */}
       {activeView === 'solutions' && (
         <CopilotSolutionsVault 
           onPromptClick={onPromptClick} 
           onExplodePlaybook={(item) => onExplodeItem?.(item)}
+          onSelectSubject={(subj) => setSelectedVaultSubject(subj)}
+          activeSubject={selectedVaultSubject}
         />
       )}
 
