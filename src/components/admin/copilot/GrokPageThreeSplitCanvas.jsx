@@ -883,6 +883,8 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
         activeDoor={rightPanelView || 'dossier'}
         voiceText={latestVoiceMessage?.text || ''}
         voiceSpeaker={latestVoiceMessage?.sender || 'charlie'}
+        voiceAutoPlayKey={latestVoiceMessage?.id}
+        onVoiceStateChange={(playing, speaker) => setActiveDemoSpeaker(playing ? speaker : null)}
         onSelectChip={(chip) => {
           handleSelectMiniApp(chip.view);
           if (!['audit', 'vetting', 'roadmap', 'escrow', 'news'].includes(chip.id)) {
