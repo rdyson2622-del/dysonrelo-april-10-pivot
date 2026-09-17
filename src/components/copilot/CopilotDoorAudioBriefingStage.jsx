@@ -314,22 +314,17 @@ export default function CopilotDoorAudioBriefingStage({
         title={`${briefing.doorName} Voice Briefing`}
       >
         {/* ── TOP HEADER ROW: DOOR IDENTITY, SPEAKER BADGE & CONTROLS ── */}
-        <div className="flex items-center justify-between text-[11px] sm:text-[12px] font-mono border-b border-white/10 pb-1.5 shrink-0">
-          <div className="flex items-center gap-2 min-w-0">
+        <div className="flex items-center justify-between text-[11px] sm:text-[12px] font-mono border-b border-white/10 pb-1.5 shrink-0 gap-2">
+          <div className="flex items-center gap-1.5 min-w-0">
             <DoorIcon className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-            <span className="font-bold text-white uppercase tracking-wider truncate">
+            <span className="font-bold text-white uppercase tracking-wider text-[11px] truncate">
               {briefing.doorName}
             </span>
-            {briefing.isCustomized && (
-              <span className="text-[8px] px-1.5 py-0.2 rounded bg-[#D4AF37]/20 text-[#D4AF37] font-sans border border-[#D4AF37]/30">
-                Custom Script
-              </span>
-            )}
           </div>
 
           {/* Media Controls Group: Rewrite Script, Play/Pause, Mute */}
           <div className="flex items-center gap-1.5 shrink-0">
-            {/* Direct Rewrite Script Button */}
+            {/* Direct Rewrite Script Button with inlined custom indicator */}
             <button
               type="button"
               onClick={(e) => {
@@ -337,11 +332,15 @@ export default function CopilotDoorAudioBriefingStage({
                 stopPlayback();
                 setIsRewriteModalOpen(true);
               }}
-              className="px-2 py-1 rounded-md bg-white/5 hover:bg-[#D4AF37]/20 text-stone-300 hover:text-[#D4AF37] border border-white/10 hover:border-[#D4AF37]/40 transition-colors cursor-pointer flex items-center gap-1 text-[9px] font-medium"
+              className={`px-2 py-1 rounded-md border transition-colors cursor-pointer flex items-center gap-1 text-[9px] font-medium ${
+                briefing.isCustomized
+                  ? 'bg-[#D4AF37]/15 text-[#D4AF37] border-[#D4AF37]/50 hover:bg-[#D4AF37]/25'
+                  : 'bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white border-white/10'
+              }`}
               title="Inspect or rewrite the spoken script for this door"
             >
               <Edit3 className="w-2.5 h-2.5 text-[#D4AF37]" />
-              <span>Rewrite Script</span>
+              <span>{briefing.isCustomized ? 'Custom Script' : 'Rewrite Script'}</span>
             </button>
 
             {/* Subtle Audio Waveform Indicator */}
@@ -504,7 +503,7 @@ export default function CopilotDoorAudioBriefingStage({
           )}
 
           {/* 5. DNN NEWS SNAPSHOT */}
-          {activeDoor === 'news' && (
+          {(activeDoor === 'news' || activeDoor === 'dnn') && (
             <div className="grid grid-cols-2 gap-1.5 text-[10px] sm:text-[11px]">
               <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
                 <span className="text-stone-400 block font-mono text-[8.5px] uppercase">BROADCAST</span>
@@ -521,6 +520,28 @@ export default function CopilotDoorAudioBriefingStage({
               <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
                 <span className="text-stone-400 block font-mono text-[8.5px] uppercase">FREQUENCY</span>
                 <span className="text-[#D4AF37] font-bold">Daily 8:00 AM PT</span>
+              </div>
+            </div>
+          )}
+
+          {/* 6. SOLUTIONS VAULT SNAPSHOT */}
+          {activeDoor === 'solutions' && (
+            <div className="grid grid-cols-2 gap-1.5 text-[10px] sm:text-[11px]">
+              <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+                <span className="text-stone-400 block font-mono text-[8.5px] uppercase">PLAYBOOKS</span>
+                <span className="text-white font-bold">12 Fiduciary Models</span>
+              </div>
+              <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+                <span className="text-stone-400 block font-mono text-[8.5px] uppercase">PROP 19</span>
+                <span className="text-white font-bold">Tax Base Portability</span>
+              </div>
+              <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+                <span className="text-stone-400 block font-mono text-[8.5px] uppercase">APPRAISALS</span>
+                <span className="text-white font-bold">Gap Structuring</span>
+              </div>
+              <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+                <span className="text-stone-400 block font-mono text-[8.5px] uppercase">SUPERVISION</span>
+                <span className="text-[#D4AF37] font-bold">Bob Dyson Advisory</span>
               </div>
             </div>
           )}

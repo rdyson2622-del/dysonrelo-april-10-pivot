@@ -101,6 +101,20 @@ export const DEFAULT_DOOR_BRIEFINGS = {
     audioUrl: 'https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=e14065ee-baa7-4aa0-9e92-540fce6493f2.wav',
     spokenText: "Welcome to today's DNN Market Desk broadcast. Charlie Simmons and Bob Dyson present the latest coastal real estate intelligence, inventory constraints, mortgage rate movements, and buyer contract protections. Tap play to view today's complete broadcast or inspect today's briefs below.",
     promptQuery: 'Charlie and Bob, summarize today’s DNN News broadcast'
+  },
+  solutions: {
+    id: 'solutions',
+    doorName: 'Solutions Vault',
+    speaker: 'bob',
+    speakerName: 'Bob Dyson',
+    speakerRole: 'Principal Broker Solutions Take',
+    avatar: BOB_AVATAR,
+    accentColor: '#D4AF37',
+    title: 'Solutions Vault Briefing',
+    subtitle: 'Fiduciary playbooks for escrow snags & deal structure',
+    audioUrl: 'https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/147b8f5713024fb9afc106f266e47482/id=f002a65f-b3e9-4d51-907f-88f57c2aa9f5.wav',
+    spokenText: "Bob Dyson here. Welcome to our Real Estate Solutions and Intelligence Vault. Here we archive our tactical playbooks—from Prop 19 tax base portability to navigating appraisal shortfalls, unpermitted space, and title defects. Tap any playbook below to inspect our deal-structuring rules.",
+    promptQuery: 'Bob, walk me through the key playbooks in the Solutions Vault'
   }
 };
 
