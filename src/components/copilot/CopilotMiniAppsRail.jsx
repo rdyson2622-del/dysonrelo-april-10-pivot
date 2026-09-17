@@ -29,7 +29,7 @@ export const CORE_EXECUTION_MINIONS = [
   {
     id: 'vetting',
     label: 'Agent Vetting',
-    copy: 'Buyer Advocacy',
+    copy: 'Agent partnership',
     icon: Shield,
     iconColor: '#d6c8b4',
     bgGradient: 'from-[#1c1b18] via-[#141412] to-[#0d0d0d]',

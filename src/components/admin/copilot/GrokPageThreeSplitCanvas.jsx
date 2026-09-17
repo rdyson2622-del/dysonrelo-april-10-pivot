@@ -82,14 +82,14 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         id: Date.now() + 1,
         sender: 'charlie',
         speakerName: 'Charlie Simmons',
-        text: `Charlie here. Fiduciary property audit initiated for ${cleanAddr}. I've pulled recent comparable sales within 0.75 miles, adjusted for market shifts, and checked local environmental and zoning risk factors. On the right, your live dossier is active with honest comps, hidden risk alerts, and lender compliance discovery.`,
+        text: `Charlie here. Property audit initiated for ${cleanAddr}. I've pulled recent verified sales within 0.75 miles, adjusted for market shifts, and checked local environmental and property risk factors. On the right, your live dossier is active with Honest comps, Hidden risks, and Compliance and discovery.`,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
       const bobMsg = {
         id: Date.now() + 2,
         sender: 'bob',
         speakerName: 'Bob Dyson',
-        text: `Bob Dyson here. On ${cleanAddr}, our primary fiduciary mandate is safeguarding your earnest money deposit. We verify all contingency timelines, geological inspections, and seller disclosures are in place before you ever submit an offer.`,
+        text: `Bob Dyson here. Under our referral agreement, CoPilot remains your strategic intelligence partner alongside your vetted agent for ${cleanAddr}. We help you understand the risks of dual agency, structure contingency milestones, and verify disclosures to safeguard your earnest money deposit.`,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
       setMessages([userMsg, charlieMsg, bobMsg]);
@@ -327,17 +327,17 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             <div className="pt-2.5 pb-1 space-y-2">
               <form onSubmit={handleSendMessage} className="w-full">
                 <div 
-                  className="flex items-center rounded-full px-3.5 py-1.5 transition-all border border-[#D4AF37] w-full relative overflow-hidden shadow-lg bg-white"
-                  style={{ backgroundColor: '#ffffff', color: '#000000' }}
+                  className="flex items-center rounded-full px-3.5 py-1.5 transition-all border border-[#666666] w-full relative overflow-hidden shadow-lg bg-black"
+                  style={{ backgroundColor: '#000000', color: '#ffffff' }}
                 >
-                  <Paperclip className="w-4 h-4 text-black mr-2 shrink-0 cursor-pointer z-10" title="Attach file or pre-approval" />
+                  <Paperclip className="w-4 h-4 text-white hover:text-[#D4AF37] mr-2 shrink-0 cursor-pointer z-10 transition-colors" title="Attach file or pre-approval" />
                   
                   <div className="relative flex-1 min-w-0 flex items-center h-7 overflow-hidden">
                     {!inputText && !isInputFocused && (
-                      <div className="absolute inset-0 flex items-center overflow-hidden pointer-events-none select-none text-black/65 text-xs sm:text-sm whitespace-nowrap">
+                      <div className="absolute inset-0 flex items-center overflow-hidden pointer-events-none select-none text-white/70 text-xs sm:text-sm whitespace-nowrap">
                         <div className="inline-flex animate-marquee whitespace-nowrap">
-                          <span className="mr-12 font-normal">Ask anything real estate—compliance, Prop 19, escrow traps, comps...</span>
-                          <span className="mr-12 font-normal">Ask anything real estate—compliance, Prop 19, escrow traps, comps...</span>
+                          <span className="mr-12 font-normal text-white">Ask anything real estate—compliance, Prop 19, escrow traps, comps...</span>
+                          <span className="mr-12 font-normal text-white">Ask anything real estate—compliance, Prop 19, escrow traps, comps...</span>
                         </div>
                       </div>
                     )}
@@ -349,8 +349,8 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                       onBlur={() => setIsInputFocused(false)}
                       onChange={(e) => setInputText(e.target.value)}
                       placeholder=""
-                      className="w-full bg-transparent text-black text-xs sm:text-sm outline-none font-normal min-w-0 z-10"
-                      style={{ color: '#000000' }}
+                      className="w-full bg-transparent text-white text-xs sm:text-sm outline-none font-normal min-w-0 z-10 placeholder:text-white/60"
+                      style={{ color: '#ffffff' }}
                     />
                   </div>
 
@@ -358,19 +358,19 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                     <button
                       type="button"
                       onClick={() => handlePillClick('Talk Live with Charlie')}
-                      className="p-1 rounded-md text-black transition-all cursor-pointer"
+                      className="p-1 rounded-md text-white hover:text-[#D4AF37] transition-all cursor-pointer"
                       title="Voice input (Charlie Live)"
                     >
-                      <Mic className="w-4 h-4 text-black" />
+                      <Mic className="w-4 h-4 text-white" />
                     </button>
 
                     <button
                       type="submit"
-                      className="px-5 py-2 rounded-full font-bold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm bg-black text-white hover:bg-stone-900 border-none active:scale-95"
-                      style={{ backgroundColor: '#000000', color: '#ffffff', opacity: 1 }}
+                      className="px-5 py-2 rounded-full font-bold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm bg-[#0a0a0a] hover:bg-[#1a1a1a] text-[#D4AF37] hover:text-white border border-[#666666] active:scale-95"
+                      style={{ backgroundColor: '#000000', color: '#D4AF37' }}
                       title="Send message"
                     >
-                      <span style={{ color: '#ffffff', fontWeight: 600 }}>Send</span>
+                      <span style={{ color: '#D4AF37' }}>Send</span>
                       <span className="text-[#D4AF37] ml-1">→</span>
                     </button>
                   </div>
@@ -406,26 +406,25 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                   (activeDemoSpeaker === 'bob' && isBob)
                 );
 
-                // Speaker border and glow styles based on designated colors:
-                // Buyer = RED (#ef4444) | Charlie = GREEN (#10b981) | Bob = GOLD (#D4AF37)
-                let bubbleClasses = 'bg-[#141414] border border-white/15 text-stone-200';
+                // Speaker subtle accents: Soft tonal backgrounds, thin clean borders, no neon glows
+                let bubbleClasses = 'bg-[#141414] border border-white/10 text-stone-200';
                 if (isSpeakingNow) {
                   if (isConsumer) {
-                    bubbleClasses = 'bg-[#1c0f0f] border-2 border-rose-500 ring-2 ring-rose-500/60 shadow-[0_0_22px_rgba(239,68,68,0.5)] text-white scale-[1.01]';
+                    bubbleClasses = 'bg-[#171313] border border-rose-500/60 text-white shadow-sm';
                   } else if (isCharlie) {
-                    bubbleClasses = 'bg-[#0c1a14] border-2 border-emerald-500 ring-2 ring-emerald-500/60 shadow-[0_0_22px_rgba(16,185,129,0.5)] text-white scale-[1.01]';
+                    bubbleClasses = 'bg-[#121614] border border-emerald-500/50 text-white shadow-sm';
                   } else if (isBob) {
-                    bubbleClasses = 'bg-[#211c0f] border-2 border-[#D4AF37] ring-2 ring-[#D4AF37]/60 shadow-[0_0_22px_rgba(212,175,55,0.55)] text-white scale-[1.01]';
+                    bubbleClasses = 'bg-[#181611] border border-[#D4AF37]/60 text-white shadow-sm';
                   }
                 } else {
                   if (isConsumer) {
-                    bubbleClasses = 'bg-[#161111] border-l-4 border-l-rose-500 border-white/10 text-white';
+                    bubbleClasses = 'bg-[#141212] border border-white/10 border-l-2 border-l-rose-400/70 text-white';
                   } else if (isCharlie) {
-                    bubbleClasses = 'bg-[#0f1512] border-l-4 border-l-emerald-500 border-white/10 text-stone-200';
+                    bubbleClasses = 'bg-[#121413] border border-white/10 border-l-2 border-l-emerald-400/70 text-stone-200';
                   } else if (isBob) {
-                    bubbleClasses = 'bg-[#16140e] border-l-4 border-l-[#D4AF37] border-[#D4AF37]/30 text-stone-200';
+                    bubbleClasses = 'bg-[#151411] border border-white/10 border-l-2 border-l-[#D4AF37]/70 text-stone-200';
                   } else if (isPlainUser) {
-                    bubbleClasses = 'bg-[#1e1e1e] border border-white/15 text-white';
+                    bubbleClasses = 'bg-[#161616] border border-white/10 text-white';
                   }
                 }
 
@@ -443,32 +442,32 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                             {m.speakerName || 'You (Buyer)'}
                           </span>
                           {isSpeakingNow && (
-                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-mono font-bold uppercase tracking-wider animate-pulse">
+                            <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-rose-500/15 text-rose-300 font-sans">
                               Speaking Live
                             </span>
                           )}
                         </>
                       ) : isCharlie ? (
                         <>
-                          <span className={`w-2 h-2 rounded-full bg-emerald-400 ${isSpeakingNow ? 'animate-ping' : ''}`} />
-                          <span className="text-emerald-400 font-bold">
+                          <span className={`w-1.5 h-1.5 rounded-full bg-emerald-400 ${isSpeakingNow ? 'animate-ping' : ''}`} />
+                          <span className="text-emerald-400 font-medium">
                             {m.speakerName || 'Charlie Simmons (Voice)'}
                           </span>
                           {isSpeakingNow && (
-                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold uppercase tracking-wider animate-pulse">
+                            <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-emerald-500/15 text-emerald-300 font-sans">
                               Speaking Live
                             </span>
                           )}
                         </>
                       ) : isBob ? (
                         <>
-                          <span className={`w-2 h-2 rounded-full bg-[#D4AF37] ${isSpeakingNow ? 'animate-ping' : ''}`} />
-                          <span className="text-[#D4AF37] font-bold">
+                          <span className={`w-1.5 h-1.5 rounded-full bg-[#D4AF37] ${isSpeakingNow ? 'animate-ping' : ''}`} />
+                          <span className="text-[#D4AF37] font-medium">
                             {m.speakerName || 'Bob Dyson (Broker)'}
                           </span>
                           {isSpeakingNow && (
-                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-[#D4AF37]/25 text-[#D4AF37] font-mono font-bold uppercase tracking-wider animate-pulse">
-                              Directing Live
+                            <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] font-sans">
+                              Advising Live
                             </span>
                           )}
                         </>

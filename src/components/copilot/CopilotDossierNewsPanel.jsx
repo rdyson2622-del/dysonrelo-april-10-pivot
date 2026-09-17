@@ -671,12 +671,12 @@ export default function CopilotDossierNewsPanel({
             </p>
           </div>
 
-          {/* Card 3: Contract & Advisory Discovery */}
+          {/* Card 3: Compliance and discovery */}
           <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-sm">
             <div className="flex items-center gap-2">
               <Shield className="w-4 h-4 text-[#D4AF37]" />
               <h3 className="text-xs sm:text-sm font-semibold text-white">
-                Contract &amp; Advisory Discovery
+                Compliance and discovery
               </h3>
             </div>
             <p className="text-[11px] text-stone-400">
