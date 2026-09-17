@@ -13,6 +13,7 @@ import CopilotExplodedSubjectModal from '@/components/copilot/CopilotExplodedSub
 import CopilotSavedDiscussionsModal from '@/components/copilot/CopilotSavedDiscussionsModal';
 import CopilotBrokerEscalationModal from '@/components/copilot/CopilotBrokerEscalationModal';
 import CopilotFooterBranding from '@/components/copilot/CopilotFooterBranding';
+import CopilotUniversalVoicePills from '@/components/copilot/CopilotUniversalVoicePills';
 import useCopilotDoorSelection from '@/components/copilot/useCopilotDoorSelection';
 import { findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { getPropertyDossier } from './propertyDossierData';
@@ -462,6 +463,8 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
     executeSendMessage();
   };
 
+  const latestVoiceMessage = [...messages].reverse().find((message) => message.sender === 'bob' || message.sender === 'charlie');
+
   const { selectDoor: handleSelectMiniApp, doorSelectionVersion } = useCopilotDoorSelection({
     setView: setRightPanelView,
     setMessages,
@@ -503,6 +506,12 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
               <span className="text-white text-[28px] sm:text-[32px] font-normal tracking-wide whitespace-nowrap">
                 Command Center
               </span>
+            </div>
+            <div className="flex justify-center -mt-1 pb-1">
+              <CopilotUniversalVoicePills
+                text={latestVoiceMessage?.text || ''}
+                defaultSpeaker={latestVoiceMessage?.sender || 'charlie'}
+              />
             </div>
 
             {/* ── ROSTER: BOB, CHARLIE, YOU SPEAKER BOXES (REDUCED BY 10%) ── */}
