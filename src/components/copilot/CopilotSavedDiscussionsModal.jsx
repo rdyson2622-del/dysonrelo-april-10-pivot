@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Bookmark, X, Trash2, ArrowUpRight, Copy, Check, Download, 
-  MessageSquare, Calendar, Sparkles, Plus, Clock, ShieldCheck
+  MessageSquare, Calendar, Sparkles, Plus, Clock, ShieldCheck, Lock, UserCheck
 } from 'lucide-react';
+import { 
+  getCheckedInUser, 
+  saveToClientVault, 
+  saveToGlobalBrain 
+} from '@/lib/copilotContactSession';
+import CopilotPreferredClientModal from './CopilotPreferredClientModal';
 
 const STORAGE_KEY = 'dyson_copilot_saved_discussions';
 
@@ -55,6 +61,11 @@ export default function CopilotSavedDiscussionsModal({
   const [copiedId, setCopiedId] = useState(null);
   const [selectedDiscussion, setSelectedDiscussion] = useState(null);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState('');
+  const [isPreferredModalOpen, setIsPreferredModalOpen] = useState(false);
+  const [pendingSaveItem, setPendingSaveItem] = useState(null);
+
+  const currentUser = getCheckedInUser();
+  const isRecognized = !!currentUser?.isPreferredClient;
 
   // Load from local storage on mount
   useEffect(() => {
@@ -67,7 +78,6 @@ export default function CopilotSavedDiscussionsModal({
           return;
         }
       }
-      // If empty, set the seed discussion
       setSavedList(DEFAULT_SEED_DISCUSSIONS);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_SEED_DISCUSSIONS));
     } catch (e) {
@@ -103,6 +113,18 @@ export default function CopilotSavedDiscussionsModal({
       messages: currentMessages
     };
 
+    // Unrecognized User State: trigger soft Preferred Client modal
+    if (!isRecognized) {
+      setPendingSaveItem(newRecord);
+      setIsPreferredModalOpen(true);
+      return;
+    }
+
+    // Recognized Client State: save seamlessly in background
+    executeSaveItem(newRecord);
+  };
+
+  const executeSaveItem = (newRecord) => {
     const updated = [newRecord, ...savedList.filter(item => item.id !== newRecord.id)];
     setSavedList(updated);
     try {
@@ -110,9 +132,39 @@ export default function CopilotSavedDiscussionsModal({
     } catch (_) {}
 
     setIsSavingNew(false);
-    setSaveSuccessMsg('Discussion saved to your command center!');
+    setSaveSuccessMsg('Saved to your Private Vault');
     if (onSaveCurrent) onSaveCurrent(newRecord);
-    setTimeout(() => setSaveSuccessMsg(''), 3000);
+
+    // 1. Dual-Storage Pipeline 1: Personal Client Vault (Private)
+    saveToClientVault({
+      title: newRecord.title,
+      item_type: 'discussion',
+      address: newRecord.propertyAddress,
+      notes: newRecord.notes,
+      payload: { messages: newRecord.messages },
+      clientUser: currentUser
+    });
+
+    // 2. Dual-Storage Pipeline 2: Global AI Brain (Internal Anonymized Q&A)
+    if (Array.isArray(newRecord.messages)) {
+      for (let i = 0; i < newRecord.messages.length - 1; i++) {
+        const msg = newRecord.messages[i];
+        const nextMsg = newRecord.messages[i + 1];
+        if (msg.sender === 'consumer' || msg.sender === 'user') {
+          if (nextMsg.sender === 'charlie' || nextMsg.sender === 'bob') {
+            saveToGlobalBrain({
+              question: msg.text,
+              answer: nextMsg.text,
+              speaker: nextMsg.sender,
+              topic: 'Fiduciary Property Inquiry',
+              property_address: newRecord.propertyAddress
+            });
+          }
+        }
+      }
+    }
+
+    setTimeout(() => setSaveSuccessMsg(''), 3500);
   };
 
   const handleDelete = (id, e) => {
@@ -191,14 +243,19 @@ Independent Fiduciary Oversight · California Broker License #00609384`;
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-sm sm:text-base font-bold text-white tracking-wide">
-                  Saved Discussions
+                  Preferred Client Vault
                 </h3>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-[#D4AF37] font-mono font-bold">
-                  {savedList.length} Saved
+                  {savedList.length} Files
                 </span>
+                {isRecognized && (
+                  <span className="text-[9.5px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-sans">
+                    Preferred Client Active
+                  </span>
+                )}
               </div>
               <p className="text-[11px] text-stone-400">
-                Command Center discussion history, unvarnished comps &amp; fiduciary advice
+                Private vault for saved discussions, property audits &amp; fiduciary intelligence
               </p>
             </div>
           </div>
@@ -423,7 +480,7 @@ Independent Fiduciary Oversight · California Broker License #00609384`;
         {/* Footer */}
         <div className="px-4 sm:px-6 py-3 bg-[#141414] border-t border-white/10 flex items-center justify-between text-xs text-stone-400">
           <span className="text-[10.5px]">
-            Saved securely in your browser session
+            {isRecognized ? `Preferred Client Vault · ${currentUser.firstName}` : 'Private Client Vault · Confidential Fiduciary Records'}
           </span>
           <button
             type="button"
@@ -434,6 +491,18 @@ Independent Fiduciary Oversight · California Broker License #00609384`;
           </button>
         </div>
       </div>
+
+      {/* Soft Preferred Client Modal (Triggered for Unrecognized Guests) */}
+      <CopilotPreferredClientModal
+        isOpen={isPreferredModalOpen}
+        onClose={() => setIsPreferredModalOpen(false)}
+        pendingItem={pendingSaveItem}
+        onClaimSuccess={(client) => {
+          if (pendingSaveItem) {
+            executeSaveItem(pendingSaveItem);
+          }
+        }}
+      />
     </div>
   );
 }

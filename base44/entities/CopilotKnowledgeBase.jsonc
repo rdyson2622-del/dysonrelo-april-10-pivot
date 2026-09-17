@@ -1,0 +1,60 @@
+{
+  "name": "CopilotKnowledgeBase",
+  "type": "object",
+  "properties": {
+    "question": {
+      "type": "string",
+      "description": "Anonymized user question or inquiry topic"
+    },
+    "answer": {
+      "type": "string",
+      "description": "Synthesized Charlie or Bob response"
+    },
+    "speaker": {
+      "type": "string",
+      "enum": [
+        "charlie",
+        "bob",
+        "duo"
+      ],
+      "default": "charlie",
+      "description": "Speaker persona delivering the answer"
+    },
+    "topic": {
+      "type": "string",
+      "description": "Category or topic (e.g. Comps, Geotechnical, Escrow, Vetting)"
+    },
+    "property_address": {
+      "type": "string",
+      "description": "Normalized property address if inquiry was property-specific"
+    },
+    "source": {
+      "type": "string",
+      "default": "copilot_dialogue",
+      "description": "Source origin of the QA entry"
+    },
+    "is_approved": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this QA is active in internal memory"
+    }
+  },
+  "required": [
+    "question",
+    "answer"
+  ],
+  "rls": {
+    "read": {},
+    "create": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

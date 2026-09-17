@@ -22,7 +22,8 @@ export const DEFAULT_DOOR_BRIEFINGS = {
     accentColor: '#10b981',
     title: 'Property Audit Briefing',
     subtitle: 'Independent comps, hazard zones & permit history',
-    audioUrl: 'https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/4cbdea855_speech.mp3',
+    // Authentic HeyGen Ruben studio male voice
+    audioUrl: 'https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=15d0b3f3-7255-4c4b-91a6-bc747917aeee.wav',
     spokenText: 'Charlie here. Welcome to your independent Property Audit. Here we break down unvarnished micro-neighborhood comps adjusted for square footage and condition, along with local hazard disclosures, bluff setbacks, and property tax records. Review your honest comps and hidden risks on screen, or ask me any question to drill into the data before formulating an offer.',
     promptQuery: 'Charlie, walk me through the comps and hidden risks on this property'
   },
@@ -36,7 +37,8 @@ export const DEFAULT_DOOR_BRIEFINGS = {
     accentColor: '#D4AF37',
     title: 'Agent Vetting Briefing',
     subtitle: 'Independent representation standards vs. dual agency',
-    audioUrl: 'https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/fcee54c87_speech.mp3',
+    // Authentic HeyGen Bob Dyson cloned studio baritone voice
+    audioUrl: 'https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/147b8f5713024fb9afc106f266e47482/id=8d7006a7-2844-4221-a052-5e62b8db0e38.wav',
     spokenText: "Bob Dyson here. Welcome to our Agent Vetting desk. In coastal luxury real estate, dual agency is a serious risk to your equity—the listing agent's legal loyalty is to the seller's price, not yours. Through our licensed California referral agreement, CoPilot pairs you with a thoroughly vetted, independent local buyer specialist. Our fiduciary broker desk remains actively involved alongside you through every negotiation and milestone to closing, with zero added fees to you. Tap any protocol below to see how we safeguard your interests.",
     promptQuery: 'Bob, break down the risks of using the listing agent and how independent advocacy works'
   },
@@ -50,7 +52,8 @@ export const DEFAULT_DOOR_BRIEFINGS = {
     accentColor: '#10b981',
     title: 'Move Roadmap Briefing',
     subtitle: '7-Phase timeline from offer formulation to key handover',
-    audioUrl: 'https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/80b35525f_speech.mp3',
+    // Authentic HeyGen Ruben studio male voice
+    audioUrl: 'https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=85a174ea-4db1-497f-bb9a-7bcae1427870.wav',
     spokenText: 'Charlie here. This is your Move Roadmap—a structured 7-phase execution timeline from initial property audit and offer formulation all the way through escrow contingencies and closing. CoPilot stays actively engaged alongside you and your agent at every milestone. Tap any phase below to inspect the specific diligence steps and documentation required.',
     promptQuery: 'Charlie, explain the 7 transaction phases of the Move Roadmap'
   },
@@ -64,7 +67,8 @@ export const DEFAULT_DOOR_BRIEFINGS = {
     accentColor: '#D4AF37',
     title: 'Escrow Watch Briefing',
     subtitle: 'Earnest money defense, 48-hr notices & title exceptions',
-    audioUrl: 'https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/07e9a056e_speech.mp3',
+    // Authentic HeyGen Bob Dyson cloned studio baritone voice
+    audioUrl: 'https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/147b8f5713024fb9afc106f266e47482/id=b2d17d80-5f6a-4f11-ac55-d2d636d05ec0.wav',
     spokenText: 'Bob Dyson here. Welcome to Escrow Watch. Once you are in contract, protecting your earnest money deposit is paramount. Under California law, liquidated damages for buyer default are capped at three percent. In standard California agreements, contingencies never expire automatically—the seller must issue a formal forty-eight-hour Notice to Perform before demanding removal. We supervise every contingency timeline, appraisal gap, and preliminary title Schedule B exception so you never risk your deposit.',
     promptQuery: 'Bob, explain earnest money defense, 48-hour notices to perform, and Schedule B title exceptions'
   },
@@ -78,7 +82,8 @@ export const DEFAULT_DOOR_BRIEFINGS = {
     accentColor: '#D4AF37',
     title: 'DNN Daily Broadcast',
     subtitle: 'Coastal market intelligence & migration trends',
-    audioUrl: 'https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/a08020a31_speech.mp3',
+    // Authentic HeyGen Ruben studio male voice
+    audioUrl: 'https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=e14065ee-baa7-4aa0-9e92-540fce6493f2.wav',
     spokenText: "Welcome to today's DNN Market Desk broadcast. Charlie Simmons and Bob Dyson present the latest coastal real estate intelligence, inventory constraints, mortgage rate movements, and buyer contract protections. Tap play to view today's complete broadcast or inspect today's briefs below.",
     promptQuery: 'Charlie and Bob, summarize today’s DNN News broadcast'
   },
@@ -92,7 +97,8 @@ export const DEFAULT_DOOR_BRIEFINGS = {
     accentColor: '#D4AF37',
     title: 'DNN Daily Broadcast',
     subtitle: 'Coastal market intelligence & migration trends',
-    audioUrl: 'https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/a08020a31_speech.mp3',
+    // Authentic HeyGen Ruben studio male voice
+    audioUrl: 'https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=e14065ee-baa7-4aa0-9e92-540fce6493f2.wav',
     spokenText: "Welcome to today's DNN Market Desk broadcast. Charlie Simmons and Bob Dyson present the latest coastal real estate intelligence, inventory constraints, mortgage rate movements, and buyer contract protections. Tap play to view today's complete broadcast or inspect today's briefs below.",
     promptQuery: 'Charlie and Bob, summarize today’s DNN News broadcast'
   }

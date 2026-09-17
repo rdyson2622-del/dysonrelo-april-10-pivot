@@ -1,0 +1,65 @@
+{
+  "name": "CopilotClientVault",
+  "type": "object",
+  "properties": {
+    "client_phone": {
+      "type": "string",
+      "description": "Normalized phone number linking to Preferred Client profile"
+    },
+    "client_email": {
+      "type": "string",
+      "description": "Optional email linking to Preferred Client profile"
+    },
+    "client_name": {
+      "type": "string",
+      "description": "Preferred Client full name"
+    },
+    "title": {
+      "type": "string",
+      "description": "Title of the saved file or discussion"
+    },
+    "item_type": {
+      "type": "string",
+      "enum": [
+        "discussion",
+        "dossier",
+        "solution",
+        "report",
+        "briefing"
+      ],
+      "default": "discussion",
+      "description": "Classification of saved vault item"
+    },
+    "address": {
+      "type": "string",
+      "description": "Subject property address if applicable"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Client or internal notes attached to item"
+    },
+    "payload": {
+      "type": "object",
+      "description": "JSON payload containing messages, snapshot, or analysis details"
+    },
+    "saved_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when saved"
+    }
+  },
+  "required": [
+    "client_phone",
+    "title"
+  ],
+  "rls": {
+    "read": {},
+    "create": {},
+    "update": {},
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

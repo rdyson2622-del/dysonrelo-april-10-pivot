@@ -119,10 +119,21 @@ export default function CopilotMiniAppsRail({
       {/* Horizontal Scrollable Strip */}
       <div className="flex items-start gap-2.5 sm:gap-3.5 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
         
-        {/* ── 4 CORE ACTIVE EXECUTION DOORS (+ DNN) ── */}
+        {/* ── 4 CORE EXECUTION DOORS (+ DNN) ── */}
         {CORE_EXECUTION_MINIONS.map((app) => {
           const IconComponent = app.icon;
-          const isSelected = activeApp === app.id;
+          const isSelected = activeApp === app.id || (app.id === 'dnn' && activeApp === 'news');
+
+          // ONLY the currently selected door shows the 'Active' status badge
+          let badgeText = null;
+          let badgeClasses = '';
+          if (isSelected) {
+            badgeText = 'Active';
+            badgeClasses = 'bg-[#D4AF37] text-black font-extrabold border border-black shadow-md';
+          } else if (app.id === 'dnn') {
+            badgeText = 'Daily';
+            badgeClasses = 'bg-white/10 text-stone-300 border border-white/20';
+          }
 
           return (
             <button
@@ -147,12 +158,12 @@ export default function CopilotMiniAppsRail({
               >
                 <IconComponent 
                   className="w-5 h-5 sm:w-5.5 sm:h-5.5 transition-transform duration-150 group-hover:scale-110" 
-                  style={{ color: app.iconColor }}
+                  style={{ color: isSelected ? '#D4AF37' : app.iconColor }}
                 />
                 
-                {app.badge && (
-                  <span className={`absolute -top-1.5 -right-1 text-[7px] font-bold px-1.5 py-0.2 rounded-full border border-black shadow-sm ${app.badgeColor}`}>
-                    {app.badge}
+                {badgeText && (
+                  <span className={`absolute -top-1.5 -right-1 text-[7px] px-1.5 py-0.2 rounded-full shadow-sm ${badgeClasses}`}>
+                    {badgeText}
                   </span>
                 )}
 
