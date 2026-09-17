@@ -11,6 +11,7 @@ import CopilotSolutionsVault from './CopilotSolutionsVault';
 import CopilotVettingView from './CopilotVettingView';
 import CopilotRoadmapView from './CopilotRoadmapView';
 import CopilotEscrowView from './CopilotEscrowView';
+import CopilotVisualSnippetCard from './CopilotVisualSnippetCard';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
@@ -35,6 +36,8 @@ export default function CopilotDossierNewsPanel({
   topOffset = 480,
   onBackToSearch,
   onClear,
+  pushedSnippet,
+  onDismissSnippet,
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -364,6 +367,15 @@ export default function CopilotDossierNewsPanel({
           </button>
         </div>
       </div>
+
+      {/* ── PUSHED VISUAL SNIPPET (FROM LEFT-SIDE CHAT OPERATOR) ── */}
+      {pushedSnippet && (
+        <CopilotVisualSnippetCard
+          snippet={pushedSnippet}
+          onDismiss={onDismissSnippet}
+          onPromptClick={onPromptClick}
+        />
+      )}
 
       {/* ─────────────────────────────────────────────────────────────
           VIEW: AGENT VETTING STANDARDS DESK

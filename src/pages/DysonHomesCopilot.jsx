@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { ArrowDown, Shield, LayoutDashboard, Paperclip, Send, Mic, Radio, FileText, Scale, ArrowLeft, Bookmark } from 'lucide-react';
+import { ArrowDown, Shield, LayoutDashboard, Paperclip, Send, Mic, Radio, FileText, Scale, ArrowLeft, Bookmark, Phone, MessageSquare } from 'lucide-react';
 import { useAuth } from '@/lib/AuthContext';
 import { base44 } from '@/api/base44Client';
 import SlideFourPrivateWealth, { extractAddressOrMls } from '@/components/admin/copilot/SlideFourPrivateWealth';
@@ -14,9 +14,17 @@ import CopilotExplodedSubjectModal from '@/components/copilot/CopilotExplodedSub
 import CopilotSavedDiscussionsModal from '@/components/copilot/CopilotSavedDiscussionsModal';
 import CopilotLegalDisclosuresModal from '@/components/copilot/CopilotLegalDisclosuresModal';
 import CopilotReferAFriendModal from '@/components/copilot/CopilotReferAFriendModal';
+import CopilotBrokerEscalationModal from '@/components/copilot/CopilotBrokerEscalationModal';
+import CopilotAdminHeaderNav from '@/components/copilot/CopilotAdminHeaderNav';
+import CopilotFooterBranding from '@/components/copilot/CopilotFooterBranding';
 import { findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { GeminiLiveSessionClient } from '@/lib/geminiLiveClient';
 import { KNOWN_PROPERTY_DOSSIERS } from '@/components/admin/copilot/propertyDossierData';
+import { 
+  getDomainKnowledgeContext, 
+  detectVisualSnippetRequest, 
+  detectEscalationTrigger 
+} from '@/lib/copilotDomainContext';
 
 // Sanctioned lookup helper imported from dedicated module to maintain clean separation
 import { resolveSanctionedDossier } from '@/lib/resolveSanctionedDossier';
@@ -55,6 +63,9 @@ export default function DysonHomesCopilot({ initialPage }) {
   const [isSavedDiscussionsOpen, setIsSavedDiscussionsOpen] = useState(false);
   const [isLegalModalOpen, setIsLegalModalOpen] = useState(false);
   const [isReferModalOpen, setIsReferModalOpen] = useState(false);
+  const [isEscalationModalOpen, setIsEscalationModalOpen] = useState(false);
+  const [escalationQuestion, setEscalationQuestion] = useState('');
+  const [pushedSnippet, setPushedSnippet] = useState(null);
   const [savedCount, setSavedCount] = useState(() => {
     if (typeof window !== 'undefined') {
       try {
@@ -332,22 +343,75 @@ export default function DysonHomesCopilot({ initialPage }) {
     };
     setMessages(prev => [...prev, userMsg]);
     setInputText('');
-    setIsSending(true);
     addDiscussionChip(clean);
 
-    // Route views if matching keywords
+    // ── 1. THE ESCALATION PROTOCOL (HITTING THE WALL) ──
+    const escalation = detectEscalationTrigger(clean);
+    if (escalation) {
+      const handoffMsg = {
+        id: Date.now() + 1,
+        sender: escalation.speaker || 'charlie',
+        speakerName: escalation.speaker === 'bob' ? 'Bob Dyson' : 'Charlie Simmons',
+        text: escalation.handoffText,
+        isEscalation: true,
+        escalationData: escalation,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      setMessages(prev => [...prev, handoffMsg]);
+      setIsSending(false);
+
+      // Programmed escalation: log asynchronously to CharlieEscalation
+      try {
+        base44.entities.CharlieEscalation.create({
+          consumer_question: clean,
+          handoff_response: escalation.handoffText,
+          status: 'open',
+          priority: 'urgent',
+          page_context: `Copilot Command Center - ${analyzedProperty}`
+        }).catch(err => console.warn('Non-blocking escalation log error:', err));
+      } catch (_) {}
+      return;
+    }
+
+    setIsSending(true);
+
+    // ── 2. LEFT-TO-RIGHT ACTIONS (PUSHING VISUAL SNIPPETS & ROUTING RIGHT VIEW) ──
+    let activeTargetDoor = rightPanelView || 'dossier';
+
     if (/news|broadcast|dnn/i.test(clean)) {
+      activeTargetDoor = 'news';
       setRightPanelView('news');
     } else if (/vetting|agent vetting|dual agency|hire agent/i.test(clean)) {
+      activeTargetDoor = 'vetting';
       setRightPanelView('vetting');
     } else if (/roadmap|milestone|steps to buy|timeline|phase/i.test(clean)) {
+      activeTargetDoor = 'roadmap';
       setRightPanelView('roadmap');
     } else if (/escrow|deposit|emd|contingency|title exception|liquidated damages/i.test(clean)) {
+      activeTargetDoor = 'escrow';
       setRightPanelView('escrow');
     } else if (/solution|vault|playbook/i.test(clean)) {
+      activeTargetDoor = 'solutions';
       setRightPanelView('solutions');
     } else if (/audit|comps|risk/i.test(clean)) {
+      activeTargetDoor = 'dossier';
       setRightPanelView('dossier');
+    }
+
+    // Detect if this question warrants pushing a visual breakdown (clause comparison, title exception, bluff setback, prop 19)
+    const visualSnippet = detectVisualSnippetRequest(clean, activeTargetDoor, analyzedProperty, dossierData);
+    if (visualSnippet) {
+      setPushedSnippet(visualSnippet);
+      if (visualSnippet.type === 'clause_comparison' || visualSnippet.type === 'title_exception') {
+        setRightPanelView('escrow');
+        activeTargetDoor = 'escrow';
+      } else if (visualSnippet.type === 'bluff_setback') {
+        setRightPanelView('dossier');
+        activeTargetDoor = 'dossier';
+      } else if (visualSnippet.type === 'prop19_calc') {
+        setRightPanelView('solutions');
+        activeTargetDoor = 'solutions';
+      }
     }
 
     if (/text me|send report|phone/i.test(clean)) {
@@ -371,7 +435,9 @@ export default function DysonHomesCopilot({ initialPage }) {
     }
 
     try {
-      // Build knowledge context from active rows
+      // ── 3. DOMAIN-SPECIFIC KNOWLEDGE LOADING ──
+      const domainKnowledge = getDomainKnowledgeContext(activeTargetDoor, analyzedProperty, dossierData);
+
       const kbContext = (kbRowsRef.current || [])
         .slice(0, 15)
         .map(r => `Q: ${r.question || ''}\nA: ${r.answer || ''}`)
@@ -401,7 +467,19 @@ ${compsFormatted}
 ${risksFormatted}
 `.trim();
 
+      const snippetDirective = visualSnippet ? `
+ACTIVE LEFT-TO-RIGHT ACTION EXECUTED:
+You have pushed a visual breakdown to the right-side dossier panel:
+- Card Title: "${visualSnippet.title}"
+- Type: ${visualSnippet.type}
+Directive: Explicitly mention in your response that you have pushed this breakdown/clause to the right-side advisory panel for their review.
+` : '';
+
       const fullPrompt = `${dossierContextBlock}
+
+${domainKnowledge}
+
+${snippetDirective}
 
 ${COPILOT_CHARLIE_SYSTEM_PROMPT}
 
@@ -412,8 +490,9 @@ USER QUESTION:
 ${clean}
 
 DIRECTIVE FOR CHARLIE SIMMONS:
+- Act as an active operator of the right-side dashboard: if a visual breakdown was pushed or is relevant to the active door, reference it on screen.
 - If compsSummary or comps are present, answer using those numbers; do not invent; do not give generic public-records spiel.
-- For “Is this a good deal vs comps?” answer first with the exact visible conclusion (e.g. citing whether the subject is above or aligned with adjusted comps and the percentage, like "Subject at $7.95M list is 24–32% above adjusted comps."); do not generic risk-talk.
+- For “Is this a good deal vs comps?” answer first with the exact visible conclusion.
 - Answer directly, authoritatively, and conversationally in 2 to 4 concise sentences.
 - Adhere strictly to hard stops (no legal/tax advice, no commissions/splits, CA DRE #02303118).`;
 
@@ -430,6 +509,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
           id: Date.now() + 1,
           sender: 'charlie',
           text: replyText || `For ${currentDossier.shortAddress}, our sanctioned registry query returned no active comps. Individual discovery is required.`,
+          pushedSnippetTitle: visualSnippet?.title || null,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);
@@ -663,56 +743,10 @@ DIRECTIVE FOR CHARLIE SIMMONS:
       
       {/* ── TOP STICKY NAVIGATION RAIL (ADMIN ONLY) ── */}
       {isAdmin && (
-        <nav className="p-3 sm:p-4 rounded-2xl bg-[#0a0a0a] border border-[#D4AF37]/50 shadow-2xl flex flex-wrap items-center justify-between gap-3 sticky top-3 z-50 backdrop-blur-md max-w-7xl mx-auto">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-pulse" />
-              <span className="text-xs font-bold text-white tracking-widest uppercase font-mono">
-                DYSON HOMES COPILOT
-              </span>
-            </div>
-
-            {/* Main Admin Quick Access Button */}
-            <Link
-              to="/admin"
-              className="px-3.5 py-1.5 rounded-xl bg-[#D4AF37] hover:bg-[#e8c84a] text-black font-bold text-xs flex items-center gap-1.5 transition-all shadow-md ml-1"
-              title="Open Admin Dashboard"
-            >
-              <LayoutDashboard className="w-3.5 h-3.5 text-black" />
-              <span>Admin Dashboard</span>
-            </Link>
-            <Link
-              to="/admin/dysonhomes-copilot"
-              className="px-3.5 py-1.5 rounded-xl bg-[#1a1a1a] hover:bg-[#252525] border border-[#D4AF37]/40 text-[#D4AF37] font-semibold text-xs hidden md:flex items-center gap-1.5 transition-all shadow-sm"
-              title="Open Admin Copilot Lab"
-            >
-              <Shield className="w-3 h-3 text-[#D4AF37]" />
-              <span>Copilot Lab</span>
-            </Link>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              onClick={() => scrollToSection(page1Ref, 1, '/')}
-              className="px-3.5 py-1.5 rounded-lg bg-[#1c1c1c] hover:bg-[#262626] text-white font-medium text-xs transition-colors border border-white/15 hover:border-[#D4AF37] cursor-pointer flex items-center gap-1.5"
-            >
-              <span className="font-mono text-stone-400 text-xs">1.</span>
-              <span>Landing &amp; Search</span>
-              <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => scrollToSection(page2Ref, 2, '/dossier')}
-              className="px-3.5 py-1.5 rounded-lg bg-[#1c1c1c] hover:bg-[#262626] text-white font-medium text-xs transition-colors border border-white/15 hover:border-[#D4AF37] cursor-pointer flex items-center gap-1.5"
-            >
-              <span className="font-mono text-stone-400 text-xs">2.</span>
-              <span>Fiduciary Command Center</span>
-              <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
-            </button>
-          </div>
-        </nav>
+        <CopilotAdminHeaderNav
+          onScrollToPage1={() => scrollToSection(page1Ref, 1, '/')}
+          onScrollToPage2={() => scrollToSection(page2Ref, 2, '/dossier')}
+        />
       )}
 
       {/* ── 2 STREAMLINED CORE PAGES ── */}
@@ -1030,6 +1064,57 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                             >
                               <p className="whitespace-pre-line font-normal">{m.text}</p>
 
+                              {/* Pushed Visual Snippet Link Affordance */}
+                              {m.pushedSnippetTitle && (
+                                <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between">
+                                  <span className="text-[10.5px] text-stone-300 font-sans">
+                                    Pushed to right panel: <strong className="text-white font-medium">{m.pushedSnippetTitle}</strong>
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      if (page2Ref.current) {
+                                        const panel = page2Ref.current.querySelector('#copilot-right-panel');
+                                        if (panel) panel.scrollIntoView({ behavior: 'smooth' });
+                                      }
+                                    }}
+                                    className="text-[10px] text-[#D4AF37] hover:underline flex items-center gap-1 font-sans cursor-pointer ml-2 shrink-0"
+                                  >
+                                    <span>View on Panel →</span>
+                                  </button>
+                                </div>
+                              )}
+
+                              {/* Escalation Protocol Card: 1-Click Call or Connect with Bob Dyson */}
+                              {m.isEscalation && (
+                                <div className="mt-3 pt-2.5 border-t border-[#D4AF37]/30 space-y-2.5">
+                                  <div className="flex items-center gap-1.5 text-[#D4AF37] text-[11px] font-sans font-medium">
+                                    <Shield className="w-3.5 h-3.5" />
+                                    <span>Programmed Broker Handoff · California DRE #02303118</span>
+                                  </div>
+                                  <div className="flex flex-wrap items-center gap-2 pt-0.5">
+                                    <a
+                                      href="tel:8583531200"
+                                      className="px-3 py-1.5 rounded-lg bg-[#D4AF37] hover:bg-[#e8c84a] text-black font-semibold text-xs flex items-center gap-1.5 transition-all shadow-sm"
+                                    >
+                                      <Phone className="w-3.5 h-3.5" />
+                                      <span>Call Bob Dyson · (858) 353-1200</span>
+                                    </a>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setEscalationQuestion(m.text || 'Requested direct broker consultation');
+                                        setIsEscalationModalOpen(true);
+                                      }}
+                                      className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium text-xs flex items-center gap-1.5 border border-white/15 transition-all cursor-pointer"
+                                    >
+                                      <MessageSquare className="w-3.5 h-3.5 text-[#D4AF37]" />
+                                      <span>Request Priority Callback</span>
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+
                               {m.options && m.options.length > 0 && (
                                 <div className="mt-3 pt-2.5 border-t border-white/10 space-y-2">
                                   <span className="text-stone-300 text-xs font-medium block font-sans">
@@ -1079,7 +1164,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                 </div>
 
                 {/* ── RIGHT COLUMN: PROPERTY AUDIT, SOLUTIONS VAULT & DAILY NEWS ── */}
-                <div className="flex-1 min-w-0 bg-[#080808] h-full overflow-hidden flex flex-col">
+                <div id="copilot-right-panel" className="flex-1 min-w-0 bg-[#080808] h-full overflow-hidden flex flex-col">
                   <CopilotDossierNewsPanel
                     property={analyzedProperty}
                     dossierData={dossierData}
@@ -1098,6 +1183,8 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                     onBackToSearch={() => {
                       setRightPanelView('dossier');
                     }}
+                    pushedSnippet={pushedSnippet}
+                    onDismissSnippet={() => setPushedSnippet(null)}
                   />
                 </div>
 
@@ -1279,6 +1366,25 @@ DIRECTIVE FOR CHARLIE SIMMONS:
               <CopilotLegalDisclosuresModal
                 isOpen={isLegalModalOpen}
                 onClose={() => setIsLegalModalOpen(false)}
+              />
+
+              {/* ── BROKER PRIORITY ESCALATION MODAL (HITTING THE WALL) ── */}
+              <CopilotBrokerEscalationModal
+                isOpen={isEscalationModalOpen}
+                onClose={() => setIsEscalationModalOpen(false)}
+                initialQuestion={escalationQuestion}
+                propertyAddress={dossierData.fullAddress || analyzedProperty}
+                onEscalationSuccess={(esc) => {
+                  setMessages(prev => [
+                    ...prev,
+                    {
+                      id: Date.now(),
+                      sender: 'bob',
+                      speakerName: 'Bob Dyson',
+                      text: `Thank you, ${esc.name || 'valued buyer'}. Your priority consultation request has been forwarded directly to my desk. I will review your documentation and connect with you shortly.`
+                    }
+                  ]);
+                }}
               />
 
             </div>
