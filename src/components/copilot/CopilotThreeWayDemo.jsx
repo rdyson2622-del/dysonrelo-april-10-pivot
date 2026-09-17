@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, RotateCcw, Volume2, Sparkles, CheckCircle, Radio } from 'lucide-react';
+import { stopAllCopilotAudio, subscribeToStopAllAudio, registerActiveMedia } from '@/lib/copilotAudioController';
 
 /**
  * CopilotThreeWayDemo
@@ -77,6 +78,7 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
         } else {
           audio.pause();
         }
+        registerActiveMedia(audio);
 
         audio.src = turnData.audioUrl;
         audio.currentTime = 0;

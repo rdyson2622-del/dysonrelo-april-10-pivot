@@ -5,17 +5,43 @@
  * eliminating overlapping voices and background playback.
  */
 
+// Active non-DOM media elements registry (e.g. new Audio() instances)
+const activeMediaRegistry = new Set();
+
+export function registerActiveMedia(media) {
+  if (!media) return () => {};
+  activeMediaRegistry.add(media);
+  return () => {
+    activeMediaRegistry.delete(media);
+  };
+}
+
 export function stopAllCopilotAudio() {
   if (typeof window === 'undefined') return;
 
-  // 1. Cancel browser speech synthesis if active
+  // 1. Unconditionally terminate and cancel browser speech synthesis immediately
   try {
-    if (window.speechSynthesis && window.speechSynthesis.speaking) {
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+      if (typeof window.speechSynthesis.pause === 'function') {
+        try { window.speechSynthesis.pause(); } catch (_) {}
+      }
       window.speechSynthesis.cancel();
     }
   } catch (_) {}
 
-  // 2. Pause and reset all video and audio elements in the entire document
+  // 2. Pause and reset all registered non-DOM audio objects
+  try {
+    activeMediaRegistry.forEach((media) => {
+      try {
+        if (typeof media.pause === 'function') media.pause();
+        if ('currentTime' in media) media.currentTime = 0;
+      } catch (_) {}
+    });
+    activeMediaRegistry.clear();
+  } catch (_) {}
+
+  // 3. Pause and reset all video and audio elements in the entire DOM
   try {
     const mediaElements = document.querySelectorAll('audio, video');
     mediaElements.forEach((el) => {
@@ -28,7 +54,7 @@ export function stopAllCopilotAudio() {
     });
   } catch (_) {}
 
-  // 3. Notify all listening components to reset their playing states
+  // 4. Notify all listening components to reset their playing states immediately
   try {
     window.dispatchEvent(new CustomEvent('dyson_copilot_stop_all_audio'));
   } catch (_) {}
