@@ -5,7 +5,7 @@ import {
   Radio, CheckCircle2, Edit3, FileText
 } from 'lucide-react';
 import { getDoorAudioBriefing } from './doorAudioBriefings';
-import { stopAllCopilotAudio, subscribeToStopAllAudio } from '@/lib/copilotAudioController';
+import { stopAllCopilotAudio, subscribeToStopAllAudio, registerActiveMedia } from '@/lib/copilotAudioController';
 import CopilotScriptRewriteModal from './CopilotScriptRewriteModal';
 
 /**
@@ -44,6 +44,7 @@ export default function CopilotDoorAudioBriefingStage({
   const progressIntervalRef = useRef(null);
   const startTimeRef = useRef(0);
   const durationRef = useRef(15);
+  const audioPlayerRef = useRef(null);
 
   // Reload briefing if activeDoor changes or scripts are updated
   useEffect(() => {
@@ -63,6 +64,12 @@ export default function CopilotDoorAudioBriefingStage({
   // Stop all audio on door change and reset state — NO AUTOPLAY
   useEffect(() => {
     stopAllCopilotAudio();
+    if (audioPlayerRef.current) {
+      try {
+        audioPlayerRef.current.pause();
+        audioPlayerRef.current.currentTime = 0;
+      } catch (_) {}
+    }
     setIsPlaying(false);
     setHasEnded(false);
     setProgress(0);
@@ -70,6 +77,12 @@ export default function CopilotDoorAudioBriefingStage({
 
     return () => {
       stopAllCopilotAudio();
+      if (audioPlayerRef.current) {
+        try {
+          audioPlayerRef.current.pause();
+          audioPlayerRef.current.currentTime = 0;
+        } catch (_) {}
+      }
       if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
     };
   }, [activeDoor]);
@@ -77,6 +90,12 @@ export default function CopilotDoorAudioBriefingStage({
   // Global listener: if another audio source fires, reset our playing state
   useEffect(() => {
     return subscribeToStopAllAudio(() => {
+      if (audioPlayerRef.current) {
+        try {
+          audioPlayerRef.current.pause();
+          audioPlayerRef.current.currentTime = 0;
+        } catch (_) {}
+      }
       setIsPlaying(false);
       if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
     });
@@ -84,15 +103,19 @@ export default function CopilotDoorAudioBriefingStage({
 
   const stopPlayback = () => {
     stopAllCopilotAudio();
+    if (audioPlayerRef.current) {
+      try {
+        audioPlayerRef.current.pause();
+        audioPlayerRef.current.currentTime = 0;
+      } catch (_) {}
+    }
     setIsPlaying(false);
     if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
   };
 
-  const startPlayback = () => {
-    // 1. Immediately terminate all existing audio/video/speech across the page
-    stopAllCopilotAudio();
-
+  const fallbackSpeechSynthesis = () => {
     if (typeof window === 'undefined' || !window.speechSynthesis) {
+      setIsPlaying(false);
       return;
     }
 
@@ -117,7 +140,6 @@ export default function CopilotDoorAudioBriefingStage({
         utterance.voice = naturalVoice;
       }
 
-      // Estimate duration based on word count
       const wordCount = (textToSpeak.trim().match(/\S+/g) || []).length;
       const estimatedSecs = Math.max(8, Math.round(wordCount / (isBob ? 2.2 : 2.5)));
       durationRef.current = estimatedSecs;
@@ -159,6 +181,74 @@ export default function CopilotDoorAudioBriefingStage({
     }
   };
 
+  const startPlayback = () => {
+    // 1. Immediately terminate all existing audio/video/speech across the page
+    stopAllCopilotAudio();
+
+    // 2. If pre-rendered audio asset is available and script has not been altered, play regenerated audio asset
+    if (briefing.audioUrl && !briefing.isCustomized) {
+      try {
+        let audio = audioPlayerRef.current;
+        if (!audio) {
+          audio = new Audio();
+          audioPlayerRef.current = audio;
+        } else {
+          audio.pause();
+        }
+
+        registerActiveMedia(audio);
+        audio.src = briefing.audioUrl;
+        audio.currentTime = 0;
+
+        // Calmer, deliberate pace & comfortable volume:
+        // Bob Dyson: measured 0.95x-0.96x rate; Charlie: 1.0x; comfortable 0.70 volume
+        const targetRate = isBob ? 0.95 : 1.0;
+        audio.playbackRate = targetRate;
+        audio.defaultPlaybackRate = targetRate;
+        audio.volume = isMuted ? 0 : 0.70;
+
+        audio.onplay = () => {
+          audio.playbackRate = targetRate;
+          setIsPlaying(true);
+          setHasEnded(false);
+          setProgress(0);
+        };
+
+        audio.ontimeupdate = () => {
+          if (audio.duration && !isNaN(audio.duration) && audio.duration > 0) {
+            const p = Math.min(100, (audio.currentTime / audio.duration) * 100);
+            setProgress(p);
+          }
+        };
+
+        audio.onended = () => {
+          setIsPlaying(false);
+          setHasEnded(true);
+          setProgress(100);
+          // Never loop or auto-repeat: stops completely
+        };
+
+        audio.onerror = (e) => {
+          console.warn('Door audio asset error, using synthesis fallback:', e);
+          fallbackSpeechSynthesis();
+        };
+
+        audio.play().catch((e) => {
+          console.warn('Audio play failed, using synthesis fallback:', e);
+          fallbackSpeechSynthesis();
+        });
+        return;
+      } catch (err) {
+        console.warn('Audio element error:', err);
+        fallbackSpeechSynthesis();
+        return;
+      }
+    }
+
+    // Otherwise use custom script synthesis
+    fallbackSpeechSynthesis();
+  };
+
   const togglePlay = (e) => {
     e?.stopPropagation();
     if (isPlaying) {
@@ -170,11 +260,14 @@ export default function CopilotDoorAudioBriefingStage({
 
   const toggleMute = (e) => {
     e?.stopPropagation();
-    setIsMuted(prev => !prev);
-    if (isPlaying) {
-      // Restart with new mute setting
-      startPlayback();
-    }
+    setIsMuted(prev => {
+      const next = !prev;
+      if (audioPlayerRef.current) {
+        audioPlayerRef.current.muted = next;
+        audioPlayerRef.current.volume = next ? 0 : 0.70;
+      }
+      return next;
+    });
   };
 
   const handleReplay = (e) => {

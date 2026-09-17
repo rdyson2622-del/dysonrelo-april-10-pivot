@@ -233,10 +233,14 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
       return;
     }
 
+    // Stop all audio across the page first
+    stopAllCopilotAudio();
+
     // Initialize or unlock audio element during the direct user click gesture
     try {
       if (!audioPlayerRef.current && typeof Audio !== 'undefined') {
         audioPlayerRef.current = new Audio();
+        registerActiveMedia(audioPlayerRef.current);
       }
     } catch (_) {}
 
@@ -246,8 +250,13 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
     playTurn(0);
   };
 
+  // Subscribe to global audio cancellation
   useEffect(() => {
+    const unsub = subscribeToStopAllAudio(() => {
+      stopDemo();
+    });
     return () => {
+      unsub();
       if (audioPlayerRef.current) {
         audioPlayerRef.current.pause();
         audioPlayerRef.current = null;
