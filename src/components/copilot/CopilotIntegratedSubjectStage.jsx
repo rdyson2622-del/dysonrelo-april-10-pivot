@@ -167,16 +167,30 @@ export default function CopilotIntegratedSubjectStage({
       const isFemale = (name) => /female|woman|samantha|victoria|karen|susan|zira|cynthia|jenny|aria|ava|emma|allison|fiona|moira|tessa|veena/i.test(name);
       const maleVoices = englishVoices.filter(v => !isFemale(v.name));
 
-      if (isBob) {
-        // Look for deeper mature authoritative male voice
-        const deepMale = maleVoices.find(v => /david|george|daniel|guy|oliver|tom|james|en-us-standard-b|en-us-standard-d|en-us-standard-j|male/i.test(v.name));
-        if (deepMale) utterance.voice = deepMale;
-        else if (maleVoices.length > 0) utterance.voice = maleVoices[0];
-      } else {
-        // Charlie: articulate polite male concierge
-        const crispMale = maleVoices.find(v => /alex|daniel|aaron|arthur|ryan|fred|google uk english male|en-gb/i.test(v.name));
-        if (crispMale) utterance.voice = crispMale;
-        else if (maleVoices.length > 0) utterance.voice = maleVoices[0];
+      const selectMale = () => {
+        const vList = window.speechSynthesis.getVoices() || [];
+        const eng = vList.filter(v => v.lang.startsWith('en'));
+        const m = eng.filter(v => !isFemale(v.name));
+        if (isBob) {
+          const deep = m.find(v => /david|george|daniel|guy|oliver|tom|james|en-us-standard-b|en-us-standard-d|en-us-standard-j|male/i.test(v.name));
+          if (deep) return deep;
+          if (m.length > 0) return m[0];
+        } else {
+          const crisp = m.find(v => /alex|daniel|aaron|arthur|ryan|fred|google uk english male|en-gb/i.test(v.name));
+          if (crisp) return crisp;
+          if (m.length > 0) return m[0];
+        }
+        return null;
+      };
+
+      const matchedMale = selectMale();
+      if (matchedMale) {
+        utterance.voice = matchedMale;
+      } else if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = () => {
+          const v = selectMale();
+          if (v) utterance.voice = v;
+        };
       }
 
       const wordCount = (textToSpeak.trim().match(/\S+/g) || []).length;
@@ -266,41 +280,47 @@ export default function CopilotIntegratedSubjectStage({
             <span className={`w-0.5 bg-[#D4AF37] rounded-full transition-all duration-150 ${isPlaying ? 'h-2.5 animate-pulse delay-100' : 'h-1 opacity-30'}`} />
           </div>
 
-          {/* Play / Pause Toggle Button */}
+          {/* Explicit Text-Labeled Play / Stop Button */}
           <button
             type="button"
             onClick={togglePlay}
             className={`px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1 font-bold text-[9px] tracking-wider shadow-sm ${
               isPlaying
-                ? 'bg-red-600 text-white'
+                ? 'bg-rose-950/80 hover:bg-rose-900 text-rose-200 border border-rose-700/50'
                 : 'bg-[#D4AF37] hover:bg-[#e8c84a] text-black'
             }`}
-            title={isPlaying ? "Pause voice briefing" : "Play voice briefing"}
+            title={isPlaying ? "Stop voice briefing" : "Tap to listen to voice briefing"}
           >
             {isPlaying ? (
               <>
                 <Pause className="w-2.5 h-2.5 fill-current" />
-                <span>STOP</span>
+                <span>Stop</span>
               </>
             ) : (
               <>
                 <Play className="w-2.5 h-2.5 fill-current" />
-                <span>PLAY (~{estimatedSeconds}s)</span>
+                <span>Tap to Listen</span>
               </>
             )}
           </button>
 
-          {/* Mute Button */}
+          {/* Explicit Text-Labeled Mute / Off Button */}
           <button
             type="button"
             onClick={toggleMute}
-            className="p-1 rounded-md bg-white/5 hover:bg-white/15 text-stone-300 hover:text-white transition-colors cursor-pointer"
-            title={isMuted ? "Unmute briefing" : "Mute briefing"}
+            className="px-2 py-1 rounded-md bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white border border-white/10 transition-colors cursor-pointer flex items-center gap-1 text-[9px] font-medium"
+            title={isMuted ? "Unmute audio briefing" : "Mute / Turn off audio"}
           >
             {isMuted ? (
-              <VolumeX className="w-3 h-3 text-rose-400" />
+              <>
+                <VolumeX className="w-2.5 h-2.5 text-rose-400" />
+                <span className="text-rose-400 font-semibold">Off</span>
+              </>
             ) : (
-              <Volume2 className="w-3 h-3 text-stone-300" />
+              <>
+                <Volume2 className="w-2.5 h-2.5 text-stone-300" />
+                <span>Mute</span>
+              </>
             )}
           </button>
 
