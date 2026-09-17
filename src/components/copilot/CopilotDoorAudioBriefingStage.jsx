@@ -8,6 +8,7 @@ import { getDoorAudioBriefing } from './doorAudioBriefings';
 import { stopAllCopilotAudio, subscribeToStopAllAudio, registerActiveMedia } from '@/lib/copilotAudioController';
 import CopilotScriptRewriteModal from './CopilotScriptRewriteModal';
 import CopilotRoadmapPreview from '@/components/copilot/CopilotRoadmapPreview';
+import CopilotObjectiveRoadmapStrip from './CopilotObjectiveRoadmapStrip';
 
 /**
  * CopilotDoorAudioBriefingStage
@@ -28,6 +29,7 @@ import CopilotRoadmapPreview from '@/components/copilot/CopilotRoadmapPreview';
  */
 export default function CopilotDoorAudioBriefingStage({
   activeDoor = 'dossier',
+  objectiveProject = null,
   dossierData = {},
   property = '',
   onPromptClick,
@@ -310,7 +312,7 @@ export default function CopilotDoorAudioBriefingStage({
   return (
     <>
       <div 
-        className="relative w-[66%] max-w-[450px] min-w-[315px] mx-auto overflow-hidden rounded-2xl shadow-2xl border border-[#D4AF37]/60 p-3 sm:p-3.5 flex flex-col justify-between shrink-0 bg-gradient-to-br from-[#16140f] via-[#101010] to-[#080808] transition-all group select-none"
+        className="relative w-[92%] max-w-[760px] min-w-[315px] mx-auto overflow-hidden rounded-2xl shadow-2xl border border-[#D4AF37]/60 p-3 sm:p-3.5 flex flex-col justify-between shrink-0 bg-gradient-to-br from-[#16140f] via-[#101010] to-[#080808] transition-all group select-none"
         style={{ aspectRatio: '16/9' }}
         title={`${briefing.doorName} Voice Briefing`}
       >
@@ -520,6 +522,8 @@ export default function CopilotDoorAudioBriefingStage({
             </div>
           )}
         </div>
+
+        <CopilotObjectiveRoadmapStrip door={activeDoor} project={objectiveProject} />
 
         {/* ── BOTTOM FOOTER: SPEAKER AVATAR, TIME PROGRESS & ACTION LINK ── */}
         <div className="border-t border-white/10 pt-1.5 text-[10px] sm:text-[11px] font-sans shrink-0">

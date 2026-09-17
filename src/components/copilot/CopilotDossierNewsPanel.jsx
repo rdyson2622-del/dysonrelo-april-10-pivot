@@ -30,6 +30,7 @@ export default function CopilotDossierNewsPanel({
   property,
   dossierData,
   activeView = 'dossier', // 'dossier' | 'news' | 'solutions'
+  objectiveProject = null,
   onViewChange,
   isExploded = false,
   onToggleExplode,
@@ -255,6 +256,7 @@ export default function CopilotDossierNewsPanel({
       {/* ── DYNAMIC INTELLIGENCE STAGE: CONTEXT-AWARE VISUAL / VIDEO STAGE ── */}
       <CopilotDynamicStage
         activeView={currentView}
+        objectiveProject={objectiveProject}
         selectedSubject={selectedVaultSubject}
         activeExplainer={activeExplainer}
         dossierData={dossierData}

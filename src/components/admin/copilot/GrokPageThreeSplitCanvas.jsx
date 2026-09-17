@@ -15,6 +15,7 @@ import CopilotBrokerEscalationModal from '@/components/copilot/CopilotBrokerEsca
 import CopilotFooterBranding from '@/components/copilot/CopilotFooterBranding';
 import CopilotUniversalVoicePills from '@/components/copilot/CopilotUniversalVoicePills';
 import useCopilotDoorSelection from '@/components/copilot/useCopilotDoorSelection';
+import useCopilotObjectiveTracker from '@/hooks/useCopilotObjectiveTracker';
 import { findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { getPropertyDossier } from './propertyDossierData';
 import { 
@@ -40,6 +41,9 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
   const [escalationQuestion, setEscalationQuestion] = useState('');
   const [pushedSnippet, setPushedSnippet] = useState(null);
   const [isSending, setIsSending] = useState(false);
+  const [pendingObjectiveDoor, setPendingObjectiveDoor] = useState(null);
+  const { ensureObjective, confirmMilestone, getCurrentMilestone, getProject } = useCopilotObjectiveTracker();
+  const objectiveScope = property || 'general';
 
   // Talk Live (Gemini Live with active door context)
   const [isTalkLiveActive, setIsTalkLiveActive] = useState(false);
@@ -119,11 +123,14 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         text: `Charlie here. Property audit initiated for ${cleanAddr}. I've pulled recent verified sales within 0.75 miles, adjusted for market shifts, and checked local environmental and property risk factors. On the right, your live dossier is active with Honest comps, Hidden risks, and Compliance and discovery.`,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
+      const seededProject = ensureObjective('dossier', `Audit property: ${cleanAddr}`, cleanAddr);
+      const seededMilestone = getCurrentMilestone('dossier', seededProject, cleanAddr);
+      if (seededMilestone) setPendingObjectiveDoor('dossier');
       const bobMsg = {
         id: Date.now() + 2,
         sender: 'bob',
         speakerName: 'Bob Dyson',
-        text: `Bob Dyson here. Under our referral agreement, CoPilot remains your strategic intelligence partner alongside your vetted agent for ${cleanAddr}. We help you understand the risks of dual agency, structure contingency milestones, and verify disclosures to safeguard your earnest money deposit.`,
+        text: `Bob Dyson here. Under our referral agreement, CoPilot remains your strategic intelligence partner alongside your vetted agent for ${cleanAddr}. We help you understand the risks of dual agency, structure contingency milestones, and verify disclosures to safeguard your earnest money deposit.${seededMilestone ? `\n\nBefore I make “${seededMilestone.title}” an action step, please confirm: move forward, not now, or accomplished.` : ''}`,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
       setMessages([userMsg, charlieMsg, bobMsg]);
@@ -280,6 +287,26 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
     setInputText('');
     addDiscussionChip(clean);
 
+    const actionDecision = pendingObjectiveDoor && (
+      /\b(accomplished|completed|done)\b/i.test(clean) ? 'accomplished' :
+      /\b(move forward|proceed|yes|make it an action)\b/i.test(clean) ? 'move_forward' :
+      /\b(not now|do not|don't|no)\b/i.test(clean) ? 'not_now' : null
+    );
+    if (actionDecision) {
+      const confirmed = confirmMilestone(pendingObjectiveDoor, actionDecision, objectiveScope);
+      const isBobConfirmation = pendingObjectiveDoor === 'vetting' || pendingObjectiveDoor === 'escrow';
+      const outcome = actionDecision === 'accomplished' ? 'marked accomplished' : actionDecision === 'move_forward' ? 'activated as an action step' : 'held for later';
+      setMessages(prev => [...prev, {
+        id: Date.now() + 1,
+        sender: isBobConfirmation ? 'bob' : 'charlie',
+        speakerName: isBobConfirmation ? 'Bob Dyson' : 'Charlie Simmons',
+        text: `${isBobConfirmation ? 'Bob Dyson' : 'Charlie'} here. Confirmed—“${confirmed?.milestone?.title || 'this milestone'}” is ${outcome}. Your live objective roadmap has been updated.`,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }]);
+      setPendingObjectiveDoor(null);
+      return;
+    }
+
     // ── 1. HIT-A-WALL ESCALATION DETECTION (NO GUESSING / HALLUCINATING) ──
     const escalation = detectEscalationTrigger(clean);
     if (escalation) {
@@ -368,6 +395,13 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
       return;
     }
 
+    const objectiveProject = ensureObjective(activeTargetDoor, clean, objectiveScope);
+    const objectiveMilestone = getCurrentMilestone(activeTargetDoor, objectiveProject, objectiveScope);
+    if (objectiveProject && objectiveMilestone) setPendingObjectiveDoor(activeTargetDoor);
+    const objectiveConfirmation = objectiveMilestone
+      ? `\n\nBefore I make “${objectiveMilestone.title}” an action step, please confirm: move forward, not now, or accomplished.`
+      : '';
+
     try {
       // ── 3. DOMAIN-SPECIFIC CONTEXT LOADING ──
       const domainKnowledge = getDomainKnowledgeContext(activeTargetDoor, property, dossierData);
@@ -429,7 +463,7 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
           id: Date.now() + 1,
           sender: isBobPrimary ? 'bob' : 'charlie',
           speakerName: isBobPrimary ? 'Bob Dyson' : 'Charlie Simmons',
-          text: replyText || `For ${dossierData.shortAddress || property}, our fiduciary desk reviews all unvarnished comps and contract contingency protections to keep your earnest money deposit 100% safeguarded.`,
+          text: `${replyText || `For ${dossierData.shortAddress || property}, our fiduciary desk reviews all unvarnished comps and contract contingency protections to keep your earnest money deposit 100% safeguarded.`}${objectiveConfirmation}`,
           pushedSnippetTitle: visualSnippet?.title || null,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
@@ -443,9 +477,9 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
           id: Date.now() + 1,
           sender: isBobPrimary ? 'bob' : 'charlie',
           speakerName: isBobPrimary ? 'Bob Dyson' : 'Charlie Simmons',
-          text: isBobPrimary 
+          text: `${isBobPrimary 
             ? `Bob Dyson here. Under California Form RPA, contingencies never expire automatically. We ensure your earnest money deposit is safeguarded under the 3% statutory cap (Cal. Civ. Code § 1675) and review all preliminary title Schedule B exceptions before any contingency removal.`
-            : `Charlie here. On ${dossierData.shortAddress || property}, our fiduciary desk reviews comps, hazard disclosures, and contract contingency protections with zero added broker fees.`,
+            : `Charlie here. On ${dossierData.shortAddress || property}, our fiduciary desk reviews comps, hazard disclosures, and contract contingency protections with zero added broker fees.`}${objectiveConfirmation}`,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);
@@ -825,6 +859,7 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
             property={property}
             dossierData={dossierData}
             activeView={rightPanelView}
+            objectiveProject={getProject(rightPanelView, objectiveScope)}
             onViewChange={handleSelectMiniApp}
             doorSelectionVersion={doorSelectionVersion}
             isExploded={isPageExploded}

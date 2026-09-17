@@ -13,6 +13,7 @@ const DNN_STUDIO_POSTER = 'https://media.base44.com/images/public/69d905d72ff7c9
 
 export default function CopilotDynamicStage({
   activeView = 'dossier',
+  objectiveProject = null,
   selectedSubject = null,
   activeExplainer = null,
   dossierData = {},
@@ -134,6 +135,7 @@ export default function CopilotDynamicStage({
       return (
         <CopilotIntegratedSubjectStage
           subject={integratedSubject}
+          objectiveProject={objectiveProject}
           dossierData={dossierData}
           property={property}
           onPromptClick={onPromptClick}
@@ -148,6 +150,7 @@ export default function CopilotDynamicStage({
   return (
     <CopilotDoorAudioBriefingStage
       activeDoor={activeView || 'dossier'}
+      objectiveProject={objectiveProject}
       dossierData={dossierData}
       property={property}
       onPromptClick={onPromptClick}

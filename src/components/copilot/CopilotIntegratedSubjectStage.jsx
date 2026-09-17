@@ -7,9 +7,11 @@ import {
 } from 'lucide-react';
 import { stopAllCopilotAudio, registerActiveMedia, subscribeToStopAllAudio } from '@/lib/copilotAudioController';
 import { CHARLIE_AVATAR, BOB_AVATAR } from './doorAudioBriefings';
+import CopilotObjectiveRoadmapStrip from './CopilotObjectiveRoadmapStrip';
 
 export default function CopilotIntegratedSubjectStage({
   subject,
+  objectiveProject = null,
   dossierData = {},
   property = '',
   onPromptClick,
@@ -253,7 +255,7 @@ export default function CopilotIntegratedSubjectStage({
 
   return (
     <div 
-      className="relative w-[66%] max-w-[450px] min-w-[315px] mx-auto overflow-hidden rounded-2xl shadow-2xl border border-[#D4AF37]/60 p-3 sm:p-3.5 flex flex-col justify-between shrink-0 bg-gradient-to-br from-[#181510] via-[#101010] to-[#080808] transition-all group select-none"
+      className="relative w-[92%] max-w-[760px] min-w-[315px] mx-auto overflow-hidden rounded-2xl shadow-2xl border border-[#D4AF37]/60 p-3 sm:p-3.5 flex flex-col justify-between shrink-0 bg-gradient-to-br from-[#181510] via-[#101010] to-[#080808] transition-all group select-none"
       style={{ aspectRatio: '16/9' }}
       title={`${subject.title} · Voice & Visual Briefing`}
     >
@@ -634,6 +636,8 @@ export default function CopilotIntegratedSubjectStage({
           </div>
         )}
       </div>
+
+      <CopilotObjectiveRoadmapStrip door={subject.door} project={objectiveProject} />
 
       {/* ── BOTTOM FOOTER ROW: AUDIO PROGRESS, TEASER COPY & PROMPT BUTTON ── */}
       <div className="shrink-0 space-y-1 pt-1 border-t border-white/10 font-sans">
