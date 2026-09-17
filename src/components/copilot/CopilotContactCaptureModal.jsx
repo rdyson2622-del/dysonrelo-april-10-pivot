@@ -112,6 +112,18 @@ export default function CopilotContactCaptureModal({
         console.warn('Property touch non-blocking error:', tErr);
       }
 
+      // Save checked-in contact identity so they are recognized up top upon return
+      if (trimmedName || digitsOnly || normalizedEmail) {
+        try {
+          const { saveCheckedInContact } = await import('@/lib/copilotContactSession');
+          saveCheckedInContact({
+            name: trimmedName,
+            phone: digitsOnly,
+            email: normalizedEmail
+          });
+        } catch (_) {}
+      }
+
       setIsSuccess(true);
       setTimeout(() => {
         setIsSubmitting(false);
