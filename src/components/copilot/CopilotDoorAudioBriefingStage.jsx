@@ -313,7 +313,7 @@ export default function CopilotDoorAudioBriefingStage({
     <>
       <div 
         className="relative w-[92%] max-w-[760px] min-w-[315px] mx-auto overflow-hidden rounded-2xl shadow-2xl border border-[#D4AF37]/60 p-3 sm:p-3.5 flex flex-col justify-between shrink-0 bg-gradient-to-br from-[#16140f] via-[#101010] to-[#080808] transition-all group select-none"
-        style={{ aspectRatio: '16/9' }}
+        style={{ aspectRatio: '80/27' }}
         title={`${briefing.doorName} Voice Briefing`}
       >
         {/* ── TOP HEADER ROW: DOOR IDENTITY, SPEAKER BADGE & CONTROLS ── */}
