@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Play, Square, Volume2, VolumeX } from 'lucide-react';
 import { stopAllCopilotAudio, subscribeToStopAllAudio } from '@/lib/copilotAudioController';
 
-const pill = 'px-2 py-1 rounded-full border text-[9px] font-normal flex items-center gap-1 transition-colors';
+const pill = 'px-2.5 py-1 rounded-full border text-[9px] font-normal flex items-center gap-1 transition-colors';
 
 export default function CopilotUniversalVoicePills({ text = '', defaultSpeaker = 'charlie', autoPlayKey, onPlayingChange }) {
   const [speaker, setSpeaker] = useState(defaultSpeaker === 'bob' ? 'bob' : 'charlie');
