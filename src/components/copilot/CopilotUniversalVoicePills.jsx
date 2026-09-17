@@ -8,7 +8,7 @@ export default function CopilotUniversalVoicePills({ text = '', defaultSpeaker =
   const [speaker, setSpeaker] = useState(defaultSpeaker === 'bob' ? 'bob' : 'charlie');
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
-  const previousAutoPlayKey = useRef(autoPlayKey);
+  const previousAutoPlayKey = useRef(undefined);
 
   const reportPlaying = (value, activeSpeaker = speaker) => {
     setPlaying(value);
@@ -34,12 +34,13 @@ export default function CopilotUniversalVoicePills({ text = '', defaultSpeaker =
   };
 
   useEffect(() => {
-    if (autoPlayKey === undefined || autoPlayKey === previousAutoPlayKey.current) return;
+    if (autoPlayKey === undefined || !text || muted || autoPlayKey === previousAutoPlayKey.current) return;
     previousAutoPlayKey.current = autoPlayKey;
     const activeSpeaker = defaultSpeaker === 'bob' ? 'bob' : 'charlie';
     setSpeaker(activeSpeaker);
-    speakText(activeSpeaker);
-  }, [autoPlayKey]);
+    const startTimer = window.setTimeout(() => speakText(activeSpeaker), 80);
+    return () => window.clearTimeout(startTimer);
+  }, [autoPlayKey, text, defaultSpeaker, muted]);
 
   const choose = (next) => {
     stopAllCopilotAudio();

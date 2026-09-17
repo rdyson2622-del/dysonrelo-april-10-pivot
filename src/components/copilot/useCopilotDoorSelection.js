@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { getDoorAudioBriefing, DEFAULT_DOOR_BRIEFINGS } from '@/components/copilot/doorAudioBriefings';
 import { stopAllCopilotAudio } from '@/lib/copilotAudioController';
 
@@ -6,6 +6,7 @@ const aliases = { audit: 'dossier', dnn: 'news', vault: 'solutions', workflows: 
 
 export default function useCopilotDoorSelection({ setView, setMessages, clearStage }) {
   const [doorSelectionVersion, setDoorSelectionVersion] = useState(0);
+  const visitedDoorsRef = useRef(new Set());
   const selectDoor = (id, isParked = false) => {
     if (isParked) {
       setMessages(prev => [...prev, {
@@ -23,11 +24,23 @@ export default function useCopilotDoorSelection({ setView, setMessages, clearSta
     setDoorSelectionVersion(version => version + 1);
     if (door == null) return;
     const briefing = getDoorAudioBriefing(door);
+    const isRevisit = visitedDoorsRef.current.has(door);
+    visitedDoorsRef.current.add(door);
+    let spokenText = briefing.spokenText;
+    if (isRevisit) {
+      if (/welcome to/i.test(spokenText)) {
+        spokenText = spokenText.replace(/welcome to/i, 'Welcome back to');
+      } else if (/^(Charlie|Bob Dyson) here\./i.test(spokenText)) {
+        spokenText = spokenText.replace(/^(Charlie|Bob Dyson) here\./i, '$& Welcome back.');
+      } else {
+        spokenText = `Welcome back. ${spokenText}`;
+      }
+    }
     setMessages(prev => [...prev, {
       id: crypto.randomUUID(),
       sender: briefing.speaker === 'bob' ? 'bob' : 'charlie',
       speakerName: briefing.speakerName,
-      text: briefing.spokenText,
+      text: spokenText,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }]);
   };
