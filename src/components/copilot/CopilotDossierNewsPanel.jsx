@@ -395,6 +395,7 @@ export default function CopilotDossierNewsPanel({
         </div>
       </div>
 
+      <div className="copilot-intelligence-content space-y-4 shrink-0">
       {/* ── PUSHED VISUAL SNIPPET (FROM LEFT-SIDE CHAT OPERATOR) ── */}
       {pushedSnippet && (
         <CopilotVisualSnippetCard
@@ -1080,6 +1081,7 @@ export default function CopilotDossierNewsPanel({
 
         </div>
       )}
+      </div>
 
     </div>
   );

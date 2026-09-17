@@ -4,6 +4,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* All present and future lower Intelligence content, including expanded views.
+   Override nested utility classes, semantic bold tags, and inline weights only here. */
+.copilot-intelligence-content,
+.copilot-intelligence-content * {
+  font-weight: 400 !important;
+}
+
 @layer base {
   :root {
     --dyson-black: #0a0a0a;

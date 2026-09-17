@@ -272,7 +272,7 @@ export default function CopilotExplodedSubjectModal({
       {/* ── MAIN SCROLLABLE CONTENT BODY ── */}
       <div 
         ref={modalContainerRef}
-        className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-3 sm:p-6 lg:p-8 max-w-5xl mx-auto w-full space-y-6 pb-32"
+        className="copilot-intelligence-content flex-1 min-h-0 overflow-y-auto overscroll-contain p-3 sm:p-6 lg:p-8 max-w-5xl mx-auto w-full space-y-6 pb-32"
       >
         
         {/* ── OPTION A: SPECIFIC SELECTED SOLUTION PLAYBOOK ── */}
