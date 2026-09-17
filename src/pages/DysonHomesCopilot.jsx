@@ -381,7 +381,7 @@ export default function DysonHomesCopilot({ initialPage }) {
     if (/news|broadcast|dnn/i.test(clean)) {
       activeTargetDoor = 'news';
       setRightPanelView('news');
-    } else if (/vetting|agent vetting|dual agency|hire agent/i.test(clean)) {
+    } else if (/vetting|agent vetting|dual agency|hire agent|connect with an agent|advisory agreement|exclusive agreement|why do i need to sign|are you my agent/i.test(clean)) {
       activeTargetDoor = 'vetting';
       setRightPanelView('vetting');
     } else if (/roadmap|milestone|steps to buy|timeline|phase/i.test(clean)) {

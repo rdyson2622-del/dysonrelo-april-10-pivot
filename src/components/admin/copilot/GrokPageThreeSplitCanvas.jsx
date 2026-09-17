@@ -575,7 +575,10 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
 
       {/* ── BOTTOM HORIZONTAL AI MINIONS RAIL ── */}
       {showRail && (
-        <CopilotMiniAppsRail />
+        <CopilotMiniAppsRail 
+          onSelectApp={(appId) => setRightPanelView(appId)}
+          activeApp={rightPanelView || 'dossier'}
+        />
       )}
 
       {/* ── FULL-PAGE EXPLODED SUBJECT THEATER ── */}
