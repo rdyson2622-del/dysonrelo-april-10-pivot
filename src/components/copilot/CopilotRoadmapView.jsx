@@ -9,7 +9,9 @@ const GOLD = '#D4AF37';
 export default function CopilotRoadmapView({
   propertyAddress,
   onPromptClick,
-  onOpenCaptureModal
+  onOpenCaptureModal,
+  onSelectSubject,
+  activeSubject
 }) {
   const shortAddr = propertyAddress ? propertyAddress.split(',')[0] : '742 Vista Del Mar';
   const [activeStep, setActiveStep] = useState(null);
@@ -117,7 +119,11 @@ export default function CopilotRoadmapView({
       >
         <button
           type="button"
-          onClick={() => setIsPartnershipOpen(!isPartnershipOpen)}
+          onClick={() => {
+            const next = !isPartnershipOpen;
+            setIsPartnershipOpen(next);
+            onSelectSubject?.(next ? 'roadmap-partnership' : null);
+          }}
           className="w-full px-3.5 py-2.5 flex items-center justify-between text-left cursor-pointer group gap-2"
           aria-expanded={isPartnershipOpen}
         >
@@ -179,7 +185,11 @@ export default function CopilotRoadmapView({
             >
               <button
                 type="button"
-                onClick={() => setActiveStep(isSelected ? null : p.num)}
+                onClick={() => {
+                  const next = isSelected ? null : p.num;
+                  setActiveStep(next);
+                  onSelectSubject?.(next !== null ? { id: `roadmap-phase-${p.num}`, phaseNum: p.num, title: p.title, timing: p.timing } : null);
+                }}
                 className="w-full px-3.5 py-2.5 flex items-center justify-between text-left cursor-pointer group gap-2"
                 aria-expanded={isSelected}
               >

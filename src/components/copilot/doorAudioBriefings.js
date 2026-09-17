@@ -81,6 +81,20 @@ export const DEFAULT_DOOR_BRIEFINGS = {
     audioUrl: 'https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/8fa783cb9_speech.mp3',
     spokenText: "Welcome to today's DNN Market Desk broadcast. Charlie Simmons and Bob Dyson present the latest coastal real estate intelligence, inventory constraints, mortgage rate movements, and buyer contract protections. Tap play to view today's complete broadcast.",
     promptQuery: 'Charlie and Bob, summarize today’s DNN News broadcast'
+  },
+  dnn: {
+    id: 'dnn',
+    doorName: 'DNN News',
+    speaker: 'charlie_bob',
+    speakerName: 'Charlie & Bob',
+    speakerRole: 'DNN Daily Market Desk',
+    avatar: DNN_BROADCAST_THUMBNAIL,
+    accentColor: '#D4AF37',
+    title: 'DNN Daily Broadcast',
+    subtitle: 'Coastal market intelligence & migration trends',
+    audioUrl: 'https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/8fa783cb9_speech.mp3',
+    spokenText: "Welcome to today's DNN Market Desk broadcast. Charlie Simmons and Bob Dyson present the latest coastal real estate intelligence, inventory constraints, mortgage rate movements, and buyer contract protections. Tap play to view today's complete broadcast.",
+    promptQuery: 'Charlie and Bob, summarize today’s DNN News broadcast'
   }
 };
 

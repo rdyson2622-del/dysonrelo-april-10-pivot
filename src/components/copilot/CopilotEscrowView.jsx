@@ -10,7 +10,9 @@ const GOLD = '#D4AF37';
 export default function CopilotEscrowView({
   propertyAddress,
   onPromptClick,
-  onOpenCaptureModal
+  onOpenCaptureModal,
+  onSelectSubject,
+  activeSubject
 }) {
   const shortAddr = propertyAddress ? propertyAddress.split(',')[0] : 'Subject Property';
   const [isPartnershipOpen, setIsPartnershipOpen] = useState(false);
@@ -93,7 +95,11 @@ export default function CopilotEscrowView({
       >
         <button
           type="button"
-          onClick={() => setIsPartnershipOpen(!isPartnershipOpen)}
+          onClick={() => {
+            const next = !isPartnershipOpen;
+            setIsPartnershipOpen(next);
+            onSelectSubject?.(next ? 'escrow-partnership' : null);
+          }}
           className="w-full px-3.5 py-2.5 flex items-center justify-between text-left cursor-pointer group gap-2"
           aria-expanded={isPartnershipOpen}
         >
@@ -150,7 +156,11 @@ export default function CopilotEscrowView({
       >
         <button
           type="button"
-          onClick={() => setIsGuardrailsOpen(!isGuardrailsOpen)}
+          onClick={() => {
+            const next = !isGuardrailsOpen;
+            setIsGuardrailsOpen(next);
+            onSelectSubject?.(next ? 'compliance' : null);
+          }}
           className="w-full px-3.5 py-2.5 flex items-center justify-between text-left cursor-pointer group gap-2"
           aria-expanded={isGuardrailsOpen}
         >
@@ -223,7 +233,11 @@ export default function CopilotEscrowView({
             >
               <button
                 type="button"
-                onClick={() => setExpandedTrapIdx(isSelected ? null : idx)}
+                onClick={() => {
+                  const next = isSelected ? null : idx;
+                  setExpandedTrapIdx(next);
+                  onSelectSubject?.(next !== null ? { id: `escrow-trap-${idx}`, trapIdx: idx, ...t } : null);
+                }}
                 className="w-full px-3.5 py-2.5 flex items-center justify-between text-left cursor-pointer group gap-2"
                 aria-expanded={isSelected}
               >

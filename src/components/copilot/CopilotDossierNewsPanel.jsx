@@ -49,10 +49,18 @@ export default function CopilotDossierNewsPanel({
   const videoRef = useRef(null);
 
   const toggleAuditAccordion = (key) => {
-    setOpenAuditAccordions(prev => ({
-      ...prev,
-      [key]: !prev[key]
-    }));
+    setOpenAuditAccordions(prev => {
+      const willBeOpen = !prev[key];
+      if (willBeOpen) {
+        setSelectedVaultSubject(key);
+      } else {
+        setSelectedVaultSubject(null);
+      }
+      return {
+        ...prev,
+        [key]: willBeOpen
+      };
+    });
   };
 
   // Fetch real broadcast data if available
@@ -127,6 +135,7 @@ export default function CopilotDossierNewsPanel({
 
   const handleViewSwitch = (view) => {
     stopAllCopilotAudio();
+    setSelectedVaultSubject(null);
     onViewChange?.(view);
   };
 
@@ -410,6 +419,8 @@ export default function CopilotDossierNewsPanel({
           propertyAddress={dossierData?.fullAddress || property}
           onPromptClick={onPromptClick}
           onOpenCaptureModal={onOpenCaptureModal}
+          onSelectSubject={(subj) => setSelectedVaultSubject(subj)}
+          activeSubject={selectedVaultSubject}
         />
       )}
 
@@ -421,6 +432,8 @@ export default function CopilotDossierNewsPanel({
           propertyAddress={dossierData?.fullAddress || property}
           onPromptClick={onPromptClick}
           onOpenCaptureModal={onOpenCaptureModal}
+          onSelectSubject={(subj) => setSelectedVaultSubject(subj)}
+          activeSubject={selectedVaultSubject}
         />
       )}
 

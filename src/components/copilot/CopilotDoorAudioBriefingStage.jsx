@@ -129,15 +129,20 @@ export default function CopilotDoorAudioBriefingStage({
       utterance.pitch = isBob ? 0.9 : 1.05;
       utterance.volume = isMuted ? 0 : 0.65; // Soft comfortable volume (not too loud)
 
-      // Preferred voice selection
-      const voices = window.speechSynthesis.getVoices();
+      // Preferred voice selection (strictly MALE voices for Bob and Charlie, rejecting female voices)
+      const voices = window.speechSynthesis.getVoices() || [];
       const englishVoices = voices.filter(v => v.lang.startsWith('en'));
-      const maleVoice = englishVoices.find(v => /male|daniel|david|george|alex/i.test(v.name));
-      const naturalVoice = englishVoices.find(v => /natural|google|premium/i.test(v.name));
-      if (maleVoice && isBob) {
-        utterance.voice = maleVoice;
-      } else if (naturalVoice) {
-        utterance.voice = naturalVoice;
+      const isFemale = (name) => /female|woman|samantha|victoria|karen|susan|zira|cynthia|jenny|aria|ava|emma|allison|fiona|moira|tessa|veena/i.test(name);
+      const maleVoices = englishVoices.filter(v => !isFemale(v.name));
+
+      if (isBob) {
+        const deepMale = maleVoices.find(v => /david|george|daniel|guy|oliver|tom|james|en-us-standard-b|en-us-standard-d|male/i.test(v.name));
+        if (deepMale) utterance.voice = deepMale;
+        else if (maleVoices.length > 0) utterance.voice = maleVoices[0];
+      } else {
+        const crispMale = maleVoices.find(v => /alex|daniel|aaron|arthur|ryan|fred|google uk english male|en-gb/i.test(v.name));
+        if (crispMale) utterance.voice = crispMale;
+        else if (maleVoices.length > 0) utterance.voice = maleVoices[0];
       }
 
       const wordCount = (textToSpeak.trim().match(/\S+/g) || []).length;
