@@ -76,10 +76,13 @@ export const CORE_EXECUTION_MINIONS = [
   }
 ];
 
+import { Edit3 } from 'lucide-react';
+
 export default function CopilotMiniAppsRail({ 
   className = '', 
   onSelectApp,
-  activeApp = 'dossier'
+  activeApp = 'dossier',
+  onOpenRewriteScripts
 }) {
   // Parked back-office tools filtered to avoid duplicating the 4 core doors
   const parkedTools = ADMIN_DEPT_MINI_APPS.filter(a => 
@@ -96,6 +99,17 @@ export default function CopilotMiniAppsRail({
           <span className="text-stone-400 hidden sm:inline">Select a stage to explore intelligence and guidance</span>
         </div>
         <div className="flex items-center gap-2 text-stone-400 text-[10px]">
+          {onOpenRewriteScripts && (
+            <button
+              type="button"
+              onClick={onOpenRewriteScripts}
+              className="text-[#D4AF37] hover:text-white flex items-center gap-1 font-semibold transition-colors cursor-pointer mr-1 px-1.5 py-0.5 rounded bg-white/5 hover:bg-white/10 border border-white/10"
+              title="Open Voice Briefing Script Studio to rewrite any pill script"
+            >
+              <Edit3 className="w-2.5 h-2.5" />
+              <span>Rewrite Scripts</span>
+            </button>
+          )}
           <span>4 Primary Stages</span>
           <span>·</span>
           <span>Back-Office Support</span>

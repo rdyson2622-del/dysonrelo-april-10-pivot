@@ -11,7 +11,7 @@ export const BOB_AVATAR = 'https://files2.heygen.ai/talking_photo/31b79a86784e49
 export const CHARLIE_AVATAR = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/6421add7d_Screenshot2026-08-31at40550PM.png';
 export const DNN_BROADCAST_THUMBNAIL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/d5e0cb3f1_Screenshot2026-09-14at81551PM.png';
 
-export const DOOR_AUDIO_BRIEFINGS = {
+export const DEFAULT_DOOR_BRIEFINGS = {
   dossier: {
     id: 'dossier',
     doorName: 'Property Audit',
@@ -22,8 +22,7 @@ export const DOOR_AUDIO_BRIEFINGS = {
     accentColor: '#10b981',
     title: 'Property Audit Briefing',
     subtitle: 'Independent comps, hazard zones & permit history',
-    audioUrl: 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/6f622bb1c_charlie_avatar_clean_vet.mp4',
-    spokenText: 'Charlie here. You are now reviewing the Property Audit for this home. We have pulled unvarnished comparable sales, tax records, and hazard disclosures so you have an independent, transparent second-look before discussing offer terms.',
+    spokenText: 'Charlie here. Welcome to your independent Property Audit. Here we break down unvarnished micro-neighborhood comps adjusted for square footage and condition, along with local hazard disclosures, bluff setbacks, and property tax records. Review your honest comps and hidden risks on screen, or ask me any question to drill into the data before formulating an offer.',
     promptQuery: 'Charlie, walk me through the comps and hidden risks on this property'
   },
   vetting: {
@@ -36,8 +35,7 @@ export const DOOR_AUDIO_BRIEFINGS = {
     accentColor: '#D4AF37',
     title: 'Agent Vetting Briefing',
     subtitle: 'Independent representation standards vs. dual agency',
-    audioUrl: 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/3400475d9_bobanswer_6a5d2e96818523aa8749508e.mp4',
-    spokenText: 'Bob Dyson here. Independent buyer representation is the cornerstone of protecting your equity. Under our licensed referral structure, we pair you with an elite local buyer specialist while our fiduciary desk stays actively involved alongside you through closing—with zero dual agency conflicts.',
+    spokenText: "Bob Dyson here. Welcome to our Agent Vetting desk. In coastal luxury real estate, dual agency is a serious risk to your equity—the listing agent's legal loyalty is to the seller's price, not yours. Through our licensed California referral agreement, CoPilot pairs you with a thoroughly vetted, independent local buyer specialist. Our fiduciary broker desk remains actively involved alongside you through every negotiation and milestone to closing, with zero added fees to you. Tap any protocol below to see how we safeguard your interests.",
     promptQuery: 'Bob, break down the risks of using the listing agent and how independent advocacy works'
   },
   roadmap: {
@@ -50,8 +48,7 @@ export const DOOR_AUDIO_BRIEFINGS = {
     accentColor: '#10b981',
     title: 'Move Roadmap Briefing',
     subtitle: '7-Phase timeline from offer formulation to key handover',
-    audioUrl: 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/2201470a5_roadmap_6a52cbc75ead5c9873240ccf_charlie.mp4',
-    spokenText: 'Charlie here. You are now looking at the Move Roadmap—your 7-phase timeline from offer formulation to key handover. Tap any milestone below to see the exact diligence checkpoints CoPilot monitors at each step.',
+    spokenText: 'Charlie here. This is your Move Roadmap—a structured 7-phase execution timeline from initial property audit and offer formulation all the way through escrow contingencies and closing. CoPilot stays actively engaged alongside you and your agent at every milestone. Tap any phase below to inspect the specific diligence steps and documentation required.',
     promptQuery: 'Charlie, explain the 7 transaction phases of the Move Roadmap'
   },
   escrow: {
@@ -64,8 +61,7 @@ export const DOOR_AUDIO_BRIEFINGS = {
     accentColor: '#D4AF37',
     title: 'Escrow Watch Briefing',
     subtitle: 'Earnest money defense, 48-hr notices & title exceptions',
-    audioUrl: 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/94b83e0f7_reqa_6a5272697665dffe7b165e0d_bob.mp4',
-    spokenText: 'Bob Dyson here. In California, your earnest money deposit is protected by affirmative written contingencies under the 3% statutory cap. We review title Schedule B exceptions and track 48-hour notices to perform before any contingency removal is signed.',
+    spokenText: 'Bob Dyson here. Welcome to Escrow Watch. Once you are in contract, protecting your earnest money deposit is paramount. Under California law, liquidated damages for buyer default are capped at three percent. In standard California agreements, contingencies never expire automatically—the seller must issue a formal forty-eight-hour Notice to Perform before demanding removal. We supervise every contingency timeline, appraisal gap, and preliminary title Schedule B exception so you never risk your deposit.',
     promptQuery: 'Bob, explain earnest money defense, 48-hour notices to perform, and Schedule B title exceptions'
   },
   news: {
@@ -79,7 +75,61 @@ export const DOOR_AUDIO_BRIEFINGS = {
     title: 'DNN Daily Broadcast',
     subtitle: 'Coastal market intelligence & migration trends',
     audioUrl: 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/75165cedb_san-diego-housing-inventory-remains-constrained-amid-sustained-price-resilience.mp4',
-    spokenText: 'Welcome to today’s DNN Daily Broadcast. Charlie Simmons and Bob Dyson present the latest coastal real estate intelligence, inventory constraints, and buyer contingency safeguards.',
+    spokenText: "Welcome to today's DNN Market Desk broadcast. Charlie Simmons and Bob Dyson present the latest coastal real estate intelligence, inventory constraints, mortgage rate movements, and buyer contract protections. Tap play to view today's complete broadcast.",
     promptQuery: 'Charlie and Bob, summarize today’s DNN News broadcast'
   }
 };
+
+const SCRIPTS_STORAGE_KEY = 'dyson_copilot_door_scripts';
+
+export function getSavedScripts() {
+  if (typeof window === 'undefined') return {};
+  try {
+    const raw = localStorage.getItem(SCRIPTS_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (_) {
+    return {};
+  }
+}
+
+export function saveDoorScript(doorId, scriptText) {
+  if (typeof window === 'undefined' || !doorId) return;
+  try {
+    const saved = getSavedScripts();
+    saved[doorId] = scriptText;
+    localStorage.setItem(SCRIPTS_STORAGE_KEY, JSON.stringify(saved));
+    window.dispatchEvent(new CustomEvent('dyson_door_scripts_updated', { detail: { doorId, scriptText } }));
+  } catch (_) {}
+}
+
+export function resetDoorScript(doorId) {
+  if (typeof window === 'undefined' || !doorId) return;
+  try {
+    const saved = getSavedScripts();
+    delete saved[doorId];
+    localStorage.setItem(SCRIPTS_STORAGE_KEY, JSON.stringify(saved));
+    window.dispatchEvent(new CustomEvent('dyson_door_scripts_updated', { detail: { doorId } }));
+  } catch (_) {}
+}
+
+export function resetAllDoorScripts() {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.removeItem(SCRIPTS_STORAGE_KEY);
+    window.dispatchEvent(new CustomEvent('dyson_door_scripts_updated', { detail: {} }));
+  } catch (_) {}
+}
+
+export function getDoorAudioBriefing(doorId = 'dossier') {
+  const base = DEFAULT_DOOR_BRIEFINGS[doorId] || DEFAULT_DOOR_BRIEFINGS.dossier;
+  const saved = getSavedScripts();
+  const customScript = saved[doorId];
+
+  return {
+    ...base,
+    spokenText: customScript || base.spokenText,
+    isCustomized: Boolean(customScript && customScript !== base.spokenText)
+  };
+}
+
+export const DOOR_AUDIO_BRIEFINGS = DEFAULT_DOOR_BRIEFINGS;

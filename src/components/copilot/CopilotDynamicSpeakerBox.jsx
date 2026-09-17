@@ -4,6 +4,7 @@ import {
   Square, AlertCircle, RefreshCw, Briefcase, Sparkles 
 } from 'lucide-react';
 import { GeminiLiveSessionClient } from '@/lib/geminiLiveClient';
+import { subscribeToStopAllAudio } from '@/lib/copilotAudioController';
 import { CHARLIE_COPILOT_LIVE_PROMPT, CHARLIE_VOICE_NAME } from '@/lib/charlieSimmonsPrompt';
 
 export const BOB_HEADSHOT = 'https://files2.heygen.ai/talking_photo/31b79a86784e495090472af2e7b9407c/5c0bde249fe348bb8b9dfb07299f608c.WEBP?Expires=1789606882&Signature=YUNW1j0tU8LsI1vb0JnPSMwCFFhUwdI2U1MoECnlYvthEhenxAfg-ws0S6jibQKfxBhXSRobys8qEkDXU-WvfEi4rH1Sej4yZCwxgjlxPNNv9XjJgaTpZDeeMYzQC8A5cLTT3-l~u5Jy~zeoIlaRFJGM2yu4vTRxo2Ul0fPWg4dK-10LrLqrsFrxEITI1uvRsyfP5ysTm1J7HaW9pCVY~1~1z2HB1zmNuMsVYcCowXhZWfyyOAsPySSciYJfIkFN6Xw16C~n7mK1B5twxKAPjW-yV0Cq8H~wCvqAUr9BbBZpTut1jy1kHtWCEmRiju1M-sQOb4ymWXlvLHxP71xlpA__&Key-Pair-Id=K38HBHX5LX3X2H';
@@ -89,9 +90,19 @@ export default function CopilotDynamicSpeakerBox({
     }
   }, [isThisExplainerActive, isBob]);
 
-  // Teardown
+  // Teardown and global audio stop listener
   useEffect(() => {
+    const unsub = subscribeToStopAllAudio(() => {
+      setIsPlaying(false);
+      if (videoRef.current) {
+        try {
+          videoRef.current.pause();
+        } catch (_) {}
+      }
+    });
+
     return () => {
+      unsub();
       if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
       if (geminiClientRef.current) {
         geminiClientRef.current.stop();

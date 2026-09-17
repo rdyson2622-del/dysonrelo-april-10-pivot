@@ -13,6 +13,7 @@ import CopilotRoadmapView from './CopilotRoadmapView';
 import CopilotEscrowView from './CopilotEscrowView';
 import CopilotVisualSnippetCard from './CopilotVisualSnippetCard';
 import CopilotDynamicStage from './CopilotDynamicStage';
+import { stopAllCopilotAudio } from '@/lib/copilotAudioController';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
@@ -116,7 +117,13 @@ export default function CopilotDossierNewsPanel({
   // Back button function strictly pertains ONLY to the Intelligence side of this page
   const currentView = activeView || 'dossier';
 
+  const handleViewSwitch = (view) => {
+    stopAllCopilotAudio();
+    onViewChange?.(view);
+  };
+
   const handleIntelligenceBack = () => {
+    stopAllCopilotAudio();
     if (isExploded) {
       onToggleExplode?.();
       return;
@@ -137,6 +144,7 @@ export default function CopilotDossierNewsPanel({
   };
 
   const handleClear = () => {
+    stopAllCopilotAudio();
     if (videoRef.current) {
       try {
         videoRef.current.pause();
@@ -249,7 +257,7 @@ export default function CopilotDossierNewsPanel({
 
           <button
             type="button"
-            onClick={() => onViewChange?.('dossier')}
+            onClick={() => handleViewSwitch('dossier')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               currentView === 'dossier'
                 ? 'bg-white text-black font-bold shadow-md'
@@ -262,7 +270,7 @@ export default function CopilotDossierNewsPanel({
 
           <button
             type="button"
-            onClick={() => onViewChange?.('vetting')}
+            onClick={() => handleViewSwitch('vetting')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               currentView === 'vetting'
                 ? 'bg-white text-black font-bold shadow-md'
@@ -275,7 +283,7 @@ export default function CopilotDossierNewsPanel({
 
           <button
             type="button"
-            onClick={() => onViewChange?.('roadmap')}
+            onClick={() => handleViewSwitch('roadmap')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               currentView === 'roadmap'
                 ? 'bg-white text-black font-bold shadow-md'
@@ -288,7 +296,7 @@ export default function CopilotDossierNewsPanel({
 
           <button
             type="button"
-            onClick={() => onViewChange?.('escrow')}
+            onClick={() => handleViewSwitch('escrow')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               currentView === 'escrow'
                 ? 'bg-white text-black font-bold shadow-md'
@@ -301,7 +309,7 @@ export default function CopilotDossierNewsPanel({
 
           <button
             type="button"
-            onClick={() => onViewChange?.('solutions')}
+            onClick={() => handleViewSwitch('solutions')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               currentView === 'solutions'
                 ? 'bg-white text-black font-bold shadow-md'
@@ -314,7 +322,7 @@ export default function CopilotDossierNewsPanel({
 
           <button
             type="button"
-            onClick={() => onViewChange?.('news')}
+            onClick={() => handleViewSwitch('news')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               currentView === 'news'
                 ? 'bg-white text-black font-bold shadow-md'

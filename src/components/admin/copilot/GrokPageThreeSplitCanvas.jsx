@@ -22,6 +22,7 @@ import {
 import { base44 } from '@/api/base44Client';
 import { COPILOT_CHARLIE_SYSTEM_PROMPT } from '@/pages/DysonHomesCopilot';
 import { GeminiLiveSessionClient } from '@/lib/geminiLiveClient';
+import { stopAllCopilotAudio } from '@/lib/copilotAudioController';
 
 export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, showRail = true }) {
   const [inputText, setInputText] = useState('');
@@ -128,6 +129,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
   }, [property]);
 
   const resetToBlank = () => {
+    stopAllCopilotAudio();
     setMessages([]);
     setRightPanelView(null);
     setActiveExplainer(null);
@@ -459,6 +461,8 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
   };
 
   const handleSelectMiniApp = (appId) => {
+    stopAllCopilotAudio();
+    setActiveExplainer(null);
     setRightPanelView(appId);
     if (appId === 'dossier') {
       addDiscussionChip('Property Audit', 'dossier');

@@ -5,6 +5,7 @@ import {
   Clock, ArrowRight, Video, Sparkles, Maximize2
 } from 'lucide-react';
 import CopilotDoorAudioBriefingStage from './CopilotDoorAudioBriefingStage';
+import { stopAllCopilotAudio, subscribeToStopAllAudio } from '@/lib/copilotAudioController';
 
 const DNN_STUDIO_POSTER = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/d5e0cb3f1_Screenshot2026-09-14at81551PM.png';
 
@@ -21,6 +22,30 @@ export default function CopilotDynamicStage({
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef(null);
+
+  // Stop all audio on any view or subject transition to avoid overlapping voices
+  useEffect(() => {
+    stopAllCopilotAudio();
+    setIsPlaying(false);
+    if (videoRef.current) {
+      try {
+        videoRef.current.pause();
+        videoRef.current.currentTime = 0;
+      } catch (_) {}
+    }
+  }, [activeView, selectedSubject, activeExplainer]);
+
+  // Subscribe to global stop-audio events
+  useEffect(() => {
+    return subscribeToStopAllAudio(() => {
+      setIsPlaying(false);
+      if (videoRef.current) {
+        try {
+          videoRef.current.pause();
+        } catch (_) {}
+      }
+    });
+  }, []);
 
   // Determine what type of content to show in the stage:
   // 1. Explicit video from active explainer
@@ -39,28 +64,19 @@ export default function CopilotDynamicStage({
     ? (activeExplainer.label || activeExplainer.topic || 'Video Explainer')
     : (isSelectedSubjectVideo ? selectedSubject.title : headline || 'DNN Daily Broadcast');
 
-  // Option A (Auto-play with Audio): Immediately speaks unmuted when videoToPlay is active
+  // Video setup: comfortable volume, explicit user play (NO unexpected unprompted loud autoplay)
   useEffect(() => {
-    setIsPlaying(false);
-    if (videoRef.current && videoToPlay) {
-      videoRef.current.muted = false;
-      const playPromise = videoRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => setIsPlaying(true))
-          .catch((err) => {
-            console.log('Unmuted video autoplay attempt:', err);
-            // Graceful fallback if browser requires user interaction before unmuted autoplay
-            if (videoRef.current) {
-              videoRef.current.muted = true;
-              videoRef.current.play()
-                .then(() => setIsPlaying(true))
-                .catch(() => setIsPlaying(false));
-            }
-          });
-      }
+    if (videoRef.current) {
+      videoRef.current.volume = 0.65; // Balanced volume (not too loud)
     }
-  }, [videoToPlay, activeView]);
+    // If an explicit explainer was triggered by user click, play it once
+    if (hasActiveExplainerVideo && videoRef.current && videoToPlay) {
+      stopAllCopilotAudio();
+      videoRef.current.currentTime = 0;
+      videoRef.current.volume = 0.65;
+      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+    }
+  }, [videoToPlay, hasActiveExplainerVideo]);
 
   // Toggle play/pause for video
   const togglePlay = (e) => {

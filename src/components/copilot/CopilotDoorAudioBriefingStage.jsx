@@ -2,9 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   Play, Pause, Volume2, VolumeX, RotateCcw, 
   Sparkles, ArrowRight, ShieldCheck, Scale, Shield, GitBranch,
-  Radio, CheckCircle2
+  Radio, CheckCircle2, Edit3, FileText
 } from 'lucide-react';
-import { DOOR_AUDIO_BRIEFINGS } from './doorAudioBriefings';
+import { getDoorAudioBriefing } from './doorAudioBriefings';
+import { stopAllCopilotAudio, subscribeToStopAllAudio } from '@/lib/copilotAudioController';
+import CopilotScriptRewriteModal from './CopilotScriptRewriteModal';
 
 /**
  * CopilotDoorAudioBriefingStage
@@ -16,7 +18,12 @@ import { DOOR_AUDIO_BRIEFINGS } from './doorAudioBriefings';
  * 4. Escrow Watch (Bob Dyson - Fiduciary Protection)
  * 5. DNN News (Charlie Simmons & Bob Dyson - Market Desk)
  * 
- * Playback Mode: Option A (Auto-play with Audio immediately on door change).
+ * User-Choice Mode:
+ * - NO uninvited autoplay on door click (eliminates overlapping voices & blaring audio).
+ * - User clicks "Play Briefing" when they choose to listen.
+ * - Single-voice guarantee: starting any briefing terminates all other audio across the app.
+ * - Never auto-repeats: stops completely when finished.
+ * - Direct "Rewrite Script" access to customize the voice-over script for each door.
  */
 export default function CopilotDoorAudioBriefingStage({
   activeDoor = 'dossier',
@@ -25,112 +32,156 @@ export default function CopilotDoorAudioBriefingStage({
   onPromptClick,
   onToggleExplode
 }) {
-  const briefing = DOOR_AUDIO_BRIEFINGS[activeDoor] || DOOR_AUDIO_BRIEFINGS.dossier;
+  const [briefing, setBriefing] = useState(() => getDoorAudioBriefing(activeDoor));
   const isBob = briefing.speaker === 'bob';
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [hasEnded, setHasEnded] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [isRewriteModalOpen, setIsRewriteModalOpen] = useState(false);
 
-  const mediaRef = useRef(null);
+  const progressIntervalRef = useRef(null);
+  const startTimeRef = useRef(0);
+  const durationRef = useRef(15);
 
-  // OPTION A: Gracefully stop previous audio and immediately auto-play new door unmuted
+  // Reload briefing if activeDoor changes or scripts are updated
   useEffect(() => {
-    if (mediaRef.current) {
-      try {
-        mediaRef.current.pause();
-        mediaRef.current.currentTime = 0;
-      } catch (_) {}
-    }
+    setBriefing(getDoorAudioBriefing(activeDoor));
+  }, [activeDoor]);
+
+  useEffect(() => {
+    const handleScriptUpdated = (e) => {
+      if (!e.detail?.doorId || e.detail.doorId === activeDoor) {
+        setBriefing(getDoorAudioBriefing(activeDoor));
+      }
+    };
+    window.addEventListener('dyson_door_scripts_updated', handleScriptUpdated);
+    return () => window.removeEventListener('dyson_door_scripts_updated', handleScriptUpdated);
+  }, [activeDoor]);
+
+  // Stop all audio on door change and reset state — NO AUTOPLAY
+  useEffect(() => {
+    stopAllCopilotAudio();
     setIsPlaying(false);
     setHasEnded(false);
     setProgress(0);
-
-    // Option A: Immediately play with audio
-    const timer = setTimeout(() => {
-      if (mediaRef.current) {
-        mediaRef.current.muted = false;
-        setIsMuted(false);
-        const playPromise = mediaRef.current.play();
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => {
-              setIsPlaying(true);
-            })
-            .catch((err) => {
-              console.log('Unmuted autoplay attempt:', err);
-              // Fallback if browser policy blocks unmuted autoplay without prior gesture
-              if (mediaRef.current) {
-                mediaRef.current.muted = true;
-                setIsMuted(true);
-                mediaRef.current.play()
-                  .then(() => setIsPlaying(true))
-                  .catch(() => setIsPlaying(false));
-              }
-            });
-        }
-      }
-    }, 100);
+    if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
 
     return () => {
-      clearTimeout(timer);
-      if (mediaRef.current) {
-        try {
-          mediaRef.current.pause();
-        } catch (_) {}
-      }
+      stopAllCopilotAudio();
+      if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
     };
   }, [activeDoor]);
 
+  // Global listener: if another audio source fires, reset our playing state
+  useEffect(() => {
+    return subscribeToStopAllAudio(() => {
+      setIsPlaying(false);
+      if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+    });
+  }, []);
+
+  const stopPlayback = () => {
+    stopAllCopilotAudio();
+    setIsPlaying(false);
+    if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+  };
+
+  const startPlayback = () => {
+    // 1. Immediately terminate all existing audio/video/speech across the page
+    stopAllCopilotAudio();
+
+    if (typeof window === 'undefined' || !window.speechSynthesis) {
+      return;
+    }
+
+    try {
+      window.speechSynthesis.cancel();
+      const textToSpeak = briefing.spokenText || '';
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+
+      // Fiduciary cadence parameters: Bob = measured broker 0.95x; Charlie = concierge 1.0x
+      utterance.rate = isBob ? 0.95 : 1.0;
+      utterance.pitch = isBob ? 0.9 : 1.05;
+      utterance.volume = isMuted ? 0 : 0.65; // Soft comfortable volume (not too loud)
+
+      // Preferred voice selection
+      const voices = window.speechSynthesis.getVoices();
+      const englishVoices = voices.filter(v => v.lang.startsWith('en'));
+      const maleVoice = englishVoices.find(v => /male|daniel|david|george|alex/i.test(v.name));
+      const naturalVoice = englishVoices.find(v => /natural|google|premium/i.test(v.name));
+      if (maleVoice && isBob) {
+        utterance.voice = maleVoice;
+      } else if (naturalVoice) {
+        utterance.voice = naturalVoice;
+      }
+
+      // Estimate duration based on word count
+      const wordCount = (textToSpeak.trim().match(/\S+/g) || []).length;
+      const estimatedSecs = Math.max(8, Math.round(wordCount / (isBob ? 2.2 : 2.5)));
+      durationRef.current = estimatedSecs;
+      startTimeRef.current = Date.now();
+
+      utterance.onstart = () => {
+        setIsPlaying(true);
+        setHasEnded(false);
+        setProgress(0);
+
+        if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+        progressIntervalRef.current = setInterval(() => {
+          const elapsed = (Date.now() - startTimeRef.current) / 1000;
+          const p = Math.min(100, (elapsed / durationRef.current) * 100);
+          setProgress(p);
+          if (p >= 100) {
+            clearInterval(progressIntervalRef.current);
+          }
+        }, 150);
+      };
+
+      utterance.onend = () => {
+        setIsPlaying(false);
+        setHasEnded(true);
+        setProgress(100);
+        if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+        // NO AUTO-REPEAT: Audio terminates cleanly and remains ended
+      };
+
+      utterance.onerror = () => {
+        setIsPlaying(false);
+        if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+      };
+
+      window.speechSynthesis.speak(utterance);
+    } catch (err) {
+      console.warn('Speech playback failed:', err);
+      setIsPlaying(false);
+    }
+  };
+
   const togglePlay = (e) => {
     e?.stopPropagation();
-    if (!mediaRef.current) return;
-    if (mediaRef.current.paused || hasEnded) {
-      if (hasEnded) {
-        mediaRef.current.currentTime = 0;
-        setHasEnded(false);
-      }
-      mediaRef.current.muted = isMuted;
-      mediaRef.current.play()
-        .then(() => setIsPlaying(true))
-        .catch(() => setIsPlaying(false));
+    if (isPlaying) {
+      stopPlayback();
     } else {
-      mediaRef.current.pause();
-      setIsPlaying(false);
+      startPlayback();
     }
   };
 
   const toggleMute = (e) => {
     e?.stopPropagation();
-    if (!mediaRef.current) return;
-    mediaRef.current.muted = !mediaRef.current.muted;
-    setIsMuted(mediaRef.current.muted);
+    setIsMuted(prev => !prev);
+    if (isPlaying) {
+      // Restart with new mute setting
+      startPlayback();
+    }
   };
 
   const handleReplay = (e) => {
     e?.stopPropagation();
-    if (!mediaRef.current) return;
-    mediaRef.current.currentTime = 0;
-    mediaRef.current.muted = false;
-    setIsMuted(false);
     setHasEnded(false);
-    mediaRef.current.play()
-      .then(() => setIsPlaying(true))
-      .catch(() => {});
-  };
-
-  const handleTimeUpdate = () => {
-    if (!mediaRef.current) return;
-    const cur = mediaRef.current.currentTime || 0;
-    const dur = mediaRef.current.duration || 1;
-    setProgress(Math.min(100, (cur / dur) * 100));
-  };
-
-  const handleEnded = () => {
-    setIsPlaying(false);
-    setHasEnded(true);
-    setProgress(100);
+    setProgress(0);
+    startPlayback();
   };
 
   const DoorIcon = activeDoor === 'vetting' ? Shield
@@ -139,232 +190,262 @@ export default function CopilotDoorAudioBriefingStage({
     : activeDoor === 'news' ? Radio
     : Scale;
 
+  const wordCount = (briefing.spokenText?.trim().match(/\S+/g) || []).length;
+  const estimatedSeconds = Math.round(wordCount / (isBob ? 2.2 : 2.5));
+
   return (
-    <div 
-      className="relative w-[66%] max-w-[450px] min-w-[315px] mx-auto overflow-hidden rounded-2xl shadow-2xl border border-[#D4AF37]/60 p-3 sm:p-3.5 flex flex-col justify-between shrink-0 bg-gradient-to-br from-[#16140f] via-[#101010] to-[#080808] transition-all group select-none"
-      style={{ aspectRatio: '16/9' }}
-      title={`${briefing.doorName} Voice Briefing`}
-    >
-      {/* Hidden Media Element (Plays verified briefing audio) */}
-      <video
-        ref={mediaRef}
-        key={briefing.audioUrl}
-        src={briefing.audioUrl}
-        playsInline
-        preload="auto"
-        onTimeUpdate={handleTimeUpdate}
-        onEnded={handleEnded}
-        className="hidden"
-      />
-
-      {/* ── TOP HEADER ROW: DOOR IDENTITY, SPEAKER BADGE & CONTROLS ── */}
-      <div className="flex items-center justify-between text-[11px] sm:text-[12px] font-mono border-b border-white/10 pb-1.5 shrink-0">
-        <div className="flex items-center gap-2 min-w-0">
-          <DoorIcon className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-          <span className="font-bold text-white uppercase tracking-wider truncate">
-            {briefing.doorName}
-          </span>
-        </div>
-
-        {/* Media Controls Group: Play/Pause, Mute, Waveform */}
-        <div className="flex items-center gap-1.5 shrink-0">
-          {/* Subtle Audio Waveform Indicator */}
-          <div className="flex items-end gap-0.5 h-3 px-1.5 shrink-0" title={isPlaying ? "Audio Briefing Active" : "Audio Paused"}>
-            <span className={`w-0.5 bg-[#D4AF37] rounded-full transition-all duration-150 ${isPlaying ? 'h-3 animate-pulse' : 'h-1 opacity-30'}`} />
-            <span className={`w-0.5 bg-[#D4AF37] rounded-full transition-all duration-200 ${isPlaying ? 'h-2 animate-pulse delay-75' : 'h-1 opacity-30'}`} />
-            <span className={`w-0.5 bg-[#D4AF37] rounded-full transition-all duration-100 ${isPlaying ? 'h-3.5 animate-pulse delay-150' : 'h-1 opacity-30'}`} />
-            <span className={`w-0.5 bg-[#D4AF37] rounded-full transition-all duration-150 ${isPlaying ? 'h-2.5 animate-pulse delay-100' : 'h-1 opacity-30'}`} />
+    <>
+      <div 
+        className="relative w-[66%] max-w-[450px] min-w-[315px] mx-auto overflow-hidden rounded-2xl shadow-2xl border border-[#D4AF37]/60 p-3 sm:p-3.5 flex flex-col justify-between shrink-0 bg-gradient-to-br from-[#16140f] via-[#101010] to-[#080808] transition-all group select-none"
+        style={{ aspectRatio: '16/9' }}
+        title={`${briefing.doorName} Voice Briefing`}
+      >
+        {/* ── TOP HEADER ROW: DOOR IDENTITY, SPEAKER BADGE & CONTROLS ── */}
+        <div className="flex items-center justify-between text-[11px] sm:text-[12px] font-mono border-b border-white/10 pb-1.5 shrink-0">
+          <div className="flex items-center gap-2 min-w-0">
+            <DoorIcon className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+            <span className="font-bold text-white uppercase tracking-wider truncate">
+              {briefing.doorName}
+            </span>
+            {briefing.isCustomized && (
+              <span className="text-[8px] px-1.5 py-0.2 rounded bg-[#D4AF37]/20 text-[#D4AF37] font-sans border border-[#D4AF37]/30">
+                Custom Script
+              </span>
+            )}
           </div>
 
-          <button
-            type="button"
-            onClick={togglePlay}
-            className="px-2 py-1 rounded-md bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer flex items-center gap-1"
-            title={isPlaying ? "Pause briefing" : "Play briefing"}
-          >
-            {isPlaying ? (
-              <Pause className="w-2.5 h-2.5 fill-current text-[#D4AF37]" />
-            ) : (
-              <Play className="w-2.5 h-2.5 fill-current text-white" />
-            )}
-            <span className="text-[9px] font-bold tracking-wider">{isPlaying ? 'PAUSE' : 'PLAY'}</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={toggleMute}
-            className="p-1 rounded-md bg-white/5 hover:bg-white/15 text-stone-300 hover:text-white transition-colors cursor-pointer"
-            title={isMuted ? "Unmute briefing" : "Mute briefing"}
-          >
-            {isMuted ? (
-              <VolumeX className="w-3 h-3 text-rose-400" />
-            ) : (
-              <Volume2 className="w-3 h-3 text-stone-300" />
-            )}
-          </button>
-
-          {hasEnded && (
+          {/* Media Controls Group: Rewrite Script, Play/Pause, Mute */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            {/* Direct Rewrite Script Button */}
             <button
               type="button"
-              onClick={handleReplay}
-              className="p-1 rounded-md bg-white/5 hover:bg-white/15 text-stone-300 hover:text-white transition-colors cursor-pointer"
-              title="Restart briefing"
+              onClick={(e) => {
+                e.stopPropagation();
+                stopPlayback();
+                setIsRewriteModalOpen(true);
+              }}
+              className="px-2 py-1 rounded-md bg-white/5 hover:bg-[#D4AF37]/20 text-stone-300 hover:text-[#D4AF37] border border-white/10 hover:border-[#D4AF37]/40 transition-colors cursor-pointer flex items-center gap-1 text-[9px] font-medium"
+              title="Inspect or rewrite the spoken script for this door"
             >
-              <RotateCcw className="w-3 h-3 text-[#D4AF37]" />
+              <Edit3 className="w-2.5 h-2.5 text-[#D4AF37]" />
+              <span>Rewrite Script</span>
             </button>
+
+            {/* Subtle Audio Waveform Indicator */}
+            <div className="flex items-end gap-0.5 h-3 px-1 shrink-0" title={isPlaying ? "Audio Briefing Active" : "Audio Paused"}>
+              <span className={`w-0.5 bg-[#D4AF37] rounded-full transition-all duration-150 ${isPlaying ? 'h-3 animate-pulse' : 'h-1 opacity-30'}`} />
+              <span className={`w-0.5 bg-[#D4AF37] rounded-full transition-all duration-200 ${isPlaying ? 'h-2 animate-pulse delay-75' : 'h-1 opacity-30'}`} />
+              <span className={`w-0.5 bg-[#D4AF37] rounded-full transition-all duration-100 ${isPlaying ? 'h-3.5 animate-pulse delay-150' : 'h-1 opacity-30'}`} />
+              <span className={`w-0.5 bg-[#D4AF37] rounded-full transition-all duration-150 ${isPlaying ? 'h-2.5 animate-pulse delay-100' : 'h-1 opacity-30'}`} />
+            </div>
+
+            {/* Play / Pause Toggle Button */}
+            <button
+              type="button"
+              onClick={togglePlay}
+              className={`px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1 font-bold text-[9px] tracking-wider shadow-sm ${
+                isPlaying
+                  ? 'bg-red-600 text-white'
+                  : 'bg-[#D4AF37] hover:bg-[#e8c84a] text-black'
+              }`}
+              title={isPlaying ? "Pause voice briefing" : "Play voice briefing"}
+            >
+              {isPlaying ? (
+                <>
+                  <Pause className="w-2.5 h-2.5 fill-current" />
+                  <span>STOP</span>
+                </>
+              ) : (
+                <>
+                  <Play className="w-2.5 h-2.5 fill-current" />
+                  <span>PLAY (~{estimatedSeconds}s)</span>
+                </>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={toggleMute}
+              className="p-1 rounded-md bg-white/5 hover:bg-white/15 text-stone-300 hover:text-white transition-colors cursor-pointer"
+              title={isMuted ? "Unmute briefing" : "Mute briefing"}
+            >
+              {isMuted ? (
+                <VolumeX className="w-3 h-3 text-rose-400" />
+              ) : (
+                <Volume2 className="w-3 h-3 text-stone-300" />
+              )}
+            </button>
+
+            {hasEnded && (
+              <button
+                type="button"
+                onClick={handleReplay}
+                className="p-1 rounded-md bg-white/5 hover:bg-white/15 text-stone-300 hover:text-white transition-colors cursor-pointer"
+                title="Restart briefing"
+              >
+                <RotateCcw className="w-3 h-3 text-[#D4AF37]" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* ── CENTER BODY: DOOR-SPECIFIC VISUAL DIAGRAM ── */}
+        <div className="my-auto px-1 py-1">
+          {/* 1. AGENT VETTING DIAGRAM */}
+          {activeDoor === 'vetting' && (
+            <div className="grid grid-cols-2 gap-1.5 text-[10px] sm:text-[11px]">
+              <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+                <span className="text-stone-400 block font-mono text-[8.5px] uppercase">REPRESENTATION</span>
+                <span className="text-white font-bold">Zero Dual Agency</span>
+              </div>
+              <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+                <span className="text-stone-400 block font-mono text-[8.5px] uppercase">STRUCTURE</span>
+                <span className="text-white font-bold">Referral Agreement</span>
+              </div>
+              <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+                <span className="text-stone-400 block font-mono text-[8.5px] uppercase">ESCROW ROLE</span>
+                <span className="text-white font-bold">CoPilot By Your Side</span>
+              </div>
+              <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+                <span className="text-stone-400 block font-mono text-[8.5px] uppercase">FEE TO BUYER</span>
+                <span className="text-[#D4AF37] font-bold">$0 Extra Cost</span>
+              </div>
+            </div>
+          )}
+
+          {/* 2. MOVE ROADMAP SEQUENCE */}
+          {activeDoor === 'roadmap' && (
+            <div className="flex items-center justify-between text-[9px] sm:text-[10px] gap-1 px-1 font-mono">
+              <div className="text-center">
+                <span className="w-5 h-5 rounded-full bg-[#D4AF37] text-black font-bold flex items-center justify-center mx-auto text-[9px]">1</span>
+                <span className="text-stone-400 block mt-1 text-[8.5px]">Audit</span>
+              </div>
+              <span className="text-stone-600 text-xs">➔</span>
+              <div className="text-center">
+                <span className="w-5 h-5 rounded-full bg-white/10 text-white font-bold flex items-center justify-center mx-auto text-[9px]">2</span>
+                <span className="text-stone-400 block mt-1 text-[8.5px]">Agent</span>
+              </div>
+              <span className="text-stone-600 text-xs">➔</span>
+              <div className="text-center">
+                <span className="w-5 h-5 rounded-full bg-white/10 text-white font-bold flex items-center justify-center mx-auto text-[9px]">3</span>
+                <span className="text-stone-400 block mt-1 text-[8.5px]">Offer</span>
+              </div>
+              <span className="text-stone-600 text-xs">➔</span>
+              <div className="text-center">
+                <span className="w-5 h-5 rounded-full bg-white/10 text-white font-bold flex items-center justify-center mx-auto text-[9px]">4</span>
+                <span className="text-stone-400 block mt-1 text-[8.5px]">Escrow</span>
+              </div>
+              <span className="text-stone-600 text-xs">➔</span>
+              <div className="text-center">
+                <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold flex items-center justify-center mx-auto text-[9px]">7</span>
+                <span className="text-emerald-400 block mt-1 text-[8.5px]">Close</span>
+              </div>
+            </div>
+          )}
+
+          {/* 3. ESCROW DEPOSIT SHIELD */}
+          {activeDoor === 'escrow' && (
+            <div className="grid grid-cols-2 gap-1.5 text-[10px] sm:text-[11px]">
+              <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+                <span className="text-stone-400 block font-mono text-[8.5px] uppercase">CONTINGENCY</span>
+                <span className="text-white font-bold">Affirmative Written</span>
+              </div>
+              <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+                <span className="text-stone-400 block font-mono text-[8.5px] uppercase">APPRAISAL GAP</span>
+                <span className="text-white font-bold">Renegotiation Shield</span>
+              </div>
+              <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+                <span className="text-stone-400 block font-mono text-[8.5px] uppercase">SCHEDULE B</span>
+                <span className="text-white font-bold">ALTA Extended Title</span>
+              </div>
+              <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+                <span className="text-stone-400 block font-mono text-[8.5px] uppercase">ESCROW ADVICE</span>
+                <span className="text-[#D4AF37] font-bold">Bob Dyson Supervision</span>
+              </div>
+            </div>
+          )}
+
+          {/* 4. DOSSIER (PROPERTY AUDIT) SNAPSHOT */}
+          {activeDoor === 'dossier' && (
+            <div className="flex items-center justify-between text-[11px] sm:text-[12px] gap-2 text-center font-mono">
+              <div className="bg-black/70 p-2 sm:p-2.5 rounded-lg border border-white/10 flex-1">
+                <span className="text-[8.5px] text-stone-400 block mb-0.5">COMPS</span>
+                <span className="font-bold text-white text-xs sm:text-[13px]">{dossierData.comps?.length || 3} Verified</span>
+              </div>
+              <div className="bg-black/70 p-2 sm:p-2.5 rounded-lg border border-white/10 flex-1">
+                <span className="text-[8.5px] text-stone-400 block mb-0.5">GEO RISK</span>
+                <span className="font-bold text-amber-400 text-xs sm:text-[13px]">Bluff Setback</span>
+              </div>
+              <div className="bg-black/70 p-2 sm:p-2.5 rounded-lg border border-white/10 flex-1">
+                <span className="text-[8.5px] text-stone-400 block mb-0.5">EST. VAL</span>
+                <span className="font-bold text-white text-xs sm:text-[13px]">~$3.85M</span>
+              </div>
+            </div>
+          )}
+
+          {/* 5. DNN NEWS SNAPSHOT */}
+          {activeDoor === 'news' && (
+            <div className="grid grid-cols-2 gap-1.5 text-[10px] sm:text-[11px]">
+              <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+                <span className="text-stone-400 block font-mono text-[8.5px] uppercase">BROADCAST</span>
+                <span className="text-white font-bold">Charlie &amp; Bob Desk</span>
+              </div>
+              <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+                <span className="text-stone-400 block font-mono text-[8.5px] uppercase">INVENTORY</span>
+                <span className="text-white font-bold">Constrained Coastal</span>
+              </div>
+              <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+                <span className="text-stone-400 block font-mono text-[8.5px] uppercase">RATE TRACK</span>
+                <span className="text-white font-bold">Jumbo Spread 6.45%</span>
+              </div>
+              <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+                <span className="text-stone-400 block font-mono text-[8.5px] uppercase">FREQUENCY</span>
+                <span className="text-[#D4AF37] font-bold">Daily 8:00 AM PT</span>
+              </div>
+            </div>
           )}
         </div>
-      </div>
 
-      {/* ── CENTER BODY: DOOR-SPECIFIC VISUAL DIAGRAM ── */}
-      <div className="my-auto px-1 py-1">
-        {/* 1. AGENT VETTING DIAGRAM */}
-        {activeDoor === 'vetting' && (
-          <div className="grid grid-cols-2 gap-1.5 text-[10px] sm:text-[11px]">
-            <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
-              <span className="text-stone-400 block font-mono text-[8.5px] uppercase">REPRESENTATION</span>
-              <span className="text-white font-bold">Zero Dual Agency</span>
-            </div>
-            <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
-              <span className="text-stone-400 block font-mono text-[8.5px] uppercase">STRUCTURE</span>
-              <span className="text-white font-bold">Referral Agreement</span>
-            </div>
-            <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
-              <span className="text-stone-400 block font-mono text-[8.5px] uppercase">ESCROW ROLE</span>
-              <span className="text-white font-bold">CoPilot By Your Side</span>
-            </div>
-            <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
-              <span className="text-stone-400 block font-mono text-[8.5px] uppercase">FEE TO BUYER</span>
-              <span className="text-[#D4AF37] font-bold">$0 Extra Cost</span>
-            </div>
-          </div>
-        )}
-
-        {/* 2. MOVE ROADMAP SEQUENCE */}
-        {activeDoor === 'roadmap' && (
-          <div className="flex items-center justify-between text-[9px] sm:text-[10px] gap-1 px-1 font-mono">
-            <div className="text-center">
-              <span className="w-5 h-5 rounded-full bg-[#D4AF37] text-black font-bold flex items-center justify-center mx-auto text-[9px]">1</span>
-              <span className="text-stone-400 block mt-1 text-[8.5px]">Audit</span>
-            </div>
-            <span className="text-stone-600 text-xs">➔</span>
-            <div className="text-center">
-              <span className="w-5 h-5 rounded-full bg-white/10 text-white font-bold flex items-center justify-center mx-auto text-[9px]">2</span>
-              <span className="text-stone-400 block mt-1 text-[8.5px]">Agent</span>
-            </div>
-            <span className="text-stone-600 text-xs">➔</span>
-            <div className="text-center">
-              <span className="w-5 h-5 rounded-full bg-white/10 text-white font-bold flex items-center justify-center mx-auto text-[9px]">3</span>
-              <span className="text-stone-400 block mt-1 text-[8.5px]">Offer</span>
-            </div>
-            <span className="text-stone-600 text-xs">➔</span>
-            <div className="text-center">
-              <span className="w-5 h-5 rounded-full bg-white/10 text-white font-bold flex items-center justify-center mx-auto text-[9px]">4</span>
-              <span className="text-stone-400 block mt-1 text-[8.5px]">Escrow</span>
-            </div>
-            <span className="text-stone-600 text-xs">➔</span>
-            <div className="text-center">
-              <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold flex items-center justify-center mx-auto text-[9px]">7</span>
-              <span className="text-emerald-400 block mt-1 text-[8.5px]">Close</span>
-            </div>
-          </div>
-        )}
-
-        {/* 3. ESCROW DEPOSIT SHIELD */}
-        {activeDoor === 'escrow' && (
-          <div className="grid grid-cols-2 gap-1.5 text-[10px] sm:text-[11px]">
-            <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
-              <span className="text-stone-400 block font-mono text-[8.5px] uppercase">CONTINGENCY</span>
-              <span className="text-white font-bold">Affirmative Written</span>
-            </div>
-            <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
-              <span className="text-stone-400 block font-mono text-[8.5px] uppercase">APPRAISAL GAP</span>
-              <span className="text-white font-bold">Renegotiation Shield</span>
-            </div>
-            <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
-              <span className="text-stone-400 block font-mono text-[8.5px] uppercase">SCHEDULE B</span>
-              <span className="text-white font-bold">ALTA Extended Title</span>
-            </div>
-            <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
-              <span className="text-stone-400 block font-mono text-[8.5px] uppercase">ESCROW ADVICE</span>
-              <span className="text-[#D4AF37] font-bold">Bob Dyson Supervision</span>
-            </div>
-          </div>
-        )}
-
-        {/* 4. DOSSIER (PROPERTY AUDIT) SNAPSHOT */}
-        {activeDoor === 'dossier' && (
-          <div className="flex items-center justify-between text-[11px] sm:text-[12px] gap-2 text-center font-mono">
-            <div className="bg-black/70 p-2 sm:p-2.5 rounded-lg border border-white/10 flex-1">
-              <span className="text-[8.5px] text-stone-400 block mb-0.5">COMPS</span>
-              <span className="font-bold text-white text-xs sm:text-[13px]">{dossierData.comps?.length || 3} Verified</span>
-            </div>
-            <div className="bg-black/70 p-2 sm:p-2.5 rounded-lg border border-white/10 flex-1">
-              <span className="text-[8.5px] text-stone-400 block mb-0.5">GEO RISK</span>
-              <span className="font-bold text-amber-400 text-xs sm:text-[13px]">Bluff Setback</span>
-            </div>
-            <div className="bg-black/70 p-2 sm:p-2.5 rounded-lg border border-white/10 flex-1">
-              <span className="text-[8.5px] text-stone-400 block mb-0.5">EST. VAL</span>
-              <span className="font-bold text-white text-xs sm:text-[13px]">~$3.85M</span>
-            </div>
-          </div>
-        )}
-
-        {/* 5. DNN NEWS SNAPSHOT */}
-        {activeDoor === 'news' && (
-          <div className="grid grid-cols-2 gap-1.5 text-[10px] sm:text-[11px]">
-            <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
-              <span className="text-stone-400 block font-mono text-[8.5px] uppercase">BROADCAST</span>
-              <span className="text-white font-bold">Charlie &amp; Bob Desk</span>
-            </div>
-            <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
-              <span className="text-stone-400 block font-mono text-[8.5px] uppercase">INVENTORY</span>
-              <span className="text-white font-bold">Constrained Coastal</span>
-            </div>
-            <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
-              <span className="text-stone-400 block font-mono text-[8.5px] uppercase">RATE TRACK</span>
-              <span className="text-white font-bold">Jumbo Spread 6.45%</span>
-            </div>
-            <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
-              <span className="text-stone-400 block font-mono text-[8.5px] uppercase">FREQUENCY</span>
-              <span className="text-[#D4AF37] font-bold">Daily 8:00 AM PT</span>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* ── BOTTOM FOOTER: SPEAKER AVATAR, TIME PROGRESS & ACTION LINK ── */}
-      <div className="border-t border-white/10 pt-1.5 text-[10px] sm:text-[11px] font-sans shrink-0">
-        {/* Progress bar line */}
-        <div className="w-full h-1 bg-white/10 rounded-full mb-1.5 overflow-hidden">
-          <div 
-            className="h-full bg-gradient-to-r from-[#D4AF37] via-[#e8c84a] to-[#D4AF37] transition-all duration-150"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-
-        <div className="flex items-center justify-between">
-          {/* Speaker Identity Tag */}
-          <div className="flex items-center gap-2 min-w-0">
-            <img 
-              src={briefing.avatar} 
-              alt={briefing.speakerName} 
-              className="w-5 h-5 rounded-full object-cover border border-white/20"
+        {/* ── BOTTOM FOOTER: SPEAKER AVATAR, TIME PROGRESS & ACTION LINK ── */}
+        <div className="border-t border-white/10 pt-1.5 text-[10px] sm:text-[11px] font-sans shrink-0">
+          {/* Progress bar line */}
+          <div className="w-full h-1 bg-white/10 rounded-full mb-1.5 overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-[#D4AF37] via-[#e8c84a] to-[#D4AF37] transition-all duration-150"
+              style={{ width: `${progress}%` }}
             />
-            <span className="text-stone-300 font-medium truncate max-w-[160px]">
-              {briefing.speakerName} Briefing
-            </span>
           </div>
 
-          <button
-            type="button"
-            onClick={() => onPromptClick?.(briefing.promptQuery)}
-            className="text-[#D4AF37] hover:underline flex items-center gap-1 font-semibold shrink-0 cursor-pointer text-[10px] sm:text-[11px]"
-          >
-            <span>Ask {isBob ? 'Bob' : briefing.speaker === 'charlie_bob' ? 'Charlie & Bob' : 'Charlie'} →</span>
-          </button>
+          <div className="flex items-center justify-between">
+            {/* Speaker Identity Tag */}
+            <div className="flex items-center gap-2 min-w-0">
+              <img 
+                src={briefing.avatar} 
+                alt={briefing.speakerName} 
+                className="w-5 h-5 rounded-full object-cover border border-white/20"
+              />
+              <span className="text-stone-300 font-medium truncate max-w-[160px]">
+                {briefing.speakerName} Briefing
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => onPromptClick?.(briefing.promptQuery)}
+              className="text-[#D4AF37] hover:underline flex items-center gap-1 font-semibold shrink-0 cursor-pointer text-[10px] sm:text-[11px]"
+            >
+              <span>Ask {isBob ? 'Bob' : briefing.speaker === 'charlie_bob' ? 'Charlie & Bob' : 'Charlie'} →</span>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Script Rewrite Modal */}
+      <CopilotScriptRewriteModal
+        isOpen={isRewriteModalOpen}
+        initialDoor={activeDoor}
+        onClose={() => setIsRewriteModalOpen(false)}
+      />
+    </>
   );
 }
