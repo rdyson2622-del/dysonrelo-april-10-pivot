@@ -13,7 +13,6 @@ import CopilotExplodedSubjectModal from '@/components/copilot/CopilotExplodedSub
 import CopilotSavedDiscussionsModal from '@/components/copilot/CopilotSavedDiscussionsModal';
 import CopilotBrokerEscalationModal from '@/components/copilot/CopilotBrokerEscalationModal';
 import CopilotFooterBranding from '@/components/copilot/CopilotFooterBranding';
-import CopilotUniversalVoicePills from '@/components/copilot/CopilotUniversalVoicePills';
 import useCopilotDoorSelection from '@/components/copilot/useCopilotDoorSelection';
 import useCopilotObjectiveTracker from '@/hooks/useCopilotObjectiveTracker';
 import { findExplainerByQuery } from '@/components/copilot/copilotExplainers';
@@ -541,13 +540,6 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
                 Command Center
               </span>
             </div>
-            <div className="flex justify-center -mt-1 pb-1">
-              <CopilotUniversalVoicePills
-                text={latestVoiceMessage?.text || ''}
-                defaultSpeaker={latestVoiceMessage?.sender || 'charlie'}
-              />
-            </div>
-
             {/* ── ROSTER: BOB, CHARLIE, YOU SPEAKER BOXES (REDUCED BY 10%) ── */}
             <div className="grid grid-cols-3 gap-2 pt-1 max-w-[90%] mx-auto">
               <CopilotDynamicSpeakerBox 
@@ -889,6 +881,8 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
         onOpenSavedDiscussions={() => setIsSavedDiscussionsOpen(true)}
         discussionChips={discussionChips}
         activeDoor={rightPanelView || 'dossier'}
+        voiceText={latestVoiceMessage?.text || ''}
+        voiceSpeaker={latestVoiceMessage?.sender || 'charlie'}
         onSelectChip={(chip) => {
           handleSelectMiniApp(chip.view);
           if (!['audit', 'vetting', 'roadmap', 'escrow', 'news'].includes(chip.id)) {

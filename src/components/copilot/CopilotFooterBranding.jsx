@@ -1,12 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Bookmark } from 'lucide-react';
+import CopilotUniversalVoicePills from './CopilotUniversalVoicePills';
 
 export default function CopilotFooterBranding({
   savedCount = 0,
   onOpenSavedDiscussions,
   discussionChips = [],
   activeDoor = null,
+  voiceText = '',
+  voiceSpeaker = 'charlie',
   onSelectChip,
   onOpenReferModal,
   onOpenLegalModal
@@ -14,7 +17,9 @@ export default function CopilotFooterBranding({
   return (
     <div className="px-3 sm:px-4 py-2.5 bg-[#0a0a0a] border-t border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 select-none">
       {/* ── LEFT: SAVED DISCUSSIONS & CHIPS CONSTRAINED TO 40% LEFT LIMIT ── */}
-      <div className="w-full lg:w-[40%] lg:max-w-[40%] min-w-0 flex flex-wrap items-center gap-1.5">
+      <div className="w-full lg:w-[40%] lg:max-w-[40%] min-w-0 flex flex-col items-start gap-1.5">
+        <CopilotUniversalVoicePills text={voiceText} defaultSpeaker={voiceSpeaker} />
+        <div className="flex flex-wrap items-center gap-1.5 w-full">
         <button
           type="button"
           onClick={onOpenSavedDiscussions}
@@ -46,6 +51,7 @@ export default function CopilotFooterBranding({
             <span>{chip.label}</span>
           </button>
         ))}
+        </div>
       </div>
 
       {/* ── FAR RIGHT: PROPERLY STACKED IN 3 CLEAN ROWS ── */}

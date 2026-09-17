@@ -13,9 +13,6 @@ import CopilotRoadmapView from './CopilotRoadmapView';
 import CopilotEscrowView from './CopilotEscrowView';
 import CopilotVisualSnippetCard from './CopilotVisualSnippetCard';
 import CopilotDynamicStage from './CopilotDynamicStage';
-import CopilotUniversalVoicePills from './CopilotUniversalVoicePills';
-import { resolveIntegratedSubject } from './subjectVisualRegistry';
-import { getDoorAudioBriefing } from './doorAudioBriefings';
 import { stopAllCopilotAudio } from '@/lib/copilotAudioController';
 
 const GOLD = '#D4AF37';
@@ -142,13 +139,6 @@ export default function CopilotDossierNewsPanel({
 
   // Back button function strictly pertains ONLY to the Intelligence side of this page
   const currentView = activeView || 'dossier';
-  const voiceSubject = selectedVaultSubject
-    ? resolveIntegratedSubject(selectedVaultSubject, currentView, property, dossierData)
-    : null;
-  const voiceBriefing = getDoorAudioBriefing(currentView);
-  const voiceText = voiceSubject?.spokenText || voiceBriefing.spokenText;
-  const voiceSpeaker = voiceSubject?.speaker || voiceBriefing.speaker;
-
   const handleViewSwitch = (view) => {
     stopAllCopilotAudio();
     setSelectedVaultSubject(null);
@@ -228,15 +218,11 @@ export default function CopilotDossierNewsPanel({
         </div>
       )}
 
-      {/* ── HEADER: aligns video top edge with the Bob/Charlie/You roster row on the left ── */}
+      {/* ── CLEAN INTELLIGENCE HEADER ── */}
       <div className="h-[62px] sm:h-[70px] shrink-0 flex items-center justify-center relative px-1">
         <span className="text-white text-[28px] sm:text-[32px] font-normal tracking-wide whitespace-nowrap">
           Intelligence
         </span>
-        <div className="absolute right-1 hidden sm:block">
-          <CopilotUniversalVoicePills text={voiceText} defaultSpeaker={voiceSpeaker} />
-        </div>
-
         {isExploded && (
           <button
             type="button"
@@ -249,10 +235,6 @@ export default function CopilotDossierNewsPanel({
           </button>
         )}
       </div>
-      <div className="flex justify-center sm:hidden -mt-3">
-        <CopilotUniversalVoicePills text={voiceText} defaultSpeaker={voiceSpeaker} />
-      </div>
-
       {/* ── DYNAMIC INTELLIGENCE STAGE: CONTEXT-AWARE VISUAL / VIDEO STAGE ── */}
       <CopilotDynamicStage
         activeView={currentView}
