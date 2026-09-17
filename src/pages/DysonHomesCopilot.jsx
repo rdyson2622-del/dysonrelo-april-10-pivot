@@ -237,8 +237,25 @@ export default function DysonHomesCopilot({ initialPage }) {
       setLiveStatusText('Connecting…');
       setIsTalkLiveActive(true);
 
+      const activeDoor = rightPanelView || 'dossier';
+      const domainContext = getDomainKnowledgeContext(activeDoor, analyzedProperty, dossierData);
+      const dynamicLivePrompt = `${COPILOT_CHARLIE_SYSTEM_PROMPT}
+
+ACTIVE DOOR CONTEXT:
+${domainContext}
+
+DOSSIER FACTS FOR ${dossierData.shortAddress || analyzedProperty}:
+- List Price: ${dossierData.listPrice || 'Could not resolve'}
+- Comps: ${dossierData.compsSummary || ''}
+- Risks: ${dossierData.risksSummary || ''}
+
+LIQUIDATED DAMAGES & TITLE CONTEXT:
+- Under Cal. Civ. Code § 1675, seller liquidated damages for buyer default is strictly capped at 3% on 1-4 unit residential.
+- In California Form RPA, contingencies never expire automatically; seller must issue a 48-hour formal Notice to Buyer to Perform (NBP).
+- Title exceptions on Schedule B (unrecorded easements, solar liens, boundary conflicts) require independent discovery and ALTA endorsements.`;
+
       const client = new GeminiLiveSessionClient({
-        systemPrompt: COPILOT_CHARLIE_SYSTEM_PROMPT,
+        systemPrompt: dynamicLivePrompt,
         voiceName: 'Algieba',
         language: 'en-US',
         onStatusChange: (st) => {

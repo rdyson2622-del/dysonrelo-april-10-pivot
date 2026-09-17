@@ -215,15 +215,24 @@ export default function CopilotBrokerEscalationModal({
               </div>
 
               {/* Direct Call Affordance */}
-              <div className="p-2.5 rounded-lg bg-black/60 border border-white/10 flex items-center justify-between text-xs">
-                <span className="text-stone-400 text-[11px]">Need immediate assistance?</span>
-                <a
-                  href="tel:8583531200"
-                  className="text-[#D4AF37] font-semibold hover:underline flex items-center gap-1 text-[11.5px]"
-                >
-                  <Phone className="w-3.5 h-3.5" />
-                  <span>Call (858) 353-1200</span>
-                </a>
+              <div className="p-2.5 rounded-lg bg-black/60 border border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs">
+                <span className="text-stone-400 text-[11px]">Direct broker contact:</span>
+                <div className="flex items-center gap-2">
+                  <a
+                    href="tel:8583531200"
+                    className="text-[#D4AF37] font-semibold hover:underline flex items-center gap-1 text-[11.5px]"
+                  >
+                    <Phone className="w-3.5 h-3.5" />
+                    <span>(858) 353-1200</span>
+                  </a>
+                  <span className="text-stone-600">·</span>
+                  <a
+                    href="mailto:bob@dysonrelo.com"
+                    className="text-stone-300 hover:text-white hover:underline text-[11.5px] font-mono"
+                  >
+                    bob@dysonrelo.com
+                  </a>
+                </div>
               </div>
 
               {/* Submit Button */}
