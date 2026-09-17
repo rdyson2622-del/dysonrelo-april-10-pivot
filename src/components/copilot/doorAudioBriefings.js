@@ -31,7 +31,7 @@ export const DEFAULT_DOOR_BRIEFINGS = {
     doorName: 'Agent Vetting',
     speaker: 'bob',
     speakerName: 'Bob Dyson',
-    speakerRole: 'Principal Broker (CA DRE #02303118)',
+    speakerRole: 'Principal Broker Fiduciary Standards',
     avatar: BOB_AVATAR,
     accentColor: '#D4AF37',
     title: 'Agent Vetting Briefing',
