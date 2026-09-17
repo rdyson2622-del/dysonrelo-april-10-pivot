@@ -41,12 +41,18 @@ export default function CopilotDossierNewsPanel({
   pushedSnippet,
   onDismissSnippet,
   activeExplainer = null,
+  doorSelectionVersion = 0,
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [selectedVaultSubject, setSelectedVaultSubject] = useState(null);
   const [openAuditAccordions, setOpenAuditAccordions] = useState({});
   const videoRef = useRef(null);
+
+  React.useEffect(() => {
+    setSelectedVaultSubject(null);
+    setOpenAuditAccordions({});
+  }, [activeView, doorSelectionVersion]);
 
   const toggleAuditAccordion = (key) => {
     setOpenAuditAccordions(prev => {

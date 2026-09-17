@@ -17,6 +17,7 @@ import CopilotReferAFriendModal from '@/components/copilot/CopilotReferAFriendMo
 import CopilotBrokerEscalationModal from '@/components/copilot/CopilotBrokerEscalationModal';
 import CopilotAdminHeaderNav from '@/components/copilot/CopilotAdminHeaderNav';
 import CopilotFooterBranding from '@/components/copilot/CopilotFooterBranding';
+import useCopilotDoorSelection from '@/components/copilot/useCopilotDoorSelection';
 import { getCheckedInUser, clearCheckedInContact } from '@/lib/copilotContactSession';
 import { findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { GeminiLiveSessionClient } from '@/lib/geminiLiveClient';
@@ -570,68 +571,21 @@ DIRECTIVE FOR CHARLIE SIMMONS:
     }
   };
 
-  const handleSelectMiniApp = (appId, isParked = false) => {
-    if (isParked) {
-      setMessages(prev => [
-        ...prev,
-        {
-          id: Date.now(),
-          sender: 'charlie',
-          speakerName: 'Charlie Simmons',
-          text: `This back-office execution module is managed by our licensed fiduciary transaction desk. I've left the 4 core execution doors open in your dock — tap Property Audit, Agent Vetting, Move Roadmap, or Escrow Watch to run live checks.`,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }
-      ]);
-      return;
+  const { selectDoor: handleSelectMiniApp, doorSelectionVersion } = useCopilotDoorSelection({
+    setView: setRightPanelView,
+    setMessages,
+    clearStage: () => {
+      setActiveExplainer(null);
+      setPushedSnippet(null);
+      setSelectedExplodedItem(null);
+      liveClientRef.current?.stop();
+      liveClientRef.current = null;
+      setIsTalkLiveActive(false);
+      setLiveStatus('ready');
+      setLiveStatusText('');
+      setActiveDemoSpeaker(null);
     }
-
-    if (appId === 'dossier' || appId === 'audit') {
-      setRightPanelView('dossier');
-      addDiscussionChip('Property Audit', 'dossier');
-    } else if (appId === 'vetting') {
-      setRightPanelView('vetting');
-      addDiscussionChip('Agent Vetting', 'vetting');
-      setMessages(prev => [
-        ...prev,
-        {
-          id: Date.now(),
-          sender: 'charlie',
-          speakerName: 'Charlie Simmons',
-          text: `I've opened the Agent Vetting view for ${dossierData.shortAddress || analyzedProperty}. Remember: our formal referral agreement establishes CoPilot as your ongoing intelligence partner alongside your chosen buyer's agent throughout the entire purchase, equipping you with independent analysis at every step.`,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }
-      ]);
-    } else if (appId === 'roadmap' || appId === 'workflows') {
-      setRightPanelView('roadmap');
-      addDiscussionChip('Move Roadmap', 'roadmap');
-      setMessages(prev => [
-        ...prev,
-        {
-          id: Date.now(),
-          sender: 'charlie',
-          speakerName: 'Charlie Simmons',
-          text: `Here is the 7-phase transaction sequence for ${dossierData.shortAddress || analyzedProperty}. CoPilot remains actively involved alongside you and your agent through each phase—from offer formulation to final escrow recording.`,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }
-      ]);
-    } else if (appId === 'escrow' || appId === 'operations') {
-      setRightPanelView('escrow');
-      addDiscussionChip('Escrow Watch', 'escrow');
-      setMessages(prev => [
-        ...prev,
-        {
-          id: Date.now(),
-          sender: 'bob',
-          speakerName: 'Bob Dyson',
-          text: `Bob Dyson here. I've opened our Escrow & Title diligence view. Under our referral agreement, we stay by your side alongside your agent and escrow officer to provide second-opinion reviews of title exceptions and contingency milestones.`,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }
-      ]);
-    } else if (appId === 'dnn') {
-      setRightPanelView('news');
-      addDiscussionChip('DNN News', 'news');
-    }
-  };
+  });
 
   const resetToBlank = () => {
     setMessages([]);
@@ -1213,7 +1167,8 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                     property={analyzedProperty}
                     dossierData={dossierData}
                     activeView={rightPanelView}
-                    onViewChange={setRightPanelView}
+                    onViewChange={handleSelectMiniApp}
+                    doorSelectionVersion={doorSelectionVersion}
                     isExploded={isPageExploded}
                     onToggleExplode={() => setIsPageExploded(prev => !prev)}
                     onExplodeItem={(item) => {
@@ -1240,9 +1195,14 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                 savedCount={savedCount}
                 onOpenSavedDiscussions={() => setIsSavedDiscussionsOpen(true)}
                 discussionChips={discussionChips}
+                activeDoor={rightPanelView || 'dossier'}
                 onSelectChip={(chip) => {
-                  if (chip.view) setRightPanelView(chip.view);
-                  executeSendMessage(chip.query);
+                  if (['audit', 'vetting', 'roadmap', 'escrow', 'news'].includes(chip.id)) {
+                    handleSelectMiniApp(chip.view);
+                  } else {
+                    handleSelectMiniApp(chip.view);
+                    executeSendMessage(chip.query);
+                  }
                 }}
                 onOpenReferModal={() => setIsReferModalOpen(true)}
                 onOpenLegalModal={() => setIsLegalModalOpen(true)}
@@ -1263,7 +1223,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                 }}
                 subjectType={rightPanelView}
                 activeView={rightPanelView}
-                onViewChange={setRightPanelView}
+                onViewChange={handleSelectMiniApp}
                 selectedItem={selectedExplodedItem}
                 onSelectItem={setSelectedExplodedItem}
                 dossierData={dossierData}

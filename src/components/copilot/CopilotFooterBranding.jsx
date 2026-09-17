@@ -6,6 +6,7 @@ export default function CopilotFooterBranding({
   savedCount = 0,
   onOpenSavedDiscussions,
   discussionChips = [],
+  activeDoor = null,
   onSelectChip,
   onOpenReferModal,
   onOpenLegalModal
@@ -34,7 +35,12 @@ export default function CopilotFooterBranding({
             key={chip.id}
             type="button"
             onClick={() => onSelectChip?.(chip)}
-            className="px-2.5 py-1 rounded-md text-[10px] bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white active:bg-white active:text-black border border-white/15 transition-all cursor-pointer shrink-0"
+            className={`px-2.5 py-1 rounded-md text-[10px] border transition-colors cursor-pointer min-w-0 max-w-full break-words ${
+              activeDoor && chip.view === activeDoor
+                ? 'bg-dyson-text text-dyson-text-dark border-dyson-text font-bold shadow-md'
+                : 'bg-dyson-charcoal text-dyson-taupe border-dyson-taupe hover:text-dyson-text'
+            }`}
+            aria-pressed={Boolean(activeDoor && chip.view === activeDoor)}
             title={chip.query}
           >
             <span>{chip.label}</span>

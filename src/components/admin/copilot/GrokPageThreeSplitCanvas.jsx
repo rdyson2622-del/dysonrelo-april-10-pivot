@@ -13,6 +13,7 @@ import CopilotExplodedSubjectModal from '@/components/copilot/CopilotExplodedSub
 import CopilotSavedDiscussionsModal from '@/components/copilot/CopilotSavedDiscussionsModal';
 import CopilotBrokerEscalationModal from '@/components/copilot/CopilotBrokerEscalationModal';
 import CopilotFooterBranding from '@/components/copilot/CopilotFooterBranding';
+import useCopilotDoorSelection from '@/components/copilot/useCopilotDoorSelection';
 import { findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { getPropertyDossier } from './propertyDossierData';
 import { 
@@ -461,73 +462,21 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
     executeSendMessage();
   };
 
-  const handleSelectMiniApp = (appId) => {
-    stopAllCopilotAudio();
-    setActiveExplainer(null);
-    setRightPanelView(appId);
-    if (appId === 'dossier') {
-      addDiscussionChip('Property Audit', 'dossier');
-      setMessages(prev => [
-        ...prev,
-        {
-          id: Date.now(),
-          sender: 'charlie',
-          speakerName: 'Charlie Simmons',
-          text: `Charlie here. I've loaded the Property Audit for ${dossierData.shortAddress || property}. Review verified comparable sales, tax assessments, and environmental risk disclosures in the right panel.`,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }
-      ]);
-    } else if (appId === 'vetting') {
-      addDiscussionChip('Agent Vetting', 'vetting');
-      setMessages(prev => [
-        ...prev,
-        {
-          id: Date.now(),
-          sender: 'bob',
-          speakerName: 'Bob Dyson',
-          text: `Bob Dyson here. I've opened our Agent Vetting standards desk. Independent buyer representation is critical—we pair you with an elite local buyer specialist while our fiduciary desk stays actively involved alongside you through closing.`,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }
-      ]);
-    } else if (appId === 'roadmap') {
-      addDiscussionChip('Move Roadmap', 'roadmap');
-      setMessages(prev => [
-        ...prev,
-        {
-          id: Date.now(),
-          sender: 'charlie',
-          speakerName: 'Charlie Simmons',
-          text: `Charlie here. Here is your 7-phase Move Roadmap for ${dossierData.shortAddress || property}. CoPilot remains actively involved alongside you and your agent through each phase—from offer formulation to final escrow recording.`,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }
-      ]);
-    } else if (appId === 'escrow') {
-      addDiscussionChip('Escrow Watch', 'escrow');
-      setMessages(prev => [
-        ...prev,
-        {
-          id: Date.now(),
-          sender: 'bob',
-          speakerName: 'Bob Dyson',
-          text: `Bob Dyson here. I've opened our Escrow Watch contingency shield. In California, your earnest money deposit is protected by affirmative written contingencies under the 3% statutory cap (Cal. Civ. Code § 1675).`,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }
-      ]);
-    } else if (appId === 'dnn') {
-      setRightPanelView('news');
-      addDiscussionChip('DNN News', 'news');
-      setMessages(prev => [
-        ...prev,
-        {
-          id: Date.now(),
-          sender: 'charlie',
-          speakerName: 'Charlie & Bob',
-          text: `Charlie and Bob here at the DNN market desk. We've loaded today's broadcast tracking coastal inventory constraints, rate movements, and buyer contract protections in the right panel.`,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }
-      ]);
+  const { selectDoor: handleSelectMiniApp, doorSelectionVersion } = useCopilotDoorSelection({
+    setView: setRightPanelView,
+    setMessages,
+    clearStage: () => {
+      setActiveExplainer(null);
+      setPushedSnippet(null);
+      setSelectedExplodedItem(null);
+      liveClientRef.current?.stop();
+      liveClientRef.current = null;
+      setIsTalkLiveActive(false);
+      setLiveStatus('ready');
+      setLiveStatusText('');
+      setActiveDemoSpeaker(null);
     }
-  };
+  });
 
   return (
     <div 
@@ -867,7 +816,8 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
             property={property}
             dossierData={dossierData}
             activeView={rightPanelView}
-            onViewChange={setRightPanelView}
+            onViewChange={handleSelectMiniApp}
+            doorSelectionVersion={doorSelectionVersion}
             isExploded={isPageExploded}
             onToggleExplode={() => setIsPageExploded(prev => !prev)}
             onExplodeItem={(item) => {
@@ -894,9 +844,12 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
         savedCount={savedCount}
         onOpenSavedDiscussions={() => setIsSavedDiscussionsOpen(true)}
         discussionChips={discussionChips}
+        activeDoor={rightPanelView || 'dossier'}
         onSelectChip={(chip) => {
-          if (chip.view) setRightPanelView(chip.view);
-          handlePillClick(chip.query);
+          handleSelectMiniApp(chip.view);
+          if (!['audit', 'vetting', 'roadmap', 'escrow', 'news'].includes(chip.id)) {
+            handlePillClick(chip.query);
+          }
         }}
         onOpenReferModal={() => {}}
         onOpenLegalModal={() => {}}
@@ -919,7 +872,7 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
         }}
         subjectType={rightPanelView}
         activeView={rightPanelView}
-        onViewChange={setRightPanelView}
+        onViewChange={handleSelectMiniApp}
         selectedItem={selectedExplodedItem}
         onSelectItem={setSelectedExplodedItem}
         dossierData={dossierData}

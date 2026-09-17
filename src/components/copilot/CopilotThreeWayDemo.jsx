@@ -178,7 +178,7 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
     }
   };
 
-  const stopDemo = () => {
+  const stopDemo = (resetConversation = true) => {
     if (audioPlayerRef.current) {
       audioPlayerRef.current.pause();
       audioPlayerRef.current.currentTime = 0;
@@ -191,7 +191,7 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
     setIsPlaying(false);
     setCurrentStep(0);
     if (onTurnChange) onTurnChange(null);
-    if (onResetDemo) onResetDemo();
+    if (resetConversation && onResetDemo) onResetDemo();
   };
 
   const playTurn = (stepIndex) => {
@@ -253,7 +253,7 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
   // Subscribe to global audio cancellation
   useEffect(() => {
     const unsub = subscribeToStopAllAudio(() => {
-      stopDemo();
+      stopDemo(false);
     });
     return () => {
       unsub();
