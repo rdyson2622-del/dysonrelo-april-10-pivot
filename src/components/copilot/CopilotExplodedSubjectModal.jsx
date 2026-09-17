@@ -513,6 +513,8 @@ export default function CopilotExplodedSubjectModal({
               propertyAddress={dossierData?.fullAddress || property}
               onPromptClick={handleReturnToCommunication}
               onOpenCaptureModal={onOpenCaptureModal}
+              onSelectSubject={onSelectItem}
+              activeSubject={selectedItem}
             />
           </div>
 

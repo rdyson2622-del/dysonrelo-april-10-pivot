@@ -370,13 +370,15 @@ export default function CopilotDossierNewsPanel({
       )}
 
       {/* ─────────────────────────────────────────────────────────────
-          VIEW: AGENT VETTING STANDARDS DESK
+          VIEW: AGENT VETTING STANDARDS DESK (PROGRESSIVE ACCORDION)
           ───────────────────────────────────────────────────────────── */}
       {activeView === 'vetting' && (
         <CopilotVettingView
           propertyAddress={dossierData?.fullAddress || property}
           onPromptClick={onPromptClick}
           onOpenCaptureModal={onOpenCaptureModal}
+          onSelectSubject={(subj) => setSelectedVaultSubject(subj)}
+          activeSubject={selectedVaultSubject}
         />
       )}
 

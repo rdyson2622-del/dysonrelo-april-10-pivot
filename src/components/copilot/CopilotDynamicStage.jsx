@@ -215,6 +215,121 @@ export default function CopilotDynamicStage({
       );
     }
 
+    // Vetting: Referral Agreement Partnership Diagram
+    if (sId === 'vetting-referral-agreement') {
+      return (
+        <div 
+          onClick={() => onPromptClick?.("Explain how the referral agreement allows CoPilot to assist me alongside my local buyer agent at zero cost.")}
+          className="relative w-[44%] max-w-[300px] min-w-[210px] mx-auto overflow-hidden rounded-xl shadow-2xl border border-[#D4AF37]/60 p-2 sm:p-2.5 flex flex-col justify-between shrink-0 bg-gradient-to-br from-[#181611] via-[#111111] to-[#0a0a0a] cursor-pointer group hover:border-[#D4AF37] transition-all"
+          style={{ aspectRatio: '16/9' }}
+          title="Referral Agreement Partnership Structure"
+        >
+          <div className="flex items-center justify-between text-[8px] font-mono text-[#D4AF37] border-b border-white/10 pb-1">
+            <span className="font-bold flex items-center gap-1">
+              <Shield className="w-2.5 h-2.5 text-[#D4AF37]" />
+              REFERRAL ALLIANCE
+            </span>
+            <span className="text-emerald-400 font-bold">$0 EXTRA FEE</span>
+          </div>
+
+          <div className="flex items-center justify-between text-[7.5px] my-auto gap-1">
+            <div className="bg-black/70 p-1 rounded border border-white/10 text-center flex-1">
+              <span className="text-[6.5px] text-stone-400 block font-mono">BUYER</span>
+              <span className="font-bold text-white">Full Fiduciary</span>
+            </div>
+            <span className="text-[#D4AF37] text-[9px]">➔</span>
+            <div className="bg-black/70 p-1 rounded border border-white/10 text-center flex-1">
+              <span className="text-[6.5px] text-stone-400 block font-mono">LOCAL AGENT</span>
+              <span className="font-bold text-white">Dedicated</span>
+            </div>
+            <span className="text-[#D4AF37] text-[9px]">➔</span>
+            <div className="bg-[#1c160c] p-1 rounded border border-[#D4AF37]/40 text-center flex-1">
+              <span className="text-[6.5px] text-[#D4AF37] block font-mono">COPILOT</span>
+              <span className="font-bold text-white">Analytics</span>
+            </div>
+          </div>
+
+          <div className="text-[7.5px] text-stone-300 flex items-center justify-between border-t border-white/10 pt-1 font-sans">
+            <span className="truncate">Active partner through closing</span>
+            <span className="text-[#D4AF37] group-hover:underline shrink-0">Ask Charlie →</span>
+          </div>
+        </div>
+      );
+    }
+
+    // Vetting: Dual Agency Risk vs Independent Representation
+    if (sId === 'vetting-dual-agency') {
+      return (
+        <div 
+          onClick={() => onPromptClick?.("Bob, what are the legal and financial risks of allowing the listing agent to represent me as a dual agent?")}
+          className="relative w-[44%] max-w-[300px] min-w-[210px] mx-auto overflow-hidden rounded-xl shadow-2xl border border-[#D4AF37]/60 p-2 sm:p-2.5 flex flex-col justify-between shrink-0 bg-gradient-to-br from-[#181212] via-[#111111] to-[#0a0a0a] cursor-pointer group hover:border-[#D4AF37] transition-all"
+          style={{ aspectRatio: '16/9' }}
+          title="Dual Agency vs Independent Representation"
+        >
+          <div className="flex items-center justify-between text-[8px] font-mono text-[#D4AF37] border-b border-white/10 pb-1">
+            <span className="font-bold flex items-center gap-1">
+              <Scale className="w-2.5 h-2.5 text-[#D4AF37]" />
+              DUAL AGENCY RISK
+            </span>
+            <span className="text-rose-400 font-bold">CONFLICT RISK</span>
+          </div>
+
+          <div className="flex items-center justify-between text-[7.5px] my-auto gap-1">
+            <div className="bg-rose-950/40 p-1 rounded border border-rose-500/30 text-center flex-1">
+              <span className="text-[6.5px] text-rose-300 block font-mono">LISTING AGENT</span>
+              <span className="font-bold text-white">Seller Loyalty</span>
+            </div>
+            <span className="text-stone-500 text-[9px]">VS</span>
+            <div className="bg-emerald-950/40 p-1 rounded border border-emerald-500/30 text-center flex-1">
+              <span className="text-[6.5px] text-emerald-300 block font-mono">BUYER AGENT</span>
+              <span className="font-bold text-white">100% Loyalty</span>
+            </div>
+          </div>
+
+          <div className="text-[7.5px] text-stone-300 flex items-center justify-between border-t border-white/10 pt-1 font-sans">
+            <span className="truncate">Never compromise your price advocacy</span>
+            <span className="text-[#D4AF37] group-hover:underline shrink-0">Ask Bob →</span>
+          </div>
+        </div>
+      );
+    }
+
+    // Vetting: Advisory Agreement Gate Verification
+    if (sId === 'vetting-advisory-gate') {
+      return (
+        <div 
+          onClick={() => onPromptClick?.("Charlie, why do I need to confirm non-exclusive representation before deploying broker review?")}
+          className="relative w-[44%] max-w-[300px] min-w-[210px] mx-auto overflow-hidden rounded-xl shadow-2xl border border-[#D4AF37]/60 p-2 sm:p-2.5 flex flex-col justify-between shrink-0 bg-gradient-to-br from-[#16140f] via-[#101010] to-[#0a0a0a] cursor-pointer group hover:border-[#D4AF37] transition-all"
+          style={{ aspectRatio: '16/9' }}
+          title="Client Advisory Agreement Gate"
+        >
+          <div className="flex items-center justify-between text-[8px] font-mono text-[#D4AF37] border-b border-white/10 pb-1">
+            <span className="font-bold flex items-center gap-1">
+              <ShieldCheck className="w-2.5 h-2.5 text-[#D4AF37]" />
+              ADVISORY FIREWALL
+            </span>
+            <span className="text-[#D4AF37] font-bold">CA DRE COMPLIANCE</span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-1 text-[7.5px] my-auto">
+            <div className="bg-black/70 p-1 rounded border border-white/10 text-center">
+              <span className="text-[6.5px] text-stone-400 block font-mono">DECLARATION</span>
+              <span className="font-bold text-white">Non-Exclusive</span>
+            </div>
+            <div className="bg-black/70 p-1 rounded border border-white/10 text-center">
+              <span className="text-[6.5px] text-stone-400 block font-mono">BROKER REVIEW</span>
+              <span className="font-bold text-white">Human Oversight</span>
+            </div>
+          </div>
+
+          <div className="text-[7.5px] text-stone-300 flex items-center justify-between border-t border-white/10 pt-1 font-sans">
+            <span className="truncate">Zero upfront cost · Licensed DRE #02303118</span>
+            <span className="text-[#D4AF37] group-hover:underline shrink-0">Ask Charlie →</span>
+          </div>
+        </div>
+      );
+    }
+
     // Default Visual Card for any other selected subject
     return (
       <div 
