@@ -294,36 +294,42 @@ export default function CopilotDynamicStage({
       );
     }
 
-    // Vetting: Advisory Agreement Gate Verification
+    // Vetting: Advisory Agreement Gate Verification (Secure Partnership Stage)
     if (sId === 'vetting-advisory-gate') {
       return (
         <div 
           onClick={() => onPromptClick?.("Charlie, why do I need to confirm non-exclusive representation before deploying broker review?")}
           className="relative w-[44%] max-w-[300px] min-w-[210px] mx-auto overflow-hidden rounded-xl shadow-2xl border border-[#D4AF37]/60 p-2 sm:p-2.5 flex flex-col justify-between shrink-0 bg-gradient-to-br from-[#16140f] via-[#101010] to-[#0a0a0a] cursor-pointer group hover:border-[#D4AF37] transition-all"
           style={{ aspectRatio: '16/9' }}
-          title="Client Advisory Agreement Gate"
+          title="Client Advisory Partnership Alliance"
         >
           <div className="flex items-center justify-between text-[8px] font-mono text-[#D4AF37] border-b border-white/10 pb-1">
             <span className="font-bold flex items-center gap-1">
               <ShieldCheck className="w-2.5 h-2.5 text-[#D4AF37]" />
-              ADVISORY FIREWALL
+              ADVISORY ALLIANCE
             </span>
-            <span className="text-[#D4AF37] font-bold">CA DRE COMPLIANCE</span>
+            <span className="text-emerald-400 font-bold">$0 CLIENT COST</span>
           </div>
 
-          <div className="grid grid-cols-2 gap-1 text-[7.5px] my-auto">
-            <div className="bg-black/70 p-1 rounded border border-white/10 text-center">
-              <span className="text-[6.5px] text-stone-400 block font-mono">DECLARATION</span>
-              <span className="font-bold text-white">Non-Exclusive</span>
+          <div className="flex items-center justify-between text-[7.5px] my-auto gap-1">
+            <div className="bg-black/70 p-1 rounded border border-white/10 text-center flex-1">
+              <span className="text-[6.5px] text-stone-400 block font-mono">BUYER</span>
+              <span className="font-bold text-white">100% Loyalty</span>
             </div>
-            <div className="bg-black/70 p-1 rounded border border-white/10 text-center">
-              <span className="text-[6.5px] text-stone-400 block font-mono">BROKER REVIEW</span>
-              <span className="font-bold text-white">Human Oversight</span>
+            <span className="text-[#D4AF37] text-[9px]">➔</span>
+            <div className="bg-black/70 p-1 rounded border border-white/10 text-center flex-1">
+              <span className="text-[6.5px] text-stone-400 block font-mono">LOCAL AGENT</span>
+              <span className="font-bold text-white">Dedicated</span>
+            </div>
+            <span className="text-[#D4AF37] text-[9px]">➔</span>
+            <div className="bg-[#1c160c] p-1 rounded border border-[#D4AF37]/40 text-center flex-1">
+              <span className="text-[6.5px] text-[#D4AF37] block font-mono">COPILOT</span>
+              <span className="font-bold text-white">Analytics</span>
             </div>
           </div>
 
           <div className="text-[7.5px] text-stone-300 flex items-center justify-between border-t border-white/10 pt-1 font-sans">
-            <span className="truncate">Zero upfront cost · Licensed DRE #02303118</span>
+            <span className="truncate">Independent buyer advocacy · CA referral agreement</span>
             <span className="text-[#D4AF37] group-hover:underline shrink-0">Ask Charlie →</span>
           </div>
         </div>

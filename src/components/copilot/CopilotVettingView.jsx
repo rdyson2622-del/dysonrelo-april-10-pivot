@@ -71,14 +71,14 @@ export const VETTING_SUBJECTS = [
   {
     id: 'vetting-advisory-gate',
     category: 'compliance',
-    categoryLabel: 'CA DRE Compliance',
-    format: 'Compliance Gateway',
+    categoryLabel: 'Advisory Partnership',
+    format: 'Client Agreement',
     formatType: 'doc',
-    title: 'Client Advisory Agreement: CA DRE Compliance & Verification',
-    shortHeader: 'Client Advisory Agreement: CA DRE Compliance & Verification',
-    subtitle: 'Non-exclusive declaration protecting your rights and avoiding dual agency',
-    summary: 'To protect your legal rights, uphold California Department of Real Estate compliance, and prevent tortious interference with existing broker relationships, CoPilot requires a simple confirmation that you are not under an exclusive agreement with another broker before deploying our back-office human resources.',
-    keyRule: 'Non-exclusive declaration ensures zero legal conflicts and deploys Bob Dyson broker desk review.',
+    title: 'Client Advisory Partnership',
+    shortHeader: 'Client Advisory Partnership',
+    subtitle: 'Independent buyer advocacy backed by our California referral agreement',
+    summary: 'CoPilot operates as your dedicated analytical partner throughout your home purchase under our licensed California referral structure. We pair you with an independent, vetted local buyer agent while providing continuous valuation second-looks, title review, and contingency tracking at zero additional cost to you.',
+    keyRule: 'Non-exclusive confirmation activates dedicated broker desk intelligence with zero conflict of interest.',
     promptQuery: 'Charlie, why do I need to confirm non-exclusive representation before deploying broker review?',
     speaker: 'charlie'
   },
@@ -464,21 +464,21 @@ export default function CopilotVettingView({
                       </p>
 
                       {gateState === 'confirmed' ? (
-                        <div className="p-3.5 rounded-lg bg-[#14130d] border border-[#D4AF37]/50 space-y-2 text-xs font-sans">
-                          <div className="flex items-center justify-between border-b border-[#D4AF37]/30 pb-2">
+                        <div className="p-3.5 rounded-lg bg-[#14130d] border border-[#D4AF37]/30 space-y-2 text-xs font-sans">
+                          <div className="flex items-center justify-between border-b border-[#D4AF37]/20 pb-2">
                             <div className="flex items-center gap-2">
                               <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                              <span className="text-white font-semibold">Agreement Confirmed · Under Human Fiduciary Review</span>
+                              <span className="text-white font-semibold">Advisory Partnership Confirmed · Active Through Closing</span>
                             </div>
-                            <span className="text-[10px] font-mono text-emerald-400">CA DRE #02303118</span>
+                            <span className="text-[10px] font-mono text-[#D4AF37]">CA DRE #02303118</span>
                           </div>
                           <p className="text-stone-300 text-[11px] leading-relaxed">
-                            Your non-exclusive status is recorded. Bob Dyson and our team are reviewing your file for <strong className="text-white">{shortAddr}</strong>.
+                            Your independent representation status is certified. Bob Dyson and our advisory desk are reviewing your file for <strong className="text-white">{shortAddr}</strong> alongside your local agent.
                           </p>
                           <div className="flex flex-wrap items-center gap-2 pt-1">
                             <a
                               href="tel:8583531200"
-                              className="px-3 py-1.5 rounded-lg bg-[#D4AF37] hover:bg-[#e8c84a] text-black font-semibold text-xs flex items-center gap-1.5 shadow-sm"
+                              className="px-3 py-1.5 rounded-lg bg-white hover:bg-stone-200 text-black font-semibold text-xs flex items-center gap-1.5 transition-all shadow-sm"
                             >
                               <Phone className="w-3.5 h-3.5" />
                               <span>Call Bob Dyson · (858) 353-1200</span>
@@ -493,11 +493,7 @@ export default function CopilotVettingView({
                           </div>
                         </div>
                       ) : (
-                        <form onSubmit={handleAgreeAndSubmit} className="p-3.5 rounded-lg bg-black/60 border border-white/10 space-y-3 text-xs font-sans">
-                          <span className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-bold block">
-                            Non-Exclusive Client Advisory Confirmation:
-                          </span>
-
+                        <form onSubmit={handleAgreeAndSubmit} className="p-3.5 rounded-lg bg-black/50 border border-white/10 space-y-3 text-xs font-sans">
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                             <div>
                               <label className="block text-[10px] uppercase font-mono text-stone-400 mb-1">
@@ -509,12 +505,12 @@ export default function CopilotVettingView({
                                 value={fullName}
                                 onChange={(e) => setFullName(e.target.value)}
                                 placeholder="Your full name"
-                                className="w-full bg-[#1c1c1c] rounded-lg border border-white/15 focus:border-[#D4AF37] px-3 py-1.5 text-xs text-white outline-none"
+                                className="w-full bg-[#161616] rounded-lg border border-white/10 focus:border-[#D4AF37] px-3 py-1.5 text-xs text-white outline-none"
                               />
                             </div>
 
                             <div>
-                              <label className="block text-[10px] uppercase font-mono text-[#D4AF37] font-bold mb-1">
+                              <label className="block text-[10px] uppercase font-mono text-stone-300 mb-1">
                                 Mobile Phone Number *
                               </label>
                               <input
@@ -523,7 +519,7 @@ export default function CopilotVettingView({
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
                                 placeholder="(858) 555-0199"
-                                className="w-full bg-[#1c1c1c] rounded-lg border border-[#D4AF37]/50 focus:border-[#D4AF37] px-3 py-1.5 text-xs text-white outline-none font-medium"
+                                className="w-full bg-[#161616] rounded-lg border border-white/10 focus:border-[#D4AF37] px-3 py-1.5 text-xs text-white outline-none font-medium"
                               />
                             </div>
                           </div>
@@ -539,12 +535,12 @@ export default function CopilotVettingView({
                               className="mt-0.5 w-4 h-4 rounded border-stone-600 bg-stone-900 text-[#D4AF37] focus:ring-[#D4AF37] cursor-pointer"
                             />
                             <span className="text-[11px] text-stone-200 leading-relaxed">
-                              <strong>Non-Exclusive Declaration:</strong> I confirm I am not currently under an exclusive representation agreement with another broker for this property.
+                              I confirm I am not currently under an exclusive representation agreement with another broker for this property.
                             </span>
                           </label>
 
                           {validationError && (
-                            <p className="text-rose-400 text-[11px] flex items-center gap-1.5">
+                            <p className="text-amber-300 text-[11px] flex items-center gap-1.5">
                               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                               <span>{validationError}</span>
                             </p>
@@ -553,13 +549,13 @@ export default function CopilotVettingView({
                           <button
                             type="submit"
                             disabled={isSubmitting || !hasNoExclusive}
-                            className="w-full py-2 px-4 rounded-lg bg-gradient-to-r from-[#D4AF37] via-[#e8c84a] to-[#D4AF37] hover:brightness-110 disabled:opacity-40 text-black font-semibold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer"
+                            className="w-full py-2 px-4 rounded-lg bg-white hover:bg-stone-200 disabled:opacity-40 text-black font-semibold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer"
                           >
                             {isSubmitting ? (
                               <span>Confirming...</span>
                             ) : (
                               <>
-                                <span>Authorize CoPilot Advisory Partnership</span>
+                                <span>Agree &amp; Proceed</span>
                                 <ArrowRight className="w-3.5 h-3.5" />
                               </>
                             )}
