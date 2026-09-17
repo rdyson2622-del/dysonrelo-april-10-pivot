@@ -596,16 +596,16 @@ export default function CopilotExplodedSubjectModal({
           /* ── OPTION D4: PROPERTY AUDIT & INTELLIGENCE IN EXPLODED THEATER ── */
           <div className="space-y-6 animate-in fade-in duration-150">
             {/* Header Banner */}
-            <div className="rounded-2xl border-2 border-[#D4AF37] bg-gradient-to-r from-[#17140b] via-[#101010] to-[#121212] p-5 sm:p-6 shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="rounded-2xl border border-white/10 bg-[#121212] p-5 sm:p-6 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="space-y-1">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#D4AF37] font-bold flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  FULL-SCREEN FIDUCIARY AUDIT DOSSIER
+                <span className="text-[10px] font-sans tracking-wide text-stone-400 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
+                  Property Overview &amp; Advisory Dossier
                 </span>
-                <h2 className="text-lg sm:text-2xl font-bold text-white tracking-wide">
+                <h2 className="text-lg sm:text-xl font-semibold text-white tracking-wide">
                   {dossierData?.shortAddress || '742 Vista Del Mar'}, {dossierData?.city || 'La Jolla'}
                 </h2>
-                <p className="text-xs sm:text-sm text-stone-300">
+                <p className="text-xs sm:text-sm text-stone-300 leading-relaxed font-sans">
                   {dossierData?.marketSummary}
                 </p>
               </div>
@@ -619,19 +619,25 @@ export default function CopilotExplodedSubjectModal({
                     handleReturnToCommunication("Text full report to my mobile");
                   }
                 }}
-                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#e8c84a] text-black font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg hover:brightness-110 cursor-pointer shrink-0"
+                className="px-4 py-2 rounded-full bg-white hover:bg-stone-200 text-black font-semibold text-xs flex items-center gap-2 shadow-sm cursor-pointer shrink-0"
               >
-                <span>Text Report to Mobile</span>
+                <span>Text Report</span>
                 <span>→</span>
               </button>
+            </div>
+
+            {/* Partnership Note */}
+            <div className="p-3.5 rounded-lg bg-[#141310] border border-[#D4AF37]/25 text-xs text-stone-300">
+              <span className="text-[#D4AF37] font-medium mr-1.5">CoPilot Partnership:</span>
+              Under our referral agreement, CoPilot remains actively involved alongside you and your matched buyer's agent through closing to provide continuous analytical support.
             </div>
 
             {/* Comps Matrix */}
             <div className="rounded-xl border border-white/10 bg-[#121212] p-4 sm:p-6 space-y-3">
               <div className="flex items-center gap-2">
                 <Scale className="w-5 h-5 text-[#D4AF37]" />
-                <h3 className="text-sm sm:text-base font-bold text-white uppercase tracking-wider">
-                  HONEST COMPS MATRIX (UNVARNISHED DATA)
+                <h3 className="text-sm sm:text-base font-semibold text-white">
+                  Comparable Market Sales
                 </h3>
               </div>
               {dossierData?.comps && dossierData.comps.length > 0 ? (
@@ -683,15 +689,15 @@ export default function CopilotExplodedSubjectModal({
             {/* Hidden Risks and Rebate Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="rounded-xl border border-white/10 bg-[#121212] p-4 sm:p-5 space-y-3">
-                <div className="flex items-center gap-2 text-white font-bold text-xs sm:text-sm uppercase tracking-wider">
+                <div className="flex items-center gap-2 text-white font-semibold text-xs sm:text-sm">
                   <ShieldAlert className="w-4 h-4 text-[#D4AF37]" />
-                  <span>Hidden Risks Audit</span>
+                  <span>Property &amp; Environmental Considerations</span>
                 </div>
-                <div className="space-y-3 text-xs">
+                <div className="space-y-2 text-xs">
                   {dossierData?.risks?.map((risk, idx) => (
-                    <div key={idx} className="p-3 rounded-lg bg-black/50 border border-white/5">
-                      <h4 className="font-bold text-white">{risk.title}</h4>
-                      <p className="text-stone-400 mt-1">{risk.desc}</p>
+                    <div key={idx} className="p-3 rounded-lg bg-[#161616] border border-white/5">
+                      <h4 className="font-medium text-white">{risk.title}</h4>
+                      <p className="text-stone-400 mt-1 leading-relaxed">{risk.desc}</p>
                     </div>
                   ))}
                 </div>
@@ -699,16 +705,16 @@ export default function CopilotExplodedSubjectModal({
 
               <div className="rounded-xl border border-white/10 bg-[#121212] p-4 sm:p-5 space-y-3 flex flex-col justify-between">
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-white font-bold text-xs sm:text-sm uppercase tracking-wider">
+                  <div className="flex items-center gap-2 text-white font-semibold text-xs sm:text-sm">
                     <Shield className="w-4 h-4 text-[#D4AF37]" />
-                    <span>Lender &amp; Fiduciary Compliance Audit</span>
+                    <span>Contract &amp; Advisory Discovery</span>
                   </div>
                   <p className="text-xs text-stone-400">
-                    Pre-Offer Fiduciary Verification | California DRE #00609384
+                    Pre-Offer Guidance · Supported by Referral Agreement
                   </p>
-                  <div className="p-4 rounded-xl bg-black border border-[#D4AF37]/50 flex items-center justify-between mt-2">
-                    <span className="text-xs sm:text-sm font-semibold text-white">Earnest Deposit Contingency</span>
-                    <span className="text-xl sm:text-2xl font-bold font-mono text-emerald-400">100% Protected</span>
+                  <div className="p-4 rounded-xl bg-[#161616] border border-white/10 flex items-center justify-between mt-2">
+                    <span className="text-xs sm:text-sm font-medium text-white">Earnest Deposit Protection</span>
+                    <span className="text-sm font-semibold text-[#D4AF37]">Affirmative Release</span>
                   </div>
                 </div>
 

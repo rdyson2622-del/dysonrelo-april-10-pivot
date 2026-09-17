@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   GitBranch, CheckCircle2, Clock, AlertCircle, 
-  ChevronRight, MessageSquare, ArrowRight, Shield 
+  ChevronRight, MessageSquare, ArrowRight, ShieldCheck, FileText
 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
@@ -17,78 +17,79 @@ export default function CopilotRoadmapView({
   const phases = [
     {
       num: 1,
-      title: 'Property Discovery & Risk Audit',
+      title: 'Property Discovery & Market Assessment',
       timing: 'Day 0',
-      status: 'In Progress (Copilot)',
-      desc: 'Verify public records, unvarnished comps, geotechnical/bluff hazard zones, tax base, and permit histories.',
-      trap: 'Relying on list price without checking 90-day adjusted sales.'
+      status: 'Active Review',
+      desc: 'Verify public records, recent adjusted comps, natural hazard zones, tax base details, and historical permits with CoPilot.',
+      trap: 'Relying strictly on asking price without evaluating 90-day neighborhood comps.'
     },
     {
       num: 2,
-      title: 'Fiduciary Agent Selection & Agreement',
+      title: 'Agent Pairing & Referral Agreement Alignment',
       timing: 'Pre-Offer',
-      status: 'Ready to Assign',
-      desc: 'Pair with an independent fiduciary buyer broker with zero listing conflict, backed by written representation terms.',
-      trap: 'Signing an open-ended buyer broker agreement without cancellation rights.'
+      status: 'Ready to Pair',
+      desc: 'Match with a vetted independent buyer’s agent. Our formal referral agreement establishes CoPilot as your ongoing intelligence partner alongside your agent throughout escrow.',
+      trap: 'Signing an open-ended representation agreement without reviewing terms.'
     },
     {
       num: 3,
-      title: 'Targeted Offer & Contingency Drafting',
-      timing: 'Offer Day',
-      status: 'Pending',
-      desc: 'Draft purchase agreement specifying strict loan, appraisal, and physical inspection contingency protections.',
-      trap: 'Waiving inspection or appraisal contingencies in a shifting market.'
+      title: 'Offer Strategy & Contingency Formulation',
+      timing: 'Offer Phase',
+      status: 'Next Step',
+      desc: 'Work with your agent and CoPilot data to structure clean loan, appraisal, and physical inspection contingency protections.',
+      trap: 'Waiving property inspection contingencies without thorough specialized discovery.'
     },
     {
       num: 4,
-      title: 'Escrow Opening & Earnest Money Deposit',
+      title: 'Escrow Opening & Earnest Money Verification',
       timing: 'Days 1–3',
-      status: 'Pending',
-      desc: 'Wire earnest money deposit (typically 3% in CA) directly to bonded escrow; verify wire instructions verbally to block fraud.',
-      trap: 'Wire fraud interception via compromised email accounts.'
+      status: 'Milestone',
+      desc: 'Deposit earnest funds directly with the bonded escrow holder; confirm wire instructions via independent verbal phone verification.',
+      trap: 'Wire fraud interception via unverified email instructions.'
     },
     {
       num: 5,
-      title: 'Physical, Geotech & Title Inspections',
+      title: 'Comprehensive Physical & Title Review',
       timing: 'Days 1–17',
-      status: 'Pending',
-      desc: 'Hire independent inspectors for structure, roof, sewer lateral, electrical, and geotechnical review if coastal.',
-      trap: 'Missing the 17-day contractual deadline to request seller repair credits.'
+      status: 'Milestone',
+      desc: 'Engage certified inspectors for structure, roof, sewer, electrical, and title Schedule B exceptions with continuous CoPilot second-look analysis.',
+      trap: 'Failing to submit formal repair or credit requests prior to contractual deadlines.'
     },
     {
       num: 6,
-      title: 'Appraisal & Financing Contingency Clear',
+      title: 'Appraisal & Financing Confirmation',
       timing: 'Days 17–21',
-      status: 'Pending',
-      desc: 'Lender completes underwriting and appraisal. Negotiate price adjustments if appraisal shortfalls arise.',
-      trap: 'Removing loan contingency before receiving lender written final commitment.'
+      status: 'Milestone',
+      desc: 'Lender completes underwriting and valuation. Your agent and CoPilot review any appraisal gaps to negotiate solutions calmly.',
+      trap: 'Releasing financing contingencies before receiving final lender loan commitment.'
     },
     {
       num: 7,
-      title: 'Final Walkthrough, Funding & Recording',
+      title: 'Final Walkthrough & Closing Funding',
       timing: 'Days 25–30',
-      status: 'Pending',
-      desc: 'Inspect repairs, verify condition matches contract, wire balance of funds, and record grant deed with county recorder.',
-      trap: 'Failing to test all major mechanical systems before signing closing escrow documents.'
+      status: 'Closing',
+      desc: 'Perform walkthrough inspection, verify agreed repairs, wire closing funds, and record the grant deed with the county.',
+      trap: 'Closing without verifying mechanical systems and agreed seller repair work.'
     }
   ];
 
   return (
     <div className="space-y-4 text-white text-left animate-in fade-in duration-200">
+      
       {/* Header Banner */}
-      <div className="rounded-xl border border-white/20 bg-gradient-to-r from-[#141414] via-[#111111] to-[#121212] p-4 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div className="space-y-1">
+      <div className="rounded-xl border border-white/10 bg-[#121212] p-4 sm:p-5 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="space-y-1 max-w-xl">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-            <span className="text-[10px] font-mono uppercase tracking-widest text-cyan-300 font-bold">
-              EXECUTION DOOR · MILESTONE TRACKER
+            <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
+            <span className="text-[10px] font-mono uppercase tracking-wider text-stone-400">
+              Milestone Sequence
             </span>
           </div>
-          <h2 className="text-sm sm:text-base font-bold text-white tracking-wide">
+          <h2 className="text-sm sm:text-base font-semibold text-white tracking-wide">
             Transaction Move Roadmap
           </h2>
-          <p className="text-xs text-stone-300">
-            7-Phase fiduciary execution plan for <span className="text-[#D4AF37] font-semibold">{shortAddr}</span> from discovery to keys.
+          <p className="text-xs text-stone-300 leading-relaxed font-sans">
+            A guided 7-phase sequence for <span className="text-[#D4AF37] font-medium">{shortAddr}</span>, with CoPilot supporting you and your agent at every milestone.
           </p>
         </div>
 
@@ -96,59 +97,70 @@ export default function CopilotRoadmapView({
           type="button"
           onClick={() => {
             if (onOpenCaptureModal) onOpenCaptureModal();
-            else onPromptClick?.("Text me the full step-by-step transaction roadmap for this home");
+            else onPromptClick?.("Send me the transaction move roadmap for this property");
           }}
-          className="px-3.5 py-1.5 rounded-full bg-white hover:bg-stone-100 text-black font-bold text-xs flex items-center gap-1.5 transition-all shadow-md cursor-pointer shrink-0 border border-white"
+          className="px-4 py-2 rounded-full bg-white hover:bg-stone-200 text-black font-semibold text-xs flex items-center gap-1.5 transition-all shadow-sm cursor-pointer shrink-0"
         >
-          <span>Send Full Roadmap</span>
-          <span>→</span>
+          <span>Email Full Roadmap</span>
+          <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
 
-      {/* 7-Phase Milestone List */}
-      <div className="bg-[#121212] border border-white/10 rounded-xl p-4 space-y-3">
-        <div className="flex items-center justify-between border-b border-white/10 pb-2">
+      {/* Referral Agreement Role Callout */}
+      <div className="p-3.5 rounded-lg bg-[#141310] border border-[#D4AF37]/25 text-xs text-stone-300 space-y-1">
+        <div className="flex items-center gap-1.5 text-[#D4AF37] font-medium text-[11.5px]">
+          <FileText className="w-3.5 h-3.5 shrink-0" />
+          <span>Active Partnership Under the Referral Agreement</span>
+        </div>
+        <p className="text-[11px] text-stone-300 leading-relaxed font-sans">
+          Our referral agreement formally anchors CoPilot's ongoing role: we remain by your side from offer through closing, providing analytical backup to your chosen agent without interfering with their direct representation.
+        </p>
+      </div>
+
+      {/* 7-Phase Milestone List: Soft tonal cards, no harsh neon cyan lines */}
+      <div className="bg-[#111111] border border-white/10 rounded-xl p-4 sm:p-5 space-y-3">
+        <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
           <div className="flex items-center gap-2">
-            <GitBranch className="w-4 h-4 text-cyan-400" />
-            <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-white">
-              7-Phase Deal Execution Timeline
+            <GitBranch className="w-4 h-4 text-[#D4AF37]" />
+            <h3 className="text-xs sm:text-sm font-semibold text-white">
+              7-Phase Transaction Sequence
             </h3>
           </div>
-          <span className="text-[10px] font-mono text-stone-400">Standard 30-Day Escrow</span>
+          <span className="text-[10px] text-stone-400 font-sans">Typical 30-Day Escrow</span>
         </div>
 
-        <div className="space-y-2 pt-1">
+        <div className="space-y-2 pt-0.5">
           {phases.map((p) => {
             const isSelected = activeStep === p.num;
             return (
               <div 
                 key={p.num}
                 onClick={() => setActiveStep(p.num)}
-                className={`p-3 rounded-lg border transition-all cursor-pointer ${
+                className={`p-3.5 rounded-lg border transition-all cursor-pointer ${
                   isSelected 
-                    ? 'bg-[#181818] border-cyan-400/60 ring-1 ring-cyan-400/30' 
-                    : 'bg-[#141414] border-white/10 hover:border-white/20'
+                    ? 'bg-[#181818] border-[#D4AF37]/50 shadow-sm' 
+                    : 'bg-[#141414] border-white/5 hover:border-white/15'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2.5">
-                    <span className={`w-5 h-5 rounded-full text-[11px] font-mono font-bold flex items-center justify-center ${
-                      p.num === 1 
-                        ? 'bg-cyan-500 text-black' 
+                    <span className={`w-5 h-5 rounded-full text-[11px] font-sans font-medium flex items-center justify-center ${
+                      isSelected 
+                        ? 'bg-[#D4AF37] text-black' 
                         : 'bg-white/10 text-stone-300'
                     }`}>
                       {p.num}
                     </span>
-                    <h4 className="text-xs sm:text-[13px] font-bold text-white">
+                    <h4 className="text-xs sm:text-[13px] font-medium text-white">
                       {p.title}
                     </h4>
                   </div>
 
-                  <div className="flex items-center gap-2 shrink-0 font-mono text-[10px]">
+                  <div className="flex items-center gap-2 shrink-0 text-[10px] font-sans">
                     <span className="text-stone-400 hidden sm:inline">{p.timing}</span>
-                    <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
-                      p.num === 1 
-                        ? 'bg-cyan-950/80 text-cyan-300 border border-cyan-500/40' 
+                    <span className={`px-2 py-0.5 rounded text-[9.5px] ${
+                      isSelected
+                        ? 'bg-white/10 text-white font-medium'
                         : 'bg-white/5 text-stone-400'
                     }`}>
                       {p.status}
@@ -156,15 +168,15 @@ export default function CopilotRoadmapView({
                   </div>
                 </div>
 
-                <p className="text-[11px] text-stone-300 pl-7.5 mt-1 leading-relaxed">
+                <p className="text-[11px] text-stone-400 pl-7.5 mt-1 leading-relaxed font-sans">
                   {p.desc}
                 </p>
 
                 {isSelected && (
                   <div className="mt-2.5 pt-2 border-t border-white/10 pl-7.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div className="text-[10.5px] text-rose-300 font-sans flex items-center gap-1.5">
-                      <AlertCircle className="w-3 h-3 text-rose-400 shrink-0" />
-                      <span><strong>Key Trap:</strong> {p.trap}</span>
+                    <div className="text-[11px] text-stone-300 font-sans flex items-center gap-1.5">
+                      <AlertCircle className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+                      <span><strong>Key Consideration:</strong> {p.trap}</span>
                     </div>
 
                     <button
@@ -173,9 +185,9 @@ export default function CopilotRoadmapView({
                         e.stopPropagation();
                         onPromptClick?.(`Charlie, advise on Phase ${p.num} (${p.title}) for ${shortAddr}`);
                       }}
-                      className="px-2.5 py-1 rounded bg-white/10 hover:bg-white/20 text-white text-[10px] font-semibold flex items-center gap-1 transition-all cursor-pointer shrink-0 self-start sm:self-auto"
+                      className="px-2.5 py-1 rounded bg-white/10 hover:bg-white/20 text-white text-[10px] font-medium flex items-center gap-1 transition-all cursor-pointer shrink-0 self-start sm:self-auto"
                     >
-                      <MessageSquare className="w-3 h-3 text-cyan-300" />
+                      <MessageSquare className="w-3 h-3 text-[#D4AF37]" />
                       <span>Ask Charlie about Phase {p.num}</span>
                     </button>
                   </div>
@@ -186,43 +198,34 @@ export default function CopilotRoadmapView({
         </div>
       </div>
 
-      {/* Immediate Dialogue Prompts */}
-      <div className="bg-[#121212] border border-white/10 rounded-xl p-4 space-y-2.5">
-        <span className="text-[10px] font-mono uppercase tracking-widest text-stone-400 block font-bold">
-          ACTIVATE CHARLIE &amp; BOB ON MILESTONES:
+      {/* Advisory Prompts */}
+      <div className="bg-[#111111] border border-white/10 rounded-xl p-4 space-y-2.5">
+        <span className="text-[10px] text-stone-400 block font-medium">
+          Ask Charlie &amp; Bob About Transaction Timing:
         </span>
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            onClick={() => onPromptClick?.(`Bob, what are the most critical contingency removal dates on ${shortAddr}?`)}
-            className="px-3 py-1.5 rounded-lg bg-[#181818] hover:bg-white/10 border border-white/15 text-stone-200 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+            onClick={() => onPromptClick?.(`Bob, what are the most critical contingency dates to track on ${shortAddr}?`)}
+            className="px-3 py-1.5 rounded-lg bg-[#161616] hover:bg-white/10 border border-white/10 text-stone-300 hover:text-white text-xs font-normal flex items-center gap-1.5 transition-all cursor-pointer"
           >
             <MessageSquare className="w-3 h-3 text-[#D4AF37]" />
-            <span>Contingency Deadlines Checklist</span>
-            <span className="text-[9px] text-stone-400 font-mono">(bob)</span>
+            <span>Contingency Deadlines Overview</span>
+            <span className="text-[10px] text-stone-500 font-mono">(bob)</span>
           </button>
 
           <button
             type="button"
-            onClick={() => onPromptClick?.(`Charlie, what happens if our appraisal comes in lower than the purchase price?`)}
-            className="px-3 py-1.5 rounded-lg bg-[#181818] hover:bg-white/10 border border-white/15 text-stone-200 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+            onClick={() => onPromptClick?.(`Charlie, how do we handle appraisal shortfalls if the valuation comes in low?`)}
+            className="px-3 py-1.5 rounded-lg bg-[#161616] hover:bg-white/10 border border-white/10 text-stone-300 hover:text-white text-xs font-normal flex items-center gap-1.5 transition-all cursor-pointer"
           >
-            <MessageSquare className="w-3 h-3 text-cyan-300" />
+            <MessageSquare className="w-3 h-3 text-[#D4AF37]" />
             <span>Appraisal Shortfall Protocol</span>
-            <span className="text-[9px] text-stone-400 font-mono">(charlie)</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onPromptClick?.(`Bob, how do we negotiate repair credits vs price reductions after inspection?`)}
-            className="px-3 py-1.5 rounded-lg bg-[#181818] hover:bg-white/10 border border-white/15 text-stone-200 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
-          >
-            <MessageSquare className="w-3 h-3 text-[#D4AF37]" />
-            <span>Repair Credit Strategy</span>
-            <span className="text-[9px] text-stone-400 font-mono">(bob)</span>
+            <span className="text-[10px] text-stone-500 font-mono">(charlie)</span>
           </button>
         </div>
       </div>
+
     </div>
   );
 }

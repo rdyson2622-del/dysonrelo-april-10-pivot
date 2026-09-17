@@ -255,9 +255,9 @@ export default function CopilotDossierNewsPanel({
           <button
             type="button"
             onClick={() => onViewChange?.('dossier')}
-            className={`px-2 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
+            className={`px-2.5 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
               currentView === 'dossier'
-                ? 'bg-white text-black font-bold shadow-sm'
+                ? 'bg-white text-black font-semibold shadow-sm'
                 : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
           >
@@ -268,10 +268,10 @@ export default function CopilotDossierNewsPanel({
           <button
             type="button"
             onClick={() => onViewChange?.('vetting')}
-            className={`px-2 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
+            className={`px-2.5 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
               currentView === 'vetting'
-                ? 'bg-purple-600 text-white font-bold shadow-sm'
-                : 'text-purple-300 hover:text-white hover:bg-white/10'
+                ? 'bg-white text-black font-semibold shadow-sm'
+                : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
           >
             <Shield className="w-3 h-3" />
@@ -281,10 +281,10 @@ export default function CopilotDossierNewsPanel({
           <button
             type="button"
             onClick={() => onViewChange?.('roadmap')}
-            className={`px-2 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
+            className={`px-2.5 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
               currentView === 'roadmap'
-                ? 'bg-cyan-500 text-black font-bold shadow-sm'
-                : 'text-cyan-300 hover:text-white hover:bg-white/10'
+                ? 'bg-white text-black font-semibold shadow-sm'
+                : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
           >
             <GitBranch className="w-3 h-3" />
@@ -294,10 +294,10 @@ export default function CopilotDossierNewsPanel({
           <button
             type="button"
             onClick={() => onViewChange?.('escrow')}
-            className={`px-2 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
+            className={`px-2.5 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
               currentView === 'escrow'
-                ? 'bg-emerald-600 text-white font-bold shadow-sm'
-                : 'text-emerald-300 hover:text-white hover:bg-white/10'
+                ? 'bg-white text-black font-semibold shadow-sm'
+                : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
           >
             <ShieldCheck className="w-3 h-3" />
@@ -307,9 +307,9 @@ export default function CopilotDossierNewsPanel({
           <button
             type="button"
             onClick={() => onViewChange?.('solutions')}
-            className={`px-2 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
+            className={`px-2.5 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
               currentView === 'solutions'
-                ? 'bg-white text-black font-bold shadow-sm'
+                ? 'bg-white text-black font-semibold shadow-sm'
                 : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
           >
@@ -320,9 +320,9 @@ export default function CopilotDossierNewsPanel({
           <button
             type="button"
             onClick={() => onViewChange?.('news')}
-            className={`px-2 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
+            className={`px-2.5 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
               currentView === 'news'
-                ? 'bg-rose-600 text-white font-bold shadow-sm'
+                ? 'bg-white text-black font-semibold shadow-sm'
                 : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
           >
@@ -414,20 +414,20 @@ export default function CopilotDossierNewsPanel({
       {activeView === 'dossier' && (
         <div className="space-y-4">
           {/* Charlie's Opening Statement Banner */}
-          <div className="rounded-xl border border-white/20 bg-gradient-to-r from-[#141414] via-[#111111] to-[#121212] p-3.5 sm:p-4 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="rounded-xl border border-white/10 bg-[#121212] p-4 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-[10px] font-mono uppercase tracking-widest text-white font-bold">
-                  {dossierData.isMlsEmpty ? "MLS RECORD NOT FOUND" : "FIDUCIARY AUDIT COMPLETE"}
+                <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
+                <span className="text-[10px] font-sans tracking-wide text-stone-400">
+                  {dossierData.isMlsEmpty ? "Listing Record Search" : "Advisory Property Overview"}
                 </span>
               </div>
-              <h2 className="text-sm sm:text-base font-bold text-white tracking-wide">
+              <h2 className="text-sm sm:text-base font-semibold text-white tracking-wide">
                 {dossierData.isMlsEmpty
                   ? `No listing records found for ${dossierData.shortAddress}`
-                  : `I've audited ${dossierData.shortAddress}. Can we help?`}
+                  : `Property overview for ${dossierData.shortAddress}`}
               </h2>
-              <p className="text-xs text-stone-300">
+              <p className="text-xs text-stone-300 leading-relaxed font-sans">
                 {dossierData.marketSummary}
               </p>
             </div>
@@ -442,7 +442,7 @@ export default function CopilotDossierNewsPanel({
                     onPromptClick?.("Text full report to my mobile");
                   }
                 }}
-                className="px-3.5 py-1.5 rounded-full bg-white hover:bg-stone-100 text-black font-bold text-xs flex items-center gap-1.5 transition-all shadow-md cursor-pointer border border-white"
+                className="px-3.5 py-1.5 rounded-full bg-white hover:bg-stone-200 text-black font-semibold text-xs flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
               >
                 <span>Text Me Report</span>
                 <span>→</span>
@@ -450,11 +450,22 @@ export default function CopilotDossierNewsPanel({
             </div>
           </div>
 
-          {/* Property Audit Header Label (no duplicate city copy) */}
-          <div className="pb-1 flex items-center justify-between">
-            <span className="text-[10.5px] font-bold tracking-widest text-white uppercase font-mono truncate">
-              PROPERTY AUDIT • {dossierData.shortAddress?.toUpperCase()}
-              {dossierData.city && !dossierData.shortAddress?.toLowerCase().includes(dossierData.city.toLowerCase().split(',')[0]) ? ` (${dossierData.city.toUpperCase()})` : ''}
+          {/* Partnership Anchor: Referral Agreement Context */}
+          <div className="p-3.5 rounded-lg bg-[#141310] border border-[#D4AF37]/25 text-xs text-stone-300 space-y-1">
+            <div className="flex items-center gap-1.5 text-[#D4AF37] font-medium text-[11.5px]">
+              <FileText className="w-3.5 h-3.5 shrink-0" />
+              <span>CoPilot Partnership with Your Agent</span>
+            </div>
+            <p className="text-[11px] text-stone-300 leading-relaxed font-sans">
+              Under our structured referral agreement, CoPilot remains actively involved throughout your purchase alongside your matched buyer's agent—providing continuous market intelligence, second-look comps, and contingency tracking to empower your decisions.
+            </p>
+          </div>
+
+          {/* Property Overview Header Label */}
+          <div className="pb-0.5 flex items-center justify-between text-xs text-stone-400 font-sans">
+            <span className="font-medium text-stone-300 truncate">
+              Property Overview · {dossierData.shortAddress}
+              {dossierData.city && !dossierData.shortAddress?.toLowerCase().includes(dossierData.city.toLowerCase().split(',')[0]) ? `, ${dossierData.city}` : ''}
             </span>
           </div>
 
@@ -573,32 +584,32 @@ export default function CopilotDossierNewsPanel({
             </div>
           )}
 
-          {/* Card 1: Honest Comps */}
-          <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-lg">
+          {/* Card 1: Comparable Market Sales */}
+          <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-sm">
             <div className="flex items-center gap-2">
-              <Scale className="w-4 h-4 text-white" />
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-white">
-                HONEST COMPS
+              <Scale className="w-4 h-4 text-[#D4AF37]" />
+              <h3 className="text-xs sm:text-sm font-semibold text-white">
+                Comparable Market Sales
               </h3>
             </div>
-            <p className="text-[11px] text-stone-400 font-medium">
-              Sold 30–90 days | Within 0.75 mi | Adjusted to current market
+            <p className="text-[11px] text-stone-400">
+              Recent verified sales within 0.75 mi · Adjusted for square footage &amp; condition
             </p>
 
             {dossierData.comps && dossierData.comps.length > 0 ? (
               <div className="space-y-1.5 pt-1 text-[11.5px] font-mono">
                 {dossierData.comps.map((comp, idx) => (
-                  <div key={idx} className="flex flex-wrap items-center justify-between text-stone-300 py-1 border-b border-white/10 gap-2">
-                    <span className="font-bold text-white w-32 sm:w-36 truncate">{comp.address}</span>
+                  <div key={idx} className="flex flex-wrap items-center justify-between text-stone-300 py-1 border-b border-white/5 gap-2">
+                    <span className="font-medium text-white w-32 sm:w-36 truncate">{comp.address}</span>
                     <span className="text-stone-400">{comp.distance}</span>
                     <span className="text-stone-400">{comp.specs}</span>
                     <span className="text-stone-300">{comp.soldPrice}</span>
-                    <span className="text-white font-bold">{comp.adjPrice}</span>
+                    <span className="text-white font-semibold">{comp.adjPrice}</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="py-2.5 px-3 rounded-lg bg-[#181818] border border-white/10 text-xs text-stone-300 space-y-1">
+              <div className="py-2.5 px-3 rounded-lg bg-[#161616] border border-white/5 text-xs text-stone-300 space-y-1">
                 <p className="text-white font-medium">
                   {dossierData.inputType === 'mls' || dossierData.isMlsEmpty
                     ? "No listing records found for this MLS#."
@@ -607,65 +618,65 @@ export default function CopilotDossierNewsPanel({
                 <p className="text-stone-400 text-[11px]">
                   {dossierData.inputType === 'mls' || dossierData.isMlsEmpty
                     ? "Try the full street address or paste the listing URL for a more reliable lookup."
-                    : (dossierData.compsSummary || "Subject property record verified via BatchData registry. Independent discovery with local desk recommended.")}
+                    : (dossierData.compsSummary || "Subject property record verified via registry. Independent discovery with local desk recommended.")}
                 </p>
               </div>
             )}
 
             {dossierData.comps && dossierData.comps.length > 0 && (
-              <p className="text-[11px] font-semibold text-white pt-1">
+              <p className="text-[11px] text-stone-300 pt-1 font-sans leading-relaxed">
                 {dossierData.compsSummary}
               </p>
             )}
           </div>
 
-          {/* Card 2: Hidden Risks */}
-          <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-lg">
+          {/* Card 2: Property & Environmental Considerations */}
+          <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-sm">
             <div className="flex items-center gap-2">
-              <ShieldAlert className="w-4 h-4 text-white" />
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-white">
-                HIDDEN RISKS
+              <ShieldAlert className="w-4 h-4 text-[#D4AF37]" />
+              <h3 className="text-xs sm:text-sm font-semibold text-white">
+                Property &amp; Environmental Considerations
               </h3>
             </div>
 
-            <div className="space-y-2.5 text-xs">
+            <div className="space-y-2 text-xs">
               {dossierData.risks.map((risk, idx) => {
                 const IconComp = idx === 0 ? Scale : idx === 1 ? Waves : Clock;
                 return (
                   <div key={risk.id || idx} className="flex items-start gap-2.5">
-                    <IconComp className="w-4 h-4 text-white shrink-0 mt-0.5" />
+                    <IconComp className="w-4 h-4 text-stone-400 shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="font-bold text-white">{risk.title}</h4>
-                      <p className="text-stone-400 text-[11px]">{risk.desc}</p>
+                      <h4 className="font-medium text-white">{risk.title}</h4>
+                      <p className="text-stone-400 text-[11px] leading-relaxed">{risk.desc}</p>
                     </div>
                   </div>
                 );
               })}
             </div>
 
-            <p className="text-[11px] font-semibold text-white pt-1">
+            <p className="text-[11px] text-stone-300 pt-1 font-sans leading-relaxed">
               {dossierData.risksSummary}
             </p>
           </div>
 
-          {/* Card 3: Transaction Compliance & Discovery */}
-          <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-lg">
+          {/* Card 3: Contract & Advisory Discovery */}
+          <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-sm">
             <div className="flex items-center gap-2">
-              <Shield className="w-4 h-4 text-white" />
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-white">
-                COMPLIANCE &amp; DISCOVERY
+              <Shield className="w-4 h-4 text-[#D4AF37]" />
+              <h3 className="text-xs sm:text-sm font-semibold text-white">
+                Contract &amp; Advisory Discovery
               </h3>
             </div>
-            <p className="text-[11px] text-stone-400 font-medium">
-              Case-by-case legal &amp; lender review | {dossierData.complianceBasis || 'Specific property issue audit'}
+            <p className="text-[11px] text-stone-400">
+              Guidance for independent legal, title, and lender review · {dossierData.complianceBasis || 'Specific property issue audit'}
             </p>
 
-            <div className="bg-[#181818] border border-white/10 rounded-lg p-3 sm:p-3.5 flex items-center justify-between">
-              <span className="text-xs sm:text-sm font-semibold text-white">
+            <div className="bg-[#161616] border border-white/5 rounded-lg p-3 sm:p-3.5 flex items-center justify-between">
+              <span className="text-xs sm:text-sm font-medium text-white">
                 Transaction Review
               </span>
               <div className="text-right">
-                <div className="text-xs sm:text-sm font-bold font-mono text-white">
+                <div className="text-xs sm:text-sm font-medium font-mono text-white">
                   {dossierData.complianceProtocol || 'Individual Discovery'}
                 </div>
                 <div className="text-[10px] text-stone-400 font-mono">
@@ -674,8 +685,8 @@ export default function CopilotDossierNewsPanel({
               </div>
             </div>
 
-            <p className="text-[11px] text-stone-300 pt-0.5 leading-relaxed">
-              All transaction terms, concessions, or credits require individual discovery checked against state, federal, and lender regulations.
+            <p className="text-[11px] text-stone-400 pt-0.5 leading-relaxed font-sans">
+              All transaction terms, concessions, or credits require individual discovery checked against state, federal, and lender regulations with your licensed representation.
             </p>
           </div>
         </div>

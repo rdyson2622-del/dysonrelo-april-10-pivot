@@ -19,23 +19,23 @@ export const CORE_EXECUTION_MINIONS = [
     label: 'Property Audit',
     copy: 'Comps & Risks',
     icon: Scale,
-    iconColor: '#e8c84a',
-    bgGradient: 'from-[#332a18] via-[#1a160d] to-[#0a0a0a]',
-    border: 'border-[#D4AF37]',
-    badge: 'ACTIVE',
-    badgeColor: 'bg-[#D4AF37] text-black font-extrabold',
+    iconColor: '#D4AF37',
+    bgGradient: 'from-[#201d17] via-[#161511] to-[#0d0d0d]',
+    border: 'border-[#D4AF37]/50',
+    badge: 'Active',
+    badgeColor: 'bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40',
     isActiveDoor: true
   },
   {
     id: 'vetting',
     label: 'Agent Vetting',
-    copy: 'Fiduciary Match',
+    copy: 'Buyer Advocacy',
     icon: Shield,
-    iconColor: '#c084fc',
-    bgGradient: 'from-[#4c1d95] via-[#2e1065] to-[#0a0a0a]',
-    border: 'border-purple-500/80',
-    badge: 'ACTIVE',
-    badgeColor: 'bg-purple-600 text-white font-extrabold',
+    iconColor: '#d6c8b4',
+    bgGradient: 'from-[#1c1b18] via-[#141412] to-[#0d0d0d]',
+    border: 'border-white/20',
+    badge: 'Active',
+    badgeColor: 'bg-white/10 text-stone-300 border border-white/20',
     isActiveDoor: true
   },
   {
@@ -43,23 +43,23 @@ export const CORE_EXECUTION_MINIONS = [
     label: 'Move Roadmap',
     copy: '7-Phase Timeline',
     icon: GitBranch,
-    iconColor: '#38bdf8',
-    bgGradient: 'from-[#0369a1] via-[#075985] to-[#0a0a0a]',
-    border: 'border-cyan-500/80',
-    badge: 'ACTIVE',
-    badgeColor: 'bg-cyan-600 text-black font-extrabold',
+    iconColor: '#d6c8b4',
+    bgGradient: 'from-[#1c1b18] via-[#141412] to-[#0d0d0d]',
+    border: 'border-white/20',
+    badge: 'Active',
+    badgeColor: 'bg-white/10 text-stone-300 border border-white/20',
     isActiveDoor: true
   },
   {
     id: 'escrow',
     label: 'Escrow Watch',
-    copy: 'Deposit Defense',
+    copy: 'Deposit Diligence',
     icon: ShieldCheck,
-    iconColor: '#34d399',
-    bgGradient: 'from-[#065f46] via-[#022c22] to-[#0a0a0a]',
-    border: 'border-emerald-500/80',
-    badge: 'ACTIVE',
-    badgeColor: 'bg-emerald-600 text-white font-extrabold',
+    iconColor: '#d6c8b4',
+    bgGradient: 'from-[#1c1b18] via-[#141412] to-[#0d0d0d]',
+    border: 'border-white/20',
+    badge: 'Active',
+    badgeColor: 'bg-white/10 text-stone-300 border border-white/20',
     isActiveDoor: true
   },
   {
@@ -67,11 +67,11 @@ export const CORE_EXECUTION_MINIONS = [
     label: 'DNN News',
     copy: 'Daily Broadcast',
     icon: Newspaper,
-    iconColor: '#ef4444',
-    bgGradient: 'from-[#450a0a] via-[#1f0a0a] to-[#0a0a0a]',
-    border: 'border-rose-500/80',
-    badge: 'LIVE',
-    badgeColor: 'bg-rose-500 text-white font-extrabold animate-pulse',
+    iconColor: '#d6c8b4',
+    bgGradient: 'from-[#1c1b18] via-[#141412] to-[#0d0d0d]',
+    border: 'border-white/20',
+    badge: 'Daily',
+    badgeColor: 'bg-white/10 text-stone-300 border border-white/20',
     isActiveDoor: true
   }
 ];
@@ -90,18 +90,15 @@ export default function CopilotMiniAppsRail({
     <aside className={`w-full bg-[#0a0a0a] border-t border-white/10 px-3 sm:px-4 py-2.5 select-none relative z-30 ${className}`}>
       
       {/* Mini App Rail Header */}
-      <div className="flex items-center justify-between pb-1.5 px-0.5 text-[9.5px] font-mono tracking-wider">
+      <div className="flex items-center justify-between pb-1.5 px-0.5 text-[10px] font-sans">
         <div className="flex items-center gap-2">
-          <span className="text-[#D4AF37] font-bold uppercase">EXECUTION DOORS:</span>
-          <span className="text-stone-400 font-sans hidden sm:inline">Tap to switch Right Panel &amp; tune Charlie &amp; Bob</span>
+          <span className="text-stone-300 font-medium">Advisory Sequence:</span>
+          <span className="text-stone-400 hidden sm:inline">Select a stage to explore intelligence and guidance</span>
         </div>
-        <div className="flex items-center gap-2 text-stone-500">
-          <span className="flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-            <span>4 Active Doors</span>
-          </span>
+        <div className="flex items-center gap-2 text-stone-400 text-[10px]">
+          <span>4 Primary Stages</span>
           <span>·</span>
-          <span>Parked Back-Office</span>
+          <span>Back-Office Support</span>
         </div>
       </div>
 
