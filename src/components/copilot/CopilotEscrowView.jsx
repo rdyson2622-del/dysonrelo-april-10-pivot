@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   ShieldCheck, AlertTriangle, 
-  FileText, MessageSquare, ArrowRight, Scale, Check
+  FileText, MessageSquare, ArrowRight, Scale, Check,
+  ChevronDown, ChevronUp
 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
@@ -12,6 +13,9 @@ export default function CopilotEscrowView({
   onOpenCaptureModal
 }) {
   const shortAddr = propertyAddress ? propertyAddress.split(',')[0] : 'Subject Property';
+  const [isPartnershipOpen, setIsPartnershipOpen] = useState(false);
+  const [isGuardrailsOpen, setIsGuardrailsOpen] = useState(false);
+  const [expandedTrapIdx, setExpandedTrapIdx] = useState(null);
 
   const traps = [
     {
@@ -79,83 +83,199 @@ export default function CopilotEscrowView({
         </button>
       </div>
 
-      {/* Referral Agreement Partnership Callout */}
-      <div className="p-3.5 rounded-lg bg-[#141310] border border-[#D4AF37]/25 text-xs text-stone-300 space-y-1">
-        <div className="flex items-center gap-1.5 text-[#D4AF37] font-medium text-[11.5px]">
-          <FileText className="w-3.5 h-3.5 shrink-0" />
-          <span>Fiduciary Partnership Anchored in the Referral Agreement</span>
-        </div>
-        <p className="text-[11px] text-stone-300 leading-relaxed font-sans">
-          CoPilot does not close the transaction or replace your escrow officer. Through our formal referral agreement, we stay actively engaged alongside you and your agent as an extra set of analytical eyes—helping track deadlines, title exceptions, and contract protections.
-        </p>
-      </div>
-
-      {/* Escrow Health Metrics Card */}
-      <div className="rounded-xl border border-white/10 bg-[#111111] p-4 sm:p-5 space-y-3">
-        <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-[#D4AF37]" />
-            <h3 className="text-xs sm:text-sm font-semibold text-white">
-              Core Escrow &amp; Deposit Guardrails
-            </h3>
-          </div>
-          <span className="text-[10px] text-stone-400 font-sans">California Standards</span>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-0.5 text-xs">
-          <div className="p-3 rounded-lg bg-[#161616] border border-white/5 space-y-1">
-            <span className="text-[10px] text-stone-400 block font-sans">EARNEST MONEY NORM</span>
-            <span className="text-white font-medium text-xs">Up to 3% (Civ. Code 1675)</span>
-          </div>
-          <div className="p-3 rounded-lg bg-[#161616] border border-white/5 space-y-1">
-            <span className="text-[10px] text-stone-400 block font-sans">CONTINGENCY RELEASES</span>
-            <span className="text-white font-medium text-xs">Affirmative Written Notice</span>
-          </div>
-          <div className="p-3 rounded-lg bg-[#161616] border border-white/5 space-y-1">
-            <span className="text-[10px] text-stone-400 block font-sans">TITLE DISCOVERY</span>
-            <span className="text-white font-medium text-xs">Schedule B Exception Review</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Critical Escrow Considerations */}
-      <div className="bg-[#111111] border border-white/10 rounded-xl p-4 sm:p-5 space-y-3">
-        <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
-          <div className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-[#D4AF37]" />
-            <h3 className="text-xs sm:text-sm font-semibold text-white">
-              Key Escrow Milestones to Review with Your Agent
-            </h3>
-          </div>
-          <span className="text-[10px] text-stone-400 font-sans">Transaction Diligence</span>
-        </div>
-
-        <div className="space-y-2 pt-0.5">
-          {traps.map((t, idx) => (
-            <div key={idx} className="p-3.5 rounded-lg bg-[#161616] border border-white/5 space-y-1.5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                <h4 className="text-xs font-medium text-white flex items-center gap-1.5">
-                  <span className="w-4 h-4 rounded-full bg-white/10 text-[10px] font-sans flex items-center justify-center shrink-0">
-                    {idx + 1}
-                  </span>
-                  <span>{t.title}</span>
-                </h4>
-                <span className="text-[9.5px] text-stone-400 bg-white/5 px-2 py-0.5 rounded font-sans self-start sm:self-auto">
-                  {t.statute}
+      {/* ── CARD 1: PARTNERSHIP UNDER REFERRAL AGREEMENT (ONE-LINER ACCORDION) ── */}
+      <div
+        className={`rounded-xl border transition-all duration-200 overflow-hidden ${
+          isPartnershipOpen 
+            ? 'border-[#D4AF37]/50 bg-[#161512] shadow-md' 
+            : 'border-white/10 bg-[#111111] hover:border-white/20 hover:bg-[#141414]'
+        }`}
+      >
+        <button
+          type="button"
+          onClick={() => setIsPartnershipOpen(!isPartnershipOpen)}
+          className="w-full px-3.5 py-2.5 flex items-center justify-between text-left cursor-pointer group gap-2"
+          aria-expanded={isPartnershipOpen}
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-6 h-6 rounded-md bg-[#D4AF37]/15 text-[#D4AF37] flex items-center justify-center shrink-0">
+              <FileText className="w-3.5 h-3.5" />
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-[9px] font-mono text-stone-400 uppercase tracking-wider">
+                  PARTNERSHIP
+                </span>
+                <span className="text-stone-600">·</span>
+                <span className="text-[9px] text-stone-400 font-sans">
+                  Referral Agreement
                 </span>
               </div>
+              <h3 className={`text-xs sm:text-[13px] font-medium transition-colors truncate ${
+                isPartnershipOpen ? 'text-[#D4AF37] font-semibold' : 'text-white group-hover:text-stone-200'
+              }`}>
+                Fiduciary Partnership Anchored in Referral Agreement
+              </h3>
+            </div>
+          </div>
 
-              <p className="text-[11px] text-stone-400 leading-relaxed pl-5.5 font-sans">
-                {t.desc}
-              </p>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-[9px] font-mono text-stone-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full hidden sm:inline">
+              Ongoing Diligence
+            </span>
+            <div className={`p-1 rounded-md transition-colors ${
+              isPartnershipOpen ? 'text-[#D4AF37] bg-[#D4AF37]/10' : 'text-stone-400 group-hover:text-white'
+            }`}>
+              {isPartnershipOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </div>
+          </div>
+        </button>
 
-              <div className="text-[11px] text-stone-300 pl-5.5 pt-0.5 flex items-center gap-1.5 font-sans">
-                <Check className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-                <span><strong>Advisory Note:</strong> {t.guidance}</span>
+        {isPartnershipOpen && (
+          <div className="px-3.5 pb-3.5 pt-1 border-t border-white/10 space-y-2 animate-in fade-in duration-150">
+            <p className="text-xs text-stone-300 leading-relaxed font-sans pt-1">
+              CoPilot does not close the transaction or replace your escrow officer. Through our formal referral agreement, we stay actively engaged alongside you and your agent as an extra set of analytical eyes—helping track deadlines, title exceptions, and contract protections.
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* ── CARD 2: CORE ESCROW & DEPOSIT GUARDRAILS (ONE-LINER ACCORDION) ── */}
+      <div
+        className={`rounded-xl border transition-all duration-200 overflow-hidden ${
+          isGuardrailsOpen 
+            ? 'border-[#D4AF37]/50 bg-[#161512] shadow-md' 
+            : 'border-white/10 bg-[#111111] hover:border-white/20 hover:bg-[#141414]'
+        }`}
+      >
+        <button
+          type="button"
+          onClick={() => setIsGuardrailsOpen(!isGuardrailsOpen)}
+          className="w-full px-3.5 py-2.5 flex items-center justify-between text-left cursor-pointer group gap-2"
+          aria-expanded={isGuardrailsOpen}
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-6 h-6 rounded-md bg-[#D4AF37]/15 text-[#D4AF37] flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-3.5 h-3.5" />
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-[9px] font-mono text-stone-400 uppercase tracking-wider">
+                  GUARDRAILS
+                </span>
+                <span className="text-stone-600">·</span>
+                <span className="text-[9px] text-stone-400 font-sans">
+                  California Standards
+                </span>
+              </div>
+              <h3 className={`text-xs sm:text-[13px] font-medium transition-colors truncate ${
+                isGuardrailsOpen ? 'text-[#D4AF37] font-semibold' : 'text-white group-hover:text-stone-200'
+              }`}>
+                Core Escrow &amp; Deposit Guardrails
+              </h3>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-[9px] font-mono text-stone-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full hidden sm:inline">
+              3 Protections
+            </span>
+            <div className={`p-1 rounded-md transition-colors ${
+              isGuardrailsOpen ? 'text-[#D4AF37] bg-[#D4AF37]/10' : 'text-stone-400 group-hover:text-white'
+            }`}>
+              {isGuardrailsOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </div>
+          </div>
+        </button>
+
+        {isGuardrailsOpen && (
+          <div className="px-3.5 pb-3.5 pt-1 border-t border-white/10 space-y-2.5 animate-in fade-in duration-150">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-xs">
+              <div className="p-2.5 rounded-lg bg-[#161616] border border-white/5 space-y-1">
+                <span className="text-[9.5px] text-stone-400 block font-sans">EARNEST MONEY NORM</span>
+                <span className="text-white font-medium text-xs">Up to 3% (Civ. Code § 1675)</span>
+              </div>
+              <div className="p-2.5 rounded-lg bg-[#161616] border border-white/5 space-y-1">
+                <span className="text-[9.5px] text-stone-400 block font-sans">CONTINGENCY RELEASES</span>
+                <span className="text-white font-medium text-xs">Affirmative Written Notice</span>
+              </div>
+              <div className="p-2.5 rounded-lg bg-[#161616] border border-white/5 space-y-1">
+                <span className="text-[9.5px] text-stone-400 block font-sans">TITLE DISCOVERY</span>
+                <span className="text-white font-medium text-xs">Schedule B Exception Review</span>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        )}
+      </div>
+
+      {/* ── CARD 3: KEY ESCROW MILESTONES & TRAPS (UNIFORM ONE-LINER ACCORDIONS) ── */}
+      <div className="space-y-1.5 pt-0.5">
+        {traps.map((t, idx) => {
+          const isSelected = expandedTrapIdx === idx;
+          return (
+            <div 
+              key={idx}
+              className={`rounded-xl border transition-all duration-200 overflow-hidden ${
+                isSelected 
+                  ? 'border-[#D4AF37]/50 bg-[#161512] shadow-md' 
+                  : 'border-white/10 bg-[#111111] hover:border-white/20 hover:bg-[#141414]'
+              }`}
+            >
+              <button
+                type="button"
+                onClick={() => setExpandedTrapIdx(isSelected ? null : idx)}
+                className="w-full px-3.5 py-2.5 flex items-center justify-between text-left cursor-pointer group gap-2"
+                aria-expanded={isSelected}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-6 h-6 rounded-md bg-[#D4AF37]/15 text-[#D4AF37] font-bold text-xs flex items-center justify-center shrink-0">
+                    {idx + 1}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] font-mono text-stone-400 uppercase tracking-wider">
+                        MILESTONE {idx + 1}
+                      </span>
+                      <span className="text-stone-600">·</span>
+                      <span className="text-[9px] text-stone-400 font-sans truncate">
+                        {t.statute}
+                      </span>
+                    </div>
+                    <h3 className={`text-xs sm:text-[13px] font-medium transition-colors truncate ${
+                      isSelected ? 'text-[#D4AF37] font-semibold' : 'text-white group-hover:text-stone-200'
+                    }`}>
+                      {t.title}
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-[9px] font-mono text-stone-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full hidden sm:inline">
+                    {t.statute}
+                  </span>
+                  <div className={`p-1 rounded-md transition-colors ${
+                    isSelected ? 'text-[#D4AF37] bg-[#D4AF37]/10' : 'text-stone-400 group-hover:text-white'
+                  }`}>
+                    {isSelected ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  </div>
+                </div>
+              </button>
+
+              {isSelected && (
+                <div className="px-3.5 pb-3.5 pt-1 border-t border-white/10 space-y-2.5 animate-in fade-in duration-150">
+                  <p className="text-xs text-stone-300 leading-relaxed font-sans pt-1">
+                    {t.desc}
+                  </p>
+
+                  <div className="p-2.5 rounded-lg bg-[#181818] border border-white/5 flex items-center gap-2 text-xs text-stone-300 font-sans">
+                    <Check className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+                    <span><strong>Advisory Note:</strong> {t.guidance}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* Dialogue Prompts */}

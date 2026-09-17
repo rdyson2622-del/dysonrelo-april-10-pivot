@@ -2,8 +2,8 @@ import React, { useState, useRef } from 'react';
 import { 
   Scale, ShieldAlert, Shield, DollarSign, Waves, Clock, Radio, 
   Maximize2, Minimize2, Newspaper, Sparkles, Play, Pause,
-  Share2, Volume2, VolumeX, ChevronRight, MessageSquare, BookOpen, FileText,
-  ArrowLeft, X, RotateCcw, GitBranch, ShieldCheck
+  Share2, Volume2, VolumeX, ChevronRight, ChevronDown, ChevronUp,
+  MessageSquare, BookOpen, FileText, ArrowLeft, X, RotateCcw, GitBranch, ShieldCheck, Home
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -45,7 +45,15 @@ export default function CopilotDossierNewsPanel({
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [selectedVaultSubject, setSelectedVaultSubject] = useState(null);
+  const [openAuditAccordions, setOpenAuditAccordions] = useState({});
   const videoRef = useRef(null);
+
+  const toggleAuditAccordion = (key) => {
+    setOpenAuditAccordions(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
 
   // Fetch real broadcast data if available
   const { data: broadcasts = [] } = useQuery({
@@ -227,20 +235,20 @@ export default function CopilotDossierNewsPanel({
         onToggleExplode={onToggleExplode}
       />
 
-      {/* ── TOP CONTROLS & VIEW SWITCHER: Back button on far left, controls grouped on the right ── */}
+      {/* ── TOP CONTROLS & VIEW SWITCHER: Frozen Left Trio (Back, Search, Clear) + Scrollable Doors ── */}
       <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-white/10 mt-4">
-        <button
-          type="button"
-          onClick={handleIntelligenceBack}
-          className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#141414] hover:bg-white/10 text-[#D4AF37] hover:text-white border border-white/20 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:bg-white active:text-black shrink-0"
-          title="Back"
-        >
-          <ArrowLeft className="w-3.5 h-3.5 text-[#D4AF37]" />
-          <span>Back</span>
-        </button>
+        {/* Frozen Trio: Back, Search, Clear (never scrolled, shrink-0) */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          <button
+            type="button"
+            onClick={handleIntelligenceBack}
+            className="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#141414] hover:bg-white/10 text-[#D4AF37] hover:text-white border border-white/20 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:bg-white active:text-black shrink-0 whitespace-nowrap"
+            title="Back to previous view"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <span>Back</span>
+          </button>
 
-        {/* Unified Button Group: 4 Execution Doors + Solutions, News, Full Screen */}
-        <div className="flex items-center bg-[#141414] p-1 rounded-xl border border-white/15 gap-1 overflow-x-auto scrollbar-thin">
           <button
             type="button"
             onClick={() => {
@@ -250,11 +258,25 @@ export default function CopilotDossierNewsPanel({
                 handleIntelligenceBack();
               }
             }}
-            className="px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1 text-stone-400 hover:text-white hover:bg-white/10 whitespace-nowrap"
+            className="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/20 transition-all cursor-pointer flex items-center gap-1 shadow-sm shrink-0 whitespace-nowrap"
+            title="Return to property address search"
           >
             <span>← Search</span>
           </button>
 
+          <button
+            type="button"
+            onClick={handleClear}
+            className="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white active:bg-white active:text-black border border-white/20 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm shrink-0 whitespace-nowrap"
+            title="Clear content from the screen"
+          >
+            <RotateCcw className="w-3.5 h-3.5 text-stone-400 group-hover:text-white" />
+            <span>Clear</span>
+          </button>
+        </div>
+
+        {/* Scrollable Doors + Full Screen View Switcher */}
+        <div className="flex items-center bg-[#141414] p-1 rounded-xl border border-white/15 gap-1 overflow-x-auto scrollbar-thin min-w-0">
           <button
             type="button"
             onClick={() => handleViewSwitch('dossier')}
@@ -355,16 +377,6 @@ export default function CopilotDossierNewsPanel({
               </>
             )}
           </button>
-
-          <button
-            type="button"
-            onClick={handleClear}
-            className="px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1 text-stone-400 hover:text-white hover:bg-white/10 active:bg-white active:text-black ml-0.5"
-            title="Clear content from the screen"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span>Clear</span>
-          </button>
         </div>
       </div>
 
@@ -425,286 +437,509 @@ export default function CopilotDossierNewsPanel({
       )}
 
       {/* ─────────────────────────────────────────────────────────────
-          VIEW A: FIDUCIARY PROPERTY AUDIT & INTELLIGENCE
+          VIEW A: FIDUCIARY PROPERTY AUDIT & INTELLIGENCE (UNIFORM ACCORDION LIST)
           ───────────────────────────────────────────────────────────── */}
       {activeView === 'dossier' && (
-        <div className="space-y-4">
-          {/* Charlie's Opening Statement Banner */}
-          <div className="rounded-xl border border-white/10 bg-[#121212] p-4 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
-                <span className="text-[10px] font-sans tracking-wide text-stone-400">
-                  {dossierData.isMlsEmpty ? "Listing Record Search" : "Advisory Property Overview"}
-                </span>
-              </div>
-              <h2 className="text-sm sm:text-base font-semibold text-white tracking-wide">
-                {dossierData.isMlsEmpty
-                  ? `No listing records found for ${dossierData.shortAddress}`
-                  : `Property overview for ${dossierData.shortAddress}`}
-              </h2>
-              <p className="text-xs text-stone-300 leading-relaxed font-sans">
-                {dossierData.marketSummary}
-              </p>
-            </div>
-            
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                type="button"
-                onClick={() => {
-                  if (onOpenCaptureModal) {
-                    onOpenCaptureModal();
-                  } else {
-                    onPromptClick?.("Text full report to my mobile");
-                  }
-                }}
-                className="px-3.5 py-1.5 rounded-full bg-white hover:bg-stone-200 text-black font-semibold text-xs flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
+        <div className="space-y-1.5 pt-0.5 text-left font-sans">
+          {/* ── ACCORDION 1: ADVISORY PROPERTY OVERVIEW & VERIFIED ATTRIBUTES ── */}
+          {(() => {
+            const isExpanded = !!openAuditAccordions['overview'];
+            return (
+              <div
+                className={`rounded-xl border transition-all duration-200 overflow-hidden ${
+                  isExpanded 
+                    ? 'border-[#D4AF37]/50 bg-[#161512] shadow-md' 
+                    : 'border-white/10 bg-[#111111] hover:border-white/20 hover:bg-[#141414]'
+                }`}
               >
-                <span>Text Me Report</span>
-                <span>→</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Partnership Anchor: Referral Agreement Context */}
-          <div className="p-3.5 rounded-lg bg-[#141310] border border-[#D4AF37]/25 text-xs text-stone-300 space-y-1">
-            <div className="flex items-center gap-1.5 text-[#D4AF37] font-medium text-[11.5px]">
-              <FileText className="w-3.5 h-3.5 shrink-0" />
-              <span>CoPilot Partnership with Your Agent</span>
-            </div>
-            <p className="text-[11px] text-stone-300 leading-relaxed font-sans">
-              Under our structured referral agreement, CoPilot remains actively involved throughout your purchase alongside your matched buyer's agent—providing continuous market intelligence, second-look comps, and contingency tracking to empower your decisions.
-            </p>
-          </div>
-
-          {/* Property Overview Header Label */}
-          <div className="pb-0.5 flex items-center justify-between text-xs text-stone-400 font-sans">
-            <span className="font-medium text-stone-300 truncate">
-              Property Overview · {dossierData.shortAddress}
-              {dossierData.city && !dossierData.shortAddress?.toLowerCase().includes(dossierData.city.toLowerCase().split(',')[0]) ? `, ${dossierData.city}` : ''}
-            </span>
-          </div>
-
-          {/* Ambiguous Property Selector ("Which property?") */}
-          {dossierData.isAmbiguous && dossierData.ambiguousOptions && dossierData.ambiguousOptions.length > 0 && (
-            <div className="rounded-xl border border-[#D4AF37]/50 bg-[#141414] p-4 space-y-3 shadow-lg">
-              <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
-                <h3 className="text-xs sm:text-sm font-semibold text-white">
-                  Which property on {dossierData.shortAddress}?
-                </h3>
-              </div>
-              <p className="text-xs text-stone-300">
-                Multiple verified street records found. Select an address to load its property overview:
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 max-h-56 overflow-y-auto pr-1 scrollbar-thin">
-                {dossierData.ambiguousOptions.map((opt, oIdx) => (
-                  <button
-                    key={oIdx}
-                    type="button"
-                    onClick={() => {
-                      if (onAuditAddress) {
-                        onAuditAddress(opt.fullAddress);
-                      } else {
-                        onPromptClick?.(opt.fullAddress);
-                      }
-                    }}
-                    className="p-2.5 rounded-lg bg-[#1c1c1c] hover:bg-[#282828] border border-white/15 hover:border-[#D4AF37] text-left transition-all cursor-pointer group"
-                  >
-                    <div className="text-xs font-bold text-white group-hover:text-[#D4AF37] font-mono">
-                      {opt.street}
+                <button
+                  type="button"
+                  onClick={() => toggleAuditAccordion('overview')}
+                  className="w-full px-3.5 py-2.5 flex items-center justify-between text-left cursor-pointer group gap-2"
+                  aria-expanded={isExpanded}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-6 h-6 rounded-md bg-[#D4AF37]/15 text-[#D4AF37] flex items-center justify-center shrink-0">
+                      <Home className="w-3.5 h-3.5" />
                     </div>
-                    <div className="text-[11px] text-stone-400">
-                      {opt.city}, {opt.state} {opt.zip}
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-mono text-stone-400 uppercase tracking-wider">
+                          PROPERTY OVERVIEW
+                        </span>
+                        <span className="text-stone-600">·</span>
+                        <span className="text-[9px] text-stone-400 font-sans truncate">
+                          {dossierData.shortAddress || property}
+                        </span>
+                      </div>
+                      <h3 className={`text-xs sm:text-[13px] font-medium transition-colors truncate ${
+                        isExpanded ? 'text-[#D4AF37] font-semibold' : 'text-white group-hover:text-stone-200'
+                      }`}>
+                        {dossierData.isMlsEmpty ? "Listing Record Search" : `Property Overview · ${dossierData.shortAddress}`}
+                      </h3>
                     </div>
-                    {opt.apn && (
-                      <div className="text-[10px] text-stone-500 font-mono mt-0.5">
-                        APN: {opt.apn}
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="text-[9px] font-mono text-stone-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full hidden sm:inline">
+                      {dossierData.listPrice || (dossierData.isMlsEmpty ? 'Search' : 'Verified')}
+                    </span>
+                    <div className={`p-1 rounded-md transition-colors ${
+                      isExpanded ? 'text-[#D4AF37] bg-[#D4AF37]/10' : 'text-stone-400 group-hover:text-white'
+                    }`}>
+                      {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    </div>
+                  </div>
+                </button>
+
+                {isExpanded && (
+                  <div className="px-3.5 pb-3.5 pt-1 border-t border-white/10 space-y-3 animate-in fade-in duration-150">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1">
+                      <p className="text-xs text-stone-300 leading-relaxed font-sans">
+                        {dossierData.marketSummary}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (onOpenCaptureModal) onOpenCaptureModal();
+                          else onPromptClick?.("Text full report to my mobile");
+                        }}
+                        className="px-3 py-1.5 rounded-full bg-white hover:bg-stone-200 text-black font-semibold text-xs flex items-center gap-1.5 transition-all shadow-sm cursor-pointer shrink-0 self-start sm:self-center"
+                      >
+                        <span>Text Me Report</span>
+                        <span>→</span>
+                      </button>
+                    </div>
+
+                    {/* Ambiguous Property Selector */}
+                    {dossierData.isAmbiguous && dossierData.ambiguousOptions && dossierData.ambiguousOptions.length > 0 && (
+                      <div className="rounded-lg border border-[#D4AF37]/40 bg-[#181818] p-3 space-y-2">
+                        <span className="text-[11px] font-semibold text-white block">
+                          Select verified record for {dossierData.shortAddress}:
+                        </span>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-1 scrollbar-thin">
+                          {dossierData.ambiguousOptions.map((opt, oIdx) => (
+                            <button
+                              key={oIdx}
+                              type="button"
+                              onClick={() => {
+                                if (onAuditAddress) onAuditAddress(opt.fullAddress);
+                                else onPromptClick?.(opt.fullAddress);
+                              }}
+                              className="p-2 rounded bg-[#222222] hover:bg-[#2c2c2c] border border-white/10 hover:border-[#D4AF37] text-left transition-all cursor-pointer group"
+                            >
+                              <div className="text-xs font-bold text-white group-hover:text-[#D4AF37] font-mono">
+                                {opt.street}
+                              </div>
+                              <div className="text-[10.5px] text-stone-400">
+                                {opt.city}, {opt.state} {opt.zip}
+                              </div>
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     )}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
 
-          {/* Verified Property Attributes Card */}
-          {dossierData.isVerified && (
-            <div className="rounded-xl border border-white/15 bg-[#121212] p-4 space-y-3 shadow-lg">
-              <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-xs font-bold text-white font-mono uppercase tracking-wide">
-                    {dossierData.listing?.status || 'Active'} {dossierData.listing?.propertyType || ''}
-                  </span>
-                </div>
-                {dossierData.listPrice && (
-                  <span className="text-sm font-bold font-mono text-[#D4AF37]">
-                    {dossierData.listPrice}
-                  </span>
-                )}
-              </div>
+                    {/* Verified Attributes Grid */}
+                    {dossierData.isVerified && (
+                      <div className="rounded-lg border border-white/10 bg-[#161616] p-3 space-y-2.5">
+                        <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                          <span className="text-[11px] font-bold text-white font-mono uppercase">
+                            {dossierData.listing?.status || 'Active'} {dossierData.listing?.propertyType || ''}
+                          </span>
+                          {dossierData.listPrice && (
+                            <span className="text-xs font-bold font-mono text-[#D4AF37]">
+                              {dossierData.listPrice}
+                            </span>
+                          )}
+                        </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-xs font-mono">
-                {dossierData.ids?.apn && (
-                  <div className="p-2 rounded bg-white/5 border border-white/5">
-                    <span className="text-[10px] text-stone-400 block font-sans">APN / PARCEL</span>
-                    <span className="text-white font-bold">{dossierData.ids.apn}</span>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
+                          {dossierData.ids?.apn && (
+                            <div className="p-2 rounded bg-white/5 border border-white/5">
+                              <span className="text-[9.5px] text-stone-400 block font-sans">APN</span>
+                              <span className="text-white font-bold">{dossierData.ids.apn}</span>
+                            </div>
+                          )}
+                          {(dossierData.building?.livingArea || dossierData.sqft) && (
+                            <div className="p-2 rounded bg-white/5 border border-white/5">
+                              <span className="text-[9.5px] text-stone-400 block font-sans">LIVING AREA</span>
+                              <span className="text-white font-bold">
+                                {Number(dossierData.building?.livingArea || dossierData.sqft).toLocaleString()} sf
+                              </span>
+                            </div>
+                          )}
+                          {(dossierData.building?.yearBuilt || dossierData.yearBuilt) && (
+                            <div className="p-2 rounded bg-white/5 border border-white/5">
+                              <span className="text-[9.5px] text-stone-400 block font-sans">YEAR BUILT</span>
+                              <span className="text-white font-bold">{dossierData.building?.yearBuilt || dossierData.yearBuilt}</span>
+                            </div>
+                          )}
+                          {dossierData.valuation?.estimatedValue && (
+                            <div className="p-2 rounded bg-white/5 border border-white/5">
+                              <span className="text-[9.5px] text-stone-400 block font-sans">EST. VALUE</span>
+                              <span className="text-white font-bold">
+                                ~${Number(dossierData.valuation.estimatedValue).toLocaleString()}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+
+                        {(dossierData.listing?.listingNumber || dossierData.listing?.daysOnMarket !== undefined || dossierData.listing?.listingUrl) && (
+                          <div className="flex flex-wrap items-center gap-3 text-[10.5px] text-stone-400 pt-1 border-t border-white/5">
+                            {dossierData.listing?.listingNumber && (
+                              <span>MLS#: <strong className="text-white">{dossierData.listing.listingNumber}</strong></span>
+                            )}
+                            {dossierData.listing?.daysOnMarket !== undefined && dossierData.listing?.daysOnMarket !== '' && (
+                              <span>DOM: <strong className="text-white">{dossierData.listing.daysOnMarket} days</strong></span>
+                            )}
+                            {dossierData.listing?.listingUrl && (
+                              <a 
+                                href={dossierData.listing.listingUrl} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="text-[#D4AF37] hover:underline flex items-center gap-1 ml-auto"
+                              >
+                                <span>Public Listing</span>
+                                <span>↗</span>
+                              </a>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
-                {(dossierData.building?.livingArea || dossierData.sqft) && (
-                  <div className="p-2 rounded bg-white/5 border border-white/5">
-                    <span className="text-[10px] text-stone-400 block font-sans">LIVING AREA</span>
-                    <span className="text-white font-bold">
-                      {Number(dossierData.building?.livingArea || dossierData.sqft).toLocaleString()} sf
-                    </span>
-                  </div>
-                )}
-                {(dossierData.building?.yearBuilt || dossierData.yearBuilt) && (
-                  <div className="p-2 rounded bg-white/5 border border-white/5">
-                    <span className="text-[10px] text-stone-400 block font-sans">YEAR BUILT</span>
-                    <span className="text-white font-bold">{dossierData.building?.yearBuilt || dossierData.yearBuilt}</span>
-                  </div>
-                )}
-                {dossierData.valuation?.estimatedValue && (
-                  <div className="p-2 rounded bg-white/5 border border-white/5">
-                    <span className="text-[10px] text-stone-400 block font-sans">EST. VALUE</span>
-                    <span className="text-white font-bold">
-                      ~${Number(dossierData.valuation.estimatedValue).toLocaleString()}
-                    </span>
-                  </div>
-                )}
               </div>
+            );
+          })()}
 
-              {(dossierData.listing?.listingNumber || dossierData.listing?.daysOnMarket !== undefined || dossierData.listing?.listingUrl) && (
-                <div className="flex flex-wrap items-center gap-3 text-[11px] text-stone-400 pt-1 border-t border-white/5">
-                  {dossierData.listing?.listingNumber && (
-                    <span>MLS#: <strong className="text-white">{dossierData.listing.listingNumber}</strong></span>
-                  )}
-                  {dossierData.listing?.daysOnMarket !== undefined && dossierData.listing?.daysOnMarket !== '' && (
-                    <span>DOM: <strong className="text-white">{dossierData.listing.daysOnMarket} days</strong></span>
-                  )}
-                  {dossierData.listing?.listingUrl && (
-                    <a 
-                      href={dossierData.listing.listingUrl} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="text-[#D4AF37] hover:underline flex items-center gap-1 ml-auto"
-                    >
-                      <span>Public Listing</span>
-                      <span>↗</span>
-                    </a>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Card 1: Honest comps */}
-          <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-sm">
-            <div className="flex items-center gap-2">
-              <Scale className="w-4 h-4 text-[#D4AF37]" />
-              <h3 className="text-xs sm:text-sm font-semibold text-white">
-                Honest comps
-              </h3>
-            </div>
-            <p className="text-[11px] text-stone-400">
-              Recent verified sales within 0.75 mi · Adjusted for square footage &amp; condition
-            </p>
-
-            {dossierData.comps && dossierData.comps.length > 0 ? (
-              <div className="space-y-1.5 pt-1 text-[11.5px] font-mono">
-                {dossierData.comps.map((comp, idx) => (
-                  <div key={idx} className="flex flex-wrap items-center justify-between text-stone-300 py-1 border-b border-white/5 gap-2">
-                    <span className="font-medium text-white w-32 sm:w-36 truncate">{comp.address}</span>
-                    <span className="text-stone-400">{comp.distance}</span>
-                    <span className="text-stone-400">{comp.specs}</span>
-                    <span className="text-stone-300">{comp.soldPrice}</span>
-                    <span className="text-white font-semibold">{comp.adjPrice}</span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="py-2.5 px-3 rounded-lg bg-[#161616] border border-white/5 text-xs text-stone-300 space-y-1">
-                <p className="text-white font-medium">
-                  {dossierData.inputType === 'mls' || dossierData.isMlsEmpty
-                    ? "No listing records found for this MLS#."
-                    : "Property and listing verified. Comparable sales currently unavailable."}
-                </p>
-                <p className="text-stone-400 text-[11px]">
-                  {dossierData.inputType === 'mls' || dossierData.isMlsEmpty
-                    ? "Try the full street address or paste the listing URL for a more reliable lookup."
-                    : (dossierData.compsSummary || "Subject property record verified via registry. Independent discovery with local desk recommended.")}
-                </p>
-              </div>
-            )}
-
-            {dossierData.comps && dossierData.comps.length > 0 && (
-              <p className="text-[11px] text-stone-300 pt-1 font-sans leading-relaxed">
-                {dossierData.compsSummary}
-              </p>
-            )}
-          </div>
-
-          {/* Card 2: Hidden risks */}
-          <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-sm">
-            <div className="flex items-center gap-2">
-              <ShieldAlert className="w-4 h-4 text-[#D4AF37]" />
-              <h3 className="text-xs sm:text-sm font-semibold text-white">
-                Hidden risks
-              </h3>
-            </div>
-
-            <div className="space-y-2 text-xs">
-              {dossierData.risks.map((risk, idx) => {
-                const IconComp = idx === 0 ? Scale : idx === 1 ? Waves : Clock;
-                return (
-                  <div key={risk.id || idx} className="flex items-start gap-2.5">
-                    <IconComp className="w-4 h-4 text-stone-400 shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="font-medium text-white">{risk.title}</h4>
-                      <p className="text-stone-400 text-[11px] leading-relaxed">{risk.desc}</p>
+          {/* ── ACCORDION 2: COPILOT PARTNERSHIP WITH YOUR AGENT ── */}
+          {(() => {
+            const isExpanded = !!openAuditAccordions['partnership'];
+            return (
+              <div
+                className={`rounded-xl border transition-all duration-200 overflow-hidden ${
+                  isExpanded 
+                    ? 'border-[#D4AF37]/50 bg-[#161512] shadow-md' 
+                    : 'border-white/10 bg-[#111111] hover:border-white/20 hover:bg-[#141414]'
+                }`}
+              >
+                <button
+                  type="button"
+                  onClick={() => toggleAuditAccordion('partnership')}
+                  className="w-full px-3.5 py-2.5 flex items-center justify-between text-left cursor-pointer group gap-2"
+                  aria-expanded={isExpanded}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-6 h-6 rounded-md bg-[#D4AF37]/15 text-[#D4AF37] flex items-center justify-center shrink-0">
+                      <FileText className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-mono text-stone-400 uppercase tracking-wider">
+                          PARTNERSHIP
+                        </span>
+                        <span className="text-stone-600">·</span>
+                        <span className="text-[9px] text-stone-400 font-sans">
+                          Referral Agreement
+                        </span>
+                      </div>
+                      <h3 className={`text-xs sm:text-[13px] font-medium transition-colors truncate ${
+                        isExpanded ? 'text-[#D4AF37] font-semibold' : 'text-white group-hover:text-stone-200'
+                      }`}>
+                        CoPilot Partnership with Your Agent
+                      </h3>
                     </div>
                   </div>
-                );
-              })}
-            </div>
 
-            <p className="text-[11px] text-stone-300 pt-1 font-sans leading-relaxed">
-              {dossierData.risksSummary}
-            </p>
-          </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="text-[9px] font-mono text-stone-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full hidden sm:inline">
+                      Fiduciary Advisory
+                    </span>
+                    <div className={`p-1 rounded-md transition-colors ${
+                      isExpanded ? 'text-[#D4AF37] bg-[#D4AF37]/10' : 'text-stone-400 group-hover:text-white'
+                    }`}>
+                      {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    </div>
+                  </div>
+                </button>
 
-          {/* Card 3: Compliance and discovery */}
-          <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-sm">
-            <div className="flex items-center gap-2">
-              <Shield className="w-4 h-4 text-[#D4AF37]" />
-              <h3 className="text-xs sm:text-sm font-semibold text-white">
-                Compliance and discovery
-              </h3>
-            </div>
-            <p className="text-[11px] text-stone-400">
-              Guidance for independent legal, title, and lender review · {dossierData.complianceBasis || 'Specific property issue audit'}
-            </p>
-
-            <div className="bg-[#161616] border border-white/5 rounded-lg p-3 sm:p-3.5 flex items-center justify-between">
-              <span className="text-xs sm:text-sm font-medium text-white">
-                Transaction Review
-              </span>
-              <div className="text-right">
-                <div className="text-xs sm:text-sm font-medium font-mono text-white">
-                  {dossierData.complianceProtocol || 'Individual Discovery'}
-                </div>
-                <div className="text-[10px] text-stone-400 font-mono">
-                  {dossierData.complianceStatus || 'State, Fed & Lender Regs'}
-                </div>
+                {isExpanded && (
+                  <div className="px-3.5 pb-3.5 pt-1 border-t border-white/10 space-y-2.5 animate-in fade-in duration-150">
+                    <p className="text-xs text-stone-300 leading-relaxed font-sans pt-1">
+                      Under our structured referral agreement, CoPilot remains actively involved throughout your purchase alongside your matched buyer's agent—providing continuous market intelligence, second-look comps, and contingency tracking to empower your decisions.
+                    </p>
+                    <div className="pt-1">
+                      <button
+                        type="button"
+                        onClick={() => onPromptClick?.("Bob, how does CoPilot stay involved alongside my agent throughout escrow?")}
+                        className="text-xs text-[#D4AF37] hover:underline flex items-center gap-1 cursor-pointer font-medium"
+                      >
+                        <span>Ask Bob about agent partnership →</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
+            );
+          })()}
 
-            <p className="text-[11px] text-stone-400 pt-0.5 leading-relaxed font-sans">
-              All transaction terms, concessions, or credits require individual discovery checked against state, federal, and lender regulations with your licensed representation.
-            </p>
-          </div>
+          {/* ── ACCORDION 3: HONEST COMPS ── */}
+          {(() => {
+            const isExpanded = !!openAuditAccordions['comps'];
+            const compCount = dossierData.comps?.length || 0;
+            return (
+              <div
+                className={`rounded-xl border transition-all duration-200 overflow-hidden ${
+                  isExpanded 
+                    ? 'border-[#D4AF37]/50 bg-[#161512] shadow-md' 
+                    : 'border-white/10 bg-[#111111] hover:border-white/20 hover:bg-[#141414]'
+                }`}
+              >
+                <button
+                  type="button"
+                  onClick={() => toggleAuditAccordion('comps')}
+                  className="w-full px-3.5 py-2.5 flex items-center justify-between text-left cursor-pointer group gap-2"
+                  aria-expanded={isExpanded}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-6 h-6 rounded-md bg-[#D4AF37]/15 text-[#D4AF37] flex items-center justify-center shrink-0">
+                      <Scale className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-mono text-stone-400 uppercase tracking-wider">
+                          HONEST COMPS
+                        </span>
+                        <span className="text-stone-600">·</span>
+                        <span className="text-[9px] text-stone-400 font-sans">
+                          0.75 mi Radius
+                        </span>
+                      </div>
+                      <h3 className={`text-xs sm:text-[13px] font-medium transition-colors truncate ${
+                        isExpanded ? 'text-[#D4AF37] font-semibold' : 'text-white group-hover:text-stone-200'
+                      }`}>
+                        Honest Comps · Verified Comparable Sales
+                      </h3>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="text-[9px] font-mono text-stone-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full hidden sm:inline">
+                      {compCount} Verified
+                    </span>
+                    <div className={`p-1 rounded-md transition-colors ${
+                      isExpanded ? 'text-[#D4AF37] bg-[#D4AF37]/10' : 'text-stone-400 group-hover:text-white'
+                    }`}>
+                      {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    </div>
+                  </div>
+                </button>
+
+                {isExpanded && (
+                  <div className="px-3.5 pb-3.5 pt-1 border-t border-white/10 space-y-2.5 animate-in fade-in duration-150">
+                    <p className="text-[11px] text-stone-400 pt-1 font-sans">
+                      Recent verified sales within 0.75 mi · Adjusted for square footage &amp; condition
+                    </p>
+
+                    {compCount > 0 ? (
+                      <div className="space-y-1.5 pt-0.5 text-[11.5px] font-mono">
+                        {dossierData.comps.map((comp, idx) => (
+                          <div key={idx} className="flex flex-wrap items-center justify-between text-stone-300 py-1 border-b border-white/5 gap-2">
+                            <span className="font-medium text-white w-32 sm:w-36 truncate">{comp.address}</span>
+                            <span className="text-stone-400">{comp.distance}</span>
+                            <span className="text-stone-400">{comp.specs}</span>
+                            <span className="text-stone-300">{comp.soldPrice}</span>
+                            <span className="text-white font-semibold">{comp.adjPrice}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="py-2.5 px-3 rounded-lg bg-[#161616] border border-white/5 text-xs text-stone-300 space-y-1">
+                        <p className="text-white font-medium">
+                          {dossierData.inputType === 'mls' || dossierData.isMlsEmpty
+                            ? "No listing records found for this MLS#."
+                            : "Property and listing verified. Comparable sales currently unavailable."}
+                        </p>
+                        <p className="text-stone-400 text-[11px]">
+                          {dossierData.inputType === 'mls' || dossierData.isMlsEmpty
+                            ? "Try the full street address or paste the listing URL for a more reliable lookup."
+                            : (dossierData.compsSummary || "Subject property record verified via registry. Independent discovery with local desk recommended.")}
+                        </p>
+                      </div>
+                    )}
+
+                    {compCount > 0 && dossierData.compsSummary && (
+                      <p className="text-xs text-stone-300 pt-1 font-sans leading-relaxed">
+                        {dossierData.compsSummary}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* ── ACCORDION 4: HIDDEN RISKS ── */}
+          {(() => {
+            const isExpanded = !!openAuditAccordions['risks'];
+            const riskCount = dossierData.risks?.length || 0;
+            return (
+              <div
+                className={`rounded-xl border transition-all duration-200 overflow-hidden ${
+                  isExpanded 
+                    ? 'border-[#D4AF37]/50 bg-[#161512] shadow-md' 
+                    : 'border-white/10 bg-[#111111] hover:border-white/20 hover:bg-[#141414]'
+                }`}
+              >
+                <button
+                  type="button"
+                  onClick={() => toggleAuditAccordion('risks')}
+                  className="w-full px-3.5 py-2.5 flex items-center justify-between text-left cursor-pointer group gap-2"
+                  aria-expanded={isExpanded}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-6 h-6 rounded-md bg-amber-500/15 text-amber-400 flex items-center justify-center shrink-0">
+                      <ShieldAlert className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-mono text-stone-400 uppercase tracking-wider">
+                          HIDDEN RISKS
+                        </span>
+                        <span className="text-stone-600">·</span>
+                        <span className="text-[9px] text-stone-400 font-sans">
+                          Topography, Bluff &amp; Permits
+                        </span>
+                      </div>
+                      <h3 className={`text-xs sm:text-[13px] font-medium transition-colors truncate ${
+                        isExpanded ? 'text-[#D4AF37] font-semibold' : 'text-white group-hover:text-stone-200'
+                      }`}>
+                        Hidden Risks &amp; Environmental Factors
+                      </h3>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="text-[9px] font-mono text-stone-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full hidden sm:inline">
+                      {riskCount} Factors
+                    </span>
+                    <div className={`p-1 rounded-md transition-colors ${
+                      isExpanded ? 'text-[#D4AF37] bg-[#D4AF37]/10' : 'text-stone-400 group-hover:text-white'
+                    }`}>
+                      {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    </div>
+                  </div>
+                </button>
+
+                {isExpanded && (
+                  <div className="px-3.5 pb-3.5 pt-1 border-t border-white/10 space-y-3 animate-in fade-in duration-150">
+                    <div className="space-y-2 text-xs pt-1">
+                      {dossierData.risks.map((risk, idx) => {
+                        const IconComp = idx === 0 ? Scale : idx === 1 ? Waves : Clock;
+                        return (
+                          <div key={risk.id || idx} className="flex items-start gap-2.5 p-2 rounded-lg bg-[#161616] border border-white/5">
+                            <IconComp className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
+                            <div>
+                              <h4 className="font-semibold text-white">{risk.title}</h4>
+                              <p className="text-stone-400 text-[11px] leading-relaxed mt-0.5">{risk.desc}</p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {dossierData.risksSummary && (
+                      <p className="text-xs text-stone-300 pt-1 font-sans leading-relaxed">
+                        {dossierData.risksSummary}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* ── ACCORDION 5: COMPLIANCE AND DISCOVERY ── */}
+          {(() => {
+            const isExpanded = !!openAuditAccordions['compliance'];
+            return (
+              <div
+                className={`rounded-xl border transition-all duration-200 overflow-hidden ${
+                  isExpanded 
+                    ? 'border-[#D4AF37]/50 bg-[#161512] shadow-md' 
+                    : 'border-white/10 bg-[#111111] hover:border-white/20 hover:bg-[#141414]'
+                }`}
+              >
+                <button
+                  type="button"
+                  onClick={() => toggleAuditAccordion('compliance')}
+                  className="w-full px-3.5 py-2.5 flex items-center justify-between text-left cursor-pointer group gap-2"
+                  aria-expanded={isExpanded}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-6 h-6 rounded-md bg-emerald-500/15 text-emerald-400 flex items-center justify-center shrink-0">
+                      <Shield className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-mono text-stone-400 uppercase tracking-wider">
+                          COMPLIANCE &amp; DISCOVERY
+                        </span>
+                        <span className="text-stone-600">·</span>
+                        <span className="text-[9px] text-stone-400 font-sans">
+                          State, Fed &amp; Lender Regs
+                        </span>
+                      </div>
+                      <h3 className={`text-xs sm:text-[13px] font-medium transition-colors truncate ${
+                        isExpanded ? 'text-[#D4AF37] font-semibold' : 'text-white group-hover:text-stone-200'
+                      }`}>
+                        Compliance and Discovery Standards
+                      </h3>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="text-[9px] font-mono text-stone-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full hidden sm:inline">
+                      Civ. Code § 1675
+                    </span>
+                    <div className={`p-1 rounded-md transition-colors ${
+                      isExpanded ? 'text-[#D4AF37] bg-[#D4AF37]/10' : 'text-stone-400 group-hover:text-white'
+                    }`}>
+                      {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    </div>
+                  </div>
+                </button>
+
+                {isExpanded && (
+                  <div className="px-3.5 pb-3.5 pt-1 border-t border-white/10 space-y-3 animate-in fade-in duration-150">
+                    <p className="text-[11px] text-stone-400 pt-1 font-sans">
+                      Guidance for independent legal, title, and lender review · {dossierData.complianceBasis || 'Specific property issue audit'}
+                    </p>
+
+                    <div className="bg-[#161616] border border-white/5 rounded-lg p-3 flex items-center justify-between">
+                      <span className="text-xs font-medium text-white">
+                        Transaction Review
+                      </span>
+                      <div className="text-right">
+                        <div className="text-xs font-medium font-mono text-white">
+                          {dossierData.complianceProtocol || 'Individual Discovery'}
+                        </div>
+                        <div className="text-[10px] text-stone-400 font-mono">
+                          {dossierData.complianceStatus || 'State, Fed & Lender Regs'}
+                        </div>
+                      </div>
+                    </div>
+
+                    <p className="text-[11px] text-stone-300 leading-relaxed font-sans">
+                      All transaction terms, concessions, or credits require individual discovery checked against state, federal, and lender regulations with your licensed representation.
+                    </p>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
         </div>
       )}
 
