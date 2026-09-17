@@ -154,7 +154,55 @@ export default function CopilotExplodedSubjectModal({
             }`}
           >
             <Scale className="w-3.5 h-3.5" />
-            <span>Saved Audits</span>
+            <span>Audit</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (selectedItem) onSelectItem?.(null);
+              onViewChange?.('vetting');
+            }}
+            className={`px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+              currentTab === 'vetting' && !selectedItem
+                ? 'bg-white/15 text-white font-semibold'
+                : 'text-stone-400 hover:text-white'
+            }`}
+          >
+            <Shield className="w-3.5 h-3.5" />
+            <span>Vetting</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (selectedItem) onSelectItem?.(null);
+              onViewChange?.('roadmap');
+            }}
+            className={`px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+              currentTab === 'roadmap' && !selectedItem
+                ? 'bg-white/15 text-white font-semibold'
+                : 'text-stone-400 hover:text-white'
+            }`}
+          >
+            <Clock className="w-3.5 h-3.5" />
+            <span>Roadmap</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (selectedItem) onSelectItem?.(null);
+              onViewChange?.('escrow');
+            }}
+            className={`px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+              currentTab === 'escrow' && !selectedItem
+                ? 'bg-white/15 text-white font-semibold'
+                : 'text-stone-400 hover:text-white'
+            }`}
+          >
+            <ShieldAlert className="w-3.5 h-3.5" />
+            <span>Escrow</span>
           </button>
 
           <button
@@ -170,7 +218,7 @@ export default function CopilotExplodedSubjectModal({
             }`}
           >
             <BookOpen className="w-3.5 h-3.5" />
-            <span>Saved Solutions</span>
+            <span>Vault</span>
           </button>
 
           <button
@@ -186,7 +234,7 @@ export default function CopilotExplodedSubjectModal({
             }`}
           >
             <Radio className="w-3.5 h-3.5" />
-            <span>Saved DNN News</span>
+            <span>News</span>
           </button>
 
           <button
@@ -526,6 +574,8 @@ export default function CopilotExplodedSubjectModal({
               propertyAddress={dossierData?.fullAddress || property}
               onPromptClick={handleReturnToCommunication}
               onOpenCaptureModal={onOpenCaptureModal}
+              onSelectSubject={onSelectItem}
+              activeSubject={selectedItem}
             />
           </div>
 
@@ -537,6 +587,8 @@ export default function CopilotExplodedSubjectModal({
               propertyAddress={dossierData?.fullAddress || property}
               onPromptClick={handleReturnToCommunication}
               onOpenCaptureModal={onOpenCaptureModal}
+              onSelectSubject={onSelectItem}
+              activeSubject={selectedItem}
             />
           </div>
 
