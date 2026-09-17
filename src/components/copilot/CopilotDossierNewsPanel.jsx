@@ -596,12 +596,12 @@ export default function CopilotDossierNewsPanel({
             </div>
           )}
 
-          {/* Card 1: Comparable Market Sales */}
+          {/* Card 1: Honest comps */}
           <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-sm">
             <div className="flex items-center gap-2">
               <Scale className="w-4 h-4 text-[#D4AF37]" />
               <h3 className="text-xs sm:text-sm font-semibold text-white">
-                Comparable Market Sales
+                Honest comps
               </h3>
             </div>
             <p className="text-[11px] text-stone-400">
@@ -642,12 +642,12 @@ export default function CopilotDossierNewsPanel({
             )}
           </div>
 
-          {/* Card 2: Property & Environmental Considerations */}
+          {/* Card 2: Hidden risks */}
           <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-sm">
             <div className="flex items-center gap-2">
               <ShieldAlert className="w-4 h-4 text-[#D4AF37]" />
               <h3 className="text-xs sm:text-sm font-semibold text-white">
-                Property &amp; Environmental Considerations
+                Hidden risks
               </h3>
             </div>
 
