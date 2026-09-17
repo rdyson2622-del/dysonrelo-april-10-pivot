@@ -22,17 +22,11 @@ export default function CopilotDynamicStage({
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef(null);
 
-  // If a video changes (e.g. explainer or news), pause previous
-  useEffect(() => {
-    setIsPlaying(false);
-  }, [selectedSubject, activeExplainer, activeView]);
-
   // Determine what type of content to show in the stage:
   // 1. Explicit video from active explainer
   // 2. Selected subject from Solutions Vault (video OR specialized visual diagram)
   // 3. View-based visual/video (News = DNN Broadcast; Vetting = Vetting standards; Roadmap = 7-phase sequence; Escrow = Deposit shield; Audit = Property snapshot)
 
-  // A. Check if an active video is requested
   const hasActiveExplainerVideo = Boolean(activeExplainer?.videoUrl);
   const isSelectedSubjectVideo = Boolean(selectedSubject?.videoUrl);
   const isNewsView = activeView === 'news';
@@ -44,6 +38,29 @@ export default function CopilotDynamicStage({
   const videoTitle = hasActiveExplainerVideo 
     ? (activeExplainer.label || activeExplainer.topic || 'Video Explainer')
     : (isSelectedSubjectVideo ? selectedSubject.title : headline || 'DNN Daily Broadcast');
+
+  // Option A (Auto-play with Audio): Immediately speaks unmuted when videoToPlay is active
+  useEffect(() => {
+    setIsPlaying(false);
+    if (videoRef.current && videoToPlay) {
+      videoRef.current.muted = false;
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => setIsPlaying(true))
+          .catch((err) => {
+            console.log('Unmuted video autoplay attempt:', err);
+            // Graceful fallback if browser requires user interaction before unmuted autoplay
+            if (videoRef.current) {
+              videoRef.current.muted = true;
+              videoRef.current.play()
+                .then(() => setIsPlaying(true))
+                .catch(() => setIsPlaying(false));
+            }
+          });
+      }
+    }
+  }, [videoToPlay, activeView]);
 
   // Toggle play/pause for video
   const togglePlay = (e) => {
@@ -344,33 +361,33 @@ export default function CopilotDynamicStage({
         className="relative w-[66%] max-w-[450px] min-w-[315px] mx-auto overflow-hidden rounded-2xl shadow-2xl border border-[#D4AF37]/60 p-3 sm:p-3.5 flex flex-col justify-between shrink-0 bg-gradient-to-br from-[#1c180e] via-[#121212] to-[#0a0a0a] cursor-pointer group hover:border-[#D4AF37] transition-all"
         style={{ aspectRatio: '16/9' }}
       >
-        <div className="flex items-center justify-between text-[8px] font-mono text-[#D4AF37] border-b border-white/10 pb-1">
-          <span className="font-bold flex items-center gap-1 truncate max-w-[140px]">
-            <Sparkles className="w-2.5 h-2.5 text-[#D4AF37] shrink-0" />
+        <div className="flex items-center justify-between text-[11px] font-mono text-[#D4AF37] border-b border-white/10 pb-1.5">
+          <span className="font-bold flex items-center gap-1.5 truncate max-w-[180px]">
+            <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
             {selectedSubject.categoryLabel || 'FIDUCIARY PLAYBOOK'}
           </span>
           <span className="text-stone-300">{selectedSubject.speaker === 'bob' ? 'Bob Dyson' : 'Charlie'}</span>
         </div>
 
-        <div className="my-auto px-1">
-          <h4 className="text-[9.5px] font-bold text-white line-clamp-2 leading-snug group-hover:text-[#D4AF37] transition-colors">
+        <div className="my-auto px-1.5">
+          <h4 className="text-xs sm:text-[13px] font-bold text-white line-clamp-2 leading-snug group-hover:text-[#D4AF37] transition-colors">
             {selectedSubject.title}
           </h4>
-          <p className="text-[8px] text-stone-400 line-clamp-1 mt-0.5 font-sans">
+          <p className="text-[10px] sm:text-[11px] text-stone-400 line-clamp-1 mt-1 font-sans">
             {selectedSubject.subtitle}
           </p>
         </div>
 
-        <div className="text-[7.5px] text-stone-300 flex items-center justify-between border-t border-white/10 pt-1 font-sans">
+        <div className="text-[10px] sm:text-[11px] text-stone-300 flex items-center justify-between border-t border-white/10 pt-1.5 font-sans">
           <span className="truncate">Active In Dialogue</span>
-          <span className="text-[#D4AF37] group-hover:underline shrink-0">Ask {selectedSubject.speaker === 'bob' ? 'Bob' : 'Charlie'} →</span>
+          <span className="text-[#D4AF37] group-hover:underline shrink-0 font-medium">Ask {selectedSubject.speaker === 'bob' ? 'Bob' : 'Charlie'} →</span>
         </div>
       </div>
     );
   }
 
-  // C. View-Specific Audio Briefing & Visual Stages for 4 Active Execution Doors
-  // (Property Audit, Agent Vetting, Move Roadmap, Escrow Watch)
+  // C. View-Specific Audio Briefing & Visual Stages for Active Execution Doors
+  // (Property Audit, Agent Vetting, Move Roadmap, Escrow Watch, DNN News)
   return (
     <CopilotDoorAudioBriefingStage
       activeDoor={activeView || 'dossier'}

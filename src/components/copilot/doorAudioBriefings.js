@@ -1,13 +1,15 @@
 /**
- * Voice Briefing Strategy Configuration for the 4 Core Execution Doors:
+ * Voice Briefing Strategy Configuration for the 5 Core Execution Doors:
  * 1. Property Audit (Charlie Simmons - Concierge & Valuation Desk)
  * 2. Agent Vetting (Bob Dyson - Principal Broker Fiduciary Standards)
  * 3. Move Roadmap (Charlie Simmons - AI Concierge & Process Director)
  * 4. Escrow Watch (Bob Dyson - Principal Broker Solutions Take)
+ * 5. DNN News (Charlie Simmons & Bob Dyson - DNN Market Desk)
  */
 
 export const BOB_AVATAR = 'https://files2.heygen.ai/talking_photo/31b79a86784e495090472af2e7b9407c/5c0bde249fe348bb8b9dfb07299f608c.WEBP?Expires=1789606882&Signature=YUNW1j0tU8LsI1vb0JnPSMwCFFhUwdI2U1MoECnlYvthEhenxAfg-ws0S6jibQKfxBhXSRobys8qEkDXU-WvfEi4rH1Sej4yZCwxgjlxPNNv9XjJgaTpZDeeMYzQC8A5cLTT3-l~u5Jy~zeoIlaRFJGM2yu4vTRxo2Ul0fPWg4dK-10LrLqrsFrxEITI1uvRsyfP5ysTm1J7HaW9pCVY~1~1z2HB1zmNuMsVYcCowXhZWfyyOAsPySSciYJfIkFN6Xw16C~n7mK1B5twxKAPjW-yV0Cq8H~wCvqAUr9BbBZpTut1jy1kHtWCEmRiju1M-sQOb4ymWXlvLHxP71xlpA__&Key-Pair-Id=K38HBHX5LX3X2H';
 export const CHARLIE_AVATAR = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/6421add7d_Screenshot2026-08-31at40550PM.png';
+export const DNN_BROADCAST_THUMBNAIL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/d5e0cb3f1_Screenshot2026-09-14at81551PM.png';
 
 export const DOOR_AUDIO_BRIEFINGS = {
   dossier: {
@@ -19,10 +21,10 @@ export const DOOR_AUDIO_BRIEFINGS = {
     avatar: CHARLIE_AVATAR,
     accentColor: '#10b981',
     title: 'Property Audit Briefing',
-    subtitle: 'Independent comps, tax records & environmental disclosures',
+    subtitle: 'Independent comps, hazard zones & permit history',
     audioUrl: 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/6f622bb1c_charlie_avatar_clean_vet.mp4',
     spokenText: 'Charlie here. You are now reviewing the Property Audit for this home. We have pulled unvarnished comparable sales, tax records, and hazard disclosures so you have an independent, transparent second-look before discussing offer terms.',
-    promptQuery: 'Charlie, summarize the valuation and risk findings for this property'
+    promptQuery: 'Charlie, walk me through the comps and hidden risks on this property'
   },
   vetting: {
     id: 'vetting',
@@ -33,10 +35,10 @@ export const DOOR_AUDIO_BRIEFINGS = {
     avatar: BOB_AVATAR,
     accentColor: '#D4AF37',
     title: 'Agent Vetting Briefing',
-    subtitle: 'Independent representation standards & referral structure',
+    subtitle: 'Independent representation standards vs. dual agency',
     audioUrl: 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/3400475d9_bobanswer_6a5d2e96818523aa8749508e.mp4',
-    spokenText: 'Bob Dyson here. Independent buyer representation is the cornerstone of protecting your equity. Under our licensed referral structure, we pair you with an elite local buyer specialist while our fiduciary desk stays actively involved alongside you through closing.',
-    promptQuery: 'Bob, how does Dyson & Dyson protect buyers and avoid dual agency?'
+    spokenText: 'Bob Dyson here. Independent buyer representation is the cornerstone of protecting your equity. Under our licensed referral structure, we pair you with an elite local buyer specialist while our fiduciary desk stays actively involved alongside you through closing—with zero dual agency conflicts.',
+    promptQuery: 'Bob, break down the risks of using the listing agent and how independent advocacy works'
   },
   roadmap: {
     id: 'roadmap',
@@ -48,9 +50,9 @@ export const DOOR_AUDIO_BRIEFINGS = {
     accentColor: '#10b981',
     title: 'Move Roadmap Briefing',
     subtitle: '7-Phase timeline from offer formulation to key handover',
-    audioUrl: 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/6f622bb1c_charlie_avatar_clean_vet.mp4',
+    audioUrl: 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/2201470a5_roadmap_6a52cbc75ead5c9873240ccf_charlie.mp4',
     spokenText: 'Charlie here. You are now looking at the Move Roadmap—your 7-phase timeline from offer formulation to key handover. Tap any milestone below to see the exact diligence checkpoints CoPilot monitors at each step.',
-    promptQuery: 'Explain the 7 transaction phases of the Move Roadmap'
+    promptQuery: 'Charlie, explain the 7 transaction phases of the Move Roadmap'
   },
   escrow: {
     id: 'escrow',
@@ -61,9 +63,23 @@ export const DOOR_AUDIO_BRIEFINGS = {
     avatar: BOB_AVATAR,
     accentColor: '#D4AF37',
     title: 'Escrow Watch Briefing',
-    subtitle: 'Earnest money deposit defense & contingency shields',
+    subtitle: 'Earnest money defense, 48-hr notices & title exceptions',
     audioUrl: 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/94b83e0f7_reqa_6a5272697665dffe7b165e0d_bob.mp4',
-    spokenText: 'Bob Dyson here. In California, your earnest money deposit is protected by affirmative written contingencies. We ensure your funds are safeguarded under the 3% statutory cap and review title Schedule B exceptions before any removal is signed.',
-    promptQuery: 'Bob, what are the biggest escrow traps and how do we protect our earnest money deposit?'
+    spokenText: 'Bob Dyson here. In California, your earnest money deposit is protected by affirmative written contingencies under the 3% statutory cap. We review title Schedule B exceptions and track 48-hour notices to perform before any contingency removal is signed.',
+    promptQuery: 'Bob, explain earnest money defense, 48-hour notices to perform, and Schedule B title exceptions'
+  },
+  news: {
+    id: 'news',
+    doorName: 'DNN News',
+    speaker: 'charlie_bob',
+    speakerName: 'Charlie & Bob',
+    speakerRole: 'DNN Daily Market Desk',
+    avatar: DNN_BROADCAST_THUMBNAIL,
+    accentColor: '#D4AF37',
+    title: 'DNN Daily Broadcast',
+    subtitle: 'Coastal market intelligence & migration trends',
+    audioUrl: 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/75165cedb_san-diego-housing-inventory-remains-constrained-amid-sustained-price-resilience.mp4',
+    spokenText: 'Welcome to today’s DNN Daily Broadcast. Charlie Simmons and Bob Dyson present the latest coastal real estate intelligence, inventory constraints, and buyer contingency safeguards.',
+    promptQuery: 'Charlie and Bob, summarize today’s DNN News broadcast'
   }
 };

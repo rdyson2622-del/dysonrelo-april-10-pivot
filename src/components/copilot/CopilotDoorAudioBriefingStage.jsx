@@ -2,25 +2,21 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   Play, Pause, Volume2, VolumeX, RotateCcw, 
   Sparkles, ArrowRight, ShieldCheck, Scale, Shield, GitBranch,
-  CheckCircle2
+  Radio, CheckCircle2
 } from 'lucide-react';
 import { DOOR_AUDIO_BRIEFINGS } from './doorAudioBriefings';
 
 /**
  * CopilotDoorAudioBriefingStage
  * 
- * Standardized Voice Briefing & Visual Stage for the 4 Core Execution Doors:
+ * Standardized Voice Briefing & Visual Stage for the 5 Core Execution Doors:
  * 1. Property Audit (Charlie Simmons - Concierge / Data)
  * 2. Agent Vetting (Bob Dyson - Fiduciary Standards)
  * 3. Move Roadmap (Charlie Simmons - Process / Navigation)
  * 4. Escrow Watch (Bob Dyson - Fiduciary Protection)
+ * 5. DNN News (Charlie Simmons & Bob Dyson - Market Desk)
  * 
- * Features:
- * - Direct audio playback with smooth stop on door change (no overlapping noise)
- * - Subtle rhythmic waveform animation when audio is playing
- * - One-tap accessible Play / Pause, Mute / Unmute, and Replay controls
- * - Speaker persona avatar with glowing activity indicator
- * - Synchronized visual diagram matching each door's subject matter
+ * Playback Mode: Option A (Auto-play with Audio immediately on door change).
  */
 export default function CopilotDoorAudioBriefingStage({
   activeDoor = 'dossier',
@@ -39,7 +35,7 @@ export default function CopilotDoorAudioBriefingStage({
 
   const mediaRef = useRef(null);
 
-  // Gracefully stop previous audio when switching execution doors
+  // OPTION A: Gracefully stop previous audio and immediately auto-play new door unmuted
   useEffect(() => {
     if (mediaRef.current) {
       try {
@@ -51,17 +47,31 @@ export default function CopilotDoorAudioBriefingStage({
     setHasEnded(false);
     setProgress(0);
 
-    // Short settling delay before starting door audio briefing
+    // Option A: Immediately play with audio
     const timer = setTimeout(() => {
       if (mediaRef.current) {
-        mediaRef.current.play()
-          .then(() => setIsPlaying(true))
-          .catch(() => {
-            // Autoplay may be restricted until user interacts with page
-            setIsPlaying(false);
-          });
+        mediaRef.current.muted = false;
+        setIsMuted(false);
+        const playPromise = mediaRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setIsPlaying(true);
+            })
+            .catch((err) => {
+              console.log('Unmuted autoplay attempt:', err);
+              // Fallback if browser policy blocks unmuted autoplay without prior gesture
+              if (mediaRef.current) {
+                mediaRef.current.muted = true;
+                setIsMuted(true);
+                mediaRef.current.play()
+                  .then(() => setIsPlaying(true))
+                  .catch(() => setIsPlaying(false));
+              }
+            });
+        }
       }
-    }, 120);
+    }, 100);
 
     return () => {
       clearTimeout(timer);
@@ -81,6 +91,7 @@ export default function CopilotDoorAudioBriefingStage({
         mediaRef.current.currentTime = 0;
         setHasEnded(false);
       }
+      mediaRef.current.muted = isMuted;
       mediaRef.current.play()
         .then(() => setIsPlaying(true))
         .catch(() => setIsPlaying(false));
@@ -101,6 +112,8 @@ export default function CopilotDoorAudioBriefingStage({
     e?.stopPropagation();
     if (!mediaRef.current) return;
     mediaRef.current.currentTime = 0;
+    mediaRef.current.muted = false;
+    setIsMuted(false);
     setHasEnded(false);
     mediaRef.current.play()
       .then(() => setIsPlaying(true))
@@ -123,13 +136,14 @@ export default function CopilotDoorAudioBriefingStage({
   const DoorIcon = activeDoor === 'vetting' ? Shield
     : activeDoor === 'roadmap' ? GitBranch
     : activeDoor === 'escrow' ? ShieldCheck
+    : activeDoor === 'news' ? Radio
     : Scale;
 
   return (
     <div 
       className="relative w-[66%] max-w-[450px] min-w-[315px] mx-auto overflow-hidden rounded-2xl shadow-2xl border border-[#D4AF37]/60 p-3 sm:p-3.5 flex flex-col justify-between shrink-0 bg-gradient-to-br from-[#16140f] via-[#101010] to-[#080808] transition-all group select-none"
       style={{ aspectRatio: '16/9' }}
-      title={`${briefing.doorName} Audio Briefing`}
+      title={`${briefing.doorName} Voice Briefing`}
     >
       {/* Hidden Media Element (Plays verified briefing audio) */}
       <video
@@ -295,6 +309,28 @@ export default function CopilotDoorAudioBriefingStage({
             </div>
           </div>
         )}
+
+        {/* 5. DNN NEWS SNAPSHOT */}
+        {activeDoor === 'news' && (
+          <div className="grid grid-cols-2 gap-1.5 text-[10px] sm:text-[11px]">
+            <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+              <span className="text-stone-400 block font-mono text-[8.5px] uppercase">BROADCAST</span>
+              <span className="text-white font-bold">Charlie &amp; Bob Desk</span>
+            </div>
+            <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+              <span className="text-stone-400 block font-mono text-[8.5px] uppercase">INVENTORY</span>
+              <span className="text-white font-bold">Constrained Coastal</span>
+            </div>
+            <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+              <span className="text-stone-400 block font-mono text-[8.5px] uppercase">RATE TRACK</span>
+              <span className="text-white font-bold">Jumbo Spread 6.45%</span>
+            </div>
+            <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
+              <span className="text-stone-400 block font-mono text-[8.5px] uppercase">FREQUENCY</span>
+              <span className="text-[#D4AF37] font-bold">Daily 8:00 AM PT</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* ── BOTTOM FOOTER: SPEAKER AVATAR, TIME PROGRESS & ACTION LINK ── */}
@@ -325,7 +361,7 @@ export default function CopilotDoorAudioBriefingStage({
             onClick={() => onPromptClick?.(briefing.promptQuery)}
             className="text-[#D4AF37] hover:underline flex items-center gap-1 font-semibold shrink-0 cursor-pointer text-[10px] sm:text-[11px]"
           >
-            <span>Ask {isBob ? 'Bob' : 'Charlie'} →</span>
+            <span>Ask {isBob ? 'Bob' : briefing.speaker === 'charlie_bob' ? 'Charlie & Bob' : 'Charlie'} →</span>
           </button>
         </div>
       </div>

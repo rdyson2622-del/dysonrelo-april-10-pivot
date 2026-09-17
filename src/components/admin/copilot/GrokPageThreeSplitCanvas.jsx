@@ -511,6 +511,16 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
     } else if (appId === 'dnn') {
       setRightPanelView('news');
       addDiscussionChip('DNN News', 'news');
+      setMessages(prev => [
+        ...prev,
+        {
+          id: Date.now(),
+          sender: 'charlie',
+          speakerName: 'Charlie & Bob',
+          text: `Charlie and Bob here at the DNN market desk. We've loaded today's broadcast tracking coastal inventory constraints, rate movements, and buyer contract protections in the right panel.`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
     }
   };
 
