@@ -228,11 +228,11 @@ export default function CopilotDossierNewsPanel({
       </div>
 
       {/* ── TOP CONTROLS & VIEW SWITCHER: Back button on far left, controls grouped on the right ── */}
-      <div className="flex items-center justify-between gap-2 pb-2 border-b border-white/10 mt-4">
+      <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-white/10 mt-4">
         <button
           type="button"
           onClick={handleIntelligenceBack}
-          className="px-2.5 py-1 rounded text-[11px] font-medium bg-[#141414] hover:bg-white/10 text-stone-300 hover:text-white border border-white/15 transition-all cursor-pointer flex items-center gap-1 shadow-sm active:bg-white active:text-black"
+          className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#141414] hover:bg-white/10 text-[#D4AF37] hover:text-white border border-white/20 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:bg-white active:text-black shrink-0"
           title="Back"
         >
           <ArrowLeft className="w-3.5 h-3.5 text-[#D4AF37]" />
@@ -240,7 +240,7 @@ export default function CopilotDossierNewsPanel({
         </button>
 
         {/* Unified Button Group: 4 Execution Doors + Solutions, News, Full Screen */}
-        <div className="flex items-center bg-[#141414] p-0.5 rounded-md border border-white/10 gap-0.5 overflow-x-auto scrollbar-thin">
+        <div className="flex items-center bg-[#141414] p-1 rounded-xl border border-white/15 gap-1 overflow-x-auto scrollbar-thin">
           <button
             type="button"
             onClick={() => {
@@ -250,7 +250,7 @@ export default function CopilotDossierNewsPanel({
                 handleIntelligenceBack();
               }
             }}
-            className="px-2 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 text-stone-400 hover:text-white hover:bg-white/10 whitespace-nowrap"
+            className="px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1 text-stone-400 hover:text-white hover:bg-white/10 whitespace-nowrap"
           >
             <span>← Search</span>
           </button>
@@ -258,85 +258,85 @@ export default function CopilotDossierNewsPanel({
           <button
             type="button"
             onClick={() => onViewChange?.('dossier')}
-            className={`px-2.5 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               currentView === 'dossier'
-                ? 'bg-white text-black font-semibold shadow-sm'
+                ? 'bg-white text-black font-bold shadow-md'
                 : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
           >
-            <Scale className="w-3 h-3" />
+            <Scale className="w-3.5 h-3.5" />
             <span>Audit</span>
           </button>
 
           <button
             type="button"
             onClick={() => onViewChange?.('vetting')}
-            className={`px-2.5 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               currentView === 'vetting'
-                ? 'bg-white text-black font-semibold shadow-sm'
+                ? 'bg-white text-black font-bold shadow-md'
                 : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
           >
-            <Shield className="w-3 h-3" />
+            <Shield className="w-3.5 h-3.5" />
             <span>Vetting</span>
           </button>
 
           <button
             type="button"
             onClick={() => onViewChange?.('roadmap')}
-            className={`px-2.5 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               currentView === 'roadmap'
-                ? 'bg-white text-black font-semibold shadow-sm'
+                ? 'bg-white text-black font-bold shadow-md'
                 : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
           >
-            <GitBranch className="w-3 h-3" />
+            <GitBranch className="w-3.5 h-3.5" />
             <span>Roadmap</span>
           </button>
 
           <button
             type="button"
             onClick={() => onViewChange?.('escrow')}
-            className={`px-2.5 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               currentView === 'escrow'
-                ? 'bg-white text-black font-semibold shadow-sm'
+                ? 'bg-white text-black font-bold shadow-md'
                 : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
           >
-            <ShieldCheck className="w-3 h-3" />
+            <ShieldCheck className="w-3.5 h-3.5" />
             <span>Escrow</span>
           </button>
 
           <button
             type="button"
             onClick={() => onViewChange?.('solutions')}
-            className={`px-2.5 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               currentView === 'solutions'
-                ? 'bg-white text-black font-semibold shadow-sm'
+                ? 'bg-white text-black font-bold shadow-md'
                 : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
           >
-            <FileText className="w-3 h-3" />
+            <FileText className="w-3.5 h-3.5" />
             <span>Vault</span>
           </button>
 
           <button
             type="button"
             onClick={() => onViewChange?.('news')}
-            className={`px-2.5 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               currentView === 'news'
-                ? 'bg-white text-black font-semibold shadow-sm'
+                ? 'bg-white text-black font-bold shadow-md'
                 : 'text-stone-400 hover:text-white hover:bg-white/10'
             }`}
           >
-            <Radio className="w-3 h-3" />
+            <Radio className="w-3.5 h-3.5" />
             <span>News</span>
           </button>
 
           <button
             type="button"
             onClick={() => onToggleExplode?.()}
-            className={`px-2 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ml-0.5 ${
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap ml-0.5 ${
               isExploded
                 ? 'bg-white text-black font-bold shadow-sm'
                 : 'text-stone-400 hover:text-white hover:bg-white/10'
@@ -345,12 +345,12 @@ export default function CopilotDossierNewsPanel({
           >
             {isExploded ? (
               <>
-                <X className="w-3 h-3 text-black stroke-[2.5]" />
+                <X className="w-3.5 h-3.5 text-black stroke-[2.5]" />
                 <span>Return</span>
               </>
             ) : (
               <>
-                <Maximize2 className="w-3 h-3" />
+                <Maximize2 className="w-3.5 h-3.5" />
                 <span>Expand</span>
               </>
             )}
@@ -359,10 +359,10 @@ export default function CopilotDossierNewsPanel({
           <button
             type="button"
             onClick={handleClear}
-            className="px-2 py-1 rounded text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 text-stone-400 hover:text-white hover:bg-white/10 active:bg-white active:text-black ml-0.5"
+            className="px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1 text-stone-400 hover:text-white hover:bg-white/10 active:bg-white active:text-black ml-0.5"
             title="Clear content from the screen"
           >
-            <RotateCcw className="w-3 h-3" />
+            <RotateCcw className="w-3.5 h-3.5" />
             <span>Clear</span>
           </button>
         </div>
