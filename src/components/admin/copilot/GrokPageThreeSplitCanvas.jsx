@@ -462,15 +462,25 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
     setRightPanelView(appId);
     if (appId === 'dossier') {
       addDiscussionChip('Property Audit', 'dossier');
-    } else if (appId === 'vetting') {
-      addDiscussionChip('Agent Vetting', 'vetting');
       setMessages(prev => [
         ...prev,
         {
           id: Date.now(),
           sender: 'charlie',
           speakerName: 'Charlie Simmons',
-          text: `I've opened the Agent Vetting view for ${dossierData.shortAddress || property}. Under our referral agreement, CoPilot remains actively involved alongside your chosen buyer's agent throughout the entire purchase, equipping you with independent analysis at every step.`,
+          text: `Charlie here. I've loaded the Property Audit for ${dossierData.shortAddress || property}. Review verified comparable sales, tax assessments, and environmental risk disclosures in the right panel.`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
+    } else if (appId === 'vetting') {
+      addDiscussionChip('Agent Vetting', 'vetting');
+      setMessages(prev => [
+        ...prev,
+        {
+          id: Date.now(),
+          sender: 'bob',
+          speakerName: 'Bob Dyson',
+          text: `Bob Dyson here. I've opened our Agent Vetting standards desk. Independent buyer representation is critical—we pair you with an elite local buyer specialist while our fiduciary desk stays actively involved alongside you through closing.`,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);
@@ -482,7 +492,7 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
           id: Date.now(),
           sender: 'charlie',
           speakerName: 'Charlie Simmons',
-          text: `Here is the 7-phase transaction sequence for ${dossierData.shortAddress || property}. CoPilot remains actively involved alongside you and your agent through each phase—from offer formulation to final escrow recording.`,
+          text: `Charlie here. Here is your 7-phase Move Roadmap for ${dossierData.shortAddress || property}. CoPilot remains actively involved alongside you and your agent through each phase—from offer formulation to final escrow recording.`,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);
@@ -494,7 +504,7 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
           id: Date.now(),
           sender: 'bob',
           speakerName: 'Bob Dyson',
-          text: `Bob Dyson here. I've opened our Escrow & Title diligence view. Under our referral agreement, we stay by your side alongside your agent and escrow officer to provide second-opinion reviews of title exceptions and contingency milestones.`,
+          text: `Bob Dyson here. I've opened our Escrow Watch contingency shield. In California, your earnest money deposit is protected by affirmative written contingencies under the 3% statutory cap (Cal. Civ. Code § 1675).`,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);

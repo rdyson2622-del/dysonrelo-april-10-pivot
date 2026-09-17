@@ -4,6 +4,7 @@ import {
   GitBranch, ShieldCheck, FileText, CheckCircle2, AlertTriangle, 
   Clock, ArrowRight, Video, Sparkles, Maximize2
 } from 'lucide-react';
+import CopilotDoorAudioBriefingStage from './CopilotDoorAudioBriefingStage';
 
 const DNN_STUDIO_POSTER = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/d5e0cb3f1_Screenshot2026-09-14at81551PM.png';
 
@@ -368,183 +369,15 @@ export default function CopilotDynamicStage({
     );
   }
 
-  // C. View-Specific Visual Stages (When no specific subject is selected)
-
-  // 1. VETTING VIEW STAGE
-  if (activeView === 'vetting') {
-    return (
-      <div 
-        onClick={() => onPromptClick?.("Charlie, what are the four vetting standards for an independent buyer's agent?")}
-        className="relative w-[44%] max-w-[300px] min-w-[210px] mx-auto overflow-hidden rounded-xl shadow-2xl border border-[#D4AF37]/60 p-2 sm:p-2.5 flex flex-col justify-between shrink-0 bg-gradient-to-br from-[#181611] via-[#111111] to-[#0a0a0a] cursor-pointer group hover:border-[#D4AF37] transition-all"
-        style={{ aspectRatio: '16/9' }}
-        title="Agent Vetting Standards Desk"
-      >
-        <div className="flex items-center justify-between text-[8px] font-mono text-[#D4AF37] border-b border-white/10 pb-1">
-          <span className="font-bold flex items-center gap-1">
-            <Shield className="w-2.5 h-2.5 text-[#D4AF37]" />
-            AGENT VETTING DESK
-          </span>
-          <span className="text-emerald-400 font-bold">FIDUCIARY PARTNER</span>
-        </div>
-
-        <div className="grid grid-cols-2 gap-1 text-[7.5px] my-auto">
-          <div className="bg-black/60 p-1 rounded border border-white/10">
-            <span className="text-stone-400 block font-mono text-[6.5px]">REPRESENTATION</span>
-            <span className="text-white font-bold">Zero Dual Agency</span>
-          </div>
-          <div className="bg-black/60 p-1 rounded border border-white/10">
-            <span className="text-stone-400 block font-mono text-[6.5px]">STRUCTURE</span>
-            <span className="text-white font-bold">Referral Agreement</span>
-          </div>
-          <div className="bg-black/60 p-1 rounded border border-white/10">
-            <span className="text-stone-400 block font-mono text-[6.5px]">ESCROW ROLE</span>
-            <span className="text-white font-bold">CoPilot By Your Side</span>
-          </div>
-          <div className="bg-black/60 p-1 rounded border border-white/10">
-            <span className="text-stone-400 block font-mono text-[6.5px]">FEE TO BUYER</span>
-            <span className="text-[#D4AF37] font-bold">$0 Extra Cost</span>
-          </div>
-        </div>
-
-        <div className="text-[7.5px] text-stone-300 flex items-center justify-between border-t border-white/10 pt-1 font-sans">
-          <span className="truncate">Independent local agent vetting</span>
-          <span className="text-[#D4AF37] group-hover:underline shrink-0">Explore Vetting →</span>
-        </div>
-      </div>
-    );
-  }
-
-  // 2. ROADMAP VIEW STAGE
-  if (activeView === 'roadmap') {
-    return (
-      <div 
-        onClick={() => onPromptClick?.("Explain the 7 transaction phases of the Move Roadmap")}
-        className="relative w-[44%] max-w-[300px] min-w-[210px] mx-auto overflow-hidden rounded-xl shadow-2xl border border-[#D4AF37]/60 p-2 sm:p-2.5 flex flex-col justify-between shrink-0 bg-gradient-to-br from-[#181611] via-[#111111] to-[#0a0a0a] cursor-pointer group hover:border-[#D4AF37] transition-all"
-        style={{ aspectRatio: '16/9' }}
-        title="7-Phase Move Roadmap"
-      >
-        <div className="flex items-center justify-between text-[8px] font-mono text-[#D4AF37] border-b border-white/10 pb-1">
-          <span className="font-bold flex items-center gap-1">
-            <GitBranch className="w-2.5 h-2.5 text-[#D4AF37]" />
-            MOVE ROADMAP SEQUENCE
-          </span>
-          <span className="text-white font-bold">7 PHASES</span>
-        </div>
-
-        <div className="flex items-center justify-between text-[7px] my-auto gap-0.5 px-0.5 font-mono">
-          <div className="text-center">
-            <span className="w-3.5 h-3.5 rounded-full bg-[#D4AF37] text-black font-bold flex items-center justify-center mx-auto text-[7px]">1</span>
-            <span className="text-stone-400 block mt-0.5 text-[6.5px]">Audit</span>
-          </div>
-          <span className="text-stone-600">➔</span>
-          <div className="text-center">
-            <span className="w-3.5 h-3.5 rounded-full bg-white/10 text-white font-bold flex items-center justify-center mx-auto text-[7px]">2</span>
-            <span className="text-stone-400 block mt-0.5 text-[6.5px]">Agent</span>
-          </div>
-          <span className="text-stone-600">➔</span>
-          <div className="text-center">
-            <span className="w-3.5 h-3.5 rounded-full bg-white/10 text-white font-bold flex items-center justify-center mx-auto text-[7px]">3</span>
-            <span className="text-stone-400 block mt-0.5 text-[6.5px]">Offer</span>
-          </div>
-          <span className="text-stone-600">➔</span>
-          <div className="text-center">
-            <span className="w-3.5 h-3.5 rounded-full bg-white/10 text-white font-bold flex items-center justify-center mx-auto text-[7px]">4</span>
-            <span className="text-stone-400 block mt-0.5 text-[6.5px]">Escrow</span>
-          </div>
-          <span className="text-stone-600">➔</span>
-          <div className="text-center">
-            <span className="w-3.5 h-3.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold flex items-center justify-center mx-auto text-[7px]">7</span>
-            <span className="text-emerald-400 block mt-0.5 text-[6.5px]">Close</span>
-          </div>
-        </div>
-
-        <div className="text-[7.5px] text-stone-300 flex items-center justify-between border-t border-white/10 pt-1 font-sans">
-          <span className="truncate">CoPilot tracks every milestone</span>
-          <span className="text-[#D4AF37] group-hover:underline shrink-0">Open Phase 1 →</span>
-        </div>
-      </div>
-    );
-  }
-
-  // 3. ESCROW VIEW STAGE
-  if (activeView === 'escrow') {
-    return (
-      <div 
-        onClick={() => onPromptClick?.("Bob, how does the 21-day loan and appraisal contingency shield protect our 3% deposit?")}
-        className="relative w-[44%] max-w-[300px] min-w-[210px] mx-auto overflow-hidden rounded-xl shadow-2xl border border-[#D4AF37]/60 p-2 sm:p-2.5 flex flex-col justify-between shrink-0 bg-gradient-to-br from-[#16140f] via-[#101010] to-[#0a0a0a] cursor-pointer group hover:border-[#D4AF37] transition-all"
-        style={{ aspectRatio: '16/9' }}
-        title="Escrow & Title Contingency Shield"
-      >
-        <div className="flex items-center justify-between text-[8px] font-mono text-[#D4AF37] border-b border-white/10 pb-1">
-          <span className="font-bold flex items-center gap-1">
-            <ShieldCheck className="w-2.5 h-2.5 text-[#D4AF37]" />
-            ESCROW DEPOSIT SHIELD
-          </span>
-          <span className="text-emerald-400 font-bold">3% PROTECTED</span>
-        </div>
-
-        <div className="grid grid-cols-2 gap-1 text-[7.5px] my-auto">
-          <div className="bg-black/60 p-1 rounded border border-white/10">
-            <span className="text-stone-400 block font-mono text-[6.5px]">CONTINGENCY</span>
-            <span className="text-white font-bold">Affirmative Written</span>
-          </div>
-          <div className="bg-black/60 p-1 rounded border border-white/10">
-            <span className="text-stone-400 block font-mono text-[6.5px]">APPRAISAL GAP</span>
-            <span className="text-white font-bold">Renegotiation Shield</span>
-          </div>
-          <div className="bg-black/60 p-1 rounded border border-white/10">
-            <span className="text-stone-400 block font-mono text-[6.5px]">SCHEDULE B</span>
-            <span className="text-white font-bold">ALTA Extended Title</span>
-          </div>
-          <div className="bg-black/60 p-1 rounded border border-white/10">
-            <span className="text-stone-400 block font-mono text-[6.5px]">ESCROW ADVICE</span>
-            <span className="text-[#D4AF37] font-bold">Bob Dyson Supervision</span>
-          </div>
-        </div>
-
-        <div className="text-[7.5px] text-stone-300 flex items-center justify-between border-t border-white/10 pt-1 font-sans">
-          <span className="truncate">Never waive prematurely</span>
-          <span className="text-[#D4AF37] group-hover:underline shrink-0">Ask Bob →</span>
-        </div>
-      </div>
-    );
-  }
-
-  // 4. DOSSIER (AUDIT) VIEW STAGE
+  // C. View-Specific Audio Briefing & Visual Stages for 4 Active Execution Doors
+  // (Property Audit, Agent Vetting, Move Roadmap, Escrow Watch)
   return (
-    <div 
-      onClick={() => onPromptClick?.(`Summarize comps and environmental risks for ${dossierData.shortAddress || property || 'this property'}`)}
-      className="relative w-[44%] max-w-[300px] min-w-[210px] mx-auto overflow-hidden rounded-xl shadow-2xl border border-[#D4AF37]/60 p-2 sm:p-2.5 flex flex-col justify-between shrink-0 bg-gradient-to-br from-[#181611] via-[#111111] to-[#0a0a0a] cursor-pointer group hover:border-[#D4AF37] transition-all"
-      style={{ aspectRatio: '16/9' }}
-      title="Property Audit Dossier Snapshot"
-    >
-      <div className="flex items-center justify-between text-[8px] font-mono text-[#D4AF37] border-b border-white/10 pb-1">
-        <span className="font-bold flex items-center gap-1 truncate max-w-[140px]">
-          <Scale className="w-2.5 h-2.5 text-[#D4AF37]" />
-          AUDIT: {dossierData.shortAddress || property || 'LA JOLLA'}
-        </span>
-        <span className="text-emerald-400 font-bold">{dossierData.listPrice || 'ACTIVE'}</span>
-      </div>
-
-      <div className="flex items-center justify-between text-[8px] my-auto gap-1">
-        <div className="bg-black/70 p-1 rounded border border-white/10 text-center flex-1">
-          <span className="text-[6.5px] text-stone-400 block font-mono">COMPS</span>
-          <span className="font-bold text-white font-mono">{dossierData.comps?.length || 3} Verified</span>
-        </div>
-        <div className="bg-black/70 p-1 rounded border border-white/10 text-center flex-1">
-          <span className="text-[6.5px] text-stone-400 block font-mono">GEO RISK</span>
-          <span className="font-bold text-amber-400 font-mono">Bluff Setback</span>
-        </div>
-        <div className="bg-black/70 p-1 rounded border border-white/10 text-center flex-1">
-          <span className="text-[6.5px] text-stone-400 block font-mono">EST. VAL</span>
-          <span className="font-bold text-white font-mono">~$3.85M</span>
-        </div>
-      </div>
-
-      <div className="text-[7.5px] text-stone-300 flex items-center justify-between border-t border-white/10 pt-1 font-sans">
-        <span className="truncate">Independent Fiduciary Analysis</span>
-        <span className="text-[#D4AF37] group-hover:underline shrink-0">Ask in Dialogue →</span>
-      </div>
-    </div>
+    <CopilotDoorAudioBriefingStage
+      activeDoor={activeView || 'dossier'}
+      dossierData={dossierData}
+      property={property}
+      onPromptClick={onPromptClick}
+      onToggleExplode={onToggleExplode}
+    />
   );
 }
