@@ -202,6 +202,7 @@ import ClientMoveRoadmap from './pages/ClientMoveRoadmap';
 import MiniAppPage from './pages/MiniAppPage';
 import CopilotUnsubscribe from './pages/CopilotUnsubscribe';
 import CopilotStopContact from './pages/CopilotStopContact';
+import AdminPreferredClientRoster from './pages/AdminPreferredClientRoster';
 
 // On boot: ?visitor=1 sets dyson_viewer_mode=guest
 if (typeof window !== 'undefined') {
@@ -515,6 +516,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/app-store-mockup" element={<AdminAppStoreMockup />} />
         <Route path="/admin/relocation-call-desk" element={<AdminRelocationCallDesk />} />
         <Route path="/admin/preferred-vendors" element={<AdminPreferredVendors />} />
+        <Route path="/admin/preferred-clients" element={<AdminPreferredClientRoster />} />
         <Route path="/admin/archived/studio-landing" element={<DnnStudioLanding />} />
         <Route path="/admin/dnn/studio-landing-source" element={<AdminDnnStudioLandingSource />} />
         <Route path="/admin/dnn/charlie-studio-solution" element={<AdminDnnCharlieStudioSolution />} />

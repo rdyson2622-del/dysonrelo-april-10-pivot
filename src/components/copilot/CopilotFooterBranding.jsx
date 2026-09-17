@@ -12,8 +12,8 @@ export default function CopilotFooterBranding({
 }) {
   return (
     <div className="px-3 sm:px-4 py-2.5 bg-[#0a0a0a] border-t border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 select-none">
-      {/* ── LEFT: SAVED DISCUSSIONS & CHIPS STACKED HORIZONTALLY IN CLEAN ROWS ── */}
-      <div className="flex-1 min-w-0 flex flex-wrap items-center gap-1.5">
+      {/* ── LEFT: SAVED DISCUSSIONS & CHIPS CONSTRAINED TO 40% LEFT LIMIT ── */}
+      <div className="w-full lg:w-[40%] lg:max-w-[40%] min-w-0 flex flex-wrap items-center gap-1.5">
         <button
           type="button"
           onClick={onOpenSavedDiscussions}
