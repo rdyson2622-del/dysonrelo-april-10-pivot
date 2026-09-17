@@ -45,7 +45,7 @@ export const THREE_WAY_SCRIPT = [
     role: 'Principal Broker',
     colorName: 'Gold Ring',
     colorHex: '#D4AF37',
-    text: "Bob Dyson here. Charlie is spot-on about the bluff setback. In California coastal parcels, ancient fault lines and erosion zones are serious deal-breakers. We mandate an un-waivable geological soil stability inspection and strict escrow contingency shields so you never risk your earnest money deposit.",
+    text: "Bob Dyson here. Charlie is spot-on about the bluff setback. In California coastal parcels, bluff setbacks and erosion zones require thorough diligence. We advise working closely with your agent to schedule a geotechnical soil inspection and structure clear contingency protections to safeguard your earnest money deposit.",
     // Authentic HeyGen Bob Dyson cloned studio voice (strictly answering without license reference)
     audioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/147b8f5713024fb9afc106f266e47482/id=f002a65f-b3e9-4d51-907f-88f57c2aa9f5.wav",
     backupAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/87ef3b1d1_speech.mp3",
@@ -281,8 +281,8 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
                 : 'Interactive 3-Way Dialogue Stage'
               }
             </span>
-            <span className="text-[7.5px] px-1.5 py-0.5 rounded bg-[#ede0cc]/20 text-[#ede0cc] font-mono uppercase font-bold shrink-0">
-              AUDIO &amp; VISUAL DEMO
+            <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/10 text-stone-300 font-sans shrink-0">
+              Interactive Dialogue
             </span>
           </div>
 

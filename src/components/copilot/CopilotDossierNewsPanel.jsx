@@ -473,13 +473,13 @@ export default function CopilotDossierNewsPanel({
           {dossierData.isAmbiguous && dossierData.ambiguousOptions && dossierData.ambiguousOptions.length > 0 && (
             <div className="rounded-xl border border-[#D4AF37]/50 bg-[#141414] p-4 space-y-3 shadow-lg">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-ping" />
-                <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-white">
-                  WHICH PROPERTY ON {dossierData.shortAddress?.toUpperCase()}?
+                <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
+                <h3 className="text-xs sm:text-sm font-semibold text-white">
+                  Which property on {dossierData.shortAddress}?
                 </h3>
               </div>
               <p className="text-xs text-stone-300">
-                Multiple verified street records found. Select an address to load its full fiduciary dossier:
+                Multiple verified street records found. Select an address to load its property overview:
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 max-h-56 overflow-y-auto pr-1 scrollbar-thin">
                 {dossierData.ambiguousOptions.map((opt, oIdx) => (
@@ -701,28 +701,28 @@ export default function CopilotDossierNewsPanel({
           <div className="bg-[#121212] border border-white/10 rounded-xl p-4 space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-2.5">
               <div>
-                <span className="text-[9.5px] font-mono tracking-widest text-white uppercase font-bold flex items-center gap-1.5">
-                  <Radio className="w-3 h-3 text-white" />
-                  MORNING BROADCAST · REAL-TIME FIDUCIARY DELIVERY
+                <span className="text-[10px] text-stone-400 flex items-center gap-1.5 font-sans">
+                  <Radio className="w-3 h-3 text-[#D4AF37]" />
+                  Morning Broadcast · Market Intelligence
                 </span>
-                <h3 className="text-sm sm:text-base font-bold text-white mt-1 leading-snug">
+                <h3 className="text-sm sm:text-base font-semibold text-white mt-1 leading-snug">
                   {headline}
                 </h3>
               </div>
-              <span className="text-[10px] font-mono text-stone-400 shrink-0">
-                1080p MP4 Broadcast
+              <span className="text-[10px] text-stone-400 shrink-0 font-sans">
+                Daily Video Update
               </span>
             </div>
 
             {/* Synopsis */}
-            <p className="text-xs text-stone-300 leading-relaxed">
-              DNN Intelligence tracks migration flows, interest rate movements, and inventory squeezes across California and destination luxury markets. Watch Charlie Simmons and Bob Dyson break down today's story.
+            <p className="text-xs text-stone-300 leading-relaxed font-sans">
+              DNN Intelligence tracks migration flows, interest rate movements, and inventory dynamics across California and destination luxury markets. Watch Charlie Simmons and Bob Dyson break down today's story.
             </p>
 
             {/* Real-Time Interactive Inquiry Buttons (Connects to Dialogue Engine) */}
             <div className="space-y-1.5 pt-1">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-stone-400 block font-mono">
-                INTERACT WITH THIS STORY (REAL-TIME RESPONSE):
+              <span className="text-[10px] text-stone-400 block font-sans">
+                Explore Questions on this Story:
               </span>
               <div className="flex flex-wrap items-center gap-2">
                 <button
@@ -767,10 +767,10 @@ export default function CopilotDossierNewsPanel({
           {/* Additional News Briefs Feed */}
           <div className="space-y-2 pt-1">
             <div className="flex items-center justify-between px-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-white font-mono">
-                TODAY'S ADDITIONAL BRIEFS
+              <span className="text-xs font-semibold text-white">
+                Today's Additional Briefs
               </span>
-              <span className="text-[9px] text-stone-500 font-mono">DNN AI BUREAU</span>
+              <span className="text-[10px] text-stone-400 font-sans">DNN Market Desk</span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">

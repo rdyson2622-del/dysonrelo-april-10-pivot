@@ -10,7 +10,7 @@ export const SOLUTIONS_LIBRARY = [
     id: 'lender-compliance-discovery',
     category: 'compliance',
     categoryLabel: 'Closing Compliance',
-    format: 'VIDEO HOW-TO (3 MIN)',
+    format: 'Video Guide (3 min)',
     formatType: 'video',
     title: 'How Fiduciary Discovery Verifies Contract & Lender Compliance',
     subtitle: 'Escrow Settlement Discovery & Protective Contract Audits',
@@ -23,7 +23,7 @@ export const SOLUTIONS_LIBRARY = [
     id: 'contingency-shields-escrow',
     category: 'escrow',
     categoryLabel: 'Escrow & Contracts',
-    format: 'PODCAST CLIP (5 MIN)',
+    format: 'Audio Brief (5 min)',
     formatType: 'audio',
     title: 'The 3 Escrow Traps Listing Agents Use to Lock In Earnest Money',
     subtitle: 'Bob Dyson on California Form RPA Protections',
@@ -36,10 +36,10 @@ export const SOLUTIONS_LIBRARY = [
     id: 'coastal-bluff-setbacks',
     category: 'coastal',
     categoryLabel: 'Coastal & Soil',
-    format: 'FIDUCIARY PROTOCOL',
+    format: 'Advisory Guide',
     formatType: 'doc',
     title: 'California Coastal Commission Bluff Setback Protocols',
-    subtitle: 'Un-waivable Geotechnical Audits & Slope Stability',
+    subtitle: 'Geotechnical Audits & Slope Stability',
     summary: 'Properties along La Jolla, Del Mar, Malibu, and Newport coastlines face stringent 75-year erosion setback requirements. An unvarnished geotechnical boring review must precede any non-contingent offer.',
     keyRule: 'Standard home inspectors do not inspect soil shear strength or ancient landslide planes.',
     promptQuery: 'What are the coastal bluff setback and soil stability risks in California?',
@@ -49,7 +49,7 @@ export const SOLUTIONS_LIBRARY = [
     id: 'prop-19-tax-portability',
     category: 'tax',
     categoryLabel: 'Tax & Prop 19',
-    format: 'LEGAL MEMO & GUIDE',
+    format: 'Tax & Planning Guide',
     formatType: 'doc',
     title: 'Prop 19 Property Tax Base Transfer for California Homeowners',
     subtitle: 'Transfer Your Low Prop 13 Tax Base Anywhere in CA',
@@ -62,7 +62,7 @@ export const SOLUTIONS_LIBRARY = [
     id: 'multiple-offer-bluff',
     category: 'escrow',
     categoryLabel: 'Escrow & Contracts',
-    format: 'VIDEO HOW-TO (4 MIN)',
+    format: 'Video Guide (4 min)',
     formatType: 'video',
     title: 'How to Counter the "We Have Multiple Offers" Listing Agent Bluff',
     subtitle: 'Demanding Signed Broker Certifications Under DRE Rules',
@@ -75,7 +75,7 @@ export const SOLUTIONS_LIBRARY = [
     id: 'title-clouds-unrecorded-easements',
     category: 'escrow',
     categoryLabel: 'Escrow & Contracts',
-    format: 'FIDUCIARY PROTOCOL',
+    format: 'Advisory Guide',
     formatType: 'doc',
     title: 'Unrecorded Easements & Boundary Encroachments in Luxury Parcels',
     subtitle: 'ALTA Extended Title Policies vs Standard CLTA',
@@ -88,7 +88,7 @@ export const SOLUTIONS_LIBRARY = [
     id: '1031-exchange-timeline',
     category: 'tax',
     categoryLabel: 'Tax & Prop 19',
-    format: 'PODCAST CLIP (6 MIN)',
+    format: 'Audio Brief (6 min)',
     formatType: 'audio',
     title: 'The 45-Day Identification Trap in 1031 Tax-Deferred Exchanges',
     subtitle: 'Safe Harbor Intermediaries & Multi-Property Replacement',
@@ -101,7 +101,7 @@ export const SOLUTIONS_LIBRARY = [
     id: 'broker-vs-salesperson',
     category: 'representation',
     categoryLabel: 'Fiduciary Duty',
-    format: 'EXECUTIVE BRIEF',
+    format: 'Advisory Brief',
     formatType: 'doc',
     title: 'Licensed Broker Fiduciary Representation vs Franchise Sales Agent',
     subtitle: 'Why Tier 1 Fiduciary Supervision Matters',
@@ -142,17 +142,17 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
     <div className="space-y-4 animate-in fade-in duration-200">
       
       {/* ── HEADER BANNER ── */}
-      <div className="rounded-xl border border-white/20 bg-gradient-to-r from-[#141414] via-[#111111] to-[#121212] p-3.5 sm:p-4 shadow-xl">
+      <div className="rounded-xl border border-white/10 bg-[#121212] p-3.5 sm:p-4 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-[10px] font-mono uppercase tracking-widest text-white font-bold">
-                FIDUCIARY INTELLIGENCE &amp; SOLUTIONS VAULT
+              <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
+              <span className="text-[10px] font-sans text-stone-400">
+                Intelligence &amp; Advisory Vault
               </span>
             </div>
-            <h2 className="text-sm sm:text-base font-bold text-white tracking-wide">
-              Real Estate Knowledge, Playbooks &amp; Legal Shields
+            <h2 className="text-sm sm:text-base font-semibold text-white tracking-wide">
+              Real Estate Playbooks &amp; Guidance
             </h2>
             <p className="text-xs text-stone-300">
               Most consumers move once every 5 to 7 years. Our curated vault eliminates the guesswork—covering lender compliance discovery, contract traps, coastal hazards, and tax portability.
@@ -255,10 +255,10 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
                   {sol.summary}
                 </p>
 
-                {/* Key Fiduciary Rule */}
-                <div className="bg-[#181818] border border-white/10 rounded-lg p-2 text-[10.5px] text-stone-300 font-mono flex items-start gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-white shrink-0 mt-0.5" />
-                  <span><strong className="text-white">Rule:</strong> {sol.keyRule}</span>
+                {/* Key Advisory Takeaway */}
+                <div className="bg-[#161616] border border-white/5 rounded-lg p-2 text-[11px] text-stone-300 font-sans flex items-start gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 mt-0.5" />
+                  <span><strong className="text-white font-medium">Key Takeaway:</strong> {sol.keyRule}</span>
                 </div>
               </div>
 

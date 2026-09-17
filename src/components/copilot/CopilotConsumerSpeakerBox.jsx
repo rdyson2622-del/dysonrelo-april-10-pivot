@@ -28,8 +28,8 @@ export default function CopilotConsumerSpeakerBox({
           <div className="w-full flex items-center justify-between text-[10px] px-1 font-mono">
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping" />
-              <span className="text-rose-400 font-bold tracking-wider uppercase text-[9.5px]">
-                YOU SPEAKING (BUYER)
+              <span className="text-rose-400 font-medium text-[10px]">
+                You (Buyer)
               </span>
             </div>
             <span className="text-rose-400 font-mono font-bold text-[9px] px-1 py-0.2 rounded bg-rose-500/20">
@@ -88,8 +88,8 @@ export default function CopilotConsumerSpeakerBox({
         <p className="text-[8.5px] text-white font-medium leading-tight truncate">
           {userRole}
         </p>
-        <span className="text-[9px] block leading-tight text-white font-medium truncate">
-          CLIENT · SUBSCRIBER
+        <span className="text-[9px] block leading-tight text-stone-300 font-sans truncate">
+          Client · Subscriber
         </span>
       </div>
 

@@ -350,8 +350,8 @@ export default function CopilotDynamicSpeakerBox({
           <div className="w-full flex items-center justify-between text-[10px] px-1 font-mono">
             <div className="flex items-center gap-1.5">
               <span className={`w-2 h-2 rounded-full ${isSpeaking ? 'bg-[#D4AF37] animate-ping' : 'bg-[#10b981] animate-pulse'}`} />
-              <span className="text-[#D4AF37] font-bold tracking-wider uppercase text-[9.5px]">
-                {isConnecting ? 'CONNECTING…' : isSpeaking ? 'CHARLIE SPEAKING' : 'CHARLIE LISTENING'}
+              <span className="text-[#D4AF37] font-semibold text-[10px]">
+                {isConnecting ? 'Connecting…' : isSpeaking ? 'Charlie Speaking' : 'Charlie Listening'}
               </span>
             </div>
             <span className="text-stone-400 font-semibold">
@@ -449,8 +449,8 @@ export default function CopilotDynamicSpeakerBox({
           <div className="w-full flex items-center justify-between text-[10px] px-1 font-mono">
             <div className="flex items-center gap-1.5">
               <span className={`w-2 h-2 rounded-full ${isBob ? 'bg-[#D4AF37]' : 'bg-emerald-400'} animate-ping`} />
-              <span className={`${isBob ? 'text-[#D4AF37]' : 'text-emerald-400'} font-bold tracking-wider uppercase text-[9.5px]`}>
-                {isBob ? 'BOB DYSON SPEAKING' : 'CHARLIE SIMMONS SPEAKING'}
+              <span className={`${isBob ? 'text-[#D4AF37]' : 'text-emerald-400'} font-semibold text-[10px]`}>
+                {isBob ? 'Bob Dyson Speaking' : 'Charlie Simmons Speaking'}
               </span>
             </div>
             <span className="text-stone-400 font-semibold text-[9px] uppercase font-mono">

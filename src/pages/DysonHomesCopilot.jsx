@@ -955,26 +955,25 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                           (activeDemoSpeaker === 'bob' && isBob)
                         );
 
-                        // Speaker border and glow styles based on designated colors:
-                        // Buyer = RED (#ef4444) | Charlie = GREEN (#10b981) | Bob = GOLD (#D4AF37)
-                        let bubbleClasses = 'bg-[#141414] border border-white/15 text-stone-200';
+                        // Speaker subtle accents: Soft tonal backgrounds, thin clean borders, no neon glows
+                        let bubbleClasses = 'bg-[#141414] border border-white/10 text-stone-200';
                         if (isSpeakingNow) {
                           if (isConsumer) {
-                            bubbleClasses = 'bg-[#1c0f0f] border-2 border-rose-500 ring-2 ring-rose-500/60 shadow-[0_0_22px_rgba(239,68,68,0.5)] text-white scale-[1.01]';
+                            bubbleClasses = 'bg-[#171313] border border-rose-500/60 text-white shadow-sm';
                           } else if (isCharlie) {
-                            bubbleClasses = 'bg-[#0c1a14] border-2 border-emerald-500 ring-2 ring-emerald-500/60 shadow-[0_0_22px_rgba(16,185,129,0.5)] text-white scale-[1.01]';
+                            bubbleClasses = 'bg-[#121614] border border-emerald-500/50 text-white shadow-sm';
                           } else if (isBob) {
-                            bubbleClasses = 'bg-[#211c0f] border-2 border-[#D4AF37] ring-2 ring-[#D4AF37]/60 shadow-[0_0_22px_rgba(212,175,55,0.55)] text-white scale-[1.01]';
+                            bubbleClasses = 'bg-[#181611] border border-[#D4AF37]/60 text-white shadow-sm';
                           }
                         } else {
                           if (isConsumer) {
-                            bubbleClasses = 'bg-[#161111] border-l-4 border-l-rose-500 border-white/10 text-white';
+                            bubbleClasses = 'bg-[#141212] border border-white/10 border-l-2 border-l-rose-400/70 text-white';
                           } else if (isCharlie) {
-                            bubbleClasses = 'bg-[#0f1512] border-l-4 border-l-emerald-500 border-white/10 text-stone-200';
+                            bubbleClasses = 'bg-[#121413] border border-white/10 border-l-2 border-l-emerald-400/70 text-stone-200';
                           } else if (isBob) {
-                            bubbleClasses = 'bg-[#16140e] border-l-4 border-l-[#D4AF37] border-[#D4AF37]/30 text-stone-200';
+                            bubbleClasses = 'bg-[#151411] border border-white/10 border-l-2 border-l-[#D4AF37]/70 text-stone-200';
                           } else if (isPlainUser) {
-                            bubbleClasses = 'bg-[#1e1e1e] border border-white/15 text-white';
+                            bubbleClasses = 'bg-[#161616] border border-white/10 text-white';
                           }
                         }
 
@@ -992,32 +991,32 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                                     {m.speakerName || 'You (Buyer)'}
                                   </span>
                                   {isSpeakingNow && (
-                                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-mono font-bold uppercase tracking-wider animate-pulse">
+                                    <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-rose-500/15 text-rose-300 font-sans">
                                       Speaking Live
                                     </span>
                                   )}
                                 </>
                               ) : isCharlie ? (
                                 <>
-                                  <span className={`w-2 h-2 rounded-full bg-emerald-400 ${isSpeakingNow ? 'animate-ping' : ''}`} />
-                                  <span className="text-emerald-400 font-bold">
+                                  <span className={`w-1.5 h-1.5 rounded-full bg-emerald-400 ${isSpeakingNow ? 'animate-ping' : ''}`} />
+                                  <span className="text-emerald-400 font-medium">
                                     {m.speakerName || 'Charlie Simmons (Voice)'}
                                   </span>
                                   {isSpeakingNow && (
-                                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold uppercase tracking-wider animate-pulse">
+                                    <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-emerald-500/15 text-emerald-300 font-sans">
                                       Speaking Live
                                     </span>
                                   )}
                                 </>
                               ) : isBob ? (
                                 <>
-                                  <span className={`w-2 h-2 rounded-full bg-[#D4AF37] ${isSpeakingNow ? 'animate-ping' : ''}`} />
-                                  <span className="text-[#D4AF37] font-bold">
+                                  <span className={`w-1.5 h-1.5 rounded-full bg-[#D4AF37] ${isSpeakingNow ? 'animate-ping' : ''}`} />
+                                  <span className="text-[#D4AF37] font-medium">
                                     {m.speakerName || 'Bob Dyson (Broker)'}
                                   </span>
                                   {isSpeakingNow && (
-                                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-[#D4AF37]/25 text-[#D4AF37] font-mono font-bold uppercase tracking-wider animate-pulse">
-                                      Directing Live
+                                    <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] font-sans">
+                                      Advising Live
                                     </span>
                                   )}
                                 </>
@@ -1033,7 +1032,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
 
                               {m.options && m.options.length > 0 && (
                                 <div className="mt-3 pt-2.5 border-t border-white/10 space-y-2">
-                                  <span className="text-[10px] text-stone-300 uppercase tracking-wider font-mono font-bold block">
+                                  <span className="text-stone-300 text-xs font-medium block font-sans">
                                     Which property? Select below:
                                   </span>
                                   <div className="flex flex-col gap-1.5 max-h-48 overflow-y-auto pr-1 scrollbar-thin">
