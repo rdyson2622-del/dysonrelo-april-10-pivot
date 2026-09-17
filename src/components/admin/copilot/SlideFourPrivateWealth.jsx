@@ -167,7 +167,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
             </div>
 
             <p className="text-base sm:text-lg lg:text-xl text-[#F3F0E6] font-normal tracking-wide">
-              A Human Driven Personal Real Estate AI Assistant
+              Human Driven + Personal Real Estate AI Assistants
             </p>
           </div>
 
