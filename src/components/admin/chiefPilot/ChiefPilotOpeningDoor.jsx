@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ShieldCheck } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
+import CopilotWordmark from '@/components/brand/CopilotWordmark';
 
 const HERO_IMAGE = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/efdc69af3_hero-evening-luxury-clean.png';
 const SAMPLES = ['742 Vista Del Mar, La Jolla, CA 92037', '1844 Mountain Shadow Way, Scottsdale, AZ 85253', '4220 Oak Hollow Terrace, Austin, TX 78746'];
@@ -17,7 +18,7 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
   return (
     <div className="grid min-h-full items-center gap-10 py-8 text-left text-dyson-text lg:grid-cols-[1.2fr_0.8fr]">
       <div>
-        <div className="flex items-end gap-3"><span className="pb-2 font-serif text-4xl font-light">meet</span><div className="flex flex-col items-center"><DysonVerticalBadge height={82} className="mb-2" /><span className="font-serif text-6xl font-bold italic leading-none text-dyson-gold-light">CoPilot</span></div></div>
+        <div className="flex items-end gap-3"><span className="pb-2 font-serif text-4xl font-light">meet</span><div className="flex flex-col items-center"><DysonVerticalBadge height={82} className="mb-2" /><CopilotWordmark bold className="h-16 w-52" /></div></div>
         <p className="mt-5 text-lg tracking-wide text-dyson-text">Human Driven + Personal Real Estate AI Assistants</p>
         <form onSubmit={event => { event.preventDefault(); search(); }} className="mt-8"><div className="flex w-full max-w-xl items-center rounded-full border border-white/35 bg-dyson-black p-1.5 pl-5 focus-within:border-dyson-gold"><input value={address} onChange={event => setAddress(event.target.value)} placeholder="Paste an address or listing number" className="min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-white/55" /><button type="submit" disabled={!address.trim() || workspace.searchLoading} className="rounded-full border border-white/30 bg-dyson-charcoal px-6 py-2.5 text-sm font-semibold text-dyson-gold-light disabled:opacity-40">{workspace.searchLoading ? 'Searching…' : 'Send →'}</button></div></form>
         <p className="mt-3 text-xs text-white/70">Paste an address for comps, risks, and property insights where allowed.</p>
