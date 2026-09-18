@@ -176,24 +176,19 @@ export default function CopilotIntegratedSubjectStage({
         if (isBob) {
           const deep = m.find(v => /david|george|daniel|guy|oliver|tom|james|en-us-standard-b|en-us-standard-d|en-us-standard-j|male/i.test(v.name));
           if (deep) return deep;
-          if (m.length > 0) return m[0];
         } else {
           const crisp = m.find(v => /alex|daniel|aaron|arthur|ryan|fred|google uk english male|en-gb/i.test(v.name));
           if (crisp) return crisp;
-          if (m.length > 0) return m[0];
         }
         return null;
       };
 
       const matchedMale = selectMale();
-      if (matchedMale) {
-        utterance.voice = matchedMale;
-      } else if (window.speechSynthesis.onvoiceschanged !== undefined) {
-        window.speechSynthesis.onvoiceschanged = () => {
-          const v = selectMale();
-          if (v) utterance.voice = v;
-        };
+      if (!matchedMale) {
+        setIsPlaying(false);
+        return;
       }
+      utterance.voice = matchedMale;
 
       const wordCount = (textToSpeak.trim().match(/\S+/g) || []).length;
       const estimatedSecs = Math.max(7, Math.round(wordCount / (isBob ? 2.2 : 2.5)));

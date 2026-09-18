@@ -142,27 +142,19 @@ export default function CopilotDoorAudioBriefingStage({
         if (isBob) {
           const deepMale = maleVoices.find(v => /david|george|daniel|guy|oliver|tom|james|en-us-standard-b|en-us-standard-d|en-us-standard-j|male/i.test(v.name));
           if (deepMale) return deepMale;
-          if (maleVoices.length > 0) return maleVoices[0];
         } else {
           const crispMale = maleVoices.find(v => /alex|daniel|aaron|arthur|ryan|fred|google uk english male|en-gb/i.test(v.name));
           if (crispMale) return crispMale;
-          if (maleVoices.length > 0) return maleVoices[0];
         }
         return null;
       };
 
       const matchedMale = selectMaleVoice();
-      if (matchedMale) {
-        utterance.voice = matchedMale;
-      } else {
-        // If voices aren't loaded yet, attach one-shot handler to ensure male voice is used
-        if (window.speechSynthesis.onvoiceschanged !== undefined) {
-          window.speechSynthesis.onvoiceschanged = () => {
-            const v = selectMaleVoice();
-            if (v) utterance.voice = v;
-          };
-        }
+      if (!matchedMale) {
+        setIsPlaying(false);
+        return;
       }
+      utterance.voice = matchedMale;
 
       const wordCount = (textToSpeak.trim().match(/\S+/g) || []).length;
       const estimatedSecs = Math.max(8, Math.round(wordCount / (isBob ? 2.2 : 2.5)));
