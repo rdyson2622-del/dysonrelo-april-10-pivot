@@ -8,8 +8,8 @@ export default function ChiefPilotPageTwo() {
   const messages = workspace.activeSubject ? workspace.conversations[workspace.activeSubject.id] || [] : [];
 
   return (
-    <section className="h-[calc(100vh-220px)] min-h-[680px] overflow-hidden rounded-xl border border-white/10 bg-dyson-ink">
-      <div className="grid h-full md:grid-cols-[240px_1fr]">
+    <section className="h-[calc(100vh-220px)] min-h-[680px] overflow-hidden rounded-xl bg-dyson-cream p-3">
+      <div className="grid h-full overflow-hidden rounded-lg border border-white/10 bg-dyson-ink md:grid-cols-[240px_1fr]">
         <ChiefPilotSidebar workspace={workspace} />
         <div id="chief-pilot-content" className="h-full overflow-y-auto bg-dyson-ink p-7 sm:p-10">
           <ChiefPilotDossier mode={workspace.mode} libraryItems={workspace.libraryItems} subject={workspace.activeSubject} activeProperty={workspace.displayProperty} hasOwnProperty={Boolean(workspace.activeProperty)} isExample={workspace.isExample} showExample={workspace.showExample} exampleLoading={workspace.exampleLoading} onHideExample={workspace.hideExample} escrowStub={workspace.escrowStub} searchLoading={workspace.searchLoading} searchError={workspace.searchError} introStatus={workspace.introStatus} saveStatus={workspace.saveStatus} preferredClientActive={workspace.preferredClientActive} selectedAgentName={workspace.selectedAgentName} teamMessages={workspace.teamMessages} onPropertySearch={workspace.runPropertySearch} onClearProperty={workspace.clearActiveProperty} onSelectSubject={workspace.selectSubject} onSend={workspace.send} onTeamMessage={workspace.sendTeamMessage} onRequestIntro={workspace.requestVettedIntro} onStartEscrow={workspace.startEscrowWatch} onPreferredClaim={workspace.activatePreferredClient} onSaveProperty={workspace.saveProperty} messages={messages} loading={workspace.loading} error={workspace.error} />
