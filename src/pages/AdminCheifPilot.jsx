@@ -11,7 +11,7 @@ export default function AdminCheifPilot() {
         <header className="space-y-3">
           <Link to="/admin" className="inline-flex items-center gap-2 text-sm text-dyson-taupe hover:text-dyson-gold"><ArrowLeft className="h-4 w-4" />Admin</Link>
           <p className="text-xs tracking-widest text-dyson-gold">DYSONHOMES.COM</p>
-          <h1 className="text-2xl sm:text-3xl font-normal">CHEIF PILOT</h1>
+          <h1 className="text-2xl sm:text-3xl font-normal">CHIEF PILOT</h1>
           <p className="text-sm text-dyson-taupe">New pages workspace · Separate from the current live pages.</p>
         </header>
         <div role="tablist" aria-label="New DysonHomes pages" className="flex flex-wrap gap-3">

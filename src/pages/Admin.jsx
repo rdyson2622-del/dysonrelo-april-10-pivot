@@ -184,7 +184,7 @@ export default function Admin() {
               to="/admin/cheif-pilot"
               className="inline-flex items-center gap-1.5 rounded-full border border-dyson-gold bg-dyson-black px-4 py-2 text-xs font-semibold text-dyson-gold shadow-sm"
             >
-              CHEIF PILOT
+              CHIEF PILOT
             </Link>
             <Link
               to="/admin/dysonhomes-copilot"
