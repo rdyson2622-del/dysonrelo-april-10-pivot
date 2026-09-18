@@ -7,6 +7,8 @@ const stages = [
   { id: 'agent', number: 2, title: 'Agent' },
   { id: 'offer', number: 3, title: 'Offer' },
   { id: 'escrow', number: 4, title: 'Escrow' },
+  { id: 'inspect', number: 5, title: 'Inspect' },
+  { id: 'finance', number: 6, title: 'Finance' },
   { id: 'close', number: 7, title: 'Close' }
 ];
 const signals = {
@@ -21,7 +23,7 @@ export default function CopilotRoadmapPreview() {
   return (
     <div className="w-full py-2 font-mono">
       <p className="mb-3 text-center text-[8px] text-dyson-taupe">Demo map · Illustrative, not your transaction status</p>
-      <ol className="grid grid-cols-5" aria-label="Illustrative transaction roadmap">
+      <ol className="grid grid-cols-7" aria-label="Illustrative seven-phase transaction roadmap">
         {stages.map((stage, index) => {
           const status = statuses[stage.id]?.status || 'pending';
           const signal = signals[status];
