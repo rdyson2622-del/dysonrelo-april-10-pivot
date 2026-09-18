@@ -159,7 +159,7 @@ export async function saveToClientVault({
       item_type,
       propertyAddress: address,
       notes,
-      messages: payload?.messages || [],
+      payload,
       savedAt: new Date().toISOString()
     };
     localStorage.setItem(localKey, JSON.stringify([newEntry, ...existing]));

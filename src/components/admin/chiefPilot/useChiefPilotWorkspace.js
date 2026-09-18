@@ -72,7 +72,7 @@ export default function useChiefPilotWorkspace() {
     if (preferredClient?.isPreferredClient) localStorage.setItem(EXAMPLE_HIDDEN_KEY, '1');
   };
   const historyItems = useMemo(() => {
-    const saved = libraryItems.map((item, index) => ({ id: `saved-${item.id || index}`, kind: 'Saved item', label: item.title || 'Saved discussion', timestamp: item.saved_at || item.savedAt || '', mode: 'library' }));
+    const saved = libraryItems.map((item, index) => ({ id: `saved-${item.id || index}`, kind: 'Saved item', label: item.title || 'Saved discussion', timestamp: item.saved_at || item.savedAt || '', mode: 'library', property: item.payload?.property, subjectId: item.payload?.property ? 'property-search' : undefined }));
     return [...activity, ...saved].sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0)).slice(0, 15);
   }, [activity, libraryItems]);
   const recordActivity = item => setActivity(current => {
@@ -90,8 +90,12 @@ export default function useChiefPilotWorkspace() {
   };
   const openActivity = item => {
     setEntryOpen(false);
+    if (item.property) {
+      setActiveProperty(item.property); sessionStorage.setItem(PROPERTY_KEY, JSON.stringify(item.property));
+      setMode('chats'); setActiveId(item.subjectId || 'property-search'); setShowChatsInbox(false);
+      return;
+    }
     if (item.mode === 'library') { setMode('library'); return; }
-    if (item.property) { setActiveProperty(item.property); sessionStorage.setItem(PROPERTY_KEY, JSON.stringify(item.property)); }
     if (item.subjectId === 'dnn-news') setMode('news');
     else { setMode('chats'); setActiveId(item.subjectId || 'property-search'); setShowChatsInbox(false); }
   };
