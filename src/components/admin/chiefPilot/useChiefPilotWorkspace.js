@@ -66,7 +66,10 @@ export default function useChiefPilotWorkspace() {
     if (nextMode !== 'chats' && !preferredClientActive) return;
     setMode(nextMode);
   };
-  const selectSubject = id => { setMode('chats'); setActiveId(id); };
+  const selectSubject = id => {
+    setMode('chats'); setActiveId(id);
+    document.getElementById('chief-pilot-content')?.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   const openActivity = item => {
     if (item.mode === 'library') { setMode('library'); return; }
     if (item.property) { setActiveProperty(item.property); sessionStorage.setItem(PROPERTY_KEY, JSON.stringify(item.property)); }
@@ -101,7 +104,9 @@ export default function useChiefPilotWorkspace() {
     return true;
   };
   const requestVettedIntro = async () => {
-    if (!activeProperty) return;
+    const targetProperty = activeProperty || displayProperty;
+    if (!targetProperty) return;
+    if (isExample) { setIntroStatus('saved'); return; }
     if (!preferredClient?.isPreferredClient) { setIntroStatus('gate'); return; }
     setIntroStatus('saving');
     try {
@@ -109,19 +114,20 @@ export default function useChiefPilotWorkspace() {
         preferred_client_name: preferredClient.name,
         preferred_client_email: preferredClient.email || undefined,
         preferred_client_phone: preferredClient.phone || undefined,
-        property_address: activeProperty.fullAddress,
-        destination_city: activeProperty.address?.city || undefined,
-        destination_state: activeProperty.address?.state || undefined,
-        destination_zip: activeProperty.address?.zip || undefined,
-        mls_number: activeProperty.listing?.listingNumber || undefined,
+        property_address: targetProperty.fullAddress,
+        destination_city: targetProperty.address?.city || undefined,
+        destination_state: targetProperty.address?.state || undefined,
+        destination_zip: targetProperty.address?.zip || undefined,
+        mls_number: targetProperty.listing?.listingNumber || undefined,
         status: 'pending', source: 'chief_pilot'
       });
       setIntroStatus('saved');
     } catch (_) { setIntroStatus('error'); }
   };
   const startEscrowWatch = () => {
-    if (!activeProperty) return;
-    const stub = { propertyAddress: activeProperty.fullAddress, steps: ESCROW_STEPS.map(label => ({ label, status: 'pending' })) };
+    const targetProperty = activeProperty || displayProperty;
+    if (!targetProperty) return;
+    const stub = { propertyAddress: targetProperty.fullAddress, steps: ESCROW_STEPS.map(label => ({ label, status: isExample ? 'EXAMPLE' : 'pending' })) };
     setEscrowStub(stub); sessionStorage.setItem(ESCROW_KEY, JSON.stringify(stub));
   };
   const activatePreferredClient = () => {
@@ -139,6 +145,7 @@ export default function useChiefPilotWorkspace() {
   const send = async text => {
     if (!activeSubject || !text.trim() || loading) return false;
     const contextId = activeSubject.id;
+    if (!preferredClientActive) return false;
     const next = [...(conversations[contextId] || []), { role: 'user', content: text.trim(), createdAt: new Date().toISOString() }];
     setConversations(current => ({ ...current, [contextId]: next })); setLoading(true); setError('');
     recordActivity({ kind: 'Chat', label: text.trim(), subjectId: contextId, mode });

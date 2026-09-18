@@ -4,6 +4,7 @@ import ChiefPilotListingCard from './ChiefPilotListingCard';
 import ChiefPilotTextDeepDive from './ChiefPilotTextDeepDive';
 import ChiefPilotStoryboard from './ChiefPilotStoryboard';
 import ChiefPilotPreferredDoor from './ChiefPilotPreferredDoor';
+import ChiefPilotActivePropertyHeader from './ChiefPilotActivePropertyHeader';
 import CopilotWordmark from '@/components/brand/CopilotWordmark';
 const STEPS = ['Paste a complete property address or listing number.', 'CoPilot loads verified property fields when available.', 'The active property replaces the Calle Pavana example.'];
 const MLS_LINKS = [['Realtor.com', 'https://www.realtor.com/'], ['Homes.com', 'https://www.homes.com/'], ['Redfin', 'https://www.redfin.com/'], ['Zillow', 'https://www.zillow.com/']];
@@ -23,8 +24,9 @@ export default function ChiefPilotPropertySearch({ title, activeProperty, isExam
   };
   return (
     <div className="flex min-h-full flex-col">
+      <ChiefPilotActivePropertyHeader property={activeProperty} onOpenListing={() => document.getElementById('chief-pilot-listing-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
       <header className="mb-8 text-center"><p className="mb-3 text-xs text-dyson-taupe">{title}</p><CopilotWordmark className="mx-auto h-14 w-36 brightness-125 saturate-125" /><p className="mt-3 text-sm text-dyson-taupe">Private real estate intelligence, organized around the property.</p></header>
-      <ChiefPilotListingCard property={activeProperty} isExample={isExample} onHideExample={onHideExample} onClear={onClear} />
+      <div id="chief-pilot-listing-card"><ChiefPilotListingCard property={activeProperty} isExample={isExample} onHideExample={onHideExample} onClear={onClear} /></div>
       {activeProperty && <ChiefPilotTextDeepDive property={activeProperty} isExample={isExample} />}
       <div className="mt-7 flex flex-wrap gap-3 border-b border-white/10 pb-8"><button type="button" onClick={() => onSelectSubject('property-audit')} className="rounded-full border border-dyson-gold/50 px-4 py-2 text-sm text-dyson-text">Audit this property</button><button type="button" onClick={() => protectedAction('save')} className="rounded-full border border-white/20 px-4 py-2 text-sm text-dyson-text">{saveStatus === 'saving' ? 'Saving…' : saveStatus === 'saved' ? 'Saved to Library' : 'Save to Library'}</button><button type="button" onClick={() => protectedAction('ask')} className="rounded-full border border-white/20 px-4 py-2 text-sm text-dyson-text">Ask about this property</button></div>
       <ChiefPilotStoryboard onSelectSubject={onSelectSubject} />
