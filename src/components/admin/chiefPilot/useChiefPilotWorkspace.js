@@ -9,7 +9,8 @@ const PROPERTY_KEY = 'chief_pilot_active_property';
 const ACTIVITY_KEY = 'chief_pilot_recent_activity';
 const EXAMPLE_HIDDEN_KEY = 'chief_pilot_example_hidden';
 export const DEMO_PROPERTY_ADDRESS = '6228 Calle Pavana, San Diego, CA 92139';
-const DEMO_PROPERTY = { fullAddress: DEMO_PROPERTY_ADDRESS, shortAddress: '6228 Calle Pavana', address: { city: 'San Diego', state: 'CA', zip: '92139' } };
+const DEMO_LISTING_URL = 'https://www.realtor.com/realestateandhomes-detail/6228-Calle-Pavana_San-Diego_CA_92139_M18233-70493';
+const DEMO_PROPERTY = { fullAddress: DEMO_PROPERTY_ADDRESS, shortAddress: '6228 Calle Pavana', listingUrl: DEMO_LISTING_URL, listing: { listingUrl: DEMO_LISTING_URL }, address: { city: 'San Diego', state: 'CA', zip: '92139' } };
 const ESCROW_KEY = 'chief_pilot_escrow_stub';
 const ESCROW_STEPS = ['Escrow opened', 'Deposit and disclosures', 'Inspections and contingencies', 'Loan and appraisal', 'Final review and close'];
 const fromSession = key => {
@@ -48,7 +49,7 @@ export default function useChiefPilotWorkspace() {
     if (activeProperty || !showExample || exampleProperty.isVerified) return;
     let current = true; setExampleLoading(true);
     resolveSanctionedDossier(DEMO_PROPERTY_ADDRESS).then(result => {
-      if (current && result?.isVerified) setExampleProperty(result);
+      if (current && result?.isVerified) setExampleProperty({ ...result, listingUrl: DEMO_LISTING_URL, listing: { ...(result.listing || {}), listingUrl: DEMO_LISTING_URL } });
     }).catch(() => null).finally(() => { if (current) setExampleLoading(false); });
     return () => { current = false; };
   }, [activeProperty, showExample, exampleProperty.isVerified]);
