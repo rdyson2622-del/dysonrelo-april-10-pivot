@@ -390,9 +390,9 @@ export default function AdminSidebar() {
       {/* ── TOP PINNED: CHIEF PILOT + DYSONHOMES COPILOT LAB ── */}
       <div className="px-3 pt-2.5 pb-2 shrink-0 space-y-2">
         <Link
-          to="/admin/cheif-pilot"
+          to="/admin/chief-pilot"
           className={`flex items-center gap-2 px-3.5 py-2.5 rounded-full border transition-all cursor-pointer shadow-lg active:scale-95 group w-full ${
-            location.pathname === '/admin/cheif-pilot'
+            location.pathname === '/admin/chief-pilot'
               ? 'bg-[#2a220c] border-[#D4AF37] ring-1 ring-[#D4AF37]'
               : 'bg-[#18140c] hover:bg-[#241c0e] border-[#D4AF37] hover:border-[#e8c84a]'
           }`}

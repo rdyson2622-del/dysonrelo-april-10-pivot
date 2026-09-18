@@ -399,7 +399,8 @@ const AuthenticatedApp = () => {
       {/* Admin Routes with Sidebar Layout */}
       <Route element={<AdminLayout />}>
         <Route path="/admin" element={<Admin />} />
-        <Route path="/admin/cheif-pilot" element={<AdminCheifPilot />} />
+        <Route path="/admin/chief-pilot" element={<AdminCheifPilot />} />
+        <Route path="/admin/cheif-pilot" element={<Navigate to="/admin/chief-pilot" replace />} />
         <Route path="/admin/scripts" element={<CharlieScripts />} />
         <Route path="/admin/clients" element={<AdminClients />} />
         <Route path="/admin/client-detail" element={<AdminClientDetail />} />
