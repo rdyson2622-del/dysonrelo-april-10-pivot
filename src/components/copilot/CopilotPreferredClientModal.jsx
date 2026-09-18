@@ -172,7 +172,7 @@ export default function CopilotPreferredClientModal({
 
                 <div className="flex items-center justify-center gap-1.5 text-[10px] text-stone-400">
                   <Lock className="w-3 h-3 text-[#D4AF37]" />
-                  <span>Strictly confidential · California Broker License #00609384</span>
+                  <span>Strictly confidential · The Dyson and Dyson Companies, Inc. · CA DRE #02303118</span>
                 </div>
               </div>
             </form>
