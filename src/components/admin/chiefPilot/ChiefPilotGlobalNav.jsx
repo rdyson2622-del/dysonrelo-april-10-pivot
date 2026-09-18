@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import CopilotWordmark from '@/components/brand/CopilotWordmark';
 
 const MODES = [['chats', 'Chats'], ['news', 'News'], ['library', 'Library · For Preferred Clients']];
-const SUBJECTS = [['property-search', 'Property Search'], ['property-audit', 'Property Audit'], ['agent-vetting', 'Agent Vetting'], ['team-thread', 'Team Thread'], ['move-roadmap', 'Relocation Road Maps'], ['escrow-watch', 'Escrow Watch']];
+const SUBJECTS = [['real-estate-solutions', 'Real Estate Solutions'], ['property-search', 'Property Search'], ['property-audit', 'Property Audit'], ['agent-vetting', 'Agent Vetting'], ['team-thread', 'Team Thread'], ['move-roadmap', 'Relocation Road Maps'], ['escrow-watch', 'Escrow Watch']];
 
 export default function ChiefPilotGlobalNav() {
   const location = useLocation();

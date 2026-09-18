@@ -5,7 +5,7 @@ import { useAuth } from '@/lib/AuthContext';
 import { getCheckedInUser, saveToClientVault } from '@/lib/copilotContactSession';
 import { resolveSanctionedDossier } from '@/lib/resolveSanctionedDossier';
 
-const INITIAL_SUBJECTS = [['property-search', 'Property Search'], ['property-audit', 'Property Audit'], ['agent-vetting', 'Agent Vetting'], ['team-thread', 'Team Thread'], ['move-roadmap', 'Relocation Road Maps'], ['escrow-watch', 'Escrow Watch']].map(([id, title]) => ({ id, title }));
+const INITIAL_SUBJECTS = [['real-estate-solutions', 'Real Estate Solutions'], ['property-search', 'Property Search'], ['property-audit', 'Property Audit'], ['agent-vetting', 'Agent Vetting'], ['team-thread', 'Team Thread'], ['move-roadmap', 'Relocation Road Maps'], ['escrow-watch', 'Escrow Watch']].map(([id, title]) => ({ id, title }));
 const PROPERTY_KEY = 'chief_pilot_active_property';
 const ACTIVITY_KEY = 'chief_pilot_recent_activity';
 const EXAMPLE_HIDDEN_KEY = 'chief_pilot_example_hidden';
