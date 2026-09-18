@@ -25,7 +25,7 @@ export default function ChiefPilotDossier({ mode, libraryItems, subject, activeP
     'dnn-news': <ChiefPilotDnnNews {...shared} />
   };
   return (
-    <div className="mx-auto w-full max-w-3xl rounded-xl border border-white/10 bg-dyson-ink p-6 shadow-xl sm:p-8">
+    <div className="w-full max-w-3xl">
       {mode === 'library' ? <ChiefPilotLibrary items={libraryItems} {...shared} isExample={showExample} /> : panels[subject.id] || <h2 className="text-2xl font-normal text-dyson-text">{subject.title}</h2>}
       <ChiefPilotConversation messages={messages} loading={loading} error={error} />
     </div>
