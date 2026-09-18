@@ -11,6 +11,15 @@
   font-weight: 400 !important;
 }
 
+/* Dark gold maintains contrast on the Chief Pilot tan workspace. */
+#chief-pilot-content .text-dyson-gold {
+  color: var(--dyson-gold-deep) !important;
+}
+
+#chief-pilot-content .bg-dyson-gold {
+  background-color: var(--dyson-gold-deep) !important;
+}
+
 @layer base {
   :root {
     --dyson-black: #0a0a0a;
