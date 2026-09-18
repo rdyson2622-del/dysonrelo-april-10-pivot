@@ -68,12 +68,6 @@ export default function useChiefPilotWorkspace() {
   });
   const openEntry = () => setEntryOpen(true);
   const closeEntry = () => setEntryOpen(false);
-  const selectEntryTarget = id => {
-    if (id === 'library' && !preferredClientActive) return;
-    if (id === 'dnn-news') setMode('news');
-    else if (id === 'library') setMode('library');
-    else { setMode('chats'); setActiveId(id); }
-  };
   const selectMode = nextMode => {
     if (nextMode === 'library' && !preferredClientActive) return;
     setEntryOpen(false); setMode(nextMode);
@@ -83,6 +77,7 @@ export default function useChiefPilotWorkspace() {
     document.getElementById('chief-pilot-content')?.scrollTo({ top: 0, behavior: 'smooth' });
   };
   const openActivity = item => {
+    setEntryOpen(false);
     if (item.mode === 'library') { setMode('library'); return; }
     if (item.property) { setActiveProperty(item.property); sessionStorage.setItem(PROPERTY_KEY, JSON.stringify(item.property)); }
     if (item.subjectId === 'dnn-news') setMode('news');
@@ -195,7 +190,6 @@ export default function useChiefPilotWorkspace() {
     } finally { setLoading(false); }
   };
   const send = text => runConversation(text, true);
-  const sendEntry = text => runConversation(text, false);
 
-  return { subjects, mode, entryOpen, openEntry, closeEntry, selectEntryTarget, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, displayProperty, isExample, showExample, exampleLoading, hideExample, escrowStub, conversations, teamMessages, selectedAgentName, loading, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, error, rename, move, send, sendEntry, sendTeamMessage, runPropertySearch, clearActiveProperty, requestVettedIntro, startEscrowWatch, activatePreferredClient, saveProperty };
+  return { subjects, mode, entryOpen, openEntry, closeEntry, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, displayProperty, isExample, showExample, exampleLoading, hideExample, escrowStub, conversations, teamMessages, selectedAgentName, loading, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, error, rename, move, send, sendTeamMessage, runPropertySearch, clearActiveProperty, requestVettedIntro, startEscrowWatch, activatePreferredClient, saveProperty };
 }
