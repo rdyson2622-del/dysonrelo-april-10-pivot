@@ -58,7 +58,7 @@ function ExplainerVideoCard({ item }) {
 
 export default function ChiefPilotExplainerVideoStack({ explainers }) {
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <div className="grid content-start items-start gap-2 grid-cols-2">
       {explainers.map(item => <ExplainerVideoCard key={item.id} item={item} />)}
     </div>
   );
