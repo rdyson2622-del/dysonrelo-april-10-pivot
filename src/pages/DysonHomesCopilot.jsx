@@ -22,6 +22,7 @@ import { getCheckedInUser, clearCheckedInContact } from '@/lib/copilotContactSes
 import { findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { GeminiLiveSessionClient } from '@/lib/geminiLiveClient';
 import { stopAllCopilotAudio } from '@/lib/copilotAudioController';
+import { buildRecentConversation, getPreviousAssistant, isAffirmativeFollowUp, isPropertyConversation } from '@/lib/copilotConversationContext';
 import { KNOWN_PROPERTY_DOSSIERS } from '@/components/admin/copilot/propertyDossierData';
 import { 
   getDomainKnowledgeContext, 
@@ -396,6 +397,26 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
     setInputText('');
     addDiscussionChip(clean);
 
+    const previousAssistant = getPreviousAssistant(messages);
+    const recentConversation = buildRecentConversation(messages);
+
+    if (isAffirmativeFollowUp(clean) && /reach out|call you|callback|contact you|connect with you/i.test(previousAssistant?.text || '')) {
+      const followUpReply = 'Absolutely. I’ve opened the secure contact form so our team can clarify the service structure with you directly.';
+      setIsCaptureModalOpen(true);
+      setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'charlie', text: followUpReply, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }]);
+      setDialogueFocus({ id: userMsg.id, question: clean, response: followUpReply, speaker: 'charlie' });
+      return;
+    }
+
+    const isGeneralCostQuestion = /\b(cost|costs|fee|fees|charge|charges|pay|free)\b/i.test(clean)
+      && !/\b(closing costs?|purchase price|home price|listing price|repair cost|inspection cost)\b/i.test(clean);
+    if (isGeneralCostQuestion) {
+      const costReply = 'Our advisory and concierge support does not add a separate brokerage fee for the buyer. Transaction-specific compensation or referral terms are handled through written agreements, and a human specialist can confirm exactly what applies to your situation.';
+      setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'charlie', text: costReply, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }]);
+      setDialogueFocus({ id: userMsg.id, question: clean, response: costReply, speaker: 'charlie' });
+      return;
+    }
+
     // ── 1. THE ESCALATION PROTOCOL (HITTING THE WALL) ──
     const escalation = detectEscalationTrigger(clean);
     if (escalation) {
@@ -491,7 +512,10 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
 
     try {
       // ── 3. DOMAIN-SPECIFIC KNOWLEDGE LOADING ──
-      const domainKnowledge = getDomainKnowledgeContext(activeTargetDoor, analyzedProperty, dossierData);
+      const propertyConversation = isPropertyConversation(clean, messages);
+      const domainKnowledge = propertyConversation
+        ? getDomainKnowledgeContext(activeTargetDoor, analyzedProperty, dossierData)
+        : 'ACTIVE CONTEXT: GENERAL COPILOT SERVICE QUESTION. Do not mention any property, address, listing, comp, risk, or dossier unless the client explicitly asks about one.';
 
       const kbContext = (kbRowsRef.current || [])
         .slice(0, 15)
@@ -511,7 +535,7 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
             .join('\n')
         : '  No verified risks returned from sanctioned functions.';
 
-      const dossierContextBlock = `
+      const dossierContextBlock = propertyConversation ? `
 DOSSIER FACTS:
 - shortAddress: ${currentDossier.shortAddress || analyzedProperty}
 - listPrice: ${currentDossier.listPrice || 'Could not resolve'}
@@ -520,7 +544,7 @@ DOSSIER FACTS:
 ${compsFormatted}
 - risk titles:
 ${risksFormatted}
-`.trim();
+`.trim() : 'NO PROPERTY DOSSIER IS RELEVANT TO THIS QUESTION. Do not use or mention previously loaded property data.';
 
       const snippetDirective = visualSnippet ? `
 ACTIVE LEFT-TO-RIGHT ACTION EXECUTED:
@@ -538,15 +562,20 @@ ${snippetDirective}
 
 ${COPILOT_CHARLIE_SYSTEM_PROMPT}
 
+RECENT CONVERSATION — AUTHORITATIVE FOLLOW-UP CONTEXT:
+${recentConversation || 'No prior dialogue.'}
+
 KNOWLEDGE BASE CONTEXT:
 ${kbContext}
 
-USER QUESTION:
+CURRENT USER QUESTION:
 ${clean}
 
 DIRECTIVE FOR CHARLIE SIMMONS:
-- Act as an active operator of the right-side dashboard: if a visual breakdown was pushed or is relevant to the active door, reference it on screen.
-- If compsSummary or comps are present, answer using those numbers; do not invent; do not give generic public-records spiel.
+- Treat short replies such as “yes,” “no,” or “please do” as answers to Charlie’s immediately preceding question in RECENT CONVERSATION.
+- Never introduce a property or address from stored dossier data unless the current question or its immediate follow-up context is property-specific.
+- Act as an active operator of the right-side dashboard only when a visual breakdown is relevant to the current question.
+- If this is a property question and comps are present, answer using those numbers; do not invent.
 - For “Is this a good deal vs comps?” answer first with the exact visible conclusion.
 - Answer directly, authoritatively, and conversationally in 2 to 4 concise sentences.
 - Adhere strictly to hard stops (no legal/tax advice, no commissions/splits, CA DRE #02303118).`;
