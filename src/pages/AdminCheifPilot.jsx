@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import ChiefPilotPageTwo from '@/components/admin/chiefPilot/ChiefPilotPageTwo';
 
 export default function AdminCheifPilot() {
   const [params, setParams] = useSearchParams();
-  const page = params.get('page') === '2' ? 2 : 1;
+  const page = params.get('page') === '1' ? 1 : 2;
   return (
     <div className="min-h-screen bg-dyson-black text-dyson-text p-4 sm:p-8">
       <div className="max-w-6xl mx-auto space-y-8">
@@ -21,13 +22,19 @@ export default function AdminCheifPilot() {
             </button>
           ))}
         </div>
-        <section id="page-workspace" role="tabpanel" aria-labelledby={`page-tab-${page}`} className="min-h-80 rounded-2xl border border-dyson-taupe bg-dyson-charcoal p-6 sm:p-10">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="text-xl font-normal">Page #{page}</h2>
-            <span className="text-xs text-dyson-taupe">Not started</span>
-          </div>
-          <p className="mt-8 text-sm text-dyson-taupe">A clean workspace for the new DysonHomes.com page #{page}. Design and content will be added next.</p>
-        </section>
+        <div id="page-workspace" role="tabpanel" aria-labelledby={`page-tab-${page}`}>
+          {page === 2 ? (
+            <ChiefPilotPageTwo />
+          ) : (
+            <section className="min-h-80 rounded-2xl border border-dyson-taupe bg-dyson-charcoal p-6 sm:p-10">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <h2 className="text-xl font-normal">Page #1</h2>
+                <span className="text-xs text-dyson-taupe">Not started</span>
+              </div>
+              <p className="mt-8 text-sm text-dyson-taupe">A clean workspace for the new DysonHomes.com page #1. Design and content will be added next.</p>
+            </section>
+          )}
+        </div>
       </div>
     </div>
   );
