@@ -35,6 +35,7 @@ import { resolveSanctionedDossier } from '@/lib/resolveSanctionedDossier';
 export { resolveSanctionedDossier };
 
 const TAN_BG = '#ede0cc';
+const CONSUMER_VOICE_ENABLED = false;
 
 export const COPILOT_CHARLIE_SYSTEM_PROMPT = "You are Charlie Simmons, AI concierge for DysonHomes Copilot (Dyson & Dyson Companies / DysonRelo). Warm, clear, brief, interruptible. On Copilot your job is to ANSWER ordinary real-estate and product questions on-point — do not pass the buck on normal questions.\n\nPOSITIONING & ROLE (CRITICAL):\n- DysonHomes Copilot is your human-driven & AI-assisted private real estate intelligence partner on dysonhomes.com.\n- We are an intelligence advocate and supportive advisor—NOT a compliance officer or final decision maker. The buyer always makes the final call; we equip them with the questions, data, comps, and risk awareness to decide with confidence.\n- Ongoing Partnership via Referral Agreement: CoPilot does not disappear when you select an agent. Under our formal referral agreement, CoPilot remains actively involved alongside the buyer and their vetted agent throughout the entire sequence of events (discovery, offer, inspections, escrow, and closing) as an extra layer of strategic analytical support.\n- Trust line: No agent spam. Dedicated independent buyer representation—never dual agency with the listing agent.\n- Public experience is conversational (chat + Talk Live). Admin/back office is separate.\n\nHOW TO ANSWER:\n- Lead with a useful answer in 2–4 short sentences, then one optional follow-up question.\n- Educate and guide rather than police or command. Instead of saying 'never accept dual agency', explain the structural conflicts of listing agent representation.\n- Explain how CoPilot works with the buyer's agent through the referral agreement when asked about our role.\n- If the dossier already shows comps/risks/notes, narrate what is on screen; do not invent new numbers.\n\nHARD STOPS (non-negotiable — hand to human, do not invent):\n- Exact fees, commissions, rebate dollar amounts or percentages, referral splits.\n- DRE / licensing / contracts / agency / legal / tax advice.\n- Guarantees of sale price, appraisal, investment returns, or outcomes.\n- Claiming to be a licensed broker; you are the AI concierge. Brokerage: The Dyson & Dyson Companies (CA DRE #02303118).\nOn a hard stop: one plain sentence + offer human specialist callback. Do not lecture.\n\nSTYLE:\n- Conversational, warm, supportive. No monologues. One question at a time when you need info.\n- You are Charlie only (not Bob) unless Bob speaks.";
 
@@ -493,7 +494,6 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
 
     const explainer = findExplainerByQuery(clean);
     if (explainer?.videoUrl) {
-      setActiveExplainer(explainer);
       const explainerSpeaker = explainer.speaker === 'bob' ? 'bob' : 'charlie';
       const explainerReply = explainer.textAnswer || `Playing video explainer for "${explainer.label}".`;
       setMessages(prev => [
@@ -882,7 +882,8 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                       </div>
                     </div>
 
-                    {/* ── ROSTER: BOB, CHARLIE, YOU SPEAKER BOXES (REDUCED BY 10%) ── */}
+                    {/* Voice roster is admin-experimental only; consumers remain text-only. */}
+                    {CONSUMER_VOICE_ENABLED && (
                     <div className="grid grid-cols-3 gap-2 pt-1 max-w-[90%] mx-auto">
                       <CopilotDynamicSpeakerBox 
                         speaker="bob"
@@ -913,8 +914,10 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                         isTransmitting={activeDemoSpeaker === 'consumer'}
                       />
                     </div>
+                    )}
 
-                    {/* ── INTERACTIVE 3-WAY DIALOGUE STAGE ── */}
+                    {/* Admin-only experimental voice stage; never mounted for consumers. */}
+                    {CONSUMER_VOICE_ENABLED && (
                     <div className="pt-2">
                       <CopilotThreeWayDemo 
                         onTurnChange={setActiveDemoSpeaker}
@@ -924,6 +927,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                         }}
                       />
                     </div>
+                    )}
 
                     {/* ── COMMAND BAR: POSITIONED DIRECTLY UNDER DEMO BOX MATCHING PAGE 1 SEARCH STYLE ── */}
                     <div className="pt-2.5 pb-1 space-y-2">
@@ -964,19 +968,6 @@ DIRECTIVE FOR CHARLIE SIMMONS:
 
                           <div className="flex items-center gap-1.5 ml-2 shrink-0 z-10">
                             <button
-                              type="button"
-                              onClick={handleToggleTalkLive}
-                              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer flex items-center justify-center ${
-                                isTalkLiveActive 
-                                  ? 'bg-red-600 text-white animate-pulse' 
-                                  : 'bg-white/10 text-white hover:bg-white/20 border border-white/20'
-                              }`}
-                              title={isTalkLiveActive ? "End live Gemini duplex session" : "Talk Live with Charlie"}
-                            >
-                              <span>{isTalkLiveActive ? (liveStatus === 'connecting' ? 'Connecting…' : 'End Voice') : 'Talk Live'}</span>
-                            </button>
-
-                            <button
                               type="submit"
                               disabled={isSending}
                               className="px-5 py-2 rounded-full font-bold text-xs flex items-center justify-center transition-all cursor-pointer shadow-sm bg-[#0a0a0a] hover:bg-[#1a1a1a] text-[#D4AF37] hover:text-white border border-[#666666] active:scale-95"
@@ -992,7 +983,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
 
                       {/* Talk Live Helper & Exact Status Bar */}
                       <div className="flex items-center justify-between text-[11px] px-2 py-0.5 min-h-[22px]">
-                        <span className="text-stone-300 font-sans truncate">
+                        <span className="hidden">
                           {liveStatus === 'connecting' ? (
                             <span className="text-[#D4AF37] font-semibold animate-pulse">Connecting…</span>
                           ) : liveStatus === 'listening' ? (
@@ -1094,7 +1085,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                                 <>
                                   <span className={`w-1.5 h-1.5 rounded-full bg-emerald-400 ${isSpeakingNow ? 'animate-ping' : ''}`} />
                                   <span className="text-emerald-400 font-medium">
-                                    {m.speakerName || 'Charlie Simmons (Voice)'}
+                                    {m.speakerName || 'Charlie Simmons'}
                                   </span>
                                   {isSpeakingNow && (
                                     <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-emerald-500/15 text-emerald-300 font-sans">
@@ -1210,7 +1201,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                         <div className="flex flex-col items-start">
                           <div className="mb-0.5 px-1 text-[11px] font-medium text-emerald-400 flex items-center gap-1.5">
                             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                            <span>Charlie Simmons (Voice)</span>
+                            <span>Charlie Simmons</span>
                           </div>
                           <div className="rounded-xl px-3.5 py-2 bg-[#0c1a14] border border-emerald-500/40 text-stone-300 text-xs flex items-center gap-2">
                             <span>Charlie is consulting property records &amp; fiduciary directives...</span>
@@ -1269,7 +1260,8 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                 voiceText={activeVoiceMessage?.text || ''}
                 voiceSpeaker={activeVoiceMessage?.sender || 'charlie'}
                 voiceAudioUrl={activeVoiceMessage?.audioUrl || null}
-                voiceAutoPlayKey={activeVoiceMessage?.id}
+                voiceAutoPlayKey={undefined}
+                showVoiceControls={false}
                 onVoiceStateChange={(playing, speaker) => setActiveDemoSpeaker(playing ? speaker : null)}
                 onSelectChip={(chip) => {
                   if (['audit', 'vetting', 'roadmap', 'escrow', 'news'].includes(chip.id)) {

@@ -13,6 +13,7 @@ export default function CopilotFooterBranding({
   voiceAudioUrl = null,
   voiceAutoPlayKey,
   onVoiceStateChange,
+  showVoiceControls = false,
   onSelectChip,
   onOpenReferModal,
   onOpenLegalModal
@@ -21,15 +22,17 @@ export default function CopilotFooterBranding({
     <div className="px-3 sm:px-4 py-2.5 bg-[#0a0a0a] border-t border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 select-none">
       {/* ── LEFT: SAVED DISCUSSIONS & CHIPS CONSTRAINED TO 40% LEFT LIMIT ── */}
       <div className="w-full lg:w-[40%] lg:max-w-[40%] min-w-0 flex flex-col items-start">
-        <div className="w-full flex justify-center pb-3 mb-1">
-          <CopilotUniversalVoicePills
-            text={voiceText}
-            defaultSpeaker={voiceSpeaker}
-            audioUrl={voiceAudioUrl}
-            autoPlayKey={voiceAutoPlayKey}
-            onPlayingChange={onVoiceStateChange}
-          />
-        </div>
+        {showVoiceControls && (
+          <div className="w-full flex justify-center pb-3 mb-1">
+            <CopilotUniversalVoicePills
+              text={voiceText}
+              defaultSpeaker={voiceSpeaker}
+              audioUrl={voiceAudioUrl}
+              autoPlayKey={undefined}
+              onPlayingChange={onVoiceStateChange}
+            />
+          </div>
+        )}
         <div className="flex flex-wrap items-center gap-1.5 w-full">
         <button
           type="button"

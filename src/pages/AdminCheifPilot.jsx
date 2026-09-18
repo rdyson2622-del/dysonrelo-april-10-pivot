@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import ChiefPilotPageTwo from '@/components/admin/chiefPilot/ChiefPilotPageTwo';
+import ChiefPilotExperimentalVoice from '@/components/admin/chiefPilot/ChiefPilotExperimentalVoice';
 
 export default function AdminCheifPilot() {
   const [params, setParams] = useSearchParams();
@@ -15,12 +16,15 @@ export default function AdminCheifPilot() {
           <h1 className="text-2xl sm:text-3xl font-normal">CHIEF PILOT</h1>
           <p className="text-sm text-dyson-taupe">New pages workspace · Separate from the current live pages.</p>
         </header>
-        <div role="tablist" aria-label="New DysonHomes pages" className="flex flex-wrap gap-3">
-          {[1, 2].map(number => (
-            <button key={number} id={`page-tab-${number}`} role="tab" aria-selected={page === number} aria-controls="page-workspace" onClick={() => setParams({ page: String(number) })} className={`rounded-full border px-5 py-2 text-sm ${page === number ? 'border-dyson-gold bg-dyson-gold text-dyson-text-dark' : 'border-dyson-taupe bg-dyson-charcoal text-dyson-taupe'}`}>
-              Page #{number}
-            </button>
-          ))}
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div role="tablist" aria-label="New DysonHomes pages" className="flex flex-wrap gap-3">
+            {[1, 2].map(number => (
+              <button key={number} id={`page-tab-${number}`} role="tab" aria-selected={page === number} aria-controls="page-workspace" onClick={() => setParams({ page: String(number) })} className={`rounded-full border px-5 py-2 text-sm ${page === number ? 'border-dyson-gold bg-dyson-gold text-dyson-text-dark' : 'border-dyson-taupe bg-dyson-charcoal text-dyson-taupe'}`}>
+                Page #{number}
+              </button>
+            ))}
+          </div>
+          <ChiefPilotExperimentalVoice />
         </div>
         <div id="page-workspace" role="tabpanel" aria-labelledby={`page-tab-${page}`}>
           {page === 2 ? (
