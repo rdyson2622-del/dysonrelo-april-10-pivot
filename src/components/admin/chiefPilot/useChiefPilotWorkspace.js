@@ -66,7 +66,7 @@ export default function useChiefPilotWorkspace() {
     sessionStorage.setItem(ACTIVITY_KEY, JSON.stringify(next)); return next;
   });
   const selectMode = nextMode => {
-    if (nextMode !== 'chats' && !preferredClientActive) return;
+    if (nextMode === 'library' && !preferredClientActive) return;
     setMode(nextMode);
   };
   const selectSubject = id => {
