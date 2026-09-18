@@ -387,8 +387,24 @@ export default function AdminSidebar() {
       {/* Sidebar Search — searches every link in every nav section below */}
       <AdminSidebarSearch items={buildSearchIndex(NAV_SECTIONS)} />
 
-      {/* ── TOP PINNED: DYSONHOMES COPILOT LAB (JUST UNDER SEARCH ADMIN PILL) ── */}
-      <div className="px-3 pt-2.5 pb-2 shrink-0 space-y-1">
+      {/* ── TOP PINNED: CHIEF PILOT + DYSONHOMES COPILOT LAB ── */}
+      <div className="px-3 pt-2.5 pb-2 shrink-0 space-y-2">
+        <Link
+          to="/admin/cheif-pilot"
+          className={`flex items-center gap-2 px-3.5 py-2.5 rounded-full border transition-all cursor-pointer shadow-lg active:scale-95 group w-full ${
+            location.pathname === '/admin/cheif-pilot'
+              ? 'bg-[#2a220c] border-[#D4AF37] ring-1 ring-[#D4AF37]'
+              : 'bg-[#18140c] hover:bg-[#241c0e] border-[#D4AF37] hover:border-[#e8c84a]'
+          }`}
+          style={{ boxShadow: '0 4px 14px rgba(212,175,55,0.25)' }}
+          title="Open Chief Pilot workspace"
+        >
+          <Star className="w-4 h-4 text-[#D4AF37] shrink-0 group-hover:scale-110 transition-transform" />
+          <span className="text-[12px] font-black uppercase tracking-wider text-[#D4AF37] truncate">
+            CHIEF PILOT
+          </span>
+        </Link>
+
         <Link
           to="/admin/dysonhomes-copilot"
           className={`flex items-center gap-2 px-3.5 py-2.5 rounded-full border transition-all cursor-pointer shadow-lg active:scale-95 group w-full ${

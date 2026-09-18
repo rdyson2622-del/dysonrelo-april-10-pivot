@@ -179,15 +179,7 @@ export default function Admin() {
             </div>
           </div>
 
-          <div className="mt-3">
-            <Link
-              to="/admin/cheif-pilot"
-              className="inline-flex items-center gap-1.5 rounded-full border border-dyson-gold bg-dyson-black px-4 py-2 text-xs font-semibold text-dyson-gold shadow-sm"
-            >
-              CHIEF PILOT
-            </Link>
-          </div>
-          <div className="flex flex-wrap gap-2 mt-2">
+          <div className="flex flex-wrap gap-2 mt-3">
             <Link
               to="/admin/dysonhomes-copilot"
               className="inline-flex items-center gap-1.5 text-xs font-black px-3.5 py-1.5 rounded-xl shadow-md transition-transform hover:scale-105"
