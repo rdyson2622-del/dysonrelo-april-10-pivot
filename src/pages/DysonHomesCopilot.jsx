@@ -1245,6 +1245,13 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                     }}
                     pushedSnippet={pushedSnippet}
                     onDismissSnippet={() => setPushedSnippet(null)}
+                    onClear={() => {
+                      setRightPanelView(null);
+                      setDialogueFocus(null);
+                      setPushedSnippet(null);
+                      setActiveExplainer(null);
+                      setSelectedExplodedItem(null);
+                    }}
                     activeExplainer={activeExplainer}
                   />
                 </div>

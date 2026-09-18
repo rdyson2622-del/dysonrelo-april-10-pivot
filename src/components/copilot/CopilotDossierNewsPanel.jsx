@@ -141,7 +141,7 @@ export default function CopilotDossierNewsPanel({
   }, [activeView]);
 
   // Back button function strictly pertains ONLY to the Intelligence side of this page
-  const currentView = activeView || 'dossier';
+  const currentView = activeView;
   const handleViewSwitch = (view) => {
     stopAllCopilotAudio();
     setSelectedVaultSubject(null);
@@ -243,7 +243,7 @@ export default function CopilotDossierNewsPanel({
         <CopilotDialogueFocusStage focus={dialogueFocus} />
       ) : (
         <CopilotDynamicStage
-          activeView={currentView}
+          activeView={currentView || 'news'}
           objectiveProject={objectiveProject}
           selectedSubject={selectedVaultSubject}
           activeExplainer={activeExplainer}
