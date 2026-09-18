@@ -1,12 +1,11 @@
 import React from 'react';
-import { COPILOT_EXPLAINERS } from '@/components/copilot/copilotExplainers';
 import ChiefPilotExplainerVideoStack from './ChiefPilotExplainerVideoStack';
 import ChiefPilotMilestoneMap from './ChiefPilotMilestoneMap';
 import { SUBJECT_EXPLAINER_CONTENT } from './chiefPilotExplainerContent';
 
 export default function ChiefPilotExplainers({ subject, onBack, isLiveObjective = false }) {
   const content = SUBJECT_EXPLAINER_CONTENT[subject.id] || SUBJECT_EXPLAINER_CONTENT['real-estate-solutions'];
-  const explainers = COPILOT_EXPLAINERS.filter(item => content.assets.includes(item.id));
+  const explainers = content.explainers;
   return (
     <section className="min-h-full rounded-xl bg-dyson-cream p-6 text-dyson-text-dark sm:p-9">
       <button type="button" onClick={onBack} className="inline-flex items-center rounded-full border border-dyson-gold-deep bg-dyson-warm-paper px-4 py-2 text-xs font-semibold text-dyson-gold-deep shadow-sm">← Back to ask/search</button>
