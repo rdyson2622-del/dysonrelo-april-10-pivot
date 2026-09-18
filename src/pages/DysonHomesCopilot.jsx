@@ -641,7 +641,8 @@ DIRECTIVE FOR CHARLIE SIMMONS:
     ? (dialogueFocus.response ? {
         id: dialogueFocus.id,
         text: dialogueFocus.response,
-        sender: dialogueFocus.speaker
+        sender: dialogueFocus.speaker,
+        audioUrl: null
       } : null)
     : latestVoiceMessage;
 
@@ -1266,6 +1267,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                 activeDoor={rightPanelView || 'dossier'}
                 voiceText={activeVoiceMessage?.text || ''}
                 voiceSpeaker={activeVoiceMessage?.sender || 'charlie'}
+                voiceAudioUrl={activeVoiceMessage?.audioUrl || null}
                 voiceAutoPlayKey={activeVoiceMessage?.id}
                 onVoiceStateChange={(playing, speaker) => setActiveDemoSpeaker(playing ? speaker : null)}
                 onSelectChip={(chip) => {

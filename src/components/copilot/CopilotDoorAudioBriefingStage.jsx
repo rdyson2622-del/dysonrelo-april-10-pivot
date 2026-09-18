@@ -9,6 +9,8 @@ import { stopAllCopilotAudio, subscribeToStopAllAudio, registerActiveMedia } fro
 import CopilotScriptRewriteModal from './CopilotScriptRewriteModal';
 import CopilotRoadmapPreview from '@/components/copilot/CopilotRoadmapPreview';
 import CopilotObjectiveRoadmapStrip from './CopilotObjectiveRoadmapStrip';
+import { useAuth } from '@/lib/AuthContext';
+import { base44 } from '@/api/base44Client';
 
 /**
  * CopilotDoorAudioBriefingStage
@@ -35,6 +37,8 @@ export default function CopilotDoorAudioBriefingStage({
   onPromptClick,
   onToggleExplode
 }) {
+  const { user } = useAuth();
+  const canEditScripts = user?.role === 'admin';
   const [briefing, setBriefing] = useState(() => getDoorAudioBriefing(activeDoor));
   const isBob = briefing.speaker === 'bob';
 
@@ -116,82 +120,32 @@ export default function CopilotDoorAudioBriefingStage({
     if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
   };
 
-  const fallbackSpeechSynthesis = () => {
-    if (typeof window === 'undefined' || !window.speechSynthesis) {
-      setIsPlaying(false);
-      return;
-    }
-
+  const generateStudioSpeech = async () => {
     try {
-      window.speechSynthesis.cancel();
-      const textToSpeak = briefing.spokenText || '';
-      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      const functionName = isBob ? 'bobSpeak' : 'charlieSpeak';
+      const response = await base44.functions.invoke(functionName, { text: briefing.spokenText || '' });
+      const generatedUrl = response?.data?.audioUrl;
+      if (!generatedUrl) return;
 
-      // Fiduciary cadence: Bob = measured, steady broker 0.95x; Charlie = articulate concierge 1.0x
-      utterance.rate = isBob ? 0.95 : 1.0;
-      utterance.pitch = isBob ? 0.88 : 1.02;
-      utterance.volume = isMuted ? 0 : 0.65; // Soft comfortable volume
-
-      // STRICT MALE VOICE SELECTION — Absolutely reject any female system voice
-      const selectMaleVoice = () => {
-        const voices = window.speechSynthesis.getVoices() || [];
-        const englishVoices = voices.filter(v => v.lang.startsWith('en'));
-        const isFemale = (name) => /female|woman|samantha|victoria|karen|susan|zira|cynthia|jenny|aria|ava|emma|allison|fiona|moira|tessa|veena|helena|catherine|serena/i.test(name);
-        const maleVoices = englishVoices.filter(v => !isFemale(v.name));
-
-        if (isBob) {
-          const deepMale = maleVoices.find(v => /david|george|daniel|guy|oliver|tom|james|en-us-standard-b|en-us-standard-d|en-us-standard-j|male/i.test(v.name));
-          if (deepMale) return deepMale;
-        } else {
-          const crispMale = maleVoices.find(v => /alex|daniel|aaron|arthur|ryan|fred|google uk english male|en-gb/i.test(v.name));
-          if (crispMale) return crispMale;
-        }
-        return null;
+      const audio = audioPlayerRef.current || new Audio();
+      audioPlayerRef.current = audio;
+      registerActiveMedia(audio);
+      audio.src = generatedUrl;
+      audio.currentTime = 0;
+      audio.volume = isMuted ? 0 : 0.7;
+      audio.onplay = () => setIsPlaying(true);
+      audio.ontimeupdate = () => {
+        if (audio.duration > 0) setProgress(Math.min(100, (audio.currentTime / audio.duration) * 100));
       };
-
-      const matchedMale = selectMaleVoice();
-      if (!matchedMale) {
-        setIsPlaying(false);
-        return;
-      }
-      utterance.voice = matchedMale;
-
-      const wordCount = (textToSpeak.trim().match(/\S+/g) || []).length;
-      const estimatedSecs = Math.max(8, Math.round(wordCount / (isBob ? 2.2 : 2.5)));
-      durationRef.current = estimatedSecs;
-      startTimeRef.current = Date.now();
-
-      utterance.onstart = () => {
-        setIsPlaying(true);
-        setHasEnded(false);
-        setProgress(0);
-
-        if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
-        progressIntervalRef.current = setInterval(() => {
-          const elapsed = (Date.now() - startTimeRef.current) / 1000;
-          const p = Math.min(100, (elapsed / durationRef.current) * 100);
-          setProgress(p);
-          if (p >= 100) {
-            clearInterval(progressIntervalRef.current);
-          }
-        }, 150);
-      };
-
-      utterance.onend = () => {
+      audio.onended = () => {
         setIsPlaying(false);
         setHasEnded(true);
         setProgress(100);
-        if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
       };
-
-      utterance.onerror = () => {
-        setIsPlaying(false);
-        if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
-      };
-
-      window.speechSynthesis.speak(utterance);
-    } catch (err) {
-      console.warn('Speech playback failed:', err);
+      audio.onerror = () => setIsPlaying(false);
+      await audio.play();
+    } catch (error) {
+      console.warn('Studio voice unavailable:', error);
       setIsPlaying(false);
     }
   };
@@ -245,23 +199,23 @@ export default function CopilotDoorAudioBriefingStage({
 
         audio.onerror = (e) => {
           console.warn('Door audio asset error, using synthesis fallback:', e);
-          fallbackSpeechSynthesis();
+          generateStudioSpeech();
         };
 
         audio.play().catch((e) => {
           console.warn('Audio play failed, using synthesis fallback:', e);
-          fallbackSpeechSynthesis();
+          generateStudioSpeech();
         });
         return;
       } catch (err) {
         console.warn('Audio element error:', err);
-        fallbackSpeechSynthesis();
+        generateStudioSpeech();
         return;
       }
     }
 
     // Otherwise use custom script synthesis
-    fallbackSpeechSynthesis();
+    generateStudioSpeech();
   };
 
   const togglePlay = (e) => {
@@ -319,24 +273,26 @@ export default function CopilotDoorAudioBriefingStage({
 
           {/* Media Controls Group: Rewrite Script, Play/Pause, Mute */}
           <div className="flex items-center gap-1.5 shrink-0">
-            {/* Direct Rewrite Script Button with inlined custom indicator */}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                stopPlayback();
-                setIsRewriteModalOpen(true);
-              }}
-              className={`px-2 py-1 rounded-md border transition-colors cursor-pointer flex items-center gap-1 text-[9px] font-medium ${
-                briefing.isCustomized
-                  ? 'bg-[#D4AF37]/15 text-[#D4AF37] border-[#D4AF37]/50 hover:bg-[#D4AF37]/25'
-                  : 'bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white border-white/10'
-              }`}
-              title="Inspect or rewrite the spoken script for this door"
-            >
-              <Edit3 className="w-2.5 h-2.5 text-[#D4AF37]" />
-              <span>{briefing.isCustomized ? 'Custom Script' : 'Rewrite Script'}</span>
-            </button>
+            {/* Script editing is restricted to authenticated admins. */}
+            {canEditScripts && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  stopPlayback();
+                  setIsRewriteModalOpen(true);
+                }}
+                className={`px-2 py-1 rounded-md border transition-colors cursor-pointer flex items-center gap-1 text-[9px] font-medium ${
+                  briefing.isCustomized
+                    ? 'bg-[#D4AF37]/15 text-[#D4AF37] border-[#D4AF37]/50 hover:bg-[#D4AF37]/25'
+                    : 'bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white border-white/10'
+                }`}
+                title="Admin script editor"
+              >
+                <Edit3 className="w-2.5 h-2.5 text-[#D4AF37]" />
+                <span>{briefing.isCustomized ? 'Custom Script' : 'Rewrite Script'}</span>
+              </button>
+            )}
 
             {/* Subtle Audio Waveform Indicator */}
             <div className="flex items-end gap-0.5 h-3 px-1 shrink-0" title={isPlaying ? "Audio Briefing Active" : "Audio Paused"}>
@@ -407,7 +363,7 @@ export default function CopilotDoorAudioBriefingStage({
         <div className="my-auto px-1 py-1">
           {/* 1. AGENT VETTING DIAGRAM */}
           {activeDoor === 'vetting' && (
-            <div className="grid grid-cols-2 gap-1.5 text-[10px] sm:text-[11px]">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-[10px] sm:text-[11px]">
               <div className="bg-black/60 p-1.5 sm:p-2 rounded-lg border border-white/10">
                 <span className="text-stone-400 block font-mono text-[8.5px] uppercase">REPRESENTATION</span>
                 <span className="text-white font-bold">Zero Dual Agency</span>
@@ -551,12 +507,14 @@ export default function CopilotDoorAudioBriefingStage({
         </div>
       </div>
 
-      {/* Script Rewrite Modal */}
-      <CopilotScriptRewriteModal
-        isOpen={isRewriteModalOpen}
-        initialDoor={activeDoor}
-        onClose={() => setIsRewriteModalOpen(false)}
-      />
+      {/* Script Rewrite Modal — admin only */}
+      {canEditScripts && (
+        <CopilotScriptRewriteModal
+          isOpen={isRewriteModalOpen}
+          initialDoor={activeDoor}
+          onClose={() => setIsRewriteModalOpen(false)}
+        />
+      )}
     </>
   );
 }

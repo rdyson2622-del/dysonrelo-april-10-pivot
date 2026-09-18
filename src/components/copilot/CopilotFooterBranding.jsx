@@ -10,6 +10,7 @@ export default function CopilotFooterBranding({
   activeDoor = null,
   voiceText = '',
   voiceSpeaker = 'charlie',
+  voiceAudioUrl = null,
   voiceAutoPlayKey,
   onVoiceStateChange,
   onSelectChip,
@@ -24,6 +25,7 @@ export default function CopilotFooterBranding({
           <CopilotUniversalVoicePills
             text={voiceText}
             defaultSpeaker={voiceSpeaker}
+            audioUrl={voiceAudioUrl}
             autoPlayKey={voiceAutoPlayKey}
             onPlayingChange={onVoiceStateChange}
           />

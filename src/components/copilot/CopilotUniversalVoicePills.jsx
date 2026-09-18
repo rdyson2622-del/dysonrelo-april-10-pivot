@@ -5,7 +5,7 @@ import { base44 } from '@/api/base44Client';
 
 const pill = 'px-2.5 py-1 rounded-full border text-[9px] font-normal flex items-center gap-1 transition-colors';
 
-export default function CopilotUniversalVoicePills({ text = '', defaultSpeaker = 'charlie', autoPlayKey, onPlayingChange }) {
+export default function CopilotUniversalVoicePills({ text = '', defaultSpeaker = 'charlie', audioUrl = null, autoPlayKey, onPlayingChange }) {
   const [speaker, setSpeaker] = useState(defaultSpeaker === 'bob' ? 'bob' : 'charlie');
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
@@ -45,17 +45,21 @@ export default function CopilotUniversalVoicePills({ text = '', defaultSpeaker =
 
     setLoading(true);
     try {
-      const functionName = activeSpeaker === 'bob' ? 'bobSpeak' : 'charlieSpeak';
-      const response = await base44.functions.invoke(functionName, { text: spokenText });
+      const defaultVoice = defaultSpeaker === 'bob' ? 'bob' : 'charlie';
+      let resolvedAudioUrl = activeSpeaker === defaultVoice ? audioUrl : null;
+      if (!resolvedAudioUrl) {
+        const functionName = activeSpeaker === 'bob' ? 'bobSpeak' : 'charlieSpeak';
+        const response = await base44.functions.invoke(functionName, { text: spokenText });
+        resolvedAudioUrl = response?.data?.audioUrl;
+      }
       if (requestVersion !== requestVersionRef.current || spokenText !== latestTextRef.current) return;
-      const audioUrl = response?.data?.audioUrl;
-      if (!audioUrl) return;
+      if (!resolvedAudioUrl) return;
 
       const audio = studioAudioRef.current || new Audio();
       studioAudioRef.current = audio;
       registerActiveMedia(audio);
       audio.pause();
-      audio.src = audioUrl;
+      audio.src = resolvedAudioUrl;
       audio.currentTime = 0;
       audio.volume = 0.72;
       audio.onplay = () => {

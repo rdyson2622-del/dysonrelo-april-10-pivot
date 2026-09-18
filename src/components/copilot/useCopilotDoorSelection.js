@@ -41,6 +41,7 @@ export default function useCopilotDoorSelection({ setView, setMessages, clearSta
       sender: briefing.speaker === 'bob' ? 'bob' : 'charlie',
       speakerName: briefing.speakerName,
       text: spokenText,
+      audioUrl: briefing.isCustomized ? null : briefing.audioUrl,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }]);
   };
