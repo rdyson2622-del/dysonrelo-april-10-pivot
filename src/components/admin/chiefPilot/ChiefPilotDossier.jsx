@@ -8,10 +8,10 @@ import ChiefPilotDnnNews from './ChiefPilotDnnNews';
 import ChiefPilotConversation from './ChiefPilotConversation';
 import ChiefPilotLibrary from './ChiefPilotLibrary';
 
-export default function ChiefPilotDossier({ mode, libraryItems, subject, activeProperty, hasOwnProperty, isExample, showExample, exampleLoading, onHideExample, escrowStub, searchLoading, searchError, introStatus, onPropertySearch, onClearProperty, onSelectSubject, onSend, onRequestIntro, onStartEscrow, messages, loading, error }) {
-  const shared = { title: subject.title, activeProperty, hasOwnProperty, isExample, exampleLoading, onHideExample, escrowStub, onSelectSearch: () => onSelectSubject('property-search'), onSearchOwn: () => onSelectSubject('property-search'), onSend };
+export default function ChiefPilotDossier({ mode, libraryItems, subject, activeProperty, hasOwnProperty, isExample, showExample, exampleLoading, onHideExample, escrowStub, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, onPropertySearch, onClearProperty, onSelectSubject, onSend, onRequestIntro, onStartEscrow, onPreferredClaim, onSaveProperty, messages, loading, error }) {
+  const shared = { title: subject.title, activeProperty, hasOwnProperty, isExample, exampleLoading, onHideExample, escrowStub, onSelectSubject, onSelectSearch: () => onSelectSubject('property-search'), onSearchOwn: () => onSelectSubject('property-search'), onSend };
   const panels = {
-    'property-search': <ChiefPilotPropertySearch {...shared} searchLoading={searchLoading} searchError={searchError} onSearch={onPropertySearch} onClear={onClearProperty} />,
+    'property-search': <ChiefPilotPropertySearch {...shared} searchLoading={searchLoading} searchError={searchError} onSearch={onPropertySearch} onClear={onClearProperty} preferredClientActive={preferredClientActive} onPreferredClaim={onPreferredClaim} onSaveProperty={onSaveProperty} saveStatus={saveStatus} />,
     'property-audit': <ChiefPilotPropertyAudit {...shared} />,
     'agent-vetting': <ChiefPilotAgentVetting {...shared} introStatus={introStatus} onRequestIntro={onRequestIntro} />,
     'move-roadmap': <ChiefPilotRelocationRoadmaps {...shared} />,

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
-import { getCheckedInUser } from '@/lib/copilotContactSession';
+import { getCheckedInUser, saveToClientVault } from '@/lib/copilotContactSession';
 import { resolveSanctionedDossier } from '@/lib/resolveSanctionedDossier';
 
 const INITIAL_SUBJECTS = [['property-search', 'Property Search'], ['property-audit', 'Property Audit'], ['agent-vetting', 'Agent Vetting'], ['move-roadmap', 'Relocation Road Maps'], ['escrow-watch', 'Escrow Watch']].map(([id, title]) => ({ id, title }));
@@ -22,7 +22,7 @@ export default function useChiefPilotWorkspace() {
   const [mode, setMode] = useState('chats');
   const [activeId, setActiveId] = useState('property-search');
   const [activity, setActivity] = useState(() => fromSession(ACTIVITY_KEY) || []);
-  const [libraryItems] = useState(() => {
+  const [libraryItems, setLibraryItems] = useState(() => {
     try { return JSON.parse(localStorage.getItem('dyson_copilot_saved_discussions') || '[]'); } catch (_) { return []; }
   });
   const [showExample, setShowExample] = useState(() => sessionStorage.getItem(EXAMPLE_HIDDEN_KEY) !== '1' && localStorage.getItem(EXAMPLE_HIDDEN_KEY) !== '1');
@@ -35,6 +35,8 @@ export default function useChiefPilotWorkspace() {
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState('');
   const [introStatus, setIntroStatus] = useState('idle');
+  const [saveStatus, setSaveStatus] = useState('idle');
+  const [preferredClientActive, setPreferredClientActive] = useState(() => sessionStorage.getItem('chief_pilot_preferred_active') === '1');
   const [error, setError] = useState('');
   const activeSubject = mode === 'news' ? { id: 'dnn-news', title: 'DNN News' } : mode === 'library' ? { id: 'library', title: 'My Library' } : subjects.find(subject => subject.id === activeId) || null;
   const preferredClient = getCheckedInUser(user);
@@ -60,7 +62,10 @@ export default function useChiefPilotWorkspace() {
     const next = [{ ...item, id: `${item.kind}-${Date.now()}`, timestamp: new Date().toISOString() }, ...current].slice(0, 15);
     sessionStorage.setItem(ACTIVITY_KEY, JSON.stringify(next)); return next;
   });
-  const selectMode = nextMode => setMode(nextMode);
+  const selectMode = nextMode => {
+    if (nextMode !== 'chats' && !preferredClientActive) return;
+    setMode(nextMode);
+  };
   const selectSubject = id => { setMode('chats'); setActiveId(id); };
   const openActivity = item => {
     if (item.mode === 'library') { setMode('library'); return; }
@@ -80,7 +85,7 @@ export default function useChiefPilotWorkspace() {
   });
 
   const clearActiveProperty = () => {
-    setActiveProperty(null); setEscrowStub(null); setSearchError(''); setIntroStatus('idle');
+    setActiveProperty(null); setEscrowStub(null); setSearchError(''); setIntroStatus('idle'); setSaveStatus('idle');
     sessionStorage.removeItem(PROPERTY_KEY); sessionStorage.removeItem(ESCROW_KEY);
   };
   const runPropertySearch = async query => {
@@ -119,6 +124,17 @@ export default function useChiefPilotWorkspace() {
     const stub = { propertyAddress: activeProperty.fullAddress, steps: ESCROW_STEPS.map(label => ({ label, status: 'pending' })) };
     setEscrowStub(stub); sessionStorage.setItem(ESCROW_KEY, JSON.stringify(stub));
   };
+  const activatePreferredClient = () => {
+    setPreferredClientActive(true);
+    sessionStorage.setItem('chief_pilot_preferred_active', '1');
+  };
+  const saveProperty = async () => {
+    if (!displayProperty || saveStatus === 'saving') return;
+    setSaveStatus('saving');
+    await saveToClientVault({ title: `${displayProperty.shortAddress || displayProperty.fullAddress} property file`, item_type: 'dossier', address: displayProperty.fullAddress, payload: { property: displayProperty } });
+    try { setLibraryItems(JSON.parse(localStorage.getItem('dyson_copilot_saved_discussions') || '[]')); } catch (_) {}
+    setSaveStatus('saved');
+  };
 
   const send = async text => {
     if (!activeSubject || !text.trim() || loading) return false;
@@ -141,5 +157,5 @@ export default function useChiefPilotWorkspace() {
     } finally { setLoading(false); }
   };
 
-  return { subjects, mode, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, displayProperty, isExample, showExample, exampleLoading, hideExample, escrowStub, conversations, loading, searchLoading, searchError, introStatus, error, rename, move, send, runPropertySearch, clearActiveProperty, requestVettedIntro, startEscrowWatch };
+  return { subjects, mode, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, displayProperty, isExample, showExample, exampleLoading, hideExample, escrowStub, conversations, loading, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, error, rename, move, send, runPropertySearch, clearActiveProperty, requestVettedIntro, startEscrowWatch, activatePreferredClient, saveProperty };
 }
