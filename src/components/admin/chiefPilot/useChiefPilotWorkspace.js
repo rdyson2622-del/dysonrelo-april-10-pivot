@@ -26,6 +26,7 @@ export default function useChiefPilotWorkspace() {
   const [mode, setMode] = useState('chats');
   const [entryOpen, setEntryOpen] = useState(true);
   const [activeId, setActiveId] = useState('property-search');
+  const [showChatsInbox, setShowChatsInbox] = useState(false);
   const [activity, setActivity] = useState(() => fromSession(ACTIVITY_KEY) || []);
   const [libraryItems, setLibraryItems] = useState(() => {
     try { return JSON.parse(localStorage.getItem('dyson_copilot_saved_discussions') || '[]'); } catch (_) { return []; }
@@ -46,7 +47,7 @@ export default function useChiefPilotWorkspace() {
   const [preferredClientActive, setPreferredClientActive] = useState(() => sessionStorage.getItem('chief_pilot_preferred_active') === '1');
   const [error, setError] = useState('');
   const activeSubject = mode === 'solutions' ? { id: 'real-estate-solutions', title: 'Real Estate Solutions' } : mode === 'news' ? { id: 'dnn-news', title: 'DNN News' } : mode === 'library' ? { id: 'library', title: 'My Library' } : subjects.find(subject => subject.id === activeId) || null;
-  const isChatsInbox = mode === 'chats' && !new URLSearchParams(location.search).get('subject');
+  const isChatsInbox = mode === 'chats' && showChatsInbox;
   const preferredClient = getCheckedInUser(user);
   const displayProperty = activeProperty || (showExample ? exampleProperty : null);
   useEffect(() => {
@@ -54,8 +55,8 @@ export default function useChiefPilotWorkspace() {
     const subject = params.get('subject');
     const nextMode = params.get('mode');
     if (params.get('open') === '1') { setEntryOpen(true); return; }
-    if (subject && INITIAL_SUBJECTS.some(item => item.id === subject)) { setMode('chats'); setActiveId(subject); setEntryOpen(false); return; }
-    if (nextMode === 'solutions' || nextMode === 'news' || nextMode === 'library' || nextMode === 'chats') { setMode(nextMode); setEntryOpen(false); }
+    if (subject && INITIAL_SUBJECTS.some(item => item.id === subject)) { setMode('chats'); setActiveId(subject); setShowChatsInbox(false); setEntryOpen(false); return; }
+    if (nextMode === 'solutions' || nextMode === 'news' || nextMode === 'library' || nextMode === 'chats') { setMode(nextMode); setShowChatsInbox(nextMode === 'chats'); setEntryOpen(false); }
   }, [location.search, preferredClientActive]);
   const isExample = !activeProperty && showExample;
   useEffect(() => {
@@ -81,10 +82,10 @@ export default function useChiefPilotWorkspace() {
   const openEntry = () => setEntryOpen(true);
   const closeEntry = () => setEntryOpen(false);
   const selectMode = nextMode => {
-    setEntryOpen(false); setMode(nextMode);
+    setEntryOpen(false); setMode(nextMode); setShowChatsInbox(nextMode === 'chats');
   };
   const selectSubject = id => {
-    setEntryOpen(false); setMode('chats'); setActiveId(id);
+    setEntryOpen(false); setMode('chats'); setActiveId(id); setShowChatsInbox(false);
     document.getElementById('chief-pilot-content')?.scrollTo({ top: 0, behavior: 'smooth' });
   };
   const openActivity = item => {
@@ -92,7 +93,7 @@ export default function useChiefPilotWorkspace() {
     if (item.mode === 'library') { setMode('library'); return; }
     if (item.property) { setActiveProperty(item.property); sessionStorage.setItem(PROPERTY_KEY, JSON.stringify(item.property)); }
     if (item.subjectId === 'dnn-news') setMode('news');
-    else { setMode('chats'); setActiveId(item.subjectId || 'property-search'); }
+    else { setMode('chats'); setActiveId(item.subjectId || 'property-search'); setShowChatsInbox(false); }
   };
 
   const rename = (id, title) => setSubjects(items => items.map(item => item.id === id ? { ...item, title } : item));
