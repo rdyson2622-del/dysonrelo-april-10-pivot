@@ -57,13 +57,18 @@ export default function CopilotDynamicStage({
 
   const hasActiveExplainerVideo = Boolean(activeExplainer?.videoUrl);
   const isSelectedSubjectVideo = Boolean(selectedSubject?.videoUrl);
-  const videoToPlay = hasActiveExplainerVideo 
-    ? activeExplainer.videoUrl 
-    : (isSelectedSubjectVideo ? selectedSubject.videoUrl : null);
+  const isNewsVideo = (activeView === 'news' || activeView === 'dnn') && Boolean(playUrl);
+  const videoToPlay = hasActiveExplainerVideo
+    ? activeExplainer.videoUrl
+    : isSelectedSubjectVideo
+      ? selectedSubject.videoUrl
+      : isNewsVideo ? playUrl : null;
 
-  const videoTitle = hasActiveExplainerVideo 
+  const videoTitle = hasActiveExplainerVideo
     ? (activeExplainer.label || activeExplainer.topic || 'Video Explainer')
-    : (isSelectedSubjectVideo ? selectedSubject.title : 'Video Explainer');
+    : isSelectedSubjectVideo
+      ? selectedSubject.title
+      : isNewsVideo ? (headline || 'DNN Daily Broadcast') : 'Video Explainer';
 
   // Video setup: comfortable volume, explicit user play (NO unexpected unprompted loud autoplay)
   useEffect(() => {

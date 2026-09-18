@@ -647,8 +647,9 @@ DIRECTIVE FOR CHARLIE SIMMONS:
     : latestVoiceMessage;
 
   const resetToBlank = () => {
+    stopAllCopilotAudio();
     setMessages([]);
-    setRightPanelView(null);
+    setRightPanelView('news');
     setActiveExplainer(null);
     setDialogueFocus(null);
     if (liveClientRef.current) {
@@ -1247,7 +1248,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                     pushedSnippet={pushedSnippet}
                     onDismissSnippet={() => setPushedSnippet(null)}
                     onClear={() => {
-                      setRightPanelView(null);
+                      setRightPanelView('news');
                       setDialogueFocus(null);
                       setPushedSnippet(null);
                       setActiveExplainer(null);

@@ -178,7 +178,6 @@ export default function CopilotDossierNewsPanel({
       setIsPlaying(false);
     }
     setSelectedVaultSubject(null);
-    onViewChange?.(null);
     onClear?.();
   };
 

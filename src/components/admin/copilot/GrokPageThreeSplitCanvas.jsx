@@ -140,7 +140,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
   const resetToBlank = () => {
     stopAllCopilotAudio();
     setMessages([]);
-    setRightPanelView(null);
+    setRightPanelView('news');
     setActiveExplainer(null);
     setPushedSnippet(null);
     if (liveClientRef.current) {
@@ -866,6 +866,7 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
             activeExplainer={activeExplainer}
             pushedSnippet={pushedSnippet}
             onDismissSnippet={() => setPushedSnippet(null)}
+            onClear={resetToBlank}
             onBackToSearch={() => {
               resetToBlank();
               onBackToSearch?.();
