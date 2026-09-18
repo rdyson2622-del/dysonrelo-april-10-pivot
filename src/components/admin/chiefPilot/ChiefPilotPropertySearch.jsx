@@ -4,6 +4,12 @@ import ChiefPilotHowItWorks from './ChiefPilotHowItWorks';
 const LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/20230d875_Screenshot2026-09-18at80532AM.png';
 const STEPS = ['Browse an MLS property on Realtor, Homes, Redfin, or Zillow.', 'Paste the address or MLS number into Property Search.', 'AI and human intelligence organize the property facts.', 'Review the resulting intelligence and open questions.', 'Use the clearer picture to make better decisions.'];
 const SAMPLES = ['742 Vista Del Mar', 'MLS #240001'];
+const MLS_LINKS = [
+  ['Realtor.com', 'https://www.realtor.com/'],
+  ['Homes.com', 'https://www.homes.com/'],
+  ['Redfin', 'https://www.redfin.com/'],
+  ['Zillow', 'https://www.zillow.com/']
+];
 
 export default function ChiefPilotPropertySearch({ title, currentProperty, onSearch }) {
   const [query, setQuery] = useState('');
@@ -27,10 +33,21 @@ export default function ChiefPilotPropertySearch({ title, currentProperty, onSea
             <button type="submit" disabled={!query.trim()} className="rounded-full bg-dyson-gold px-5 py-2 text-sm text-dyson-text-dark disabled:opacity-40">Send</button>
           </div>
           <div className="mt-4 flex flex-wrap justify-center gap-2">{SAMPLES.map(sample => <button key={sample} type="button" onClick={() => setQuery(sample)} className="rounded-full border border-white/10 px-3 py-1 text-xs text-dyson-taupe hover:text-dyson-text">{sample}</button>)}</div>
-          {currentProperty && <p className="mt-4 text-center text-xs text-dyson-gold">Current property: {currentProperty}</p>}
+          {currentProperty && (
+            <div className="mt-4 text-center text-xs">
+              <p className="text-dyson-gold">Current property: {currentProperty}</p>
+              <p className="mt-2 text-dyson-taupe">Save to your Private Vault / Claim Preferred Client status</p>
+            </div>
+          )}
         </form>
       </div>
-      <ChiefPilotHowItWorks title="How search works" items={STEPS} />
+      <ChiefPilotHowItWorks title="How search works" items={STEPS}>
+        <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/10 pt-4">
+          {MLS_LINKS.map(([label, url]) => (
+            <a key={label} href={url} target="_blank" rel="noopener" className="text-xs text-dyson-taupe underline underline-offset-4 hover:text-dyson-text">{label}</a>
+          ))}
+        </div>
+      </ChiefPilotHowItWorks>
       <p className="mt-5 text-xs text-dyson-taupe/70">No agent spam. CoPilot keeps the search focused on your questions and decisions.</p>
     </div>
   );
