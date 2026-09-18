@@ -69,6 +69,7 @@ export default function DysonHomesCopilot({ initialPage }) {
   const [isEscalationModalOpen, setIsEscalationModalOpen] = useState(false);
   const [escalationQuestion, setEscalationQuestion] = useState('');
   const [pushedSnippet, setPushedSnippet] = useState(null);
+  const [dialogueFocus, setDialogueFocus] = useState(null);
   const [savedCount, setSavedCount] = useState(() => {
     if (typeof window !== 'undefined') {
       try {
@@ -381,6 +382,10 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
       return;
     }
 
+    setActiveExplainer(null);
+    setPushedSnippet(null);
+    setDialogueFocus({ question: clean, response: '', speaker: 'charlie' });
+
     const userMsg = {
       id: Date.now(),
       sender: 'user',
@@ -404,6 +409,7 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
       setMessages(prev => [...prev, handoffMsg]);
+      setDialogueFocus({ question: clean, response: escalation.handoffText, speaker: handoffMsg.sender });
       setIsSending(false);
 
       // Programmed escalation: log asynchronously to CharlieEscalation
@@ -467,15 +473,18 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
     const explainer = findExplainerByQuery(clean);
     if (explainer?.videoUrl) {
       setActiveExplainer(explainer);
+      const explainerSpeaker = explainer.speaker === 'bob' ? 'bob' : 'charlie';
+      const explainerReply = explainer.textAnswer || `Playing video explainer for "${explainer.label}".`;
       setMessages(prev => [
         ...prev,
         {
           id: Date.now() + 1,
-          sender: explainer.speaker === 'bob' ? 'bob' : 'charlie',
-          text: explainer.textAnswer || `Playing video explainer for "${explainer.label}".`,
+          sender: explainerSpeaker,
+          text: explainerReply,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);
+      setDialogueFocus({ question: clean, response: explainerReply, speaker: explainerSpeaker });
       setIsSending(false);
       return;
     }
@@ -548,25 +557,29 @@ DIRECTIVE FOR CHARLIE SIMMONS:
       });
 
       const replyText = typeof res === 'string' ? res : res?.response || res?.content || JSON.stringify(res);
+      const finalReplyText = replyText || `For ${currentDossier.shortAddress}, our sanctioned registry query returned no active comps. Individual discovery is required.`;
+      setDialogueFocus({ question: clean, response: finalReplyText, speaker: 'charlie' });
 
       setMessages(prev => [
         ...prev,
         {
           id: Date.now() + 1,
           sender: 'charlie',
-          text: replyText || `For ${currentDossier.shortAddress}, our sanctioned registry query returned no active comps. Individual discovery is required.`,
+          text: finalReplyText,
           pushedSnippetTitle: visualSnippet?.title || null,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);
     } catch (err) {
       console.warn('InvokeLLM failed, providing grounded fallback:', err);
+      const fallbackReply = `On ${dossierData.shortAddress || analyzedProperty}, our fiduciary desk reviews all unvarnished comps, geotechnical reports, and contract contingency protections to keep your earnest money deposit 100% safeguarded.`;
+      setDialogueFocus({ question: clean, response: fallbackReply, speaker: 'charlie' });
       setMessages(prev => [
         ...prev,
         {
           id: Date.now() + 1,
           sender: 'charlie',
-          text: `On ${dossierData.shortAddress || analyzedProperty}, our fiduciary desk reviews all unvarnished comps, geotechnical reports, and contract contingency protections to keep your earnest money deposit 100% safeguarded.`,
+          text: fallbackReply,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);
@@ -581,6 +594,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
     clearStage: () => {
       setActiveExplainer(null);
       setPushedSnippet(null);
+      setDialogueFocus(null);
       setSelectedExplodedItem(null);
       liveClientRef.current?.stop();
       liveClientRef.current = null;
@@ -599,6 +613,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
     setMessages([]);
     setRightPanelView(null);
     setActiveExplainer(null);
+    setDialogueFocus(null);
     if (liveClientRef.current) {
       liveClientRef.current.stop();
       liveClientRef.current = null;
@@ -622,6 +637,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
 
   const handleAuditAddress = async (addr) => {
     if (!addr || typeof addr !== 'string' || !addr.trim()) return;
+    setDialogueFocus(null);
     const rawTrimmed = addr.trim();
 
     // Guard: Prevent duplicate overlapping audit requests
@@ -1175,6 +1191,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                     property={analyzedProperty}
                     dossierData={dossierData}
                     activeView={rightPanelView}
+                    dialogueFocus={dialogueFocus}
                     onViewChange={handleSelectMiniApp}
                     doorSelectionVersion={doorSelectionVersion}
                     isExploded={isPageExploded}

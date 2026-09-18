@@ -13,6 +13,8 @@ import CopilotRoadmapView from './CopilotRoadmapView';
 import CopilotEscrowView from './CopilotEscrowView';
 import CopilotVisualSnippetCard from './CopilotVisualSnippetCard';
 import CopilotDynamicStage from './CopilotDynamicStage';
+import CopilotDialogueFocusStage from './CopilotDialogueFocusStage';
+import CopilotDialogueFocusDetails from './CopilotDialogueFocusDetails';
 import { stopAllCopilotAudio } from '@/lib/copilotAudioController';
 
 const GOLD = '#D4AF37';
@@ -27,6 +29,7 @@ export default function CopilotDossierNewsPanel({
   property,
   dossierData,
   activeView = 'dossier', // 'dossier' | 'news' | 'solutions'
+  dialogueFocus = null,
   objectiveProject = null,
   onViewChange,
   isExploded = false,
@@ -236,18 +239,22 @@ export default function CopilotDossierNewsPanel({
         )}
       </div>
       {/* ── DYNAMIC INTELLIGENCE STAGE: CONTEXT-AWARE VISUAL / VIDEO STAGE ── */}
-      <CopilotDynamicStage
-        activeView={currentView}
-        objectiveProject={objectiveProject}
-        selectedSubject={selectedVaultSubject}
-        activeExplainer={activeExplainer}
-        dossierData={dossierData}
-        property={property}
-        playUrl={playUrl}
-        headline={headline}
-        onPromptClick={onPromptClick}
-        onToggleExplode={onToggleExplode}
-      />
+      {dialogueFocus ? (
+        <CopilotDialogueFocusStage focus={dialogueFocus} />
+      ) : (
+        <CopilotDynamicStage
+          activeView={currentView}
+          objectiveProject={objectiveProject}
+          selectedSubject={selectedVaultSubject}
+          activeExplainer={activeExplainer}
+          dossierData={dossierData}
+          property={property}
+          playUrl={playUrl}
+          headline={headline}
+          onPromptClick={onPromptClick}
+          onToggleExplode={onToggleExplode}
+        />
+      )}
 
       {/* ── TOP CONTROLS & VIEW SWITCHER: Frozen Left Trio (Back, Search, Clear) + Scrollable Doors ── */}
       <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-white/10 mt-4">
@@ -395,6 +402,7 @@ export default function CopilotDossierNewsPanel({
       </div>
 
       <div className="copilot-intelligence-content space-y-4 shrink-0">
+      {dialogueFocus && <CopilotDialogueFocusDetails focus={dialogueFocus} />}
       {/* ── PUSHED VISUAL SNIPPET (FROM LEFT-SIDE CHAT OPERATOR) ── */}
       {pushedSnippet && (
         <CopilotVisualSnippetCard
@@ -407,7 +415,7 @@ export default function CopilotDossierNewsPanel({
       {/* ─────────────────────────────────────────────────────────────
           VIEW: AGENT VETTING STANDARDS DESK (PROGRESSIVE ACCORDION)
           ───────────────────────────────────────────────────────────── */}
-      {activeView === 'vetting' && (
+      {!dialogueFocus && activeView === 'vetting' && (
         <CopilotVettingView
           propertyAddress={dossierData?.fullAddress || property}
           onPromptClick={onPromptClick}
@@ -420,7 +428,7 @@ export default function CopilotDossierNewsPanel({
       {/* ─────────────────────────────────────────────────────────────
           VIEW: TRANSACTION MOVE ROADMAP
           ───────────────────────────────────────────────────────────── */}
-      {activeView === 'roadmap' && (
+      {!dialogueFocus && activeView === 'roadmap' && (
         <CopilotRoadmapView
           propertyAddress={dossierData?.fullAddress || property}
           onPromptClick={onPromptClick}
@@ -433,7 +441,7 @@ export default function CopilotDossierNewsPanel({
       {/* ─────────────────────────────────────────────────────────────
           VIEW: ESCROW & TITLE CONTINGENCY SHIELD
           ───────────────────────────────────────────────────────────── */}
-      {activeView === 'escrow' && (
+      {!dialogueFocus && activeView === 'escrow' && (
         <CopilotEscrowView
           propertyAddress={dossierData?.fullAddress || property}
           onPromptClick={onPromptClick}
@@ -446,7 +454,7 @@ export default function CopilotDossierNewsPanel({
       {/* ─────────────────────────────────────────────────────────────
           VIEW: REAL ESTATE SOLUTIONS & INTELLIGENCE VAULT (PROGRESSIVE ACCORDION)
           ───────────────────────────────────────────────────────────── */}
-      {activeView === 'solutions' && (
+      {!dialogueFocus && activeView === 'solutions' && (
         <CopilotSolutionsVault 
           onPromptClick={onPromptClick} 
           onExplodePlaybook={(item) => onExplodeItem?.(item)}
@@ -458,7 +466,7 @@ export default function CopilotDossierNewsPanel({
       {/* ─────────────────────────────────────────────────────────────
           VIEW A: FIDUCIARY PROPERTY AUDIT & INTELLIGENCE (UNIFORM ACCORDION LIST)
           ───────────────────────────────────────────────────────────── */}
-      {activeView === 'dossier' && (
+      {!dialogueFocus && activeView === 'dossier' && (
         <div className="space-y-1.5 pt-0.5 text-left font-sans">
           {/* ── ACCORDION 1: ADVISORY PROPERTY OVERVIEW & VERIFIED ATTRIBUTES ── */}
           {(() => {
@@ -965,7 +973,7 @@ export default function CopilotDossierNewsPanel({
       {/* ─────────────────────────────────────────────────────────────
           VIEW B: DAILY NEWS & STORY INTELLIGENCE
           ───────────────────────────────────────────────────────────── */}
-      {activeView === 'news' && (
+      {!dialogueFocus && activeView === 'news' && (
         <div className={`space-y-4 ${isExploded ? 'max-w-5xl mx-auto w-full' : ''}`}>
           {/* Broadcast Story Headline & Real-Time Engagement */}
           <div className="bg-[#121212] border border-white/10 rounded-xl p-4 space-y-3">
