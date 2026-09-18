@@ -19,6 +19,8 @@ export default function AdminLayout() {
   const { user: authUser, isAuthenticated, isLoadingAuth } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isCopilotRoute = location.pathname.includes('copilot') || location.pathname.startsWith('/admin/dysonhomes-copilot');
+  const isChiefPilotRoute = location.pathname === '/admin/chief-pilot' || location.pathname === '/admin/cheif-pilot';
+  const adminCanvas = isChiefPilotRoute ? 'var(--dyson-black)' : 'var(--dyson-cream)';
   const [access, setAccess] = useState(() => isCopilotRoute ? 'allowed' : 'loading');
 
   useEffect(() => {
@@ -81,7 +83,7 @@ export default function AdminLayout() {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: '#ede0cc' }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: adminCanvas }}>
       {/* Desktop Sidebar */}
       <div className="hidden md:flex">
         <AdminSidebar />
@@ -97,7 +99,7 @@ export default function AdminLayout() {
         </div>
       )}
 
-      <main className="flex-1 w-full overflow-auto relative" style={{ background: '#ede0cc' }}>
+      <main className="flex-1 w-full overflow-auto relative" style={{ background: adminCanvas }}>
         {/* Top Controls */}
         <div className="fixed top-3 left-3 md:left-[330px] z-50 flex items-center gap-2">
           <PortalHomeButton onClick={() => navigate('/?choose=1')} label="STUDIO" />
