@@ -21,6 +21,7 @@ import useCopilotDoorSelection from '@/components/copilot/useCopilotDoorSelectio
 import { getCheckedInUser, clearCheckedInContact } from '@/lib/copilotContactSession';
 import { findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { GeminiLiveSessionClient } from '@/lib/geminiLiveClient';
+import { stopAllCopilotAudio } from '@/lib/copilotAudioController';
 import { KNOWN_PROPERTY_DOSSIERS } from '@/components/admin/copilot/propertyDossierData';
 import { 
   getDomainKnowledgeContext, 
@@ -364,6 +365,9 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
     const clean = (textToSend || inputText).trim();
     if (!clean || isSending) return;
 
+    // A live client question always takes priority over any running canned demo or prior voice.
+    stopAllCopilotAudio();
+
     // Route address queries, MLS numbers, or listing URLs directly to handleAuditAddress
     const isAddressOrMlsOrUrl = (
       /^\d+[\w-]*\s+/.test(clean) || 
@@ -586,6 +590,10 @@ DIRECTIVE FOR CHARLIE SIMMONS:
       setActiveDemoSpeaker(null);
     }
   });
+
+  const latestVoiceMessage = [...messages].reverse().find(
+    (message) => message.sender === 'charlie' || message.sender === 'bob'
+  );
 
   const resetToBlank = () => {
     setMessages([]);
@@ -1196,6 +1204,10 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                 onOpenSavedDiscussions={() => setIsSavedDiscussionsOpen(true)}
                 discussionChips={discussionChips}
                 activeDoor={rightPanelView || 'dossier'}
+                voiceText={latestVoiceMessage?.text || ''}
+                voiceSpeaker={latestVoiceMessage?.sender || 'charlie'}
+                voiceAutoPlayKey={latestVoiceMessage?.id}
+                onVoiceStateChange={(playing, speaker) => setActiveDemoSpeaker(playing ? speaker : null)}
                 onSelectChip={(chip) => {
                   if (['audit', 'vetting', 'roadmap', 'escrow', 'news'].includes(chip.id)) {
                     handleSelectMiniApp(chip.view);
