@@ -194,6 +194,7 @@ import AdminFrontDoorLab from './pages/AdminFrontDoorLab';
 import AdminAppStoreMockup from './pages/AdminAppStoreMockup';
 import AdminDysonHomesCopilot from './pages/AdminDysonHomesCopilot';
 import DysonHomesCopilot from './pages/DysonHomesCopilot';
+import CopilotHome from './pages/CopilotHome';
 import AdminRelocationCallDesk from './pages/AdminRelocationCallDesk';
 import RelocationAgentDesk from './pages/RelocationAgentDesk';
 import AdminPreferredVendors from './pages/AdminPreferredVendors';
@@ -308,23 +309,21 @@ const AuthenticatedApp = () => {
         <Route path="/talking-app" element={<TalkingApp />} />
       </Route>
 
-      {/* Main Front Pages — DysonHomes Copilot Live 4-Page Consumer Entry Flow */}
-      <Route path="/" element={<DysonHomesCopilot initialPage={1} />} />
-      <Route path="/landing" element={<DysonHomesCopilot initialPage={1} />} />
-      <Route path="/chat" element={<DysonHomesCopilot initialPage={2} />} />
-      <Route path="/dossier" element={<DysonHomesCopilot initialPage={3} />} />
-      <Route path="/team" element={<DysonHomesCopilot initialPage={4} />} />
-      <Route path="/team-rail" element={<DysonHomesCopilot initialPage={4} />} />
+      {/* Main Front Pages — Locked Chief Pilot CoPilot IA (live consumer entry) */}
+      <Route path="/" element={<CopilotHome />} />
+      <Route path="/landing" element={<CopilotHome />} />
+      <Route path="/team" element={<CopilotHome />} />
+      <Route path="/team-rail" element={<CopilotHome />} />
 
       {/* Standalone consumer routes for DysonHomes Copilot */}
-      <Route path="/copilot" element={<DysonHomesCopilot initialPage={1} />} />
-      <Route path="/copilot/page-1" element={<DysonHomesCopilot initialPage={1} />} />
-      <Route path="/copilot/page-2" element={<DysonHomesCopilot initialPage={2} />} />
-      <Route path="/copilot/page-3" element={<DysonHomesCopilot initialPage={3} />} />
-      <Route path="/copilot/page-4" element={<DysonHomesCopilot initialPage={4} />} />
-      <Route path="/copilot-chat" element={<DysonHomesCopilot initialPage={2} />} />
-      <Route path="/copilot-dossier" element={<DysonHomesCopilot initialPage={3} />} />
-      <Route path="/copilot-team" element={<DysonHomesCopilot initialPage={4} />} />
+      <Route path="/copilot" element={<CopilotHome />} />
+      <Route path="/copilot/page-1" element={<CopilotHome />} />
+      <Route path="/copilot/page-2" element={<CopilotHome />} />
+      <Route path="/copilot/page-3" element={<CopilotHome />} />
+      <Route path="/copilot/page-4" element={<CopilotHome />} />
+      <Route path="/copilot-chat" element={<CopilotHome />} />
+      <Route path="/copilot-dossier" element={<CopilotHome />} />
+      <Route path="/copilot-team" element={<CopilotHome />} />
 
       {/* Portal & Role Selector */}
       <Route path="/portal" element={<FrontDoor />} />
