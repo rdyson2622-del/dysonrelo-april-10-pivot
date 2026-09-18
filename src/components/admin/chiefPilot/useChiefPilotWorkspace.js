@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 
 const INITIAL_SUBJECTS = [
+  ['property-search', 'Property Search', 'Search for a property and begin a focused working dossier.'],
   ['property-audit', 'Property Audit', 'Review property facts, comparable sales, material risks, and open diligence items.'],
   ['agent-vetting', 'Agent Vetting', 'Focus on agent background, local performance, references, and fit.'],
   ['move-roadmap', 'Relocation Road Maps', 'Organize the move into a clear sequence of decisions, owners, and next steps.'],
