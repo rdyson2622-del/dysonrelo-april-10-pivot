@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import ChiefPilotHowItWorks from './ChiefPilotHowItWorks';
 import ChiefPilotPropertySummary from './ChiefPilotPropertySummary';
 import ChiefPilotExampleFrame from './ChiefPilotExampleFrame';
-
-const LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/20230d875_Screenshot2026-09-18at80532AM.png';
+import CopilotWordmark from '@/components/brand/CopilotWordmark';
 const STEPS = ['Browse a property on Realtor, Homes, Redfin, or Zillow.', 'Paste the address or listing number into Property Search.', 'AI and human intelligence organize the property facts.', 'Review the resulting intelligence and open questions.', 'Use the clearer picture to make better decisions.'];
 const SAMPLES = ['6228 Calle Pavana, San Diego, CA 92139'];
 const MLS_LINKS = [['Realtor.com', 'https://www.realtor.com/'], ['Homes.com', 'https://www.homes.com/'], ['Redfin', 'https://www.redfin.com/'], ['Zillow', 'https://www.zillow.com/']];
@@ -13,7 +12,7 @@ export default function ChiefPilotPropertySearch({ title, activeProperty, isExam
   const submit = event => { event.preventDefault(); if (query.trim() && !searchLoading) onSearch(query.trim()); };
   return (
     <div className="flex min-h-full flex-col">
-      <header className="text-center"><p className="mb-3 text-xs text-dyson-taupe">{title}</p><img src={LOGO} alt="Dyson CoPilot" className="mx-auto mb-3 w-28 object-contain opacity-80" /><h2 className="text-2xl font-normal text-dyson-text">Meet CoPilot</h2><p className="mt-2 text-sm text-dyson-taupe">Private real estate intelligence, organized around the property.</p></header>
+      <header className="text-center"><p className="mb-3 text-xs text-dyson-taupe">{title}</p><CopilotWordmark className="mx-auto mb-3 h-14 w-36" /><h2 className="text-2xl font-normal text-dyson-text">Meet CoPilot</h2><p className="mt-2 text-sm text-dyson-taupe">Private real estate intelligence, organized around the property.</p></header>
       <div className="flex flex-1 flex-col py-8">
         <ChiefPilotExampleFrame isExample={isExample} purpose="Start with the home you are already looking at." benefit="Private intelligence around that address — not agent spam." onHide={onHideExample} onSearchOwn={onSearchOwn} sample={activeProperty ? <ChiefPilotPropertySummary property={activeProperty} onClear={onClear} isExample={isExample} /> : <p className="text-sm text-dyson-taupe">{exampleLoading ? 'Loading verified example property data…' : 'Property data is not available in example.'}</p>} next={<div><button type="button" onClick={() => { setQuery(SAMPLES[0]); onSearch(SAMPLES[0]); }} className="mb-4 rounded-full border border-dyson-gold/40 px-3 py-1.5 text-xs text-dyson-gold">Try this example address</button><form onSubmit={submit} className="w-full max-w-2xl">
           <label htmlFor="property-search" className="mb-3 block text-center text-sm text-dyson-taupe">Paste an address or listing number from Realtor, Homes, Redfin, or Zillow.</label>
