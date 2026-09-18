@@ -8,7 +8,7 @@ import CopilotWordmark from '@/components/brand/CopilotWordmark';
 export default function ChiefPilotSidebar({ workspace }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const isSolutions = !workspace.entryOpen && workspace.mode === 'solutions';
-  const activeSubjectId = !workspace.entryOpen && workspace.mode === 'chats' ? workspace.activeId : '';
+  const activeSubjectId = !workspace.entryOpen && workspace.mode === 'chats' && !workspace.isChatsInbox ? workspace.activeId : '';
   return (
     <aside className="flex min-h-0 flex-col gap-4 rounded-lg border border-white/10 bg-dyson-ink p-5">
       <div className="flex items-center justify-between gap-2">
