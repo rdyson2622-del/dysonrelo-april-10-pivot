@@ -20,11 +20,14 @@ export default function ChiefPilotExplainers({ subject, onBack, isLiveObjective 
       <p className="mt-3 text-xs tracking-widest text-dyson-gold-deep">LEVEL 3 · OPTIONAL EXPLAINERS</p>
       <h2 className="mt-1 text-xl font-normal">{subject.title}</h2>
       <div className="mt-3 grid gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(220px,1fr)]">
-        <div><p className="max-w-2xl text-sm leading-5">{content.intro}</p><ul className="mt-3 space-y-1.5">{content.bullets.map(point => <li key={point} className="flex gap-3 text-sm leading-5"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-dyson-gold-deep" />{point}</li>)}</ul></div>
+        <div>
+          <p className="max-w-2xl text-sm leading-5">{content.intro}</p>
+          <ul className="mt-3 space-y-1.5">{content.bullets.map(point => <li key={point} className="flex gap-3 text-sm leading-5"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-dyson-gold-deep" />{point}</li>)}</ul>
+          {onSend && <form onSubmit={submit} className="mt-3 max-w-md"><label htmlFor="chief-explainer-query" className="mb-1.5 block text-xs text-dyson-text-dark/70">Ask about {subject.title} without leaving this explainer</label><div className="flex items-center rounded-full border border-black/20 bg-dyson-warm-paper p-1 pl-4 focus-within:border-dyson-gold-deep"><input id="chief-explainer-query" value={query} onChange={event => setQuery(event.target.value)} placeholder={`Ask about ${subject.title}…`} className="min-w-0 flex-1 bg-transparent text-sm text-dyson-text-dark outline-none placeholder:text-dyson-text-dark/45" /><button type="submit" disabled={!query.trim() || loading} className="rounded-full border border-dyson-gold-deep/60 bg-dyson-cream px-4 py-2 text-xs font-semibold text-dyson-gold-deep disabled:opacity-40">{loading ? 'Searching…' : 'Send →'}</button></div></form>}
+          {(messages.length || loading || error) ? <div className="mt-3 max-w-md rounded-xl border border-black/10 bg-dyson-warm-paper p-3"><ChiefPilotConversation messages={messages} loading={loading} error={error} /></div> : null}
+        </div>
         <ChiefPilotExplainerVideoStack explainers={explainers} />
       </div>
-      {onSend && <form onSubmit={submit} className="mt-3 max-w-md"><label htmlFor="chief-explainer-query" className="mb-1.5 block text-xs text-dyson-text-dark/70">Ask about {subject.title} without leaving this explainer</label><div className="flex items-center rounded-full border border-black/20 bg-dyson-warm-paper p-1 pl-4 focus-within:border-dyson-gold-deep"><input id="chief-explainer-query" value={query} onChange={event => setQuery(event.target.value)} placeholder={`Ask about ${subject.title}…`} className="min-w-0 flex-1 bg-transparent text-sm text-dyson-text-dark outline-none placeholder:text-dyson-text-dark/45" /><button type="submit" disabled={!query.trim() || loading} className="rounded-full border border-dyson-gold-deep/60 bg-dyson-cream px-4 py-2 text-xs font-semibold text-dyson-gold-deep disabled:opacity-40">{loading ? 'Searching…' : 'Send →'}</button></div></form>}
-      {(messages.length || loading || error) ? <div className="mt-3 max-w-md rounded-xl border border-black/10 bg-dyson-warm-paper p-3"><ChiefPilotConversation messages={messages} loading={loading} error={error} /></div> : null}
       <ChiefPilotMilestoneMap milestones={content.milestones} isLiveObjective={isLiveObjective} />
     </section>
   );
