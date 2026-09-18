@@ -347,7 +347,7 @@ export default function AdminSidebar() {
     : [];
 
   return (
-    <aside ref={sidebarRef} className="w-[310px] sm:w-[320px] flex flex-col h-screen shrink-0 overflow-y-auto select-none shadow-2xl" style={{ background: '#0a0a0a', borderRight: '1px solid rgba(212,175,55,0.3)' }}>
+    <aside ref={sidebarRef} className="w-[310px] sm:w-[320px] md:w-[260px] flex flex-col h-screen shrink-0 overflow-y-auto select-none shadow-2xl" style={{ background: '#0a0a0a', borderRight: '1px solid rgba(212,175,55,0.3)' }}>
       <ChiefPilotGlobalNav />
       <p className="px-4 pt-5 text-[10px] font-black tracking-[0.2em] text-[#D4AF37]">ADMIN TOOLS</p>
 

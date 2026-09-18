@@ -101,7 +101,7 @@ export default function AdminLayout() {
 
       <main className="flex-1 w-full overflow-auto relative" style={{ background: adminCanvas }}>
         {/* Top Controls */}
-        <div className="fixed top-3 left-3 md:left-[330px] z-50 flex items-center gap-2">
+        <div className="fixed top-3 left-3 md:left-[270px] z-50 flex items-center gap-2">
           <PortalHomeButton onClick={() => navigate('/?choose=1')} label="STUDIO" />
           <Link
             to="/admin/dysonhomes-copilot"
