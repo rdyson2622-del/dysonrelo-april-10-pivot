@@ -17,7 +17,7 @@ export default function ChiefPilotPageTwo() {
           <ChiefPilotChatComposer disabled={!workspace.activeSubject} loading={workspace.loading} onSend={workspace.send} />
         </aside>
         <div className="h-full overflow-y-auto p-7 sm:p-10">
-          <ChiefPilotDossier subject={workspace.activeSubject} currentProperty={workspace.currentProperty} onPropertySearch={workspace.setCurrentProperty} onSelectSubject={workspace.setActiveId} onSend={workspace.send} messages={messages} loading={workspace.loading} error={workspace.error} />
+          <ChiefPilotDossier subject={workspace.activeSubject} activeProperty={workspace.activeProperty} escrowStub={workspace.escrowStub} searchLoading={workspace.searchLoading} searchError={workspace.searchError} introStatus={workspace.introStatus} onPropertySearch={workspace.runPropertySearch} onClearProperty={workspace.clearActiveProperty} onSelectSubject={workspace.setActiveId} onSend={workspace.send} onRequestIntro={workspace.requestVettedIntro} onStartEscrow={workspace.startEscrowWatch} messages={messages} loading={workspace.loading} error={workspace.error} />
         </div>
       </div>
     </section>

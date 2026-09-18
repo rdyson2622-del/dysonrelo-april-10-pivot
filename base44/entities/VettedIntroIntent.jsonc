@@ -1,0 +1,45 @@
+{
+  "name": "VettedIntroIntent",
+  "type": "object",
+  "properties": {
+    "preferred_client_name": {
+      "type": "string"
+    },
+    "preferred_client_email": {
+      "type": "string"
+    },
+    "preferred_client_phone": {
+      "type": "string"
+    },
+    "property_address": {
+      "type": "string"
+    },
+    "destination_city": {
+      "type": "string"
+    },
+    "destination_state": {
+      "type": "string"
+    },
+    "destination_zip": {
+      "type": "string"
+    },
+    "mls_number": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "reviewed"
+      ],
+      "default": "pending"
+    },
+    "source": {
+      "type": "string",
+      "default": "chief_pilot"
+    }
+  },
+  "required": [
+    "property_address"
+  ]
+}

@@ -7,14 +7,14 @@ import ChiefPilotEscrowWatch from './ChiefPilotEscrowWatch';
 import ChiefPilotDnnNews from './ChiefPilotDnnNews';
 import ChiefPilotConversation from './ChiefPilotConversation';
 
-export default function ChiefPilotDossier({ subject, currentProperty, onPropertySearch, onSelectSubject, onSend, messages, loading, error }) {
-  const shared = { title: subject.title, currentProperty, onSelectSearch: () => onSelectSubject('property-search'), onSend };
+export default function ChiefPilotDossier({ subject, activeProperty, escrowStub, searchLoading, searchError, introStatus, onPropertySearch, onClearProperty, onSelectSubject, onSend, onRequestIntro, onStartEscrow, messages, loading, error }) {
+  const shared = { title: subject.title, activeProperty, escrowStub, onSelectSearch: () => onSelectSubject('property-search'), onSend };
   const panels = {
-    'property-search': <ChiefPilotPropertySearch {...shared} onSearch={onPropertySearch} />,
+    'property-search': <ChiefPilotPropertySearch {...shared} searchLoading={searchLoading} searchError={searchError} onSearch={onPropertySearch} onClear={onClearProperty} />,
     'property-audit': <ChiefPilotPropertyAudit {...shared} />,
-    'agent-vetting': <ChiefPilotAgentVetting {...shared} />,
+    'agent-vetting': <ChiefPilotAgentVetting {...shared} introStatus={introStatus} onRequestIntro={onRequestIntro} />,
     'move-roadmap': <ChiefPilotRelocationRoadmaps {...shared} />,
-    'escrow-watch': <ChiefPilotEscrowWatch {...shared} />,
+    'escrow-watch': <ChiefPilotEscrowWatch {...shared} onStartEscrow={onStartEscrow} />,
     'dnn-news': <ChiefPilotDnnNews {...shared} />
   };
   return (
