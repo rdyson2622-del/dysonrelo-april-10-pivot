@@ -16,7 +16,7 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
   };
 
   return (
-    <div className="grid min-h-full items-center gap-10 py-8 text-left text-dyson-text lg:grid-cols-[1.2fr_0.8fr]">
+    <div className="grid min-h-full items-center gap-10 py-8 text-left text-dyson-text lg:grid-cols-[1.2fr_0.8fr]" style={{ transform: 'translateY(-12%)' }}>
       <div>
         <div className="flex items-end gap-3"><span className="pb-2 font-serif text-4xl font-light">meet</span><div className="flex flex-col items-center"><DysonVerticalBadge height={82} className="mb-2" /><CopilotWordmark bold className="h-16 w-52" /></div></div>
         <p className="mt-5 text-lg tracking-wide text-dyson-text">Human Driven + Personal Real Estate AI Assistants</p>
