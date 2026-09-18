@@ -28,6 +28,7 @@ const DEFAULT_SHOW_URL = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/f
 export default function CopilotExplodedSubjectModal({
   isOpen,
   onClose,
+  onClear,
   subjectType = 'news', // 'news' | 'solutions' | 'dossier' | 'story' | 'solution'
   activeView = 'news',
   onViewChange,
@@ -244,7 +245,8 @@ export default function CopilotExplodedSubjectModal({
               if (videoRef.current) {
                 try { videoRef.current.pause(); } catch (_) {}
               }
-              onViewChange?.(null);
+              if (onClear) onClear();
+              else onViewChange?.('news');
               onClose?.();
             }}
             className="px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 text-stone-400 hover:text-white active:bg-white active:text-black"

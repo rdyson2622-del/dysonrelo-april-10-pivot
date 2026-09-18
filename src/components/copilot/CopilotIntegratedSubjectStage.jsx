@@ -23,6 +23,7 @@ export default function CopilotIntegratedSubjectStage({
   const [progress, setProgress] = useState(0);
 
   const audioPlayerRef = useRef(null);
+  const playbackVersionRef = useRef(0);
   const progressIntervalRef = useRef(null);
   const startTimeRef = useRef(null);
   const durationRef = useRef(20);
@@ -48,6 +49,7 @@ export default function CopilotIntegratedSubjectStage({
   }, []);
 
   const stopPlayback = () => {
+    playbackVersionRef.current += 1;
     if (typeof window !== 'undefined' && window.speechSynthesis) {
       try {
         window.speechSynthesis.cancel();
@@ -92,6 +94,7 @@ export default function CopilotIntegratedSubjectStage({
 
   const startPlayback = () => {
     stopAllCopilotAudio();
+    const playbackVersion = ++playbackVersionRef.current;
 
     // 1. If subject has a dedicated pre-rendered audio asset, play it
     if (subject.audioUrl) {
@@ -131,22 +134,23 @@ export default function CopilotIntegratedSubjectStage({
         };
 
         audio.onerror = () => {
-          fallbackSpeechSynthesis();
+          fallbackSpeechSynthesis(playbackVersion);
         };
 
-        audio.play().catch(() => fallbackSpeechSynthesis());
+        audio.play().catch(() => fallbackSpeechSynthesis(playbackVersion));
         return;
       } catch (_) {
-        fallbackSpeechSynthesis();
+        fallbackSpeechSynthesis(playbackVersion);
         return;
       }
     }
 
-    fallbackSpeechSynthesis();
+    fallbackSpeechSynthesis(playbackVersion);
   };
 
   // 2. Fallback Speech Synthesis with STRICT MALE VOICE SELECTION for Charlie and Bob
-  const fallbackSpeechSynthesis = () => {
+  const fallbackSpeechSynthesis = (playbackVersion) => {
+    if (playbackVersion !== playbackVersionRef.current) return;
     if (typeof window === 'undefined' || !window.speechSynthesis) {
       setIsPlaying(false);
       return;

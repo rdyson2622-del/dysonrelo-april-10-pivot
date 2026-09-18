@@ -58,6 +58,8 @@ export default function DysonHomesCopilot({ initialPage }) {
   const [activeExplainer, setActiveExplainer] = useState(null);
   const [activeDemoSpeaker, setActiveDemoSpeaker] = useState(null);
   const [rightPanelView, setRightPanelView] = useState(null);
+  const presentationEpochRef = useRef(0);
+  const [presentationResetKey, setPresentationResetKey] = useState(0);
   const [isPageExploded, setIsPageExploded] = useState(false);
   const [selectedExplodedItem, setSelectedExplodedItem] = useState(null);
   const [isCaptureModalOpen, setIsCaptureModalOpen] = useState(false);
@@ -250,6 +252,7 @@ export default function DysonHomesCopilot({ initialPage }) {
 
   // Talk Live handler using GeminiLiveSessionClient with Algieba voice
   const handleToggleTalkLive = async () => {
+    const presentationEpoch = presentationEpochRef.current;
     if (isTalkLiveActive && liveClientRef.current) {
       liveClientRef.current.stop();
       liveClientRef.current = null;
@@ -287,6 +290,7 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
         voiceName: 'Algieba',
         language: 'en-US',
         onStatusChange: (st) => {
+          if (presentationEpoch !== presentationEpochRef.current) return;
           setLiveStatus(st);
           if (st === 'connecting') {
             setLiveStatusText('Connecting…');
@@ -311,11 +315,13 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
           }
         },
         onSpeaker: (sp) => {
+          if (presentationEpoch !== presentationEpochRef.current) return;
           if (sp === 'assistant') setActiveDemoSpeaker('charlie');
           else if (sp === 'user') setActiveDemoSpeaker('consumer');
           else setActiveDemoSpeaker(null);
         },
         onTranscript: (item) => {
+          if (presentationEpoch !== presentationEpochRef.current) return;
           if (item?.text) {
             setMessages(prev => [
               ...prev,
@@ -329,6 +335,7 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
           }
         },
         onError: (err) => {
+          if (presentationEpoch !== presentationEpochRef.current) return;
           console.warn('Gemini Live session error:', err);
           const isDenied = err?.code === 'mic_denied' || 
                            String(err?.message || err).toLowerCase().includes('denied') || 
@@ -348,6 +355,7 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
       liveClientRef.current = client;
       await client.start();
     } catch (e) {
+      if (presentationEpoch !== presentationEpochRef.current) return;
       console.warn('Failed to start Gemini Live session:', e);
       const isDenied = e?.name === 'NotAllowedError' || e?.name === 'PermissionDeniedError';
       if (isDenied) {
@@ -366,6 +374,7 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
   const executeSendMessage = async (textToSend) => {
     const clean = (textToSend || inputText).trim();
     if (!clean || isSending) return;
+    const presentationEpoch = presentationEpochRef.current;
 
     // A live client question always takes priority over any running canned demo or prior voice.
     stopAllCopilotAudio();
@@ -585,6 +594,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
         prompt: fullPrompt
       });
 
+      if (presentationEpoch !== presentationEpochRef.current) return;
       const replyText = typeof res === 'string' ? res : res?.response || res?.content || JSON.stringify(res);
       const finalReplyText = replyText || `For ${currentDossier.shortAddress}, our sanctioned registry query returned no active comps. Individual discovery is required.`;
       setDialogueFocus({ id: userMsg.id, question: clean, response: finalReplyText, speaker: 'charlie' });
@@ -600,6 +610,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
         }
       ]);
     } catch (err) {
+      if (presentationEpoch !== presentationEpochRef.current) return;
       console.warn('InvokeLLM failed, providing grounded fallback:', err);
       const fallbackReply = `On ${dossierData.shortAddress || analyzedProperty}, our fiduciary desk reviews all unvarnished comps, geotechnical reports, and contract contingency protections to keep your earnest money deposit 100% safeguarded.`;
       setDialogueFocus({ id: userMsg.id, question: clean, response: fallbackReply, speaker: 'charlie' });
@@ -613,7 +624,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
         }
       ]);
     } finally {
-      setIsSending(false);
+      if (presentationEpoch === presentationEpochRef.current) setIsSending(false);
     }
   };
 
@@ -647,17 +658,27 @@ DIRECTIVE FOR CHARLIE SIMMONS:
     : latestVoiceMessage;
 
   const resetToBlank = () => {
+    // Invalidate pending replies before resetting every presentation surface.
+    presentationEpochRef.current += 1;
     stopAllCopilotAudio();
     setMessages([]);
+    setInputText('');
+    setIsSending(false);
+    isAuditingRef.current = false;
     setRightPanelView('news');
     setActiveExplainer(null);
     setDialogueFocus(null);
+    setPushedSnippet(null);
+    setSelectedExplodedItem(null);
+    setIsPageExploded(false);
+    setPresentationResetKey(key => key + 1);
     if (liveClientRef.current) {
       liveClientRef.current.stop();
       liveClientRef.current = null;
     }
     setIsTalkLiveActive(false);
     setLiveStatus('ready');
+    setLiveStatusText('');
     setActiveDemoSpeaker(null);
   };
 
@@ -682,6 +703,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
     if (isAuditingRef.current && lastAuditedAddressRef.current === rawTrimmed) {
       return;
     }
+    const presentationEpoch = presentationEpochRef.current;
     isAuditingRef.current = true;
     lastAuditedAddressRef.current = rawTrimmed;
 
@@ -711,6 +733,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
     try {
       // Query sanctioned backend functions (mlsListingLookup / searchListingsForSkipTrace)
       const resolved = await resolveSanctionedDossier(cleanAddr);
+      if (presentationEpoch !== presentationEpochRef.current) return;
       setDossierData(resolved);
 
       const hasComps = resolved.comps && resolved.comps.length > 0;
@@ -762,7 +785,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
 
       setMessages(prev => [...prev, charlieMsg, bobMsg]);
     } finally {
-      isAuditingRef.current = false;
+      if (presentationEpoch === presentationEpochRef.current) isAuditingRef.current = false;
     }
   };
 
@@ -1025,7 +1048,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                               type="button"
                               onClick={resetToBlank}
                               className="px-2 py-0.5 rounded text-[10px] font-medium bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white border border-white/15 transition-all cursor-pointer whitespace-nowrap"
-                              title="Clear all messages and reset screen to blank"
+                              title="Clear the session and restore the News image and video"
                             >
                               Clear Session
                             </button>
@@ -1226,6 +1249,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                 {/* ── RIGHT COLUMN: PROPERTY AUDIT, SOLUTIONS VAULT & DAILY NEWS ── */}
                 <div id="copilot-right-panel" className="flex-1 min-w-0 bg-[#080808] h-full overflow-hidden flex flex-col">
                   <CopilotDossierNewsPanel
+                    key={presentationResetKey}
                     property={analyzedProperty}
                     dossierData={dossierData}
                     activeView={rightPanelView}
@@ -1247,13 +1271,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                     }}
                     pushedSnippet={pushedSnippet}
                     onDismissSnippet={() => setPushedSnippet(null)}
-                    onClear={() => {
-                      setRightPanelView('news');
-                      setDialogueFocus(null);
-                      setPushedSnippet(null);
-                      setActiveExplainer(null);
-                      setSelectedExplodedItem(null);
-                    }}
+                    onClear={resetToBlank}
                     activeExplainer={activeExplainer}
                   />
                 </div>
@@ -1291,6 +1309,8 @@ DIRECTIVE FOR CHARLIE SIMMONS:
 
               {/* ── FULL-PAGE EXPLODED SUBJECT THEATER ── */}
               <CopilotExplodedSubjectModal
+                key={presentationResetKey}
+                onClear={resetToBlank}
                 isOpen={isPageExploded}
                 onClose={() => {
                   setIsPageExploded(false);

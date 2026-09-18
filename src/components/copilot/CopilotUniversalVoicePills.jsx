@@ -33,6 +33,7 @@ export default function CopilotUniversalVoicePills({ text = '', defaultSpeaker =
     reportPlaying(false);
   }, [text]);
   useEffect(() => () => {
+    requestVersionRef.current += 1;
     studioAudioRef.current?.pause();
   }, []);
   useEffect(() => setSpeaker(defaultSpeaker === 'bob' ? 'bob' : 'charlie'), [defaultSpeaker]);

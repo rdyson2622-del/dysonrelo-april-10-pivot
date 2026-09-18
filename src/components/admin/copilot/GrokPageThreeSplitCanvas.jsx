@@ -32,6 +32,8 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
   const [activeExplainer, setActiveExplainer] = useState(null);
   const [activeDemoSpeaker, setActiveDemoSpeaker] = useState(null);
   const [rightPanelView, setRightPanelView] = useState('dossier'); // 5 doors: 'dossier' | 'vetting' | 'roadmap' | 'escrow' | 'news' | 'solutions'
+  const presentationEpochRef = useRef(0);
+  const [presentationResetKey, setPresentationResetKey] = useState(0);
   const [isPageExploded, setIsPageExploded] = useState(false);
   const [selectedExplodedItem, setSelectedExplodedItem] = useState(null);
   const [isCaptureModalOpen, setIsCaptureModalOpen] = useState(false);
@@ -138,17 +140,25 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
   }, [property]);
 
   const resetToBlank = () => {
+    presentationEpochRef.current += 1;
     stopAllCopilotAudio();
     setMessages([]);
+    setInputText('');
+    setIsSending(false);
     setRightPanelView('news');
     setActiveExplainer(null);
     setPushedSnippet(null);
+    setSelectedExplodedItem(null);
+    setIsPageExploded(false);
+    setPendingObjectiveDoor(null);
+    setPresentationResetKey(key => key + 1);
     if (liveClientRef.current) {
       liveClientRef.current.stop();
       liveClientRef.current = null;
     }
     setIsTalkLiveActive(false);
     setLiveStatus('ready');
+    setLiveStatusText('');
     setActiveDemoSpeaker(null);
   };
 
@@ -165,6 +175,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
 
   // Talk Live (Gemini Live Session) with active door context
   const handleToggleTalkLive = async () => {
+    const presentationEpoch = presentationEpochRef.current;
     if (isTalkLiveActive && liveClientRef.current) {
       liveClientRef.current.stop();
       liveClientRef.current = null;
@@ -202,6 +213,7 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
         voiceName: 'Algieba',
         language: 'en-US',
         onStatusChange: (st) => {
+          if (presentationEpoch !== presentationEpochRef.current) return;
           setLiveStatus(st);
           if (st === 'connecting') {
             setLiveStatusText('Connecting…');
@@ -226,11 +238,13 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
           }
         },
         onSpeaker: (sp) => {
+          if (presentationEpoch !== presentationEpochRef.current) return;
           if (sp === 'assistant') setActiveDemoSpeaker('charlie');
           else if (sp === 'user') setActiveDemoSpeaker('consumer');
           else setActiveDemoSpeaker(null);
         },
         onTranscript: (item) => {
+          if (presentationEpoch !== presentationEpochRef.current) return;
           if (item?.text) {
             setMessages(prev => [
               ...prev,
@@ -244,6 +258,7 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
           }
         },
         onError: (err) => {
+          if (presentationEpoch !== presentationEpochRef.current) return;
           console.warn('Gemini Live session error in split canvas:', err);
           const isDenied = err?.code === 'mic_denied' || 
                            String(err?.message || err).toLowerCase().includes('denied') || 
@@ -263,6 +278,7 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
       liveClientRef.current = client;
       await client.start();
     } catch (e) {
+      if (presentationEpoch !== presentationEpochRef.current) return;
       console.warn('Failed to start Gemini Live session in split canvas:', e);
       setLiveStatus('error');
       setLiveStatusText('Couldn’t start voice. Tap Talk Live to retry.');
@@ -275,6 +291,7 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
   const executeSendMessage = async (textToSend) => {
     const clean = (textToSend || inputText).trim();
     if (!clean || isSending) return;
+    const presentationEpoch = presentationEpochRef.current;
 
     const userMsg = {
       id: Date.now(),
@@ -454,6 +471,7 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
         prompt: fullPrompt
       });
 
+      if (presentationEpoch !== presentationEpochRef.current) return;
       const replyText = typeof res === 'string' ? res : res?.response || res?.content || JSON.stringify(res);
 
       setMessages(prev => [
@@ -468,6 +486,7 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
         }
       ]);
     } catch (err) {
+      if (presentationEpoch !== presentationEpochRef.current) return;
       console.warn('InvokeLLM fallback in split canvas:', err);
       const isBobPrimary = activeTargetDoor === 'escrow' || activeTargetDoor === 'vetting';
       setMessages(prev => [
@@ -483,7 +502,7 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
         }
       ]);
     } finally {
-      setIsSending(false);
+      if (presentationEpoch === presentationEpochRef.current) setIsSending(false);
     }
   };
 
@@ -680,7 +699,7 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
                       type="button"
                       onClick={resetToBlank}
                       className="px-2 py-1 rounded-md text-[10px] font-medium bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white border border-white/15 transition-all cursor-pointer whitespace-nowrap"
-                      title="Clear all messages and reset screen to blank"
+                      title="Clear the session and restore the News image and video"
                     >
                       Clear Session
                     </button>
@@ -848,6 +867,7 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
         {/* ── RIGHT COLUMN: PROPERTY AUDIT, SOLUTIONS VAULT & DAILY NEWS ── */}
         <div id="copilot-right-panel" className="flex-1 min-w-0 bg-[#080808] h-full overflow-hidden flex flex-col">
           <CopilotDossierNewsPanel
+            key={presentationResetKey}
             property={property}
             dossierData={dossierData}
             activeView={rightPanelView}
@@ -906,6 +926,8 @@ ${isBobPrimary ? "Answer primarily as Bob Dyson (Principal Broker, CA DRE #02303
 
       {/* ── FULL-PAGE EXPLODED SUBJECT THEATER ── */}
       <CopilotExplodedSubjectModal
+        key={presentationResetKey}
+        onClear={resetToBlank}
         isOpen={isPageExploded}
         onClose={() => {
           setIsPageExploded(false);

@@ -128,7 +128,7 @@ export default function CopilotDossierNewsPanel({
     setIsMuted(videoRef.current.muted);
   };
 
-  const [viewHistory, setViewHistory] = useState(['dossier']);
+  const [viewHistory, setViewHistory] = useState([activeView || 'news']);
 
   // Track intelligence view navigation history
   React.useEffect(() => {

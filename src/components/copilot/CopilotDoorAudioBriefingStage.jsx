@@ -52,6 +52,7 @@ export default function CopilotDoorAudioBriefingStage({
   const startTimeRef = useRef(0);
   const durationRef = useRef(15);
   const audioPlayerRef = useRef(null);
+  const playbackVersionRef = useRef(0);
 
   // Reload briefing if activeDoor changes or scripts are updated
   useEffect(() => {
@@ -83,6 +84,7 @@ export default function CopilotDoorAudioBriefingStage({
     if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
 
     return () => {
+      playbackVersionRef.current += 1;
       stopAllCopilotAudio();
       if (audioPlayerRef.current) {
         try {
@@ -97,6 +99,7 @@ export default function CopilotDoorAudioBriefingStage({
   // Global listener: if another audio source fires, reset our playing state
   useEffect(() => {
     return subscribeToStopAllAudio(() => {
+      playbackVersionRef.current += 1;
       if (audioPlayerRef.current) {
         try {
           audioPlayerRef.current.pause();
@@ -120,12 +123,13 @@ export default function CopilotDoorAudioBriefingStage({
     if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
   };
 
-  const generateStudioSpeech = async () => {
+  const generateStudioSpeech = async (playbackVersion) => {
+    if (playbackVersion !== playbackVersionRef.current) return;
     try {
       const functionName = isBob ? 'bobSpeak' : 'charlieSpeak';
       const response = await base44.functions.invoke(functionName, { text: briefing.spokenText || '' });
       const generatedUrl = response?.data?.audioUrl;
-      if (!generatedUrl) return;
+      if (playbackVersion !== playbackVersionRef.current || !generatedUrl) return;
 
       const audio = audioPlayerRef.current || new Audio();
       audioPlayerRef.current = audio;
@@ -153,6 +157,7 @@ export default function CopilotDoorAudioBriefingStage({
   const startPlayback = () => {
     // 1. Immediately terminate all existing audio/video/speech across the page
     stopAllCopilotAudio();
+    const playbackVersion = ++playbackVersionRef.current;
 
     // 2. If pre-rendered audio asset is available and script has not been altered, play regenerated audio asset
     if (briefing.audioUrl && !briefing.isCustomized) {
@@ -199,23 +204,23 @@ export default function CopilotDoorAudioBriefingStage({
 
         audio.onerror = (e) => {
           console.warn('Door audio asset error, using synthesis fallback:', e);
-          generateStudioSpeech();
+          generateStudioSpeech(playbackVersion);
         };
 
         audio.play().catch((e) => {
           console.warn('Audio play failed, using synthesis fallback:', e);
-          generateStudioSpeech();
+          generateStudioSpeech(playbackVersion);
         });
         return;
       } catch (err) {
         console.warn('Audio element error:', err);
-        generateStudioSpeech();
+        generateStudioSpeech(playbackVersion);
         return;
       }
     }
 
     // Otherwise use custom script synthesis
-    generateStudioSpeech();
+    generateStudioSpeech(playbackVersion);
   };
 
   const togglePlay = (e) => {
