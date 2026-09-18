@@ -27,6 +27,7 @@ import FindAgent from './pages/FindAgent';
 import GeminiSession from './pages/GeminiSession';
 import TalkingApp from './pages/TalkingApp';
 import Admin from './pages/Admin';
+import AdminCheifPilot from '@/pages/AdminCheifPilot';
 import CharlieScripts from './pages/CharlieScripts';
 import AdminClients from './pages/AdminClients';
 import AdminClientDetail from './pages/AdminClientDetail';
@@ -398,6 +399,7 @@ const AuthenticatedApp = () => {
       {/* Admin Routes with Sidebar Layout */}
       <Route element={<AdminLayout />}>
         <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/cheif-pilot" element={<AdminCheifPilot />} />
         <Route path="/admin/scripts" element={<CharlieScripts />} />
         <Route path="/admin/clients" element={<AdminClients />} />
         <Route path="/admin/client-detail" element={<AdminClientDetail />} />
