@@ -384,7 +384,6 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
 
     setActiveExplainer(null);
     setPushedSnippet(null);
-    setDialogueFocus({ question: clean, response: '', speaker: 'charlie' });
 
     const userMsg = {
       id: Date.now(),
@@ -392,6 +391,7 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
       text: clean,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
+    setDialogueFocus({ id: userMsg.id, question: clean, response: '', speaker: 'charlie' });
     setMessages(prev => [...prev, userMsg]);
     setInputText('');
     addDiscussionChip(clean);
@@ -409,7 +409,7 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
       setMessages(prev => [...prev, handoffMsg]);
-      setDialogueFocus({ question: clean, response: escalation.handoffText, speaker: handoffMsg.sender });
+      setDialogueFocus({ id: userMsg.id, question: clean, response: escalation.handoffText, speaker: handoffMsg.sender });
       setIsSending(false);
 
       // Programmed escalation: log asynchronously to CharlieEscalation
@@ -484,7 +484,7 @@ LIQUIDATED DAMAGES & TITLE CONTEXT:
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);
-      setDialogueFocus({ question: clean, response: explainerReply, speaker: explainerSpeaker });
+      setDialogueFocus({ id: userMsg.id, question: clean, response: explainerReply, speaker: explainerSpeaker });
       setIsSending(false);
       return;
     }
@@ -558,7 +558,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
 
       const replyText = typeof res === 'string' ? res : res?.response || res?.content || JSON.stringify(res);
       const finalReplyText = replyText || `For ${currentDossier.shortAddress}, our sanctioned registry query returned no active comps. Individual discovery is required.`;
-      setDialogueFocus({ question: clean, response: finalReplyText, speaker: 'charlie' });
+      setDialogueFocus({ id: userMsg.id, question: clean, response: finalReplyText, speaker: 'charlie' });
 
       setMessages(prev => [
         ...prev,
@@ -573,7 +573,7 @@ DIRECTIVE FOR CHARLIE SIMMONS:
     } catch (err) {
       console.warn('InvokeLLM failed, providing grounded fallback:', err);
       const fallbackReply = `On ${dossierData.shortAddress || analyzedProperty}, our fiduciary desk reviews all unvarnished comps, geotechnical reports, and contract contingency protections to keep your earnest money deposit 100% safeguarded.`;
-      setDialogueFocus({ question: clean, response: fallbackReply, speaker: 'charlie' });
+      setDialogueFocus({ id: userMsg.id, question: clean, response: fallbackReply, speaker: 'charlie' });
       setMessages(prev => [
         ...prev,
         {
@@ -608,6 +608,13 @@ DIRECTIVE FOR CHARLIE SIMMONS:
   const latestVoiceMessage = [...messages].reverse().find(
     (message) => message.sender === 'charlie' || message.sender === 'bob'
   );
+  const activeVoiceMessage = dialogueFocus
+    ? (dialogueFocus.response ? {
+        id: dialogueFocus.id,
+        text: dialogueFocus.response,
+        sender: dialogueFocus.speaker
+      } : null)
+    : latestVoiceMessage;
 
   const resetToBlank = () => {
     setMessages([]);
@@ -1221,9 +1228,9 @@ DIRECTIVE FOR CHARLIE SIMMONS:
                 onOpenSavedDiscussions={() => setIsSavedDiscussionsOpen(true)}
                 discussionChips={discussionChips}
                 activeDoor={rightPanelView || 'dossier'}
-                voiceText={latestVoiceMessage?.text || ''}
-                voiceSpeaker={latestVoiceMessage?.sender || 'charlie'}
-                voiceAutoPlayKey={latestVoiceMessage?.id}
+                voiceText={activeVoiceMessage?.text || ''}
+                voiceSpeaker={activeVoiceMessage?.sender || 'charlie'}
+                voiceAutoPlayKey={activeVoiceMessage?.id}
                 onVoiceStateChange={(playing, speaker) => setActiveDemoSpeaker(playing ? speaker : null)}
                 onSelectChip={(chip) => {
                   if (['audit', 'vetting', 'roadmap', 'escrow', 'news'].includes(chip.id)) {

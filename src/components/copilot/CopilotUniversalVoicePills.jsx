@@ -12,6 +12,8 @@ export default function CopilotUniversalVoicePills({ text = '', defaultSpeaker =
   const [loading, setLoading] = useState(false);
   const previousAutoPlayKey = useRef(undefined);
   const studioAudioRef = useRef(null);
+  const requestVersionRef = useRef(0);
+  const latestTextRef = useRef(text);
 
   const reportPlaying = (value, activeSpeaker = speaker) => {
     setPlaying(value);
@@ -19,9 +21,17 @@ export default function CopilotUniversalVoicePills({ text = '', defaultSpeaker =
   };
 
   useEffect(() => subscribeToStopAllAudio(() => {
+    requestVersionRef.current += 1;
     studioAudioRef.current?.pause();
     reportPlaying(false);
   }), [speaker]);
+  useEffect(() => {
+    latestTextRef.current = text;
+    requestVersionRef.current += 1;
+    studioAudioRef.current?.pause();
+    setLoading(false);
+    reportPlaying(false);
+  }, [text]);
   useEffect(() => () => {
     studioAudioRef.current?.pause();
     window.speechSynthesis?.cancel();
@@ -31,11 +41,14 @@ export default function CopilotUniversalVoicePills({ text = '', defaultSpeaker =
   const speakText = async (activeSpeaker = speaker) => {
     if (!text || muted) return;
     stopAllCopilotAudio();
+    const spokenText = text;
+    const requestVersion = ++requestVersionRef.current;
 
     if (activeSpeaker === 'charlie') {
       setLoading(true);
       try {
-        const response = await base44.functions.invoke('charlieSpeak', { text });
+        const response = await base44.functions.invoke('charlieSpeak', { text: spokenText });
+        if (requestVersion !== requestVersionRef.current || spokenText !== latestTextRef.current) return;
         const audioUrl = response?.data?.audioUrl;
         if (!audioUrl) return;
 
@@ -46,14 +59,20 @@ export default function CopilotUniversalVoicePills({ text = '', defaultSpeaker =
         audio.src = audioUrl;
         audio.currentTime = 0;
         audio.volume = 0.72;
-        audio.onplay = () => reportPlaying(true, 'charlie');
-        audio.onended = audio.onerror = () => reportPlaying(false, 'charlie');
+        audio.onplay = () => {
+          if (requestVersion === requestVersionRef.current) reportPlaying(true, 'charlie');
+        };
+        audio.onended = audio.onerror = () => {
+          if (requestVersion === requestVersionRef.current) reportPlaying(false, 'charlie');
+        };
         await audio.play();
       } catch (error) {
-        console.warn('Charlie studio voice unavailable:', error);
-        reportPlaying(false, 'charlie');
+        if (requestVersion === requestVersionRef.current) {
+          console.warn('Charlie studio voice unavailable:', error);
+          reportPlaying(false, 'charlie');
+        }
       } finally {
-        setLoading(false);
+        if (requestVersion === requestVersionRef.current) setLoading(false);
       }
       return;
     }
@@ -62,12 +81,17 @@ export default function CopilotUniversalVoicePills({ text = '', defaultSpeaker =
     const voices = window.speechSynthesis.getVoices().filter((voice) => voice.lang.startsWith('en'));
     const trustedBobVoice = voices.find((voice) => /david|george|daniel|guy|oliver|tom|james|male/i.test(voice.name));
     if (!trustedBobVoice) return;
-    const speech = new SpeechSynthesisUtterance(text);
+    if (requestVersion !== requestVersionRef.current || spokenText !== latestTextRef.current) return;
+    const speech = new SpeechSynthesisUtterance(spokenText);
     speech.voice = trustedBobVoice;
     speech.rate = 0.92;
     speech.pitch = 0.86;
-    speech.onstart = () => reportPlaying(true, 'bob');
-    speech.onend = speech.onerror = () => reportPlaying(false, 'bob');
+    speech.onstart = () => {
+      if (requestVersion === requestVersionRef.current) reportPlaying(true, 'bob');
+    };
+    speech.onend = speech.onerror = () => {
+      if (requestVersion === requestVersionRef.current) reportPlaying(false, 'bob');
+    };
     window.speechSynthesis.speak(speech);
   };
 
