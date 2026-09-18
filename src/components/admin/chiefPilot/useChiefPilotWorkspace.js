@@ -45,6 +45,7 @@ export default function useChiefPilotWorkspace() {
   const [preferredClientActive, setPreferredClientActive] = useState(() => sessionStorage.getItem('chief_pilot_preferred_active') === '1');
   const [error, setError] = useState('');
   const activeSubject = mode === 'solutions' ? { id: 'real-estate-solutions', title: 'Real Estate Solutions' } : mode === 'news' ? { id: 'dnn-news', title: 'DNN News' } : mode === 'library' ? { id: 'library', title: 'My Library' } : subjects.find(subject => subject.id === activeId) || null;
+  const isChatsInbox = mode === 'chats' && !new URLSearchParams(location.search).get('subject');
   const preferredClient = getCheckedInUser(user);
   const displayProperty = activeProperty || (showExample ? exampleProperty : null);
   useEffect(() => {
@@ -200,5 +201,5 @@ export default function useChiefPilotWorkspace() {
   };
   const send = text => runConversation(text, false);
 
-  return { subjects, mode, entryOpen, openEntry, closeEntry, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, displayProperty, isExample, showExample, exampleLoading, hideExample, escrowStub, conversations, teamMessages, selectedAgentName, loading, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, error, rename, move, send, sendTeamMessage, runPropertySearch, clearActiveProperty, requestVettedIntro, startEscrowWatch, activatePreferredClient, saveProperty };
+  return { subjects, mode, isChatsInbox, entryOpen, openEntry, closeEntry, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, displayProperty, isExample, showExample, exampleLoading, hideExample, escrowStub, conversations, teamMessages, selectedAgentName, loading, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, error, rename, move, send, sendTeamMessage, runPropertySearch, clearActiveProperty, requestVettedIntro, startEscrowWatch, activatePreferredClient, saveProperty };
 }
