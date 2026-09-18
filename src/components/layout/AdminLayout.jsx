@@ -102,13 +102,6 @@ export default function AdminLayout() {
         <div className="fixed top-3 left-3 md:left-[330px] z-50 flex items-center gap-2">
           <PortalHomeButton onClick={() => navigate('/?choose=1')} label="STUDIO" />
           <Link
-            to="/admin/cheif-pilot"
-            className="inline-flex shrink-0 items-center rounded-full border border-dyson-gold bg-dyson-gold px-3 py-1.5 text-xs font-bold text-dyson-text-dark shadow-md whitespace-nowrap"
-            title="New DysonHomes.com pages workspace"
-          >
-            CHIEF PILOT
-          </Link>
-          <Link
             to="/admin/dysonhomes-copilot"
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95 border"
             style={{
