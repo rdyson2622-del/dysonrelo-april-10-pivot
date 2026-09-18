@@ -9,8 +9,8 @@ export default function ChiefPilotRelocationRoadmaps({ title, activeProperty, es
   return (
     <div>
       <ChiefPilotActivePropertyHeader property={activeProperty} agentName={selectedAgentName} onOpenListing={onOpenListing} />
-      <div className="flex items-center justify-between gap-3"><h2 className="text-2xl font-normal text-dyson-text">{title}</h2>{isExample && <span className="text-[10px] tracking-[0.18em] text-dyson-gold">EXAMPLE</span>}</div>
-      {activeProperty && <article className="mt-6 rounded-xl border border-white/10 bg-white/[0.03] p-5"><p className="text-sm text-dyson-text">{activeProperty.fullAddress}</p><p className="mt-1 text-xs text-dyson-taupe">Destination thread: {destination || 'Pending'}</p><ChiefPilotRoadMapStrip current={current} /><p className="mt-5 text-xs leading-5 text-dyson-taupe">The highlighted phase is the current working point for this property.</p></article>}
+      <div className="flex items-center justify-between gap-3"><h2 className="text-2xl font-normal text-dyson-text-dark">{title}</h2>{isExample && <span className="text-[10px] tracking-[0.18em] text-dyson-gold">EXAMPLE</span>}</div>
+      {activeProperty && <article className="mt-6 rounded-xl border border-black/20 bg-dyson-charcoal p-5"><p className="text-sm text-dyson-text">{activeProperty.fullAddress}</p><p className="mt-1 text-xs text-dyson-taupe">Destination thread: {destination || 'Pending'}</p><ChiefPilotRoadMapStrip current={current} /><p className="mt-5 text-xs leading-5 text-dyson-taupe">The highlighted phase is the current working point for this property.</p></article>}
     </div>
   );
 }
