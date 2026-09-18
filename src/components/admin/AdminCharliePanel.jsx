@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
 
-export default function AdminCharliePanel() {
+export default function AdminCharliePanel({ compact = false }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
     { role: 'charlie', content: "Admin mode active. I have live access to your client pipeline, tasks, and escalations. Ask me anything or tell me what to do — I can query data, draft content, or execute operations like creating clients and tasks." }
@@ -80,7 +80,7 @@ export default function AdminCharliePanel() {
       <button
         data-charlie-toggle
         onClick={() => setOpen(o => !o)}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-full font-bold text-sm shadow-2xl transition-all hover:scale-105"
+        className={`fixed z-50 flex items-center justify-center rounded-full font-bold shadow-2xl transition-all hover:scale-105 ${compact ? 'bottom-3 right-3 h-9 w-9 p-0' : 'bottom-6 right-6 gap-2 px-4 py-3 text-sm'}`}
         style={{
           background: open ? '#111' : `linear-gradient(135deg, #e8c84a, ${GOLD})`,
           color: open ? GOLD : '#000',
@@ -89,7 +89,7 @@ export default function AdminCharliePanel() {
         }}
       >
         {open ? <ChevronDown className="w-4 h-4" /> : <Zap className="w-4 h-4" />}
-        {open ? 'Close Charlie' : 'Admin Charlie'}
+        {!compact && (open ? 'Close Charlie' : 'Admin Charlie')}
       </button>
 
       {/* Panel */}

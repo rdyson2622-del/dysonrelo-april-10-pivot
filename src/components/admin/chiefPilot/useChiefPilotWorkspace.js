@@ -12,7 +12,8 @@ const INITIAL_SUBJECTS = [
 
 export default function useChiefPilotWorkspace() {
   const [subjects, setSubjects] = useState(INITIAL_SUBJECTS);
-  const [activeId, setActiveId] = useState(null);
+  const [activeId, setActiveId] = useState('property-search');
+  const [currentProperty, setCurrentProperty] = useState('');
   const [conversations, setConversations] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -47,5 +48,5 @@ export default function useChiefPilotWorkspace() {
     }
   };
 
-  return { subjects, activeSubject, activeId, setActiveId, conversations, loading, error, rename, move, send };
+  return { subjects, activeSubject, activeId, setActiveId, currentProperty, setCurrentProperty, conversations, loading, error, rename, move, send };
 }

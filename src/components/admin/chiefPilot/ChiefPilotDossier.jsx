@@ -1,37 +1,26 @@
 import React from 'react';
+import ChiefPilotPropertySearch from './ChiefPilotPropertySearch';
+import ChiefPilotPropertyAudit from './ChiefPilotPropertyAudit';
+import ChiefPilotAgentVetting from './ChiefPilotAgentVetting';
+import ChiefPilotRelocationRoadmaps from './ChiefPilotRelocationRoadmaps';
+import ChiefPilotEscrowWatch from './ChiefPilotEscrowWatch';
+import ChiefPilotDnnNews from './ChiefPilotDnnNews';
+import ChiefPilotConversation from './ChiefPilotConversation';
 
-export default function ChiefPilotDossier({ subject, messages, loading, error }) {
-  if (!subject) {
-    return (
-      <div className="flex min-h-[460px] w-full items-center justify-center">
-        <img
-          src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/20230d875_Screenshot2026-09-18at80532AM.png"
-          alt="Dyson CoPilot"
-          className="w-full max-w-[280px] object-contain opacity-80"
-        />
-      </div>
-    );
-  }
-
+export default function ChiefPilotDossier({ subject, currentProperty, onPropertySearch, onSelectSubject, onSend, messages, loading, error }) {
+  const shared = { title: subject.title, currentProperty, onSelectSearch: () => onSelectSubject('property-search'), onSend };
+  const panels = {
+    'property-search': <ChiefPilotPropertySearch {...shared} onSearch={onPropertySearch} />,
+    'property-audit': <ChiefPilotPropertyAudit {...shared} />,
+    'agent-vetting': <ChiefPilotAgentVetting {...shared} />,
+    'move-roadmap': <ChiefPilotRelocationRoadmaps {...shared} />,
+    'escrow-watch': <ChiefPilotEscrowWatch {...shared} />,
+    'dnn-news': <ChiefPilotDnnNews {...shared} />
+  };
   return (
-    <div className="w-full max-w-2xl">
-      <div className="border-b border-white/10 pb-7">
-        <p className="mb-3 text-xs text-dyson-taupe">Focused dossier</p>
-        <h2 className="text-2xl font-normal text-dyson-text">{subject.title}</h2>
-        <p className="mt-4 max-w-xl text-sm leading-7 text-dyson-taupe">{subject.placeholder}</p>
-      </div>
-      {messages.length > 0 && (
-        <div className="space-y-5 py-7">
-          {messages.map((message, index) => (
-            <div key={`${message.role}-${index}`} className="border-b border-white/5 pb-5">
-              <p className="mb-2 text-[11px] text-dyson-taupe">{message.role === 'user' ? 'You' : 'Chief Pilot'}</p>
-              <p className="whitespace-pre-wrap text-sm leading-7 text-dyson-text">{message.content}</p>
-            </div>
-          ))}
-        </div>
-      )}
-      {loading && <p className="pt-5 text-xs text-dyson-taupe">Thinking…</p>}
-      {error && <p className="pt-5 text-xs text-status-stop">{error}</p>}
+    <div className="w-full max-w-3xl">
+      {panels[subject.id] || <h2 className="text-2xl font-normal text-dyson-text">{subject.title}</h2>}
+      <ChiefPilotConversation messages={messages} loading={loading} error={error} />
     </div>
   );
 }
