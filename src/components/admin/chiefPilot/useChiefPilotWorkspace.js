@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { getCheckedInUser, saveToClientVault } from '@/lib/copilotContactSession';
 import { resolveSanctionedDossier } from '@/lib/resolveSanctionedDossier';
+import { getChiefPilotSampleProperty } from './chiefPilotSampleProperties';
 
 const INITIAL_SUBJECTS = [['property-search', 'Property Searches'], ['property-audit', 'Property Audits'], ['agent-vetting', 'Agent Vettings'], ['team-thread', 'Team Threads'], ['move-roadmap', 'Relocation Road Maps'], ['escrow-watch', 'Escrow Watches']].map(([id, title]) => ({ id, title }));
 const PROPERTY_KEY = 'chief_pilot_active_property';
@@ -110,6 +111,13 @@ export default function useChiefPilotWorkspace() {
   };
   const runPropertySearch = async query => {
     clearActiveProperty(); setSearchLoading(true);
+    const sample = getChiefPilotSampleProperty(query);
+    if (sample) {
+      setSearchLoading(false); setMode('chats'); setActiveId('property-search');
+      setActiveProperty(sample); sessionStorage.setItem(PROPERTY_KEY, JSON.stringify(sample));
+      recordActivity({ kind: 'Example', label: sample.fullAddress, subjectId: 'property-search', property: sample });
+      return true;
+    }
     const result = await resolveSanctionedDossier(query);
     setSearchLoading(false);
     if (!result?.isVerified) {
