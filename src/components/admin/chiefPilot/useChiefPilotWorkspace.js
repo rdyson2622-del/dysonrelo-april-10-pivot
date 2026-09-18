@@ -21,6 +21,7 @@ export default function useChiefPilotWorkspace() {
   const { user } = useAuth();
   const [subjects, setSubjects] = useState(INITIAL_SUBJECTS);
   const [mode, setMode] = useState('chats');
+  const [entryOpen, setEntryOpen] = useState(true);
   const [activeId, setActiveId] = useState('property-search');
   const [activity, setActivity] = useState(() => fromSession(ACTIVITY_KEY) || []);
   const [libraryItems, setLibraryItems] = useState(() => {
@@ -65,12 +66,20 @@ export default function useChiefPilotWorkspace() {
     const next = [{ ...item, id: `${item.kind}-${Date.now()}`, timestamp: new Date().toISOString() }, ...current].slice(0, 15);
     sessionStorage.setItem(ACTIVITY_KEY, JSON.stringify(next)); return next;
   });
+  const openEntry = () => setEntryOpen(true);
+  const closeEntry = () => setEntryOpen(false);
+  const selectEntryTarget = id => {
+    if (id === 'library' && !preferredClientActive) return;
+    if (id === 'dnn-news') setMode('news');
+    else if (id === 'library') setMode('library');
+    else { setMode('chats'); setActiveId(id); }
+  };
   const selectMode = nextMode => {
     if (nextMode === 'library' && !preferredClientActive) return;
-    setMode(nextMode);
+    setEntryOpen(false); setMode(nextMode);
   };
   const selectSubject = id => {
-    setMode('chats'); setActiveId(id);
+    setEntryOpen(false); setMode('chats'); setActiveId(id);
     document.getElementById('chief-pilot-content')?.scrollTo({ top: 0, behavior: 'smooth' });
   };
   const openActivity = item => {
@@ -160,10 +169,10 @@ export default function useChiefPilotWorkspace() {
     setSaveStatus('saved');
   };
 
-  const send = async text => {
+  const runConversation = async (text, requirePreferred) => {
     if (!activeSubject || !text.trim() || loading) return false;
     const contextId = activeSubject.id;
-    if (!preferredClientActive) {
+    if (requirePreferred && !preferredClientActive) {
       selectSubject('property-search');
       requestAnimationFrame(() => requestAnimationFrame(() => document.getElementById('preferred-client-door')?.scrollIntoView({ behavior: 'smooth', block: 'center' })));
       return false;
@@ -185,6 +194,8 @@ export default function useChiefPilotWorkspace() {
       return true;
     } finally { setLoading(false); }
   };
+  const send = text => runConversation(text, true);
+  const sendEntry = text => runConversation(text, false);
 
-  return { subjects, mode, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, displayProperty, isExample, showExample, exampleLoading, hideExample, escrowStub, conversations, teamMessages, selectedAgentName, loading, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, error, rename, move, send, sendTeamMessage, runPropertySearch, clearActiveProperty, requestVettedIntro, startEscrowWatch, activatePreferredClient, saveProperty };
+  return { subjects, mode, entryOpen, openEntry, closeEntry, selectEntryTarget, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, displayProperty, isExample, showExample, exampleLoading, hideExample, escrowStub, conversations, teamMessages, selectedAgentName, loading, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, error, rename, move, send, sendEntry, sendTeamMessage, runPropertySearch, clearActiveProperty, requestVettedIntro, startEscrowWatch, activatePreferredClient, saveProperty };
 }
