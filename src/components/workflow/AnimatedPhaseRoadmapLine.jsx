@@ -6,7 +6,7 @@ import { CheckCircle2, Loader2, Circle } from 'lucide-react';
  * all 8 relocation phases in sequence, lighting each one up green as it
  * completes and gold (pulsing) as it's the active step, then loops.
  */
-export default function AnimatedPhaseRoadmapLine({ phases, color = '#D4AF37' }) {
+export default function AnimatedPhaseRoadmapLine({ phases, color = '#D4AF37', compact = false }) {
   const [activeStep, setActiveStep] = useState(0);
 
   useEffect(() => {
@@ -17,10 +17,12 @@ export default function AnimatedPhaseRoadmapLine({ phases, color = '#D4AF37' }) 
   }, [phases.length]);
 
   const progress = (Math.min(activeStep, phases.length) / phases.length) * 100;
+  const dotSize = compact ? { active: 26, idle: 22 } : { active: 38, idle: 34 };
+  const rowHeight = compact ? 34 : 52;
 
   return (
-    <div className="overflow-x-auto">
-      <div className="relative" style={{ height: 52, minWidth: phases.length * 90 }}>
+    <div className={compact ? '' : 'overflow-x-auto'}>
+      <div className="relative" style={compact ? { height: rowHeight, width: '100%' } : { height: rowHeight, minWidth: phases.length * 90 }}>
         <div className="absolute rounded-full" style={{ top: '50%', left: '20px', right: '20px', height: '3px', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.06)' }} />
         <div
           className="absolute rounded-full transition-all duration-700"
@@ -46,12 +48,12 @@ export default function AnimatedPhaseRoadmapLine({ phases, color = '#D4AF37' }) 
                 <div
                   className="rounded-full flex items-center justify-center transition-all duration-500"
                   style={{
-                    width: isActive ? 38 : 34, height: isActive ? 38 : 34,
+                    width: isActive ? dotSize.active : dotSize.idle, height: isActive ? dotSize.active : dotSize.idle,
                     background: cfg.bg, border: `2.5px solid ${cfg.color}`,
                     boxShadow: cfg.glow ? `0 0 16px ${cfg.color}, 0 0 4px ${cfg.color}` : 'none',
                   }}
                 >
-                  <Icon className={`w-4 h-4 ${cfg.spin ? 'animate-spin' : ''}`} style={{ color: cfg.color }} />
+                  <Icon className={`${compact ? 'w-3 h-3' : 'w-4 h-4'} ${cfg.spin ? 'animate-spin' : ''}`} style={{ color: cfg.color }} />
                 </div>
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 whitespace-nowrap rounded-lg px-2 py-1 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" style={{ background: '#1a1a1a', border: `1px solid ${cfg.color}40`, color: '#fff' }}>
                   Phase {p.number} · {p.title}
@@ -62,14 +64,14 @@ export default function AnimatedPhaseRoadmapLine({ phases, color = '#D4AF37' }) 
         </div>
       </div>
 
-      <div className="flex justify-between px-1 mt-2" style={{ minWidth: phases.length * 90 }}>
+      <div className="flex justify-between px-1 mt-2" style={compact ? { width: '100%' } : { minWidth: phases.length * 90 }}>
         {phases.map((p, idx) => {
           const isDone = idx < activeStep;
           const isActive = idx === activeStep;
           const labelColor = isDone ? '#22c55e' : isActive ? color : '#777';
           return (
-            <p key={p.number} className="text-[9px] font-bold text-center shrink-0" style={{ width: 80, color: labelColor }}>
-              Phase {p.number}
+            <p key={p.number} className={`text-center shrink-0 ${compact ? 'text-[9px] font-semibold' : 'text-[9px] font-bold'}`} style={{ width: compact ? 70 : 80, color: labelColor }}>
+              {p.title}
             </p>
           );
         })}
