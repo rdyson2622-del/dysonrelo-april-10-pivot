@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { ShieldCheck } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import CopilotWordmark from '@/components/brand/CopilotWordmark';
+import ChiefPilotHowCopilotWorksExplainer from './ChiefPilotHowCopilotWorksExplainer';
 
 const HERO_IMAGE = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/efdc69af3_hero-evening-luxury-clean.png';
 const SAMPLES = ['742 Vista Del Mar, La Jolla, CA 92037', '1844 Mountain Shadow Way, Scottsdale, AZ 85253'];
 
 export default function ChiefPilotOpeningDoor({ workspace }) {
   const [address, setAddress] = useState('');
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
+  if (showHowItWorks) return <ChiefPilotHowCopilotWorksExplainer onBack={() => setShowHowItWorks(false)} />;
   const search = async value => {
     const query = (value || address).trim();
     if (!query || workspace.searchLoading) return;
@@ -25,6 +28,7 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
         <div className="mt-6 flex flex-wrap items-center gap-2"><span className="text-xs text-dyson-gold-light">Sample Lookups:</span>{SAMPLES.map(sample => <button key={sample} type="button" onClick={() => { setAddress(sample); search(sample); }} className="rounded-md border border-white/20 bg-white/5 px-3 py-1 text-xs text-white hover:border-dyson-gold">{sample.split(',')[0]}</button>)}</div>
         {workspace.searchError && <p className="mt-4 text-sm text-white/70">{workspace.searchError}</p>}
         <p className="mt-7 flex items-center gap-2 text-xs text-dyson-gold-light"><ShieldCheck className="h-4 w-4" />Independent research — no spam calls or agent involvement.</p>
+        <button type="button" onClick={() => setShowHowItWorks(true)} className="mt-6 rounded-full border border-white/20 px-5 py-2.5 text-sm text-white/75 hover:border-dyson-gold hover:text-dyson-gold-light">Watch how this works · Explainers</button>
       </div>
       <div className="overflow-hidden rounded-2xl shadow-2xl"><img src={HERO_IMAGE} alt="Luxury home at evening" className="aspect-[16/11] h-full w-full object-cover" /></div>
     </div>
