@@ -5,7 +5,7 @@ import { useAuth } from '@/lib/AuthContext';
 import { getCheckedInUser, saveToClientVault } from '@/lib/copilotContactSession';
 import { resolveSanctionedDossier } from '@/lib/resolveSanctionedDossier';
 
-const INITIAL_SUBJECTS = [['real-estate-solutions', 'Real Estate Solutions'], ['property-search', 'Property Search'], ['property-audit', 'Property Audit'], ['agent-vetting', 'Agent Vetting'], ['team-thread', 'Team Thread'], ['move-roadmap', 'Relocation Road Maps'], ['escrow-watch', 'Escrow Watch']].map(([id, title]) => ({ id, title }));
+const INITIAL_SUBJECTS = [['property-search', 'Property Search'], ['property-audit', 'Property Audit'], ['agent-vetting', 'Agent Vetting'], ['team-thread', 'Team Thread'], ['move-roadmap', 'Relocation Road Maps'], ['escrow-watch', 'Escrow Watch']].map(([id, title]) => ({ id, title }));
 const PROPERTY_KEY = 'chief_pilot_active_property';
 const ACTIVITY_KEY = 'chief_pilot_recent_activity';
 const EXAMPLE_HIDDEN_KEY = 'chief_pilot_example_hidden';
@@ -44,7 +44,7 @@ export default function useChiefPilotWorkspace() {
   const [saveStatus, setSaveStatus] = useState('idle');
   const [preferredClientActive, setPreferredClientActive] = useState(() => sessionStorage.getItem('chief_pilot_preferred_active') === '1');
   const [error, setError] = useState('');
-  const activeSubject = mode === 'news' ? { id: 'dnn-news', title: 'DNN News' } : mode === 'library' ? { id: 'library', title: 'My Library' } : subjects.find(subject => subject.id === activeId) || null;
+  const activeSubject = mode === 'solutions' ? { id: 'real-estate-solutions', title: 'Real Estate Solutions' } : mode === 'news' ? { id: 'dnn-news', title: 'DNN News' } : mode === 'library' ? { id: 'library', title: 'My Library' } : subjects.find(subject => subject.id === activeId) || null;
   const preferredClient = getCheckedInUser(user);
   const displayProperty = activeProperty || (showExample ? exampleProperty : null);
   useEffect(() => {
@@ -53,8 +53,7 @@ export default function useChiefPilotWorkspace() {
     const nextMode = params.get('mode');
     if (params.get('open') === '1') { setEntryOpen(true); return; }
     if (subject && INITIAL_SUBJECTS.some(item => item.id === subject)) { setMode('chats'); setActiveId(subject); setEntryOpen(false); return; }
-    if (nextMode === 'library' && !preferredClientActive) return;
-    if (nextMode === 'news' || nextMode === 'library' || nextMode === 'chats') { setMode(nextMode); setEntryOpen(false); }
+    if (nextMode === 'solutions' || nextMode === 'news' || nextMode === 'library' || nextMode === 'chats') { setMode(nextMode); setEntryOpen(false); }
   }, [location.search, preferredClientActive]);
   const isExample = !activeProperty && showExample;
   useEffect(() => {
@@ -80,7 +79,6 @@ export default function useChiefPilotWorkspace() {
   const openEntry = () => setEntryOpen(true);
   const closeEntry = () => setEntryOpen(false);
   const selectMode = nextMode => {
-    if (nextMode === 'library' && !preferredClientActive) return;
     setEntryOpen(false); setMode(nextMode);
   };
   const selectSubject = id => {
@@ -200,7 +198,7 @@ export default function useChiefPilotWorkspace() {
       return true;
     } finally { setLoading(false); }
   };
-  const send = text => runConversation(text, true);
+  const send = text => runConversation(text, false);
 
   return { subjects, mode, entryOpen, openEntry, closeEntry, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, displayProperty, isExample, showExample, exampleLoading, hideExample, escrowStub, conversations, teamMessages, selectedAgentName, loading, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, error, rename, move, send, sendTeamMessage, runPropertySearch, clearActiveProperty, requestVettedIntro, startEscrowWatch, activatePreferredClient, saveProperty };
 }

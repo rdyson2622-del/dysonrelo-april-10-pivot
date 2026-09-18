@@ -1,33 +1,14 @@
 import React from 'react';
-import ChiefPilotPropertySearch from './ChiefPilotPropertySearch';
-import ChiefPilotPropertyAudit from './ChiefPilotPropertyAudit';
-import ChiefPilotAgentVetting from './ChiefPilotAgentVetting';
-import ChiefPilotRelocationRoadmaps from './ChiefPilotRelocationRoadmaps';
-import ChiefPilotEscrowWatch from './ChiefPilotEscrowWatch';
 import ChiefPilotDnnNews from './ChiefPilotDnnNews';
-import ChiefPilotConversation from './ChiefPilotConversation';
 import ChiefPilotLibrary from './ChiefPilotLibrary';
-import ChiefPilotTeamThread from './ChiefPilotTeamThread';
+import ChiefPilotSubjectSearch from './ChiefPilotSubjectSearch';
 
-export default function ChiefPilotDossier({ mode, libraryItems, subject, activeProperty, hasOwnProperty, isExample, showExample, exampleLoading, onHideExample, escrowStub, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, selectedAgentName, teamMessages, onPropertySearch, onClearProperty, onSelectSubject, onSend, onTeamMessage, onRequestIntro, onStartEscrow, onPreferredClaim, onSaveProperty, messages, loading, error }) {
-  const openListing = () => {
-    onSelectSubject('property-search');
-    requestAnimationFrame(() => requestAnimationFrame(() => document.getElementById('chief-pilot-listing-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' })));
-  };
-  const shared = { title: subject.title, activeProperty, hasOwnProperty, isExample, exampleLoading, onHideExample, escrowStub, selectedAgentName, preferredClientActive, onSelectSubject, onOpenListing: openListing, onSelectSearch: openListing, onSearchOwn: openListing, onSend, onSaveProperty, saveStatus };
-  const panels = {
-    'property-search': <ChiefPilotPropertySearch {...shared} searchLoading={searchLoading} searchError={searchError} onSearch={onPropertySearch} onClear={onClearProperty} preferredClientActive={preferredClientActive} selectedAgentName={selectedAgentName} onPreferredClaim={onPreferredClaim} onSaveProperty={onSaveProperty} saveStatus={saveStatus} />,
-    'property-audit': <ChiefPilotPropertyAudit {...shared} />,
-    'agent-vetting': <ChiefPilotAgentVetting {...shared} agentName={selectedAgentName} introStatus={introStatus} onRequestIntro={onRequestIntro} />,
-    'team-thread': <ChiefPilotTeamThread {...shared} agentName={selectedAgentName} messages={teamMessages} onSendMessage={onTeamMessage} />,
-    'move-roadmap': <ChiefPilotRelocationRoadmaps {...shared} />,
-    'escrow-watch': <ChiefPilotEscrowWatch {...shared} onStartEscrow={onStartEscrow} />,
-    'dnn-news': <ChiefPilotDnnNews {...shared} />
-  };
-  return (
-    <div className="w-full max-w-3xl text-dyson-text-dark">
-      {mode === 'library' ? <ChiefPilotLibrary items={libraryItems} {...shared} isExample={showExample} /> : panels[subject.id] || <h2 className="text-2xl font-normal text-dyson-text-dark">{subject.title}</h2>}
-      <ChiefPilotConversation messages={messages} loading={loading} error={error} />
-    </div>
-  );
+export default function ChiefPilotDossier({ mode, libraryItems, subject, activeProperty, isExample, showExample, onHideExample, selectedAgentName, onOpenEntry, onSend, messages, loading, error }) {
+  if (mode === 'library') {
+    return <div className="w-full max-w-3xl text-dyson-text-dark"><ChiefPilotLibrary items={libraryItems} isExample={showExample} onHideExample={onHideExample} onSearchOwn={onOpenEntry} /></div>;
+  }
+  if (mode === 'news') {
+    return <div className="w-full max-w-3xl text-dyson-text-dark"><ChiefPilotDnnNews title={subject.title} activeProperty={activeProperty} isExample={isExample} onHideExample={onHideExample} onSearchOwn={onOpenEntry} onSend={onSend} /></div>;
+  }
+  return <ChiefPilotSubjectSearch subject={subject} activeProperty={activeProperty} selectedAgentName={selectedAgentName} onOpenEntry={onOpenEntry} onSend={onSend} messages={messages} loading={loading} error={error} />;
 }
