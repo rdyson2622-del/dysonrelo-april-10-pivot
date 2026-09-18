@@ -21,6 +21,7 @@ import ListingProspectsRepWidget from '@/components/admin/ListingProspectsRepWid
 import SubscriberInviteModal from '@/components/admin/SubscriberInviteModal';
 import AdminWorkingModelsScroll from '@/components/admin/AdminWorkingModelsScroll';
 import AdminMiniAppsGrid from '@/components/admin/AdminMiniAppsGrid';
+import ChiefPilotGlobalNav from '@/components/admin/chiefPilot/ChiefPilotGlobalNav';
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/c04428737_DYSONDYSONLOGO2026.png";
 
@@ -347,107 +348,11 @@ export default function AdminSidebar() {
 
   return (
     <aside ref={sidebarRef} className="w-[310px] sm:w-[320px] flex flex-col h-screen shrink-0 overflow-y-auto select-none shadow-2xl" style={{ background: '#0a0a0a', borderRight: '1px solid rgba(212,175,55,0.3)' }}>
-      {/* Top Brand Header: Dyson & Dyson Logo + The Dyson & Dyson Companies */}
-      <div className="p-3.5 pb-2 space-y-1.5 shrink-0 text-center">
-        <Link 
-          to="/portal" 
-          className="block group cursor-pointer transition-transform hover:scale-[1.02] active:scale-98"
-          title="The Dyson & Dyson Companies · Return to Portal"
-        >
-          <div className="flex justify-center items-center py-1">
-            <img 
-              src={DYSON_LOGO} 
-              alt="The Dyson & Dyson Companies" 
-              className="h-10 sm:h-12 w-auto object-contain drop-shadow" 
-            />
-          </div>
-          <div className="text-xs sm:text-sm font-semibold text-white tracking-wide mt-1 font-sans">
-            The Dyson &amp; Dyson Companies
-          </div>
-        </Link>
-
-        {/* Signed In Quick Status */}
-        <div className="py-1.5 px-3 rounded-xl bg-[#141414] border border-white/10 flex items-center justify-between text-[11px]">
-          <div className="flex items-center gap-1.5 truncate pr-2">
-            <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse shrink-0" />
-            <span className="text-white/90 font-medium truncate">
-              Signed In: <strong className="text-white font-bold">Admin Console</strong>
-            </span>
-          </div>
-          <Link
-            to="/admin"
-            className="text-[10.5px] font-bold text-[#D4AF37] hover:text-white transition-colors shrink-0 flex items-center gap-0.5"
-          >
-            <span>Console</span>
-            <ArrowRight className="w-3 h-3" />
-          </Link>
-        </div>
-      </div>
+      <ChiefPilotGlobalNav />
+      <p className="px-4 pt-5 text-[10px] font-black tracking-[0.2em] text-[#D4AF37]">ADMIN TOOLS</p>
 
       {/* Sidebar Search — searches every link in every nav section below */}
       <AdminSidebarSearch items={buildSearchIndex(NAV_SECTIONS)} />
-
-      {/* ── TOP PINNED: CHIEF PILOT + DYSONHOMES COPILOT LAB ── */}
-      <div className="px-3 pt-2.5 pb-2 shrink-0 space-y-2">
-        <Link
-          to="/admin/chief-pilot"
-          className={`flex items-center gap-2 px-3.5 py-2.5 rounded-full border transition-all cursor-pointer shadow-lg active:scale-95 group w-full ${
-            location.pathname === '/admin/chief-pilot'
-              ? 'bg-[#2a220c] border-[#D4AF37] ring-1 ring-[#D4AF37]'
-              : 'bg-[#18140c] hover:bg-[#241c0e] border-[#D4AF37] hover:border-[#e8c84a]'
-          }`}
-          style={{ boxShadow: '0 4px 14px rgba(212,175,55,0.25)' }}
-          title="Open Chief Pilot workspace"
-        >
-          <Star className="w-4 h-4 text-[#D4AF37] shrink-0 group-hover:scale-110 transition-transform" />
-          <span className="text-[12px] font-black uppercase tracking-wider text-[#D4AF37] truncate">
-            CHIEF PILOT
-          </span>
-        </Link>
-
-        <Link
-          to="/admin/dysonhomes-copilot"
-          className={`flex items-center gap-2 px-3.5 py-2.5 rounded-full border transition-all cursor-pointer shadow-lg active:scale-95 group w-full ${
-            location.pathname === '/admin/dysonhomes-copilot'
-              ? 'bg-[#2a220c] border-[#D4AF37] ring-1 ring-[#D4AF37]'
-              : 'bg-[#18140c] hover:bg-[#241c0e] border-[#D4AF37] hover:border-[#e8c84a]'
-          }`}
-          style={{
-            boxShadow: '0 4px 14px rgba(212,175,55,0.25)',
-          }}
-          title="Open DysonHomes Copilot Lab"
-        >
-          <Sparkles className="w-4 h-4 text-[#D4AF37] shrink-0 group-hover:scale-110 transition-transform" />
-          <span className="text-[12px] font-black uppercase tracking-wider text-[#D4AF37] truncate">
-            ✨ DYSONHOMES COPILOT LAB
-          </span>
-        </Link>
-
-        {/* Sub-links matching 2-page consolidated sequence */}
-        <div className="pt-1 space-y-0.5">
-          <Link
-            to="/admin/dysonhomes-copilot?page=1"
-            className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white hover:text-[#D4AF37] hover:bg-white/5 transition-all group"
-            title="Page 1: Landing & Property Search (Private Wealth)"
-          >
-            <Home className="w-3.5 h-3.5 text-stone-400 group-hover:text-[#D4AF37] shrink-0" />
-            <span className="text-[11px] font-semibold text-white group-hover:text-[#D4AF37] truncate">
-              ↳ Page 1: Landing &amp; Property Search
-            </span>
-          </Link>
-
-          <Link
-            to="/admin/dysonhomes-copilot?page=2"
-            className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white hover:text-[#D4AF37] hover:bg-white/5 transition-all group"
-            title="Page 2: Fiduciary Command Center & Dossier"
-          >
-            <FileText className="w-3.5 h-3.5 text-stone-400 group-hover:text-[#D4AF37] shrink-0" />
-            <span className="text-[11px] font-semibold text-white group-hover:text-[#D4AF37] truncate">
-              ↳ Page 2: Fiduciary Command Center
-            </span>
-          </Link>
-        </div>
-      </div>
 
       {/* ── TOP PINNED: 10 PLATFORM APPS & SPRINGBOARD SPECS ── */}
       <div className="px-3 pt-1 pb-1 shrink-0">

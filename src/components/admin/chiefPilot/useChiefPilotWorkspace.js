@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { getCheckedInUser, saveToClientVault } from '@/lib/copilotContactSession';
@@ -19,6 +20,7 @@ const fromSession = key => {
 
 export default function useChiefPilotWorkspace() {
   const { user } = useAuth();
+  const location = useLocation();
   const [subjects, setSubjects] = useState(INITIAL_SUBJECTS);
   const [mode, setMode] = useState('chats');
   const [entryOpen, setEntryOpen] = useState(true);
@@ -45,6 +47,15 @@ export default function useChiefPilotWorkspace() {
   const activeSubject = mode === 'news' ? { id: 'dnn-news', title: 'DNN News' } : mode === 'library' ? { id: 'library', title: 'My Library' } : subjects.find(subject => subject.id === activeId) || null;
   const preferredClient = getCheckedInUser(user);
   const displayProperty = activeProperty || (showExample ? exampleProperty : null);
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const subject = params.get('subject');
+    const nextMode = params.get('mode');
+    if (params.get('open') === '1') { setEntryOpen(true); return; }
+    if (subject && INITIAL_SUBJECTS.some(item => item.id === subject)) { setMode('chats'); setActiveId(subject); setEntryOpen(false); return; }
+    if (nextMode === 'library' && !preferredClientActive) return;
+    if (nextMode === 'news' || nextMode === 'library' || nextMode === 'chats') { setMode(nextMode); setEntryOpen(false); }
+  }, [location.search, preferredClientActive]);
   const isExample = !activeProperty && showExample;
   useEffect(() => {
     if (activeProperty || !showExample || exampleProperty.isVerified) return;
