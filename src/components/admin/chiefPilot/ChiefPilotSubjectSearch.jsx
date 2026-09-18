@@ -7,7 +7,7 @@ export default function ChiefPilotSubjectSearch({ subject, activeProperty, isExa
   const [query, setQuery] = useState('');
   const [showExplainers, setShowExplainers] = useState(false);
   useEffect(() => { setQuery(''); setShowExplainers(false); }, [subject.id]);
-  if (showExplainers) return <ChiefPilotExplainers subject={subject} onBack={() => setShowExplainers(false)} isLiveObjective={Boolean(activeProperty) && !isExample} />;
+  if (showExplainers) return <ChiefPilotExplainers subject={subject} onBack={() => setShowExplainers(false)} isLiveObjective={Boolean(activeProperty) && !isExample} onSend={onSend} messages={messages} loading={loading} error={error} />;
   const submit = async event => {
     event.preventDefault();
     if (!query.trim() || loading) return;
