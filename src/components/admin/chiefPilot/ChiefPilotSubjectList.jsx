@@ -16,7 +16,7 @@ export default function ChiefPilotSubjectList({ subjects, activeId, onSelect, on
   };
 
   return (
-    <nav className="flex-1 space-y-1 overflow-y-auto" aria-label="Chief Pilot subjects">
+    <nav className="space-y-1" aria-label="Chief Pilot subjects">
       {subjects.map((subject, index) => editingId === subject.id ? (
         <form key={subject.id} onSubmit={event => { event.preventDefault(); saveRename(subject.id); }} className="border-l border-dyson-gold px-3 py-2">
           <input autoFocus value={draft} onChange={event => setDraft(event.target.value)} className="w-full border-b border-white/20 bg-transparent py-1 text-sm text-dyson-text outline-none focus:border-dyson-gold" />

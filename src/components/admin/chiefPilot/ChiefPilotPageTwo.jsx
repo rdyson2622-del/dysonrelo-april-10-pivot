@@ -1,23 +1,18 @@
 import React from 'react';
-import ChiefPilotSubjectList from './ChiefPilotSubjectList';
-import ChiefPilotChatComposer from './ChiefPilotChatComposer';
+import ChiefPilotSidebar from './ChiefPilotSidebar';
 import ChiefPilotDossier from './ChiefPilotDossier';
 import useChiefPilotWorkspace from './useChiefPilotWorkspace';
 
 export default function ChiefPilotPageTwo() {
   const workspace = useChiefPilotWorkspace();
-  const messages = workspace.activeId ? workspace.conversations[workspace.activeId] || [] : [];
+  const messages = workspace.activeSubject ? workspace.conversations[workspace.activeSubject.id] || [] : [];
 
   return (
     <section className="h-[calc(100vh-220px)] min-h-[680px] overflow-hidden rounded-xl border border-white/10 bg-dyson-ink">
       <div className="grid h-full md:grid-cols-[300px_1fr]">
-        <aside className="flex min-h-0 flex-col border-b border-white/10 p-5 md:border-b-0 md:border-r">
-          <p className="mb-6 text-xs font-medium tracking-wide text-dyson-taupe">Workspace</p>
-          <ChiefPilotSubjectList subjects={workspace.subjects} activeId={workspace.activeId} onSelect={workspace.setActiveId} onRename={workspace.rename} onMove={workspace.move} />
-          <ChiefPilotChatComposer disabled={!workspace.activeSubject} loading={workspace.loading} onSend={workspace.send} />
-        </aside>
+        <ChiefPilotSidebar workspace={workspace} />
         <div className="h-full overflow-y-auto p-7 sm:p-10">
-          <ChiefPilotDossier subject={workspace.activeSubject} activeProperty={workspace.activeProperty} escrowStub={workspace.escrowStub} searchLoading={workspace.searchLoading} searchError={workspace.searchError} introStatus={workspace.introStatus} onPropertySearch={workspace.runPropertySearch} onClearProperty={workspace.clearActiveProperty} onSelectSubject={workspace.setActiveId} onSend={workspace.send} onRequestIntro={workspace.requestVettedIntro} onStartEscrow={workspace.startEscrowWatch} messages={messages} loading={workspace.loading} error={workspace.error} />
+          <ChiefPilotDossier mode={workspace.mode} libraryItems={workspace.libraryItems} subject={workspace.activeSubject} activeProperty={workspace.activeProperty} escrowStub={workspace.escrowStub} searchLoading={workspace.searchLoading} searchError={workspace.searchError} introStatus={workspace.introStatus} onPropertySearch={workspace.runPropertySearch} onClearProperty={workspace.clearActiveProperty} onSelectSubject={workspace.selectSubject} onSend={workspace.send} onRequestIntro={workspace.requestVettedIntro} onStartEscrow={workspace.startEscrowWatch} messages={messages} loading={workspace.loading} error={workspace.error} />
         </div>
       </div>
     </section>

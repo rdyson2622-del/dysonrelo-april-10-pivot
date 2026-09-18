@@ -6,8 +6,9 @@ import ChiefPilotRelocationRoadmaps from './ChiefPilotRelocationRoadmaps';
 import ChiefPilotEscrowWatch from './ChiefPilotEscrowWatch';
 import ChiefPilotDnnNews from './ChiefPilotDnnNews';
 import ChiefPilotConversation from './ChiefPilotConversation';
+import ChiefPilotLibrary from './ChiefPilotLibrary';
 
-export default function ChiefPilotDossier({ subject, activeProperty, escrowStub, searchLoading, searchError, introStatus, onPropertySearch, onClearProperty, onSelectSubject, onSend, onRequestIntro, onStartEscrow, messages, loading, error }) {
+export default function ChiefPilotDossier({ mode, libraryItems, subject, activeProperty, escrowStub, searchLoading, searchError, introStatus, onPropertySearch, onClearProperty, onSelectSubject, onSend, onRequestIntro, onStartEscrow, messages, loading, error }) {
   const shared = { title: subject.title, activeProperty, escrowStub, onSelectSearch: () => onSelectSubject('property-search'), onSend };
   const panels = {
     'property-search': <ChiefPilotPropertySearch {...shared} searchLoading={searchLoading} searchError={searchError} onSearch={onPropertySearch} onClear={onClearProperty} />,
@@ -19,7 +20,7 @@ export default function ChiefPilotDossier({ subject, activeProperty, escrowStub,
   };
   return (
     <div className="w-full max-w-3xl">
-      {panels[subject.id] || <h2 className="text-2xl font-normal text-dyson-text">{subject.title}</h2>}
+      {mode === 'library' ? <ChiefPilotLibrary items={libraryItems} /> : panels[subject.id] || <h2 className="text-2xl font-normal text-dyson-text">{subject.title}</h2>}
       <ChiefPilotConversation messages={messages} loading={loading} error={error} />
     </div>
   );

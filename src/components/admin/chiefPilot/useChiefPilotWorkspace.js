@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { getCheckedInUser } from '@/lib/copilotContactSession';
 import { resolveSanctionedDossier } from '@/lib/resolveSanctionedDossier';
 
-const INITIAL_SUBJECTS = [['property-search', 'Property Search'], ['property-audit', 'Property Audit'], ['agent-vetting', 'Agent Vetting'], ['move-roadmap', 'Relocation Road Maps'], ['escrow-watch', 'Escrow Watch'], ['dnn-news', 'DNN News']].map(([id, title]) => ({ id, title }));
+const INITIAL_SUBJECTS = [['property-search', 'Property Search'], ['property-audit', 'Property Audit'], ['agent-vetting', 'Agent Vetting'], ['move-roadmap', 'Relocation Road Maps'], ['escrow-watch', 'Escrow Watch']].map(([id, title]) => ({ id, title }));
 const PROPERTY_KEY = 'chief_pilot_active_property';
+const ACTIVITY_KEY = 'chief_pilot_recent_activity';
 const ESCROW_KEY = 'chief_pilot_escrow_stub';
 const ESCROW_STEPS = ['Escrow opened', 'Deposit and disclosures', 'Inspections and contingencies', 'Loan and appraisal', 'Final review and close'];
 const fromSession = key => {
@@ -15,7 +16,12 @@ const fromSession = key => {
 export default function useChiefPilotWorkspace() {
   const { user } = useAuth();
   const [subjects, setSubjects] = useState(INITIAL_SUBJECTS);
+  const [mode, setMode] = useState('chats');
   const [activeId, setActiveId] = useState('property-search');
+  const [activity, setActivity] = useState(() => fromSession(ACTIVITY_KEY) || []);
+  const [libraryItems] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('dyson_copilot_saved_discussions') || '[]'); } catch (_) { return []; }
+  });
   const [activeProperty, setActiveProperty] = useState(() => fromSession(PROPERTY_KEY));
   const [escrowStub, setEscrowStub] = useState(() => fromSession(ESCROW_KEY));
   const [conversations, setConversations] = useState({});
@@ -24,8 +30,24 @@ export default function useChiefPilotWorkspace() {
   const [searchError, setSearchError] = useState('');
   const [introStatus, setIntroStatus] = useState('idle');
   const [error, setError] = useState('');
-  const activeSubject = subjects.find(subject => subject.id === activeId) || null;
+  const activeSubject = mode === 'news' ? { id: 'dnn-news', title: 'DNN News' } : mode === 'library' ? { id: 'library', title: 'My Library' } : subjects.find(subject => subject.id === activeId) || null;
   const preferredClient = getCheckedInUser(user);
+  const historyItems = useMemo(() => {
+    const saved = libraryItems.map((item, index) => ({ id: `saved-${item.id || index}`, kind: 'Saved item', label: item.title || 'Saved discussion', timestamp: item.saved_at || item.savedAt || '', mode: 'library' }));
+    return [...activity, ...saved].sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0)).slice(0, 15);
+  }, [activity, libraryItems]);
+  const recordActivity = item => setActivity(current => {
+    const next = [{ ...item, id: `${item.kind}-${Date.now()}`, timestamp: new Date().toISOString() }, ...current].slice(0, 15);
+    sessionStorage.setItem(ACTIVITY_KEY, JSON.stringify(next)); return next;
+  });
+  const selectMode = nextMode => setMode(nextMode);
+  const selectSubject = id => { setMode('chats'); setActiveId(id); };
+  const openActivity = item => {
+    if (item.mode === 'library') { setMode('library'); return; }
+    if (item.property) { setActiveProperty(item.property); sessionStorage.setItem(PROPERTY_KEY, JSON.stringify(item.property)); }
+    if (item.subjectId === 'dnn-news') setMode('news');
+    else { setMode('chats'); setActiveId(item.subjectId || 'property-search'); }
+  };
 
   const rename = (id, title) => setSubjects(items => items.map(item => item.id === id ? { ...item, title } : item));
   const move = (id, direction) => setSubjects(items => {
@@ -50,6 +72,7 @@ export default function useChiefPilotWorkspace() {
       return false;
     }
     setActiveProperty(result); sessionStorage.setItem(PROPERTY_KEY, JSON.stringify(result));
+    recordActivity({ kind: 'Search', label: result.fullAddress || query, subjectId: 'property-search', property: result });
     return true;
   };
   const requestVettedIntro = async () => {
@@ -79,8 +102,10 @@ export default function useChiefPilotWorkspace() {
 
   const send = async text => {
     if (!activeSubject || !text.trim() || loading) return false;
-    const next = [...(conversations[activeId] || []), { role: 'user', content: text.trim() }];
-    setConversations(current => ({ ...current, [activeId]: next })); setLoading(true); setError('');
+    const contextId = activeSubject.id;
+    const next = [...(conversations[contextId] || []), { role: 'user', content: text.trim(), createdAt: new Date().toISOString() }];
+    setConversations(current => ({ ...current, [contextId]: next })); setLoading(true); setError('');
+    recordActivity({ kind: 'Chat', label: text.trim(), subjectId: contextId, mode });
     const known = activeProperty ? JSON.stringify({ address: activeProperty.address, fullAddress: activeProperty.fullAddress, building: activeProperty.building, listing: activeProperty.listing, valuation: activeProperty.valuation, comps: activeProperty.comps, risks: activeProperty.risks }) : 'No Active Property';
     const scoped = next.map((message, index) => index === next.length - 1 ? { ...message, content: `SELECTED SUBJECT: ${activeSubject.title}\nVERIFIED ACTIVE PROPERTY DATA: ${known}\nUse only known data. Never invent property facts, comps, risks, dates, or prices. Do not execute actions or send/draft outreach. If the answer requires unavailable data, begin with [HANDOFF] and recommend Call / Connect with Bob.\n\nUSER MESSAGE: ${message.content}` } : message);
     try {
@@ -88,13 +113,13 @@ export default function useChiefPilotWorkspace() {
       const raw = res.data?.reply || '[HANDOFF] I could not verify an answer from known data.';
       const handoff = raw.includes('[HANDOFF]') || /cannot verify|could not verify|not available in the known data|do not have verified/i.test(raw);
       const reply = raw.replace('[HANDOFF]', '').trim();
-      setConversations(current => ({ ...current, [activeId]: [...(current[activeId] || []), { role: 'charlie', content: reply, handoff }] }));
+      setConversations(current => ({ ...current, [contextId]: [...(current[contextId] || []), { role: 'charlie', content: reply, handoff, createdAt: new Date().toISOString() }] }));
       return true;
     } catch (_) {
-      setConversations(current => ({ ...current, [activeId]: [...(current[activeId] || []), { role: 'charlie', content: 'I could not verify an answer from known data.', handoff: true }] }));
+      setConversations(current => ({ ...current, [contextId]: [...(current[contextId] || []), { role: 'charlie', content: 'I could not verify an answer from known data.', handoff: true, createdAt: new Date().toISOString() }] }));
       return true;
     } finally { setLoading(false); }
   };
 
-  return { subjects, activeSubject, activeId, setActiveId, activeProperty, escrowStub, conversations, loading, searchLoading, searchError, introStatus, error, rename, move, send, runPropertySearch, clearActiveProperty, requestVettedIntro, startEscrowWatch };
+  return { subjects, mode, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, escrowStub, conversations, loading, searchLoading, searchError, introStatus, error, rename, move, send, runPropertySearch, clearActiveProperty, requestVettedIntro, startEscrowWatch };
 }
