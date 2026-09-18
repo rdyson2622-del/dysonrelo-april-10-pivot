@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 const INITIAL_SUBJECTS = [
   ['property-audit', 'Property Audit', 'Review property facts, comparable sales, material risks, and open diligence items.'],
   ['agent-vetting', 'Agent Vetting', 'Focus on agent background, local performance, references, and fit.'],
-  ['move-roadmap', 'Move Roadmap', 'Organize the move into a clear sequence of decisions, owners, and next steps.'],
+  ['move-roadmap', 'Relocation Road Maps', 'Organize the move into a clear sequence of decisions, owners, and next steps.'],
   ['escrow-watch', 'Escrow Watch', 'Track escrow milestones, unresolved items, deadlines, and transaction questions.'],
   ['dnn-news', 'DNN News', 'Bring current housing and relocation intelligence into the working dossier.']
 ].map(([id, title, placeholder]) => ({ id, title, placeholder }));
