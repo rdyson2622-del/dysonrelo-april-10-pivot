@@ -34,7 +34,6 @@ export default function CopilotUniversalVoicePills({ text = '', defaultSpeaker =
   }, [text]);
   useEffect(() => () => {
     studioAudioRef.current?.pause();
-    window.speechSynthesis?.cancel();
   }, []);
   useEffect(() => setSpeaker(defaultSpeaker === 'bob' ? 'bob' : 'charlie'), [defaultSpeaker]);
 
@@ -44,55 +43,36 @@ export default function CopilotUniversalVoicePills({ text = '', defaultSpeaker =
     const spokenText = text;
     const requestVersion = ++requestVersionRef.current;
 
-    if (activeSpeaker === 'charlie') {
-      setLoading(true);
-      try {
-        const response = await base44.functions.invoke('charlieSpeak', { text: spokenText });
-        if (requestVersion !== requestVersionRef.current || spokenText !== latestTextRef.current) return;
-        const audioUrl = response?.data?.audioUrl;
-        if (!audioUrl) return;
+    setLoading(true);
+    try {
+      const functionName = activeSpeaker === 'bob' ? 'bobSpeak' : 'charlieSpeak';
+      const response = await base44.functions.invoke(functionName, { text: spokenText });
+      if (requestVersion !== requestVersionRef.current || spokenText !== latestTextRef.current) return;
+      const audioUrl = response?.data?.audioUrl;
+      if (!audioUrl) return;
 
-        const audio = studioAudioRef.current || new Audio();
-        studioAudioRef.current = audio;
-        registerActiveMedia(audio);
-        audio.pause();
-        audio.src = audioUrl;
-        audio.currentTime = 0;
-        audio.volume = 0.72;
-        audio.onplay = () => {
-          if (requestVersion === requestVersionRef.current) reportPlaying(true, 'charlie');
-        };
-        audio.onended = audio.onerror = () => {
-          if (requestVersion === requestVersionRef.current) reportPlaying(false, 'charlie');
-        };
-        await audio.play();
-      } catch (error) {
-        if (requestVersion === requestVersionRef.current) {
-          console.warn('Charlie studio voice unavailable:', error);
-          reportPlaying(false, 'charlie');
-        }
-      } finally {
-        if (requestVersion === requestVersionRef.current) setLoading(false);
+      const audio = studioAudioRef.current || new Audio();
+      studioAudioRef.current = audio;
+      registerActiveMedia(audio);
+      audio.pause();
+      audio.src = audioUrl;
+      audio.currentTime = 0;
+      audio.volume = 0.72;
+      audio.onplay = () => {
+        if (requestVersion === requestVersionRef.current) reportPlaying(true, activeSpeaker);
+      };
+      audio.onended = audio.onerror = () => {
+        if (requestVersion === requestVersionRef.current) reportPlaying(false, activeSpeaker);
+      };
+      await audio.play();
+    } catch (error) {
+      if (requestVersion === requestVersionRef.current) {
+        console.warn(`${activeSpeaker === 'bob' ? 'Bob' : 'Charlie'} studio voice unavailable:`, error);
+        reportPlaying(false, activeSpeaker);
       }
-      return;
+    } finally {
+      if (requestVersion === requestVersionRef.current) setLoading(false);
     }
-
-    if (!window.speechSynthesis) return;
-    const voices = window.speechSynthesis.getVoices().filter((voice) => voice.lang.startsWith('en'));
-    const trustedBobVoice = voices.find((voice) => /david|george|daniel|guy|oliver|tom|james|male/i.test(voice.name));
-    if (!trustedBobVoice) return;
-    if (requestVersion !== requestVersionRef.current || spokenText !== latestTextRef.current) return;
-    const speech = new SpeechSynthesisUtterance(spokenText);
-    speech.voice = trustedBobVoice;
-    speech.rate = 0.92;
-    speech.pitch = 0.86;
-    speech.onstart = () => {
-      if (requestVersion === requestVersionRef.current) reportPlaying(true, 'bob');
-    };
-    speech.onend = speech.onerror = () => {
-      if (requestVersion === requestVersionRef.current) reportPlaying(false, 'bob');
-    };
-    window.speechSynthesis.speak(speech);
   };
 
   useEffect(() => {
