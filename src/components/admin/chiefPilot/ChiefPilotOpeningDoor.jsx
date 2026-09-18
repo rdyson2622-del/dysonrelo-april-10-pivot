@@ -4,7 +4,7 @@ import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import CopilotWordmark from '@/components/brand/CopilotWordmark';
 
 const HERO_IMAGE = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/efdc69af3_hero-evening-luxury-clean.png';
-const SAMPLES = ['742 Vista Del Mar, La Jolla, CA 92037', '1844 Mountain Shadow Way, Scottsdale, AZ 85253', '4220 Oak Hollow Terrace, Austin, TX 78746'];
+const SAMPLES = ['742 Vista Del Mar, La Jolla, CA 92037', '1844 Mountain Shadow Way, Scottsdale, AZ 85253'];
 
 export default function ChiefPilotOpeningDoor({ workspace }) {
   const [address, setAddress] = useState('');
