@@ -4,7 +4,7 @@ import { useAuth } from '@/lib/AuthContext';
 import { getCheckedInUser, saveToClientVault } from '@/lib/copilotContactSession';
 import { resolveSanctionedDossier } from '@/lib/resolveSanctionedDossier';
 
-const INITIAL_SUBJECTS = [['property-search', 'Property Search'], ['property-audit', 'Property Audit'], ['agent-vetting', 'Agent Vetting'], ['move-roadmap', 'Relocation Road Maps'], ['escrow-watch', 'Escrow Watch']].map(([id, title]) => ({ id, title }));
+const INITIAL_SUBJECTS = [['property-search', 'Property Search'], ['property-audit', 'Property Audit'], ['agent-vetting', 'Agent Vetting'], ['team-thread', 'Team Thread'], ['move-roadmap', 'Relocation Road Maps'], ['escrow-watch', 'Escrow Watch']].map(([id, title]) => ({ id, title }));
 const PROPERTY_KEY = 'chief_pilot_active_property';
 const ACTIVITY_KEY = 'chief_pilot_recent_activity';
 const EXAMPLE_HIDDEN_KEY = 'chief_pilot_example_hidden';
@@ -31,6 +31,8 @@ export default function useChiefPilotWorkspace() {
   const [activeProperty, setActiveProperty] = useState(() => fromSession(PROPERTY_KEY));
   const [escrowStub, setEscrowStub] = useState(() => fromSession(ESCROW_KEY));
   const [conversations, setConversations] = useState({});
+  const [teamMessages, setTeamMessages] = useState([]);
+  const [selectedAgentName, setSelectedAgentName] = useState('');
   const [loading, setLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState('');
@@ -88,7 +90,7 @@ export default function useChiefPilotWorkspace() {
   });
 
   const clearActiveProperty = () => {
-    setActiveProperty(null); setEscrowStub(null); setSearchError(''); setIntroStatus('idle'); setSaveStatus('idle');
+    setActiveProperty(null); setEscrowStub(null); setSelectedAgentName(''); setTeamMessages([]); setSearchError(''); setIntroStatus('idle'); setSaveStatus('idle');
     sessionStorage.removeItem(PROPERTY_KEY); sessionStorage.removeItem(ESCROW_KEY);
   };
   const runPropertySearch = async query => {
@@ -106,7 +108,12 @@ export default function useChiefPilotWorkspace() {
   const requestVettedIntro = async () => {
     const targetProperty = activeProperty || displayProperty;
     if (!targetProperty) return;
-    if (isExample) { setIntroStatus('saved'); return; }
+    if (!preferredClientActive) {
+      selectSubject('property-search');
+      requestAnimationFrame(() => requestAnimationFrame(() => document.getElementById('preferred-client-door')?.scrollIntoView({ behavior: 'smooth', block: 'center' })));
+      return;
+    }
+    if (isExample) { setSelectedAgentName('Selected after Vetting'); setIntroStatus('saved'); return; }
     if (!preferredClient?.isPreferredClient) { setIntroStatus('gate'); return; }
     setIntroStatus('saving');
     try {
@@ -121,6 +128,7 @@ export default function useChiefPilotWorkspace() {
         mls_number: targetProperty.listing?.listingNumber || undefined,
         status: 'pending', source: 'chief_pilot'
       });
+      setSelectedAgentName('Vetted introduction requested');
       setIntroStatus('saved');
     } catch (_) { setIntroStatus('error'); }
   };
@@ -134,8 +142,17 @@ export default function useChiefPilotWorkspace() {
     setPreferredClientActive(true);
     sessionStorage.setItem('chief_pilot_preferred_active', '1');
   };
+  const sendTeamMessage = text => {
+    if (!preferredClientActive || !text.trim()) return;
+    setTeamMessages(items => [...items, { id: Date.now(), role: 'client', text: text.trim() }]);
+  };
   const saveProperty = async () => {
     if (!displayProperty || saveStatus === 'saving') return;
+    if (!preferredClientActive) {
+      selectSubject('property-search');
+      requestAnimationFrame(() => requestAnimationFrame(() => document.getElementById('preferred-client-door')?.scrollIntoView({ behavior: 'smooth', block: 'center' })));
+      return;
+    }
     setSaveStatus('saving');
     await saveToClientVault({ title: `${displayProperty.shortAddress || displayProperty.fullAddress} property file`, item_type: 'dossier', address: displayProperty.fullAddress, payload: { property: displayProperty } });
     try { setLibraryItems(JSON.parse(localStorage.getItem('dyson_copilot_saved_discussions') || '[]')); } catch (_) {}
@@ -145,7 +162,11 @@ export default function useChiefPilotWorkspace() {
   const send = async text => {
     if (!activeSubject || !text.trim() || loading) return false;
     const contextId = activeSubject.id;
-    if (!preferredClientActive) return false;
+    if (!preferredClientActive) {
+      selectSubject('property-search');
+      requestAnimationFrame(() => requestAnimationFrame(() => document.getElementById('preferred-client-door')?.scrollIntoView({ behavior: 'smooth', block: 'center' })));
+      return false;
+    }
     const next = [...(conversations[contextId] || []), { role: 'user', content: text.trim(), createdAt: new Date().toISOString() }];
     setConversations(current => ({ ...current, [contextId]: next })); setLoading(true); setError('');
     recordActivity({ kind: 'Chat', label: text.trim(), subjectId: contextId, mode });
@@ -164,5 +185,5 @@ export default function useChiefPilotWorkspace() {
     } finally { setLoading(false); }
   };
 
-  return { subjects, mode, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, displayProperty, isExample, showExample, exampleLoading, hideExample, escrowStub, conversations, loading, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, error, rename, move, send, runPropertySearch, clearActiveProperty, requestVettedIntro, startEscrowWatch, activatePreferredClient, saveProperty };
+  return { subjects, mode, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, displayProperty, isExample, showExample, exampleLoading, hideExample, escrowStub, conversations, teamMessages, selectedAgentName, loading, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, error, rename, move, send, sendTeamMessage, runPropertySearch, clearActiveProperty, requestVettedIntro, startEscrowWatch, activatePreferredClient, saveProperty };
 }

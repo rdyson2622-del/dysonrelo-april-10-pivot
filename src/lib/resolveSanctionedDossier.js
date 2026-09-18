@@ -1,4 +1,5 @@
 import { base44 } from '@/api/base44Client';
+import { extractPropertyMedia } from '@/lib/propertyMedia';
 
 /**
  * Sanctioned dossier resolution helper.
@@ -54,6 +55,7 @@ export async function resolveSanctionedDossier(rawInput) {
 
       if (data?.success && properties.length > 0) {
         const primary = properties[0];
+        const media = extractPropertyMedia(primary);
         const street = primary.address?.street || primary.street || `MLS# ${cleanMls}`;
         const city = primary.address?.city || primary.city || '';
         const state = primary.address?.state || primary.state || 'CA';
@@ -107,6 +109,9 @@ export async function resolveSanctionedDossier(rawInput) {
           complianceProtocol: 'Case-by-Case Discovery',
           complianceStatus: 'Checked Against State, Fed & Lender Regs',
           providerStatus: 'searchListingsForSkipTrace: verified provider record',
+          photoUrl: media.photoUrl,
+          photos: media.photos,
+          listingUrl: media.listingUrl,
           listing: primary.listing || {},
           valuation: primary.valuation || {},
           building: primary.building || {},
@@ -185,6 +190,7 @@ export async function resolveSanctionedDossier(rawInput) {
       const listing = res?.data?.listing;
       if (res?.data?.success && (res?.data?.found || listing?.listing_address || listing?.listing_value) && listing) {
         const addr = listing.listing_address || input;
+        const media = extractPropertyMedia(listing);
         const short = addr.split(',')[0] || addr;
         const val = Number(listing.listing_value);
         const priceStr = listing.price_formatted || (val && !isNaN(val) && val > 0 
@@ -215,6 +221,9 @@ export async function resolveSanctionedDossier(rawInput) {
           complianceProtocol: 'Case-by-Case Discovery',
           complianceStatus: 'Checked Against State, Fed & Lender Regs',
           rawListing: listing,
+          photoUrl: media.photoUrl,
+          photos: media.photos,
+          listingUrl: media.listingUrl || input,
           providerStatus: 'mlsListingLookup: verified real record'
         };
       }
@@ -361,7 +370,8 @@ export async function resolveSanctionedDossier(rawInput) {
 
     if (data?.success && properties.length > 0) {
       const primary = properties[0];
-
+      const media = extractPropertyMedia(primary);
+      
       const pStreet = primary.address?.street || primary.street || streetPart;
       const pCity = primary.address?.city || primary.city || cityPart;
       const pState = primary.address?.state || primary.state || statePart;
@@ -460,11 +470,14 @@ export async function resolveSanctionedDossier(rawInput) {
         complianceProtocol: 'Case-by-Case Discovery',
         complianceStatus: 'Checked Against State, Fed & Lender Regs',
         providerStatus: `BatchData all-attributes: verified real record (${pStreet})`,
+        photoUrl: media.photoUrl,
+        photos: media.photos,
+        listingUrl: listingUrl || media.listingUrl,
         listing: {
           status,
           price: listP || '',
           listingNumber,
-          listingUrl,
+          listingUrl: listingUrl || media.listingUrl,
           daysOnMarket,
           propertyType,
           livingArea,

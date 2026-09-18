@@ -7,17 +7,19 @@ import ChiefPilotEscrowWatch from './ChiefPilotEscrowWatch';
 import ChiefPilotDnnNews from './ChiefPilotDnnNews';
 import ChiefPilotConversation from './ChiefPilotConversation';
 import ChiefPilotLibrary from './ChiefPilotLibrary';
+import ChiefPilotTeamThread from './ChiefPilotTeamThread';
 
-export default function ChiefPilotDossier({ mode, libraryItems, subject, activeProperty, hasOwnProperty, isExample, showExample, exampleLoading, onHideExample, escrowStub, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, onPropertySearch, onClearProperty, onSelectSubject, onSend, onRequestIntro, onStartEscrow, onPreferredClaim, onSaveProperty, messages, loading, error }) {
+export default function ChiefPilotDossier({ mode, libraryItems, subject, activeProperty, hasOwnProperty, isExample, showExample, exampleLoading, onHideExample, escrowStub, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, selectedAgentName, teamMessages, onPropertySearch, onClearProperty, onSelectSubject, onSend, onTeamMessage, onRequestIntro, onStartEscrow, onPreferredClaim, onSaveProperty, messages, loading, error }) {
   const openListing = () => {
     onSelectSubject('property-search');
     requestAnimationFrame(() => requestAnimationFrame(() => document.getElementById('chief-pilot-listing-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' })));
   };
-  const shared = { title: subject.title, activeProperty, hasOwnProperty, isExample, exampleLoading, onHideExample, escrowStub, onSelectSubject, onOpenListing: openListing, onSelectSearch: openListing, onSearchOwn: openListing, onSend, onSaveProperty, saveStatus };
+  const shared = { title: subject.title, activeProperty, hasOwnProperty, isExample, exampleLoading, onHideExample, escrowStub, selectedAgentName, preferredClientActive, onSelectSubject, onOpenListing: openListing, onSelectSearch: openListing, onSearchOwn: openListing, onSend, onSaveProperty, saveStatus };
   const panels = {
-    'property-search': <ChiefPilotPropertySearch {...shared} searchLoading={searchLoading} searchError={searchError} onSearch={onPropertySearch} onClear={onClearProperty} preferredClientActive={preferredClientActive} onPreferredClaim={onPreferredClaim} onSaveProperty={onSaveProperty} saveStatus={saveStatus} />,
+    'property-search': <ChiefPilotPropertySearch {...shared} searchLoading={searchLoading} searchError={searchError} onSearch={onPropertySearch} onClear={onClearProperty} preferredClientActive={preferredClientActive} selectedAgentName={selectedAgentName} onPreferredClaim={onPreferredClaim} onSaveProperty={onSaveProperty} saveStatus={saveStatus} />,
     'property-audit': <ChiefPilotPropertyAudit {...shared} />,
-    'agent-vetting': <ChiefPilotAgentVetting {...shared} introStatus={introStatus} onRequestIntro={onRequestIntro} />,
+    'agent-vetting': <ChiefPilotAgentVetting {...shared} agentName={selectedAgentName} introStatus={introStatus} onRequestIntro={onRequestIntro} />,
+    'team-thread': <ChiefPilotTeamThread {...shared} agentName={selectedAgentName} messages={teamMessages} onSendMessage={onTeamMessage} />,
     'move-roadmap': <ChiefPilotRelocationRoadmaps {...shared} />,
     'escrow-watch': <ChiefPilotEscrowWatch {...shared} onStartEscrow={onStartEscrow} />,
     'dnn-news': <ChiefPilotDnnNews {...shared} />
