@@ -3,11 +3,11 @@ import ChiefPilotActivePropertyHeader from './ChiefPilotActivePropertyHeader';
 import ChiefPilotConversation from './ChiefPilotConversation';
 import ChiefPilotExplainers from './ChiefPilotExplainers';
 
-export default function ChiefPilotSubjectSearch({ subject, activeProperty, selectedAgentName, onOpenEntry, onSend, messages, loading, error }) {
+export default function ChiefPilotSubjectSearch({ subject, activeProperty, isExample, selectedAgentName, onOpenEntry, onSend, messages, loading, error }) {
   const [query, setQuery] = useState('');
   const [showExplainers, setShowExplainers] = useState(false);
   useEffect(() => { setQuery(''); setShowExplainers(false); }, [subject.id]);
-  if (showExplainers) return <ChiefPilotExplainers subject={subject} onBack={() => setShowExplainers(false)} />;
+  if (showExplainers) return <ChiefPilotExplainers subject={subject} onBack={() => setShowExplainers(false)} isLiveObjective={Boolean(activeProperty) && !isExample} />;
   const submit = async event => {
     event.preventDefault();
     if (!query.trim() || loading) return;
