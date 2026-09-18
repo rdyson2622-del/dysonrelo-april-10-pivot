@@ -11,6 +11,7 @@ import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
 import VoiceGreetingWidget from '@/components/portal/VoiceGreetingWidget';
 import DepartmentSubChoicesView from '@/components/admin/DepartmentSubChoicesView';
 import CopilotPastUsersTable from '@/components/admin/CopilotPastUsersTable';
+import ChiefPilotAdminNeeds from '@/components/admin/ChiefPilotAdminNeeds';
 
 const GOLD = '#D4AF37';
 
@@ -213,6 +214,8 @@ export default function Admin() {
               <Volume2 className="w-3.5 h-3.5 text-purple-400" /> Test Voice Greeting
             </button>
           </div>
+
+          <ChiefPilotAdminNeeds />
         </motion.div>
 
         {/* ── DEPARTMENT SUB-CHOICES VIEW (SHOWN WHEN IN SUBCHOICES MODE) ── */}
