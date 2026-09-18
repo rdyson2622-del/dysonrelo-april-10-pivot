@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { getCheckedInUser } from '@/lib/copilotContactSession';
@@ -7,6 +7,9 @@ import { resolveSanctionedDossier } from '@/lib/resolveSanctionedDossier';
 const INITIAL_SUBJECTS = [['property-search', 'Property Search'], ['property-audit', 'Property Audit'], ['agent-vetting', 'Agent Vetting'], ['move-roadmap', 'Relocation Road Maps'], ['escrow-watch', 'Escrow Watch']].map(([id, title]) => ({ id, title }));
 const PROPERTY_KEY = 'chief_pilot_active_property';
 const ACTIVITY_KEY = 'chief_pilot_recent_activity';
+const EXAMPLE_HIDDEN_KEY = 'chief_pilot_example_hidden';
+export const DEMO_PROPERTY_ADDRESS = '6228 Calle Pavana, San Diego, CA 92139';
+const DEMO_PROPERTY = { fullAddress: DEMO_PROPERTY_ADDRESS, shortAddress: '6228 Calle Pavana', address: { city: 'San Diego', state: 'CA', zip: '92139' } };
 const ESCROW_KEY = 'chief_pilot_escrow_stub';
 const ESCROW_STEPS = ['Escrow opened', 'Deposit and disclosures', 'Inspections and contingencies', 'Loan and appraisal', 'Final review and close'];
 const fromSession = key => {
@@ -22,6 +25,9 @@ export default function useChiefPilotWorkspace() {
   const [libraryItems] = useState(() => {
     try { return JSON.parse(localStorage.getItem('dyson_copilot_saved_discussions') || '[]'); } catch (_) { return []; }
   });
+  const [showExample, setShowExample] = useState(() => sessionStorage.getItem(EXAMPLE_HIDDEN_KEY) !== '1' && localStorage.getItem(EXAMPLE_HIDDEN_KEY) !== '1');
+  const [exampleProperty, setExampleProperty] = useState(DEMO_PROPERTY);
+  const [exampleLoading, setExampleLoading] = useState(false);
   const [activeProperty, setActiveProperty] = useState(() => fromSession(PROPERTY_KEY));
   const [escrowStub, setEscrowStub] = useState(() => fromSession(ESCROW_KEY));
   const [conversations, setConversations] = useState({});
@@ -32,6 +38,20 @@ export default function useChiefPilotWorkspace() {
   const [error, setError] = useState('');
   const activeSubject = mode === 'news' ? { id: 'dnn-news', title: 'DNN News' } : mode === 'library' ? { id: 'library', title: 'My Library' } : subjects.find(subject => subject.id === activeId) || null;
   const preferredClient = getCheckedInUser(user);
+  const displayProperty = activeProperty || (showExample ? exampleProperty : null);
+  const isExample = !activeProperty && showExample;
+  useEffect(() => {
+    if (activeProperty || !showExample || exampleProperty.isVerified) return;
+    let current = true; setExampleLoading(true);
+    resolveSanctionedDossier(DEMO_PROPERTY_ADDRESS).then(result => {
+      if (current && result?.isVerified) setExampleProperty(result);
+    }).catch(() => null).finally(() => { if (current) setExampleLoading(false); });
+    return () => { current = false; };
+  }, [activeProperty, showExample, exampleProperty.isVerified]);
+  const hideExample = () => {
+    setShowExample(false); sessionStorage.setItem(EXAMPLE_HIDDEN_KEY, '1');
+    if (preferredClient?.isPreferredClient) localStorage.setItem(EXAMPLE_HIDDEN_KEY, '1');
+  };
   const historyItems = useMemo(() => {
     const saved = libraryItems.map((item, index) => ({ id: `saved-${item.id || index}`, kind: 'Saved item', label: item.title || 'Saved discussion', timestamp: item.saved_at || item.savedAt || '', mode: 'library' }));
     return [...activity, ...saved].sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0)).slice(0, 15);
@@ -106,7 +126,7 @@ export default function useChiefPilotWorkspace() {
     const next = [...(conversations[contextId] || []), { role: 'user', content: text.trim(), createdAt: new Date().toISOString() }];
     setConversations(current => ({ ...current, [contextId]: next })); setLoading(true); setError('');
     recordActivity({ kind: 'Chat', label: text.trim(), subjectId: contextId, mode });
-    const known = activeProperty ? JSON.stringify({ address: activeProperty.address, fullAddress: activeProperty.fullAddress, building: activeProperty.building, listing: activeProperty.listing, valuation: activeProperty.valuation, comps: activeProperty.comps, risks: activeProperty.risks }) : 'No Active Property';
+    const known = displayProperty ? JSON.stringify({ example: isExample, address: displayProperty.address, fullAddress: displayProperty.fullAddress, building: displayProperty.building, listing: displayProperty.listing, valuation: displayProperty.valuation, comps: displayProperty.comps, risks: displayProperty.risks }) : 'No Active Property';
     const scoped = next.map((message, index) => index === next.length - 1 ? { ...message, content: `SELECTED SUBJECT: ${activeSubject.title}\nVERIFIED ACTIVE PROPERTY DATA: ${known}\nUse only known data. Never invent property facts, comps, risks, dates, or prices. Do not execute actions or send/draft outreach. If the answer requires unavailable data, begin with [HANDOFF] and recommend Call / Connect with Bob.\n\nUSER MESSAGE: ${message.content}` } : message);
     try {
       const res = await base44.functions.invoke('adminCharlie', { messages: scoped });
@@ -121,5 +141,5 @@ export default function useChiefPilotWorkspace() {
     } finally { setLoading(false); }
   };
 
-  return { subjects, mode, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, escrowStub, conversations, loading, searchLoading, searchError, introStatus, error, rename, move, send, runPropertySearch, clearActiveProperty, requestVettedIntro, startEscrowWatch };
+  return { subjects, mode, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, displayProperty, isExample, showExample, exampleLoading, hideExample, escrowStub, conversations, loading, searchLoading, searchError, introStatus, error, rename, move, send, runPropertySearch, clearActiveProperty, requestVettedIntro, startEscrowWatch };
 }
