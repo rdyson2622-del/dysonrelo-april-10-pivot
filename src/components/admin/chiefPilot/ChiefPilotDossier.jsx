@@ -2,7 +2,15 @@ import React from 'react';
 
 export default function ChiefPilotDossier({ subject, messages, loading, error }) {
   if (!subject) {
-    return <p className="text-sm text-dyson-taupe/70">Select a subject to focus the dossier.</p>;
+    return (
+      <div className="flex min-h-[460px] w-full items-center justify-center">
+        <img
+          src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/20230d875_Screenshot2026-09-18at80532AM.png"
+          alt="Dyson CoPilot"
+          className="w-full max-w-[280px] object-contain opacity-80"
+        />
+      </div>
+    );
   }
 
   return (
