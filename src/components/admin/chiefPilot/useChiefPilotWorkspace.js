@@ -6,7 +6,7 @@ import { getCheckedInUser, saveToClientVault } from '@/lib/copilotContactSession
 import { resolveSanctionedDossier } from '@/lib/resolveSanctionedDossier';
 import { getChiefPilotSampleProperty } from './chiefPilotSampleProperties';
 
-const INITIAL_SUBJECTS = [['property-search', 'Property Searches'], ['property-audit', 'Property Audits'], ['agent-vetting', 'Agent Vettings'], ['team-thread', 'Team Threads'], ['move-roadmap', 'Relocation Road Maps'], ['escrow-watch', 'Escrow Watches']].map(([id, title]) => ({ id, title }));
+const INITIAL_SUBJECTS = [['property-search', 'Property Searches'], ['property-audit', 'Property Audits'], ['agent-vetting', 'Agent Vettings'], ['team-thread', 'Team Threads'], ['move-roadmap', 'Relocation Road Maps'], ['escrow-watch', 'Escrow Watch and Compliance']].map(([id, title]) => ({ id, title }));
 const PROPERTY_KEY = 'chief_pilot_active_property';
 const ACTIVITY_KEY = 'chief_pilot_recent_activity';
 const EXAMPLE_HIDDEN_KEY = 'chief_pilot_example_hidden';
