@@ -35,7 +35,7 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
           <button key={label} type="button" className="rounded-full border border-black bg-dyson-black px-6 py-2.5 text-sm font-medium text-dyson-gold-light hover:border-dyson-gold-deep">{label}</button>
         ))}
       </div>
-      <p className="mt-6 text-[2.7rem] font-medium leading-tight text-dyson-text-dark">We do not sell real estate...<br />we orchestrate your entire move</p>
+      <p className="mt-6 text-[2.7rem] font-medium leading-tight text-dyson-text-dark">We do not sell real estate...</p>
       <div className="mt-6 flex flex-col items-start gap-2 text-left">
         <p className="text-lg text-dyson-text-dark">• We vet the best local agents</p>
         <p className="text-lg text-dyson-text-dark">• We save you significant closing costs</p>
