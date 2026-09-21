@@ -27,7 +27,7 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
             <div className="flex items-end gap-3"><span className="pb-2 font-serif text-3xl font-light text-white">meet</span><CopilotWordmark bold className="h-16 w-52" /></div>
             <p className="mt-5 text-lg tracking-wide text-white">Your Private AI Real Estate Assistants</p>
           </div>
-          <div className="overflow-hidden rounded-2xl shadow-2xl"><img src={HERO_IMAGE} alt="Luxury home at evening" className="aspect-[16/11] h-full w-full object-cover" /></div>
+          <div className="overflow-hidden rounded-2xl shadow-2xl"><img src={HERO_IMAGE} alt="Luxury home at evening" className="aspect-[16/11] w-full object-cover" /></div>
         </div>
       </div>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
