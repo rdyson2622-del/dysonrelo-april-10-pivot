@@ -26,7 +26,7 @@ export default function CopilotHome() {
           <ChiefPilotSidebar workspace={workspace} />
         </div>
         <div className="min-h-0 flex-1 overflow-hidden rounded-lg bg-dyson-black">
-          <div id="chief-pilot-content" className={`h-full overflow-y-auto rounded-lg border p-7 sm:p-10 ${workspace.entryOpen || (workspace.mode !== 'news' && workspace.mode !== 'library') ? 'border-white/10 bg-dyson-black' : 'border-black/10 bg-dyson-cream'}`}>
+          <div id="chief-pilot-content" className={`h-full overflow-y-auto rounded-lg border p-7 sm:p-10 ${workspace.entryOpen ? 'border-black/10 bg-dyson-cream' : (workspace.mode !== 'news' && workspace.mode !== 'library') ? 'border-white/10 bg-dyson-black' : 'border-black/10 bg-dyson-cream'}`}>
             {workspace.entryOpen ? (
               <>
                 <CopilotHeroBanner onSearch={handleHeroSearch} onOpenVoice={() => navigate('/talking-app')} />
