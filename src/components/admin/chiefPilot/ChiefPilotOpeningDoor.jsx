@@ -35,6 +35,7 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
           <button key={label} type="button" className="rounded-full border border-black/20 bg-transparent px-6 py-2.5 text-sm font-medium text-dyson-text-dark hover:border-dyson-gold-deep hover:text-dyson-gold-deep">{label}</button>
         ))}
       </div>
+      <p className="mt-6 whitespace-nowrap text-2xl font-medium text-dyson-text-dark">We do not sell real estate...we orchestrate your entire move</p>
       <div className="w-full pt-[25%]">
         <form onSubmit={event => { event.preventDefault(); search(); }} className="w-full flex justify-center"><div className="flex w-full max-w-xl items-center rounded-full border border-white/25 bg-dyson-black p-1.5 pl-5 focus-within:border-dyson-gold"><input value={address} onChange={event => setAddress(event.target.value)} placeholder="Paste an address or listing number" className="min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-white/55" /><button type="submit" disabled={!address.trim() || workspace.searchLoading} className="rounded-full border border-white/30 bg-dyson-charcoal px-6 py-2.5 text-sm font-semibold text-dyson-gold-light disabled:opacity-40">{workspace.searchLoading ? 'Searching…' : 'Send →'}</button></div></form>
         <p className="mt-3 text-xs text-white/70">Paste an address for comps, risks, and property insights where allowed.</p>
