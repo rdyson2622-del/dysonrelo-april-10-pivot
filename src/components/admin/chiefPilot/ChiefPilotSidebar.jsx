@@ -21,6 +21,7 @@ export default function ChiefPilotSidebar({ workspace }) {
         <button type="button" onClick={() => setMobileOpen(value => !value)} className="text-xs text-dyson-taupe md:hidden">{mobileOpen ? 'Close' : 'Menu'}</button>
       </div>
       <div className={`${mobileOpen ? 'flex' : 'hidden'} min-h-0 flex-1 flex-col gap-4 overflow-y-auto md:flex`}>
+        <p className="text-[11px] tracking-[0.18em] text-dyson-taupe">Administration</p>
         <ChiefPilotModeRail activeMode={workspace.mode} onSelect={workspace.selectMode} preferredClientActive={workspace.preferredClientActive} />
         <section>
           <p className="mb-2 text-[11px] text-dyson-taupe">Subjects</p>
