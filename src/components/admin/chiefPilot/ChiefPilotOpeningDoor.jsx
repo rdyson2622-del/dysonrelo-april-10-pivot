@@ -37,9 +37,9 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
       </div>
       <p className="mt-6 text-[2.7rem] font-medium leading-tight text-dyson-text-dark">We Don't Sell Real Estate...</p>
       <div className="mt-6 flex flex-col items-start gap-2 text-left">
-        <p className="text-lg text-dyson-text-dark">• We vet the top local agents with you</p>
+        <p className="text-lg text-dyson-text-dark">• In any city or state, we vet the top local agents with you</p>
         <p className="text-lg text-dyson-text-dark">• You save significant closing costs in the process</p>
-        <p className="text-lg text-dyson-text-dark">• Together, we orchestrate your entire move</p>
+        <p className="text-lg text-dyson-text-dark">• Together, we orchestrate your entire move and reduce stress all along the way</p>
       </div>
       <div className="w-full pt-[25%]">
         <form onSubmit={event => { event.preventDefault(); search(); }} className="w-full flex justify-center"><div className="flex w-full max-w-xl items-center rounded-full border border-white/25 bg-dyson-black p-1.5 pl-5 focus-within:border-dyson-gold"><input value={address} onChange={event => setAddress(event.target.value)} placeholder="Paste an address or listing number" className="min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-white/55" /><button type="submit" disabled={!address.trim() || workspace.searchLoading} className="rounded-full border border-white/30 bg-dyson-charcoal px-6 py-2.5 text-sm font-semibold text-dyson-gold-light disabled:opacity-40">{workspace.searchLoading ? 'Searching…' : 'Send →'}</button></div></form>
