@@ -15,7 +15,7 @@ export default function CopilotHeroBanner({ onSearch, onOpenVoice }) {
   return (
     <section className="px-4 sm:px-8 pt-6 pb-8" style={{ background: '#ede0cc' }}>
       <div className="max-w-4xl mx-auto space-y-6 text-center">
-        <div className="overflow-hidden rounded-2xl shadow-2xl border border-[#D4AF37]/30">
+        <div className="overflow-hidden rounded-2xl shadow-2xl border border-[#D4AF37]/30 w-1/2 mx-auto">
           <img src={HERO_IMAGE} alt="Luxury home with pool" className="w-full aspect-[16/9] object-cover" />
         </div>
 
