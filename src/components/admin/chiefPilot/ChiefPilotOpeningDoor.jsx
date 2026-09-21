@@ -32,7 +32,7 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
       </div>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
         {['Buy', 'Relocation Management', 'Sell'].map(label => (
-          <button key={label} type="button" className="rounded-full border border-black/20 bg-transparent px-6 py-2.5 text-sm font-medium text-dyson-text-dark hover:border-dyson-gold-deep hover:text-dyson-gold-deep">{label}</button>
+          <button key={label} type="button" className="rounded-full border border-black bg-dyson-black px-6 py-2.5 text-sm font-medium text-dyson-gold-light hover:border-dyson-gold-deep">{label}</button>
         ))}
       </div>
       <p className="mt-6 text-[2.7rem] font-medium leading-tight text-dyson-text-dark">We do not sell real estate...<br />we orchestrate your entire move</p>
