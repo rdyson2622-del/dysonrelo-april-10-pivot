@@ -17,15 +17,16 @@ export default function CopilotHeroBanner({ onSearch, onOpenVoice }) {
   return (
     <section className="px-4 sm:px-8 pt-6 pb-8" style={{ background: '#ede0cc' }}>
       <div className="max-w-4xl mx-auto space-y-6 text-center">
-        <div className="flex items-center justify-center gap-6">
-          <div className="flex items-center gap-3 shrink-0">
+        <div className="flex flex-col items-center gap-3">
+          <DysonVerticalBadge height={72} />
+          <div className="flex items-center gap-3">
             <span className="text-2xl font-bold text-[#0a0a0a]" style={{ fontFamily: 'Cormorant Garamond, serif' }}>meet</span>
-            <DysonVerticalBadge height={44} />
             <CopilotWordmark bold className="h-9 w-24" />
           </div>
-          <div className="overflow-hidden rounded-2xl shadow-2xl border border-[#D4AF37]/30 w-1/2">
-            <img src={HERO_IMAGE} alt="Luxury home with pool" className="w-full aspect-[16/9] object-cover" />
-          </div>
+        </div>
+
+        <div className="overflow-hidden rounded-2xl shadow-2xl border border-[#D4AF37]/30 w-1/2 mx-auto">
+          <img src={HERO_IMAGE} alt="Luxury home with pool" className="w-full aspect-[16/9] object-cover" />
         </div>
 
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-tight" style={{ fontFamily: 'Cormorant Garamond, serif', color: '#854d0e' }}>
