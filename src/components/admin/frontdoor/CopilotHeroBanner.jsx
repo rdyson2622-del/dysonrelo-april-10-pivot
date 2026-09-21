@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Mic, Sparkles } from 'lucide-react';
+import { Search, Mic } from 'lucide-react';
 
 const HERO_IMAGE = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/efdc69af3_hero-evening-luxury-clean.png';
 
@@ -19,14 +19,8 @@ export default function CopilotHeroBanner({ onSearch, onOpenVoice }) {
           <img src={HERO_IMAGE} alt="Luxury home with pool" className="w-full aspect-[16/9] object-cover" />
         </div>
 
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0a0a0a] border border-[#D4AF37]/70 text-[#D4AF37] text-[11px] font-black uppercase tracking-widest shadow-md">
-          <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
-          <span>DYSONHOMES COPILOT</span>
-        </div>
-
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#0a0a0a] leading-tight" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-          Your Human &amp; AI-Assisted<br />
-          <span style={{ color: '#854d0e' }}>Private Real Estate Copilot.</span>
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-tight" style={{ fontFamily: 'Cormorant Garamond, serif', color: '#854d0e' }}>
+          Your Private Real Estate Copilot.
         </h1>
 
         <p className="text-sm sm:text-base text-[#2a241b] max-w-2xl mx-auto font-medium leading-relaxed">
