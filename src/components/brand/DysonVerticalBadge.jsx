@@ -6,7 +6,7 @@ import React from 'react';
  * Uses the authentic high-resolution asset provided by Dyson & Dyson.
  */
 export default function DysonVerticalBadge({ height = 48, className = '', onClick }) {
-  const OFFICIAL_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/904029dd2_generated_image.png";
+  const OFFICIAL_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/3af9b35c9_DYSONDYSONLOGO2026.png";
 
   return (
     <div 
