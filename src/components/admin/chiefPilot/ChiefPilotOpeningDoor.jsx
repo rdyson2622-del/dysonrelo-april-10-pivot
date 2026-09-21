@@ -4,6 +4,7 @@ import CopilotWordmark from '@/components/brand/CopilotWordmark';
 import ChiefPilotHowCopilotWorksExplainer from './ChiefPilotHowCopilotWorksExplainer';
 
 const HERO_IMAGE = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/efdc69af3_hero-evening-luxury-clean.png';
+const DD_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0c42dcd7c_DYSONDYSONLOGO2026.png';
 const SAMPLES = ['742 Vista Del Mar, La Jolla, CA 92037', '1844 Mountain Shadow Way, Scottsdale, AZ 85253'];
 
 export default function ChiefPilotOpeningDoor({ workspace }) {
@@ -20,6 +21,7 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
   return (
     <div className="grid min-h-full items-start gap-10 py-8 text-white lg:grid-cols-[1.2fr_0.8fr]">
       <div className="flex flex-col items-center text-center">
+        <img src={DD_LOGO} alt="Dyson & Dyson" className="mx-auto mb-2 h-24 w-auto" />
         <div className="flex items-end gap-3"><span className="pb-2 font-serif text-3xl font-light text-white">meet</span><CopilotWordmark bold className="h-16 w-52" /></div>
         <p className="mt-5 text-lg tracking-wide text-white">Your Private AI Real Estate Assistant</p>
         <div className="w-full pt-[25%]">
