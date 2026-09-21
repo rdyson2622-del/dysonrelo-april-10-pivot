@@ -21,6 +21,11 @@ export default function ChiefPilotSidebar({ workspace }) {
         <button type="button" onClick={() => setMobileOpen(value => !value)} className="text-xs text-dyson-taupe md:hidden">{mobileOpen ? 'Close' : 'Menu'}</button>
       </div>
       <div className={`${mobileOpen ? 'flex' : 'hidden'} min-h-0 flex-1 flex-col gap-4 overflow-y-auto md:flex`}>
+        <nav className="flex flex-col gap-1 border-y border-white/10 py-3" aria-label="Chief Pilot services">
+          {['Buy', 'Sell', 'Relocation Management'].map(label => (
+            <button key={label} type="button" className="w-full rounded-md px-3 py-2 text-left text-xs text-dyson-taupe hover:bg-white/5 hover:text-dyson-text">{label}</button>
+          ))}
+        </nav>
         <ChiefPilotModeRail activeMode={workspace.mode} onSelect={workspace.selectMode} preferredClientActive={workspace.preferredClientActive} heading="Administration" />
         <section>
           <p className="mb-2 text-[11px] text-dyson-taupe">Subjects</p>
