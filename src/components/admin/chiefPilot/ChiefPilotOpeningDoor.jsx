@@ -21,7 +21,7 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
   return (
     <div className="grid min-h-full items-start gap-10 py-8 text-white lg:grid-cols-[1.2fr_0.8fr]">
       <div className="flex flex-col items-center text-center">
-        <div className="flex items-end gap-3"><span className="pb-2 font-serif text-3xl font-light text-white">meet</span><div className="flex flex-col items-center"><DysonVerticalBadge height={99} className="mb-2 md:-translate-x-[25%]" /><CopilotWordmark bold className="h-16 w-52" /></div></div>
+        <div className="flex items-end gap-3"><span className="pb-2 font-serif text-3xl font-light text-white">meet</span><div className="flex flex-col items-center"><DysonVerticalBadge height={99} className="mb-2 md:-translate-x-[45%]" /><CopilotWordmark bold className="h-16 w-52" /></div></div>
         <p className="mt-5 text-lg tracking-wide text-white">Your Private AI Real Estate Assistant</p>
         <div className="w-full pt-[25%]">
           <form onSubmit={event => { event.preventDefault(); search(); }} className="w-full flex justify-center"><div className="flex w-full max-w-xl items-center rounded-full border border-white/25 bg-dyson-black p-1.5 pl-5 focus-within:border-dyson-gold"><input value={address} onChange={event => setAddress(event.target.value)} placeholder="Paste an address or listing number" className="min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-white/55" /><button type="submit" disabled={!address.trim() || workspace.searchLoading} className="rounded-full border border-white/30 bg-dyson-charcoal px-6 py-2.5 text-sm font-semibold text-dyson-gold-light disabled:opacity-40">{workspace.searchLoading ? 'Searching…' : 'Send →'}</button></div></form>
