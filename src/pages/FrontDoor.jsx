@@ -13,6 +13,7 @@ import LuxuryHeroShowcase from '@/components/admin/frontdoor/LuxuryHeroShowcase'
 import SubscriberSignInButton from '@/components/auth/SubscriberSignInButton';
 import ExploreDestinationsStrip from '@/components/admin/frontdoor/ExploreDestinationsStrip';
 import ModernConversationalAiCanvas from '@/components/frontdoor/ModernConversationalAiCanvas';
+import CopilotHeroBanner from '@/components/admin/frontdoor/CopilotHeroBanner';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -270,6 +271,9 @@ export default function FrontDoor() {
 
   return (
     <div className="min-h-screen bg-[#070707] text-white">
+      {/* NEW HERO BANNER — SCROLLS DOWN INTO THE EXISTING LANDING PAGE BELOW */}
+      <CopilotHeroBanner onSearch={handleSearch} onOpenVoice={() => navigate('/talking-app')} />
+
       {/* Main Container */}
       <main className="p-2 sm:p-5 md:p-6 flex justify-center items-start">
         <div
