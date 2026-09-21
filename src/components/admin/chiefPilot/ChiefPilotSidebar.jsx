@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Settings } from 'lucide-react';
 import ChiefPilotModeRail from './ChiefPilotModeRail';
 import ChiefPilotSubjectList from './ChiefPilotSubjectList';
 import ChiefPilotHistory from './ChiefPilotHistory';
@@ -15,6 +17,7 @@ export default function ChiefPilotSidebar({ workspace }) {
         <button type="button" onClick={workspace.openEntry} title="Back to CoPilot home" className="flex items-center gap-2 rounded-md px-1 -mx-1 py-1 transition-colors hover:bg-white/5">
           <span className="text-[10px] tracking-[0.18em] text-dyson-text">DYSON HOMES</span><CopilotWordmark bold className="h-7 w-16" />
         </button>
+        <Link to="/admin" title="Admin" className="flex items-center justify-center rounded-full p-1.5 text-dyson-taupe transition-colors hover:bg-white/5 hover:text-dyson-gold-light"><Settings className="h-4 w-4" /></Link>
         <button type="button" onClick={() => setMobileOpen(value => !value)} className="text-xs text-dyson-taupe md:hidden">{mobileOpen ? 'Close' : 'Menu'}</button>
       </div>
       <div className={`${mobileOpen ? 'flex' : 'hidden'} min-h-0 flex-1 flex-col gap-4 overflow-y-auto md:flex`}>
