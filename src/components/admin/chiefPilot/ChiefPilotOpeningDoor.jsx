@@ -37,7 +37,7 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
       </div>
       <p className="mt-6 text-[2.7rem] font-medium leading-tight text-dyson-text-dark">We Don't Sell Real Estate...We Reduce Stress!</p>
       <div className="mt-6 flex flex-col items-start gap-2 text-left">
-        <p className="text-lg text-dyson-text-dark">• In any city or state, we vet the top local agents with you</p>
+        <p className="text-lg text-dyson-text-dark">• In any city or state, we vet the top local agents with & for you</p>
         <p className="text-lg text-dyson-text-dark">• You save significant closing costs using our Relocation Process</p>
         <p className="text-lg text-dyson-text-dark">• Together, we orchestrate your entire move and reduce stress all along the way</p>
       </div>
