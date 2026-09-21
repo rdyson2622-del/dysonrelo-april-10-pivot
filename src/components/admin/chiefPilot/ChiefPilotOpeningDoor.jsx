@@ -31,7 +31,7 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
         </div>
       </div>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-        {['Buy', 'Sell', 'Relocation Management'].map(label => (
+        {['Buy', 'Relocation Management', 'Sell'].map(label => (
           <button key={label} type="button" className="rounded-full border border-black/20 bg-transparent px-6 py-2.5 text-sm font-medium text-dyson-text-dark hover:border-dyson-gold-deep hover:text-dyson-gold-deep">{label}</button>
         ))}
       </div>
