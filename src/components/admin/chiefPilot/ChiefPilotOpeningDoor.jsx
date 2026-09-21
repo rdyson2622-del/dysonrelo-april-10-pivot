@@ -19,7 +19,8 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
   };
 
   return (
-    <div className="grid min-h-full items-start gap-10 py-8 text-white lg:grid-cols-[1.2fr_0.8fr]">
+    <div className="rounded-3xl border border-white/10 bg-dyson-black p-6 sm:p-8">
+    <div className="grid min-h-full items-start gap-10 text-white lg:grid-cols-[1.2fr_0.8fr]">
       <div className="flex flex-col items-center text-center">
         <img src={DD_LOGO} alt="Dyson & Dyson" className="mx-auto mb-2 h-24 w-auto" />
         <div className="flex items-end gap-3"><span className="pb-2 font-serif text-3xl font-light text-white">meet</span><CopilotWordmark bold className="h-16 w-52" /></div>
@@ -34,6 +35,7 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
         </div>
       </div>
       <div className="overflow-hidden rounded-2xl shadow-2xl"><img src={HERO_IMAGE} alt="Luxury home at evening" className="aspect-[16/11] h-full w-full object-cover" /></div>
+    </div>
     </div>
   );
 }
