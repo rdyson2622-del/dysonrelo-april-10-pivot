@@ -10,7 +10,7 @@ export default function DysonVerticalBadge({ height = 48, className = '', onClic
 
   return (
     <div 
-      className={`relative shrink-0 inline-flex items-center justify-center ${onClick ? 'cursor-pointer' : ''} ${className}`}
+      className={`relative shrink-0 inline-flex items-center justify-center bg-black ${onClick ? 'cursor-pointer' : ''} ${className}`}
       onClick={onClick}
     >
       <img
