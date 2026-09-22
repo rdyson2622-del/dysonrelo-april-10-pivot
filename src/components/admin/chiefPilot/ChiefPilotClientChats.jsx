@@ -34,8 +34,13 @@ export default function ChiefPilotClientChats() {
   const sendReply = async () => {
     if (!reply.trim() || !selected || sending) return;
     setSending(true);
+    const text = reply.trim();
     try {
-      await base44.entities.ChatMessage.create({ client_id: selected.client?.id || undefined, role: 'charlie', content: reply.trim() });
+      await base44.entities.ChatMessage.create({ client_id: selected.client?.id || undefined, role: 'user', content: text });
+      const history = [...selected.messages.map(message => ({ role: message.role === 'user' ? 'user' : 'charlie', content: message.content })), { role: 'user', content: text }];
+      const res = await base44.functions.invoke('copilotAsk', { messages: history });
+      const answer = (res.data?.reply || 'I could not verify an answer from known data.').replace('[HANDOFF]', '').trim();
+      await base44.entities.ChatMessage.create({ client_id: selected.client?.id || undefined, role: 'charlie', content: answer });
       setReply('');
       queryClient.invalidateQueries({ queryKey: ['chief-pilot-client-chats'] });
     } finally { setSending(false); }
