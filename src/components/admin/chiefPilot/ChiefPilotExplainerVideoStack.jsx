@@ -40,17 +40,17 @@ function ExplainerVideoCard({ item }) {
           onClick={togglePlay}
           className="h-full w-full cursor-pointer"
         />
-        <button type="button" onClick={() => {}} className="absolute right-2 top-2 text-white/80"><MoreVertical size={18} /></button>
-        <div className="absolute inset-x-0 bottom-0 flex items-center gap-2.5 bg-gradient-to-t from-black/80 to-transparent p-3">
-          <button type="button" onClick={togglePlay} className="text-white">{playing ? <Pause size={18} /> : <Play size={18} />}</button>
-          <button type="button" onClick={toggleMute} className="text-white">{muted ? <VolumeX size={18} /> : <Volume2 size={18} />}</button>
-          <div className="mx-1 h-1.5 flex-1 overflow-hidden rounded-full bg-white/30"><div className="h-full bg-white/90" style={{ width: `${progress}%` }} /></div>
-          <button type="button" onClick={goFullscreen} className="text-white"><Maximize size={18} /></button>
+        <button type="button" onClick={() => {}} className="absolute right-1 top-1 text-white/80"><MoreVertical size={11} /></button>
+        <div className="absolute inset-x-0 bottom-0 flex items-center gap-1.5 bg-gradient-to-t from-black/80 to-transparent p-1.5">
+          <button type="button" onClick={togglePlay} className="text-white">{playing ? <Pause size={11} /> : <Play size={11} />}</button>
+          <button type="button" onClick={toggleMute} className="text-white">{muted ? <VolumeX size={11} /> : <Volume2 size={11} />}</button>
+          <div className="mx-0.5 h-1 flex-1 overflow-hidden rounded-full bg-white/30"><div className="h-full bg-white/90" style={{ width: `${progress}%` }} /></div>
+          <button type="button" onClick={goFullscreen} className="text-white"><Maximize size={11} /></button>
         </div>
       </div>
-      <div className="p-4">
-        <p className="text-xs font-semibold uppercase tracking-wider text-dyson-gold-deep">{item.speakerName}</p>
-        <h3 className="mt-1 text-base font-semibold leading-5">{item.label}</h3>
+      <div className="p-2">
+        <p className="text-[9px] font-semibold uppercase tracking-wider text-dyson-gold-deep">{item.speakerName}</p>
+        <h3 className="mt-0.5 text-[11px] font-semibold leading-tight">{item.label}</h3>
       </div>
     </article>
   );
