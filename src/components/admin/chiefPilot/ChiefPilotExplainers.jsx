@@ -17,8 +17,7 @@ export default function ChiefPilotExplainers({ subject, onBack, isLiveObjective 
   return (
     <section className="min-h-full rounded-xl bg-dyson-cream p-4 text-dyson-text-dark sm:p-5">
       <button type="button" onClick={onBack} className="inline-flex items-center rounded-full border border-dyson-gold-deep bg-dyson-warm-paper px-4 py-2 text-xs font-semibold text-dyson-gold-deep shadow-sm">← Back to ask/search</button>
-      <p className="mt-3 text-xs tracking-widest text-dyson-gold-deep">LEVEL 3 · OPTIONAL EXPLAINERS</p>
-      <h2 className="mt-1 text-xl font-normal">{subject.title}</h2>
+      <h2 className="mt-3 text-xl font-normal">{subject.title}</h2>
       <div className="mt-3 grid items-start gap-5 lg:grid-cols-[minmax(0,2fr)_minmax(160px,180px)]">
         <div>
           <p className="max-w-2xl text-sm leading-5">{content.intro}</p>
