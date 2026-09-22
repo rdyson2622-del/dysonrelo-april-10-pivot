@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Radio } from 'lucide-react';
 import ChiefPilotDnnNewsLibrary from './ChiefPilotDnnNewsLibrary';
+import ChiefPilotHowCopilotWorksExplainer from './ChiefPilotHowCopilotWorksExplainer';
 
 // Canonical studio poster — Charlie at desk + DNN center screen + Bob Dyson standing.
 // Shown as the placeholder frame whenever no broadcast is currently running.
@@ -10,6 +11,7 @@ const STUDIO_POSTER_URL = 'https://media.base44.com/images/public/69d905d72ff7c9
 
 export default function ChiefPilotDnnNewsPlayer({ title }) {
   const [showLibrary, setShowLibrary] = useState(false);
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
   const { data: broadcasts = [] } = useQuery({
     queryKey: ['chiefPilotDnnBroadcast'],
     queryFn: () => base44.entities.DnnBroadcast.filter({ status: 'completed' }, '-broadcast_date', 10),
@@ -44,6 +46,7 @@ export default function ChiefPilotDnnNewsPlayer({ title }) {
   ];
 
   if (showLibrary) return <ChiefPilotDnnNewsLibrary stories={stories} onBack={() => setShowLibrary(false)} />;
+  if (showHowItWorks) return <ChiefPilotHowCopilotWorksExplainer onBack={() => setShowHowItWorks(false)} />;
 
   return (
     <div className="mx-auto w-full max-w-2xl text-center">
@@ -60,6 +63,7 @@ export default function ChiefPilotDnnNewsPlayer({ title }) {
       </div>
       {playUrl && headline && <p className="mt-3 text-sm font-semibold text-dyson-text-dark">{headline}</p>}
       <button type="button" onClick={() => setShowLibrary(true)} className="mt-6 rounded-full border border-dyson-gold-deep bg-dyson-warm-paper px-5 py-2.5 text-sm font-semibold text-dyson-gold-deep shadow-sm">Browse all DNN video stories →</button>
+      <div className="mt-10 flex justify-center"><button type="button" onClick={() => setShowHowItWorks(true)} className="rounded-full border border-white/20 px-5 py-2.5 text-sm text-dyson-text-dark hover:border-dyson-gold-deep hover:text-dyson-gold-deep">Watch how this works · Explainers</button></div>
     </div>
   );
 }
