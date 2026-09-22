@@ -46,7 +46,7 @@ export default function useChiefPilotWorkspace() {
   const [saveStatus, setSaveStatus] = useState('idle');
   const [preferredClientActive, setPreferredClientActive] = useState(() => sessionStorage.getItem('chief_pilot_preferred_active') === '1');
   const [error, setError] = useState('');
-  const activeSubject = mode === 'solutions' ? { id: 'real-estate-solutions', title: 'Real Estate Solutions' } : mode === 'buy' ? { id: 'buy', title: 'Buy' } : mode === 'relocation-management' ? { id: 'relocation-management', title: 'Relocation Management' } : mode === 'sell' ? { id: 'sell', title: 'Sell' } : mode === 'news' ? { id: 'dnn-news', title: 'DNN News' } : mode === 'library' ? { id: 'library', title: 'My Library' } : subjects.find(subject => subject.id === activeId) || null;
+  const activeSubject = mode === 'solutions' ? { id: 'real-estate-solutions', title: 'Real Estate Solutions' } : mode === 'buy' ? { id: 'buy', title: 'Buying Real Estate Should Start With a Logical Plan of Action. CoPilot Not Only Provides the Plan But Executes Most of the Requirements Along the Way for You' } : mode === 'relocation-management' ? { id: 'relocation-management', title: 'Relocation Management' } : mode === 'sell' ? { id: 'sell', title: 'Sell' } : mode === 'news' ? { id: 'dnn-news', title: 'DNN News' } : mode === 'library' ? { id: 'library', title: 'My Library' } : subjects.find(subject => subject.id === activeId) || null;
   const isChatsInbox = mode === 'chats' && showChatsInbox;
   const preferredClient = getCheckedInUser(user);
   const displayProperty = activeProperty || (showExample ? exampleProperty : null);
