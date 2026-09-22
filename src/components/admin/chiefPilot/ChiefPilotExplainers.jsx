@@ -17,7 +17,7 @@ export default function ChiefPilotExplainers({ subject, onBack, isLiveObjective 
   return (
     <section className="min-h-full rounded-xl bg-dyson-cream p-4 text-dyson-text-dark sm:p-5">
       <button type="button" onClick={onBack} className="inline-flex items-center rounded-full border border-dyson-gold-deep bg-dyson-warm-paper px-4 py-2 text-xs font-semibold text-dyson-gold-deep shadow-sm">← Back to ask/search</button>
-      <h2 className="mt-3 text-[0.9375rem] font-normal leading-snug">
+      <h2 className={`mt-3 font-normal leading-snug ${subject.id === 'relocation-management' ? 'text-2xl' : 'text-[0.9375rem]'}`}>
         {(() => {
           const splitAt = subject.title.indexOf('. ');
           if (splitAt === -1) return subject.title;
