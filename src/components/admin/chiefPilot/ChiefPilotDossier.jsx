@@ -5,9 +5,9 @@ import ChiefPilotSubjectSearch from './ChiefPilotSubjectSearch';
 import ChiefPilotClientChats from './ChiefPilotClientChats';
 import ChiefPilotSampleExplainer from './ChiefPilotSampleExplainer';
 
-export default function ChiefPilotDossier({ mode, isChatsInbox, libraryItems, visitorId, subject, activeProperty, isExample, showExample, onHideExample, selectedAgentName, onOpenEntry, onSend, messages = [], loading = false, error = '' }) {
+export default function ChiefPilotDossier({ mode, isChatsInbox, libraryItems, onDeleteLibraryItem, onRenameLibraryItem, visitorId, subject, activeProperty, isExample, showExample, onHideExample, selectedAgentName, onOpenEntry, onSend, messages = [], loading = false, error = '' }) {
   if (mode === 'library') {
-    return <div className="w-full max-w-3xl text-dyson-text-dark"><ChiefPilotLibrary items={libraryItems} visitorId={visitorId} isExample={showExample} onHideExample={onHideExample} onSearchOwn={onOpenEntry} /></div>;
+    return <div className="w-full max-w-3xl text-dyson-text-dark"><ChiefPilotLibrary items={libraryItems} onDeleteItem={onDeleteLibraryItem} onRenameItem={onRenameLibraryItem} visitorId={visitorId} isExample={showExample} onHideExample={onHideExample} onSearchOwn={onOpenEntry} /></div>;
   }
   if (mode === 'news') {
     return <div className="mx-auto w-full max-w-3xl text-dyson-text-dark"><ChiefPilotDnnNewsPlayer title={subject.title} /></div>;

@@ -27,6 +27,8 @@ export default function CopilotHome() {
                 mode={workspace.mode}
                 isChatsInbox={workspace.isChatsInbox}
                 libraryItems={workspace.libraryItems}
+                onDeleteLibraryItem={workspace.deleteLibraryItem}
+                onRenameLibraryItem={workspace.renameLibraryItem}
                 visitorId={workspace.visitorId}
                 subject={workspace.activeSubject}
                 activeProperty={workspace.displayProperty}

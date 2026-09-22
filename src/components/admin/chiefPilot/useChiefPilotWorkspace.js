@@ -183,6 +183,16 @@ export default function useChiefPilotWorkspace() {
     if (!preferredClientActive || !text.trim()) return;
     setTeamMessages(items => [...items, { id: Date.now(), role: 'client', text: text.trim() }]);
   };
+  const deleteLibraryItem = id => setLibraryItems(current => {
+    const next = current.filter(item => item.id !== id);
+    try { localStorage.setItem('dyson_copilot_saved_discussions', JSON.stringify(next)); } catch (_) {}
+    return next;
+  });
+  const renameLibraryItem = (id, title) => setLibraryItems(current => {
+    const next = current.map(item => item.id === id ? { ...item, title } : item);
+    try { localStorage.setItem('dyson_copilot_saved_discussions', JSON.stringify(next)); } catch (_) {}
+    return next;
+  });
   const saveProperty = async () => {
     if (!displayProperty || saveStatus === 'saving') return;
     if (!preferredClientActive) {
@@ -247,5 +257,5 @@ export default function useChiefPilotWorkspace() {
     return runConversation(trimmed, false, subject);
   };
 
-  return { subjects, mode, isChatsInbox, entryOpen, openEntry, closeEntry, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, displayProperty, isExample, showExample, exampleLoading, hideExample, escrowStub, conversations, teamMessages, selectedAgentName, loading, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, error, visitorId, rename, move, send, sendTeamMessage, runPropertySearch, askAnything, clearActiveProperty, requestVettedIntro, startEscrowWatch, activatePreferredClient, saveProperty };
+  return { subjects, mode, isChatsInbox, entryOpen, openEntry, closeEntry, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, displayProperty, isExample, showExample, exampleLoading, hideExample, escrowStub, conversations, teamMessages, selectedAgentName, loading, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, error, visitorId, rename, move, send, sendTeamMessage, runPropertySearch, askAnything, clearActiveProperty, requestVettedIntro, startEscrowWatch, activatePreferredClient, saveProperty, deleteLibraryItem, renameLibraryItem };
 }
