@@ -229,12 +229,13 @@ export default function useChiefPilotWorkspace() {
       const handoff = raw.includes('[HANDOFF]') || /cannot verify|could not verify|not available in the known data|do not have verified/i.test(raw);
       const reply = raw.replace('[HANDOFF]', '').trim();
       const createdAt = new Date().toISOString();
-      setConversations(current => ({ ...current, [contextId]: [...(current[contextId] || []), { role: 'charlie', content: reply, handoff, createdAt }] }));
+      setConversations(current => ({ ...current, [contextId]: [...(current[contextId] || []), { role: 'charlie', content: reply, handoff, createdAt, audioLoading: true }] }));
       base44.functions.invoke('charlieSpeak', { text: reply }).then(voiceRes => {
         const audioUrl = voiceRes.data?.audioUrl;
-        if (!audioUrl) return;
-        setConversations(current => ({ ...current, [contextId]: (current[contextId] || []).map(message => message.createdAt === createdAt ? { ...message, audioUrl } : message) }));
-      }).catch(() => {});
+        setConversations(current => ({ ...current, [contextId]: (current[contextId] || []).map(message => message.createdAt === createdAt ? { ...message, audioUrl, audioLoading: false } : message) }));
+      }).catch(() => {
+        setConversations(current => ({ ...current, [contextId]: (current[contextId] || []).map(message => message.createdAt === createdAt ? { ...message, audioLoading: false } : message) }));
+      });
       return true;
     } catch (_) {
       setConversations(current => ({ ...current, [contextId]: [...(current[contextId] || []), { role: 'charlie', content: 'This is taking longer than expected to verify. Please try again, or call (858) 353-1200 to reach the team directly.', handoff: true, createdAt: new Date().toISOString() }] }));
