@@ -20,6 +20,12 @@ export default function ChiefPilotExplainers({ subject, onBack, isLiveObjective 
       <h2 className="mt-3 text-xl font-normal">{subject.title}</h2>
       <div className="mt-3 grid items-start gap-5 lg:grid-cols-[minmax(0,2fr)_minmax(160px,180px)]">
         <div>
+          {content.preface && (
+            <div className="mb-4 border-b border-black/10 pb-4">
+              <p className="max-w-2xl text-sm leading-5">{content.preface}</p>
+              <ol className="mt-2 space-y-1">{content.steps.map((step, index) => <li key={step} className="flex gap-3 text-sm leading-5"><span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-dyson-gold-deep text-xs">{index + 1}</span>{step}</li>)}</ol>
+            </div>
+          )}
           <p className="max-w-2xl text-sm leading-5">{content.intro}</p>
           <ul className="mt-3 space-y-1.5">{content.bullets.map(point => <li key={point} className="flex gap-3 text-sm leading-5"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-dyson-gold-deep" />{point}</li>)}</ul>
           {onSend && <form onSubmit={submit} className="mt-10 max-w-md border-t border-black/10 pt-5"><label htmlFor="chief-explainer-query" className="mb-1.5 block text-xs text-dyson-text-dark/70">Ask about {subject.title} without leaving this explainer</label><div className="flex items-center rounded-full border border-black/20 bg-dyson-warm-paper p-1 pl-4 focus-within:border-dyson-gold-deep"><input id="chief-explainer-query" value={query} onChange={event => setQuery(event.target.value)} placeholder={`Ask about ${subject.title}…`} className="min-w-0 flex-1 bg-transparent text-sm text-dyson-text-dark outline-none placeholder:text-dyson-text-dark/45" /><button type="submit" disabled={!query.trim() || loading} className="rounded-full border border-dyson-gold-deep/60 bg-dyson-cream px-4 py-2 text-xs font-semibold text-dyson-gold-deep disabled:opacity-40">{loading ? 'Searching…' : 'Send →'}</button></div></form>}
