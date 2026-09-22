@@ -19,6 +19,7 @@ export default function ChiefPilotHowCopilotWorksExplainer({ onBack }) {
         <p className="flex items-center gap-3 text-sm font-semibold"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-dyson-gold-deep text-xs">1</span>First of all browse your preferred MLS and copy the MLS# or address:</p>
         <div className="mt-3 flex flex-wrap gap-2 pl-8">
           {MLS_SITES.map(([label, url]) => <a key={label} href={url} target="_blank" rel="noreferrer" className="rounded-full border border-black/20 bg-dyson-warm-paper px-4 py-1.5 text-sm font-semibold hover:border-dyson-gold-deep">{label}</a>)}
+          <span className="flex items-center gap-2 rounded-full border border-black/20 bg-dyson-warm-paper px-4 py-1.5 text-sm font-semibold text-dyson-text-dark/60">DysonCoPilot <span className="text-xs font-normal text-dyson-gold-deep">coming soon</span></span>
         </div>
       </div>
 
