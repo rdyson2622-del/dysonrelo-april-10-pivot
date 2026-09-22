@@ -18,6 +18,7 @@ export default function ChiefPilotExplainers({ subject, onBack, isLiveObjective 
     <section className="min-h-full rounded-xl bg-dyson-cream p-4 text-dyson-text-dark sm:p-5">
       <button type="button" onClick={onBack} className="inline-flex items-center rounded-full border border-dyson-gold-deep bg-dyson-warm-paper px-4 py-2 text-xs font-semibold text-dyson-gold-deep shadow-sm">← Back to ask/search</button>
       <h2 className="mt-3 text-xl font-normal">{subject.title}</h2>
+      {content.byline && <p className="mt-1.5 max-w-2xl text-sm leading-5 text-dyson-text-dark/80">{content.byline}</p>}
       <div className="mt-3 grid items-start gap-5 lg:grid-cols-[minmax(0,2fr)_minmax(160px,180px)]">
         <div>
           {content.preface && (
