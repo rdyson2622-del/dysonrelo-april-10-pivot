@@ -31,7 +31,7 @@ export default function PreferredClientFloatingPill() {
         style={{ background: GOLD, color: '#0a0a0a', border: '1px solid rgba(0,0,0,0.15)' }}
       >
         <Sparkles className="h-3.5 w-3.5" />
-        Make Me a Preferred Client — At No Expense to Me
+        Make Me a Preferred Client So I Can Save All My Data — At No Expense
       </button>
       <CopilotPreferredClientModal
         isOpen={open}
