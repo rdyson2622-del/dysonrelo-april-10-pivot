@@ -24,7 +24,9 @@ export default function ChiefPilotExplainers({ subject, onBack, isLiveObjective 
           <p className="max-w-2xl text-sm leading-5">{content.intro}</p>
           <ul className="mt-3 space-y-1.5">{content.bullets.map(point => <li key={point} className="flex gap-3 text-sm leading-5"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-dyson-gold-deep" />{point}</li>)}</ul>
           {onSend && <form onSubmit={submit} className="mt-10 max-w-md border-t border-black/10 pt-5"><label htmlFor="chief-explainer-query" className="mb-1.5 block text-xs text-dyson-text-dark/70">Ask about {subject.title} without leaving this explainer</label><div className="flex items-center rounded-full border border-black/20 bg-dyson-warm-paper p-1 pl-4 focus-within:border-dyson-gold-deep"><input id="chief-explainer-query" value={query} onChange={event => setQuery(event.target.value)} placeholder={`Ask about ${subject.title}…`} className="min-w-0 flex-1 bg-transparent text-sm text-dyson-text-dark outline-none placeholder:text-dyson-text-dark/45" /><button type="submit" disabled={!query.trim() || loading} className="rounded-full border border-dyson-gold-deep/60 bg-dyson-cream px-4 py-2 text-xs font-semibold text-dyson-gold-deep disabled:opacity-40">{loading ? 'Searching…' : 'Send →'}</button></div></form>}
-          {(messages.length || loading || error) ? <div className="mt-3 max-w-md rounded-xl border border-black/10 bg-dyson-warm-paper p-3"><ChiefPilotConversation messages={messages} loading={loading} error={error} /></div> : null}
+          <div className="mt-3 max-w-md rounded-xl border border-white/15 bg-dyson-black p-3">
+            {(messages.length || loading || error) ? <ChiefPilotConversation messages={messages} loading={loading} error={error} /> : <p className="text-sm text-dyson-taupe">Your answer and work product will appear here.</p>}
+          </div>
         </div>
         <ChiefPilotExplainerVideoStack explainers={explainers} />
       </div>
