@@ -202,7 +202,7 @@ export default function useChiefPilotWorkspace() {
     const known = displayProperty ? JSON.stringify({ example: isExample, address: displayProperty.address, fullAddress: displayProperty.fullAddress, building: displayProperty.building, listing: displayProperty.listing, valuation: displayProperty.valuation, comps: displayProperty.comps, risks: displayProperty.risks }) : 'No Active Property';
     const scoped = next.map((message, index) => index === next.length - 1 ? { ...message, content: `SELECTED SUBJECT: ${subject.title}\nVERIFIED ACTIVE PROPERTY DATA: ${known}\nUse only known data. Never invent property facts, comps, risks, dates, or prices. Do not execute actions or send/draft outreach. If the answer requires unavailable data, begin with [HANDOFF] and recommend Call / Connect with Bob.\n\nUSER MESSAGE: ${message.content}` } : message);
     try {
-      const res = await base44.functions.invoke('adminCharlie', { messages: scoped });
+      const res = await base44.functions.invoke('copilotAsk', { messages: scoped });
       const raw = res.data?.reply || '[HANDOFF] I could not verify an answer from known data.';
       const handoff = raw.includes('[HANDOFF]') || /cannot verify|could not verify|not available in the known data|do not have verified/i.test(raw);
       const reply = raw.replace('[HANDOFF]', '').trim();
