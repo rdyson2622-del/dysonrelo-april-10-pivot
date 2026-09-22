@@ -21,7 +21,7 @@ export default function ChiefPilotExplainers({ subject, onBack, isLiveObjective 
         {(() => {
           const splitAt = subject.title.indexOf('. ');
           if (splitAt === -1) return subject.title;
-          return <>{subject.title.slice(0, splitAt + 1)}<br />{subject.title.slice(splitAt + 2)}</>;
+          return <>{subject.title.slice(0, splitAt + 1)}<br /><span className="text-lg">{subject.title.slice(splitAt + 2)}</span></>;
         })()}
       </h2>
       {content.byline && <p className="mt-1.5 max-w-2xl text-sm leading-5 text-dyson-text-dark/80">{content.byline}</p>}
