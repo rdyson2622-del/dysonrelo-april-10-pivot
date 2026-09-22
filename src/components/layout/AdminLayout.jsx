@@ -115,7 +115,7 @@ export default function AdminLayout() {
         </div>
         <div className="w-full">
           {/* Back button */}
-          <div className="px-4 pt-16 md:pt-4">
+          <div className="px-4 pt-16">
             <button
               onClick={() => {
                 if (window.history?.state?.idx > 0) {
