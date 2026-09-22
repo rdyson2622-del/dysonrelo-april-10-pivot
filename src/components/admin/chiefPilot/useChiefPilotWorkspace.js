@@ -187,9 +187,10 @@ export default function useChiefPilotWorkspace() {
     setSaveStatus('saved');
   };
 
-  const runConversation = async (text, requirePreferred) => {
-    if (!activeSubject || !text.trim() || loading) return false;
-    const contextId = activeSubject.id;
+  const runConversation = async (text, requirePreferred, explicitSubject) => {
+    const subject = explicitSubject || activeSubject;
+    if (!subject || !text.trim() || loading) return false;
+    const contextId = subject.id;
     if (requirePreferred && !preferredClientActive) {
       selectSubject('property-search');
       requestAnimationFrame(() => requestAnimationFrame(() => document.getElementById('preferred-client-door')?.scrollIntoView({ behavior: 'smooth', block: 'center' })));
@@ -197,9 +198,9 @@ export default function useChiefPilotWorkspace() {
     }
     const next = [...(conversations[contextId] || []), { role: 'user', content: text.trim(), createdAt: new Date().toISOString() }];
     setConversations(current => ({ ...current, [contextId]: next })); setLoading(true); setError('');
-    recordActivity({ kind: 'Chat', label: text.trim(), subjectId: contextId, mode });
+    recordActivity({ kind: 'Chat', label: text.trim(), subjectId: contextId, mode: 'chats' });
     const known = displayProperty ? JSON.stringify({ example: isExample, address: displayProperty.address, fullAddress: displayProperty.fullAddress, building: displayProperty.building, listing: displayProperty.listing, valuation: displayProperty.valuation, comps: displayProperty.comps, risks: displayProperty.risks }) : 'No Active Property';
-    const scoped = next.map((message, index) => index === next.length - 1 ? { ...message, content: `SELECTED SUBJECT: ${activeSubject.title}\nVERIFIED ACTIVE PROPERTY DATA: ${known}\nUse only known data. Never invent property facts, comps, risks, dates, or prices. Do not execute actions or send/draft outreach. If the answer requires unavailable data, begin with [HANDOFF] and recommend Call / Connect with Bob.\n\nUSER MESSAGE: ${message.content}` } : message);
+    const scoped = next.map((message, index) => index === next.length - 1 ? { ...message, content: `SELECTED SUBJECT: ${subject.title}\nVERIFIED ACTIVE PROPERTY DATA: ${known}\nUse only known data. Never invent property facts, comps, risks, dates, or prices. Do not execute actions or send/draft outreach. If the answer requires unavailable data, begin with [HANDOFF] and recommend Call / Connect with Bob.\n\nUSER MESSAGE: ${message.content}` } : message);
     try {
       const res = await base44.functions.invoke('adminCharlie', { messages: scoped });
       const raw = res.data?.reply || '[HANDOFF] I could not verify an answer from known data.';
@@ -213,6 +214,20 @@ export default function useChiefPilotWorkspace() {
     } finally { setLoading(false); }
   };
   const send = text => runConversation(text, false);
+  // Front-door entry box: try a property lookup first; if the text isn't a
+  // resolvable address/MLS#, treat it as a question and answer it in the
+  // Property Searches chat so every typed query always gets a visible reply
+  // and lands in "Prior activity" history.
+  const askAnything = async query => {
+    const trimmed = (query || '').trim();
+    if (!trimmed || searchLoading || loading) return false;
+    const found = await runPropertySearch(trimmed);
+    if (found) { setEntryOpen(false); return true; }
+    setSearchError('');
+    setMode('chats'); setActiveId('property-search'); setShowChatsInbox(false); setEntryOpen(false);
+    const subject = subjects.find(item => item.id === 'property-search');
+    return runConversation(trimmed, false, subject);
+  };
 
-  return { subjects, mode, isChatsInbox, entryOpen, openEntry, closeEntry, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, displayProperty, isExample, showExample, exampleLoading, hideExample, escrowStub, conversations, teamMessages, selectedAgentName, loading, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, error, rename, move, send, sendTeamMessage, runPropertySearch, clearActiveProperty, requestVettedIntro, startEscrowWatch, activatePreferredClient, saveProperty };
+  return { subjects, mode, isChatsInbox, entryOpen, openEntry, closeEntry, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, displayProperty, isExample, showExample, exampleLoading, hideExample, escrowStub, conversations, teamMessages, selectedAgentName, loading, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, error, rename, move, send, sendTeamMessage, runPropertySearch, askAnything, clearActiveProperty, requestVettedIntro, startEscrowWatch, activatePreferredClient, saveProperty };
 }

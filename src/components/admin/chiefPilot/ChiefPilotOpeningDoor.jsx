@@ -15,8 +15,7 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
   const search = async value => {
     const query = (value || address).trim();
     if (!query || workspace.searchLoading) return;
-    const found = await workspace.runPropertySearch(query);
-    if (found) workspace.closeEntry();
+    await workspace.askAnything(query);
   };
 
   return (
