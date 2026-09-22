@@ -17,11 +17,11 @@ export default function ChiefPilotExplainers({ subject, onBack, isLiveObjective 
   return (
     <section className="min-h-full rounded-xl bg-dyson-cream p-4 text-dyson-text-dark sm:p-5">
       <button type="button" onClick={onBack} className="inline-flex items-center rounded-full border border-dyson-gold-deep bg-dyson-warm-paper px-4 py-2 text-xs font-semibold text-dyson-gold-deep shadow-sm">← Back to ask/search</button>
-      <h2 className={`mt-3 font-normal leading-snug ${subject.id === 'relocation-management' ? 'text-2xl' : 'text-[0.9375rem]'}`}>
+      <h2 className="mt-3 text-2xl font-normal leading-snug">
         {(() => {
           const splitAt = subject.title.indexOf('. ');
           if (splitAt === -1) return subject.title;
-          return <><span className="text-[1.172rem]">{subject.title.slice(0, splitAt + 1)}</span><br />{subject.title.slice(splitAt + 2)}</>;
+          return <>{subject.title.slice(0, splitAt + 1)}<br />{subject.title.slice(splitAt + 2)}</>;
         })()}
       </h2>
       {content.byline && <p className="mt-1.5 max-w-2xl text-sm leading-5 text-dyson-text-dark/80">{content.byline}</p>}
