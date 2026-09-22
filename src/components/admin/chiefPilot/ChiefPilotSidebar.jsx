@@ -12,7 +12,7 @@ export default function ChiefPilotSidebar({ workspace }) {
   const isSolutions = !workspace.entryOpen && workspace.mode === 'solutions';
   const activeSubjectId = !workspace.entryOpen && workspace.mode === 'chats' && !workspace.isChatsInbox ? workspace.activeId : '';
   return (
-    <aside className="flex min-h-0 flex-col gap-4 rounded-lg border border-white/10 bg-dyson-ink p-5">
+    <aside className="flex h-full min-h-0 flex-col gap-4 rounded-lg border border-white/10 bg-dyson-ink p-5">
       <div className="flex items-center justify-between gap-2">
         <button type="button" onClick={workspace.openEntry} title="Back to CoPilot home" className="flex items-center gap-2 rounded-md px-1 -mx-1 py-1 transition-colors hover:bg-white/5">
           <span className="text-[10px] tracking-[0.18em] text-dyson-text">DYSON HOMES</span><CopilotWordmark bold className="h-7 w-16" />
