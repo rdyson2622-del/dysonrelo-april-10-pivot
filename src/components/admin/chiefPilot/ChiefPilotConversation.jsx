@@ -19,7 +19,7 @@ export default function ChiefPilotConversation({ messages, loading, error, dark 
                 }} />}
                 {message.audioLoading && !message.audioUrl && <p className={`mt-2 text-[11px] ${dark ? 'text-white/45' : 'text-dyson-text-dark/50'}`}>Generating voice…</p>}
                 {!isUser && <ChiefPilotAnswerMilestoneStrip milestones={milestones} relevantPhase={message.relevantPhase} />}
-                {message.handoff && <div className="mt-3 flex items-center gap-4 text-xs"><a href="tel:8583531200" className={dark ? 'text-dyson-gold-light underline underline-offset-4' : 'text-dyson-gold-deep underline underline-offset-4'}>Call Bob</a><span className={dark ? 'text-white/65' : 'text-dyson-text-dark/70'}>Connect with Bob · (858) 353-1200</span></div>}
+                {message.handoff && <div className="mt-3 flex items-center gap-4 text-xs"><a href="tel:8583531200" className={dark ? 'text-dyson-gold-light underline underline-offset-4' : 'text-dyson-gold-deep underline underline-offset-4'}>Call Bob</a><span className={dark ? 'text-white/65' : 'text-dyson-text-dark/70'}>Connect with Bob and his specific research team member · (858) 353-1200</span></div>}
               </div>
             </div>
           );
