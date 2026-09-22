@@ -9,7 +9,6 @@ import { useLayout } from '@/lib/LayoutContext';
 import { ArrowLeft, Menu, X, Sparkles } from 'lucide-react';
 import AdminCharliePanel from '../admin/AdminCharliePanel';
 import ReferralFloatingPill from '../portal/ReferralFloatingPill';
-import CommandPills from './CommandPills';
 import PortalHomeButton from './PortalHomeButton';
 
 export default function AdminLayout() {
@@ -112,7 +111,6 @@ export default function AdminLayout() {
           </button>
         </div>
         <div className="fixed top-3 right-3 z-[10000] flex items-center gap-2">
-          <CommandPills />
           <LayoutToggleButton />
         </div>
         <div className="w-full">
