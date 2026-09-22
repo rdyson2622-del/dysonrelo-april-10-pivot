@@ -13,7 +13,7 @@ export default function CopilotHome() {
   const messages = workspace.activeSubject ? workspace.conversations[workspace.activeSubject.id] || [] : [];
 
   return (
-    <div className="min-h-screen bg-dyson-black p-3 sm:p-4">
+    <div className="h-screen overflow-hidden bg-dyson-black p-3 sm:p-4">
       <div className="mx-auto flex h-[calc(100vh-32px)] max-w-7xl flex-col gap-3 md:flex-row">
         <div className="w-full shrink-0 md:w-72">
           <ChiefPilotSidebar workspace={workspace} />
