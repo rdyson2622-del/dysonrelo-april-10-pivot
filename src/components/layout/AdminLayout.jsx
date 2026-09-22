@@ -103,19 +103,6 @@ export default function AdminLayout() {
         {/* Top Controls */}
         <div className="fixed top-3 left-3 md:left-[270px] z-50 flex items-center gap-2">
           <PortalHomeButton onClick={() => navigate('/?choose=1')} label="STUDIO" />
-          <Link
-            to="/admin/dysonhomes-copilot"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95 border"
-            style={{
-              background: '#0a0a0a',
-              borderColor: '#D4AF37',
-              color: '#D4AF37',
-            }}
-            title="Copilot Landing Pages"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-            <span className="font-black text-[11px] tracking-wider uppercase whitespace-nowrap">✨ COPILOT LANDING PAGES</span>
-          </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"

@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 const GOLD = '#D4AF37';
 
+const COPILOT_PILL = { label: 'COPILOT LANDING PAGES', emoji: '✨', path: '/admin/dysonhomes-copilot' };
+
 const PORTAL_PILLS = [
   { label: 'ADMIN', emoji: '⚙️', role: 'admin', path: '/admin', isAdmin: true },
   { label: 'FIRST-TIME VISITOR', emoji: '👋', role: 'first_time_visitor', path: '/portal' },
@@ -35,6 +37,14 @@ export default function CommandPills() {
 
   return (
     <div className="flex items-center gap-1" style={{ marginRight: '180px' }}>
+      <button
+        onClick={() => navigate(COPILOT_PILL.path)}
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-black tracking-[0.06em] transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+        style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)', border: '1px solid #b8920a', color: '#000' }}
+      >
+        <span>{COPILOT_PILL.emoji}</span>
+        <span>{COPILOT_PILL.label}</span>
+      </button>
       {PORTAL_PILLS.map(({ label, emoji, role, path, isAdmin }) => {
         const isActive = isAdmin ? onAdmin : (!onAdmin && activeRole === role);
         return (
