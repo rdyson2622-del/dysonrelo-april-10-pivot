@@ -31,7 +31,7 @@ export default function ChiefPilotSidebar({ workspace }) {
         </nav>
         <ChiefPilotModeRail activeMode={workspace.mode} onSelect={workspace.selectMode} preferredClientActive={workspace.preferredClientActive} heading="Administration" />
         <section>
-          <p className="mb-2 text-[11px] text-dyson-taupe">Subjects</p>
+          <p className="mb-2 text-[11px] text-dyson-taupe">Subjects to Explore</p>
           <div className="space-y-1">
             <ChiefPilotSubjectList subjects={workspace.subjects} activeId={activeSubjectId} onSelect={workspace.selectSubject} />
           </div>
