@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/AuthContext';
 import { getCheckedInUser, saveToClientVault } from '@/lib/copilotContactSession';
 import { resolveSanctionedDossier } from '@/lib/resolveSanctionedDossier';
 import { getChiefPilotSampleProperty } from './chiefPilotSampleProperties';
+import { SUBJECT_EXPLAINER_CONTENT } from './chiefPilotExplainerContent';
 
 const INITIAL_SUBJECTS = [['property-search', 'Property Searches'], ['property-audit', 'Property Audits'], ['agent-vetting', 'Agent Vettings'], ['team-thread', 'Team Threads'], ['move-roadmap', 'Relocation Road Maps'], ['escrow-watch', 'Escrow Watch and Compliance']].map(([id, title]) => ({ id, title }));
 const PROPERTY_KEY = 'chief_pilot_active_property';
@@ -220,16 +221,18 @@ export default function useChiefPilotWorkspace() {
     recordActivity({ kind: 'Chat', label: text.trim(), subjectId: contextId, mode: 'chats' });
     const known = displayProperty ? JSON.stringify({ example: isExample, address: displayProperty.address, fullAddress: displayProperty.fullAddress, building: displayProperty.building, listing: displayProperty.listing, valuation: displayProperty.valuation, comps: displayProperty.comps, risks: displayProperty.risks }) : 'No Active Property';
     const scoped = next.map((message, index) => index === next.length - 1 ? { ...message, content: `SELECTED SUBJECT: ${subject.title}\nVERIFIED ACTIVE PROPERTY DATA: ${known}\nUse only known data. Never invent property facts, comps, risks, dates, or prices. Do not execute actions or send/draft outreach. If the answer requires unavailable data, begin with [HANDOFF] and recommend Call / Connect with Bob.\n\nUSER MESSAGE: ${message.content}` } : message);
+    const milestones = SUBJECT_EXPLAINER_CONTENT[contextId]?.milestones || [];
     try {
       const res = await Promise.race([
-        base44.functions.invoke('copilotAsk', { messages: scoped, visitor_id: visitorId, question: text.trim() }),
+        base44.functions.invoke('copilotAsk', { messages: scoped, visitor_id: visitorId, question: text.trim(), milestones }),
         new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 20000))
       ]);
       const raw = res.data?.reply || '[HANDOFF] I could not verify an answer from known data.';
+      const relevantPhase = res.data?.relevantPhase || null;
       const handoff = raw.includes('[HANDOFF]') || /cannot verify|could not verify|not available in the known data|do not have verified/i.test(raw);
       const reply = raw.replace('[HANDOFF]', '').trim();
       const createdAt = new Date().toISOString();
-      setConversations(current => ({ ...current, [contextId]: [...(current[contextId] || []), { role: 'charlie', content: reply, handoff, createdAt, audioLoading: true }] }));
+      setConversations(current => ({ ...current, [contextId]: [...(current[contextId] || []), { role: 'charlie', content: reply, handoff, relevantPhase, createdAt, audioLoading: true }] }));
       base44.functions.invoke('charlieSpeak', { text: reply }).then(voiceRes => {
         const audioUrl = voiceRes.data?.audioUrl;
         setConversations(current => ({ ...current, [contextId]: (current[contextId] || []).map(message => message.createdAt === createdAt ? { ...message, audioUrl, audioLoading: false } : message) }));

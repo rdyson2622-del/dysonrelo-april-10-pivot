@@ -15,7 +15,7 @@ Rules:
 export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
-    const { messages, visitor_id, question } = await req.json();
+    const { messages, visitor_id, question, milestones } = await req.json();
     if (!Array.isArray(messages) || messages.length === 0) {
       return Response.json({ error: 'Missing messages' }, { status: 400 });
     }
@@ -24,10 +24,31 @@ export default async function(req) {
       .map(m => `${m.role === 'charlie' ? 'Charlie' : 'User'}: ${m.content}`)
       .join('\n');
 
-    const prompt = `${COPILOT_SYSTEM}\n\nConversation so far:\n${transcript}\n\nRespond as Charlie to the most recent user message.`;
+    const milestoneList = Array.isArray(milestones) ? milestones.filter(Boolean) : [];
+    const prompt = milestoneList.length
+      ? `${COPILOT_SYSTEM}\n\nConversation so far:\n${transcript}\n\nRespond as Charlie to the most recent user message. Also classify which ONE of these milestones the answer is most relevant to: ${milestoneList.join(', ')}. If none clearly apply, use null.`
+      : `${COPILOT_SYSTEM}\n\nConversation so far:\n${transcript}\n\nRespond as Charlie to the most recent user message.`;
 
-    const reply = await base44.asServiceRole.integrations.Core.InvokeLLM({ prompt });
-    const replyText = typeof reply === 'string' ? reply : String(reply);
+    let replyText = '';
+    let relevantPhase: string | null = null;
+    if (milestoneList.length) {
+      const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: 'object',
+          properties: {
+            reply: { type: 'string' },
+            relevantPhase: { type: ['string', 'null'], enum: [...milestoneList, null] }
+          },
+          required: ['reply']
+        }
+      });
+      replyText = result?.reply || '';
+      relevantPhase = result?.relevantPhase || null;
+    } else {
+      const reply = await base44.asServiceRole.integrations.Core.InvokeLLM({ prompt });
+      replyText = typeof reply === 'string' ? reply : String(reply);
+    }
 
     // Persist this turn so it shows up in Admin > Client Conversations and the
     // consumer's own My Library. Anonymous visitors have no authenticated user,
@@ -41,7 +62,7 @@ export default async function(req) {
       ]).catch(() => {}));
     }
 
-    return Response.json({ reply: replyText });
+    return Response.json({ reply: replyText, relevantPhase });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
