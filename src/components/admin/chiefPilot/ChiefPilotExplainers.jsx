@@ -24,6 +24,10 @@ export default function ChiefPilotExplainers({ subject, onBack, isLiveObjective 
             <div className="mb-4 border-b border-black/10 pb-4">
               <p className="max-w-2xl text-sm leading-5">{content.preface}</p>
               <ol className="mt-2 space-y-1">{content.steps.map((step, index) => <li key={step} className="flex gap-3 text-sm leading-5"><span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-dyson-gold-deep text-xs">{index + 1}</span>{step}</li>)}</ol>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {[['Realtor.com', 'https://www.realtor.com'], ['Homes.com', 'https://www.homes.com'], ['Redfin.com', 'https://www.redfin.com'], ['Zillow', 'https://www.zillow.com']].map(([label, url]) => <a key={label} href={url} target="_blank" rel="noreferrer" className="rounded-full border border-black/20 bg-dyson-warm-paper px-3 py-1 text-xs font-semibold hover:border-dyson-gold-deep">{label}</a>)}
+                <span className="flex items-center gap-1.5 rounded-full border border-black/20 bg-dyson-warm-paper px-3 py-1 text-xs font-semibold text-dyson-text-dark/60">DysonCoPilot <span className="text-[10px] font-normal text-dyson-gold-deep">coming soon</span></span>
+              </div>
             </div>
           )}
           <p className="max-w-2xl text-sm leading-5">{content.intro}</p>
