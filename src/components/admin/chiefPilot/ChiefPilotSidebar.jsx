@@ -27,6 +27,7 @@ export default function ChiefPilotSidebar({ workspace }) {
             <button key={label} type="button" className="w-full rounded-md px-3 py-2 text-left text-xs text-dyson-taupe hover:bg-white/5 hover:text-dyson-text">{label}</button>
           ))}
           <button type="button" onClick={() => workspace.selectMode('solutions')} className={`w-full rounded-md px-3 py-2 text-left text-xs hover:bg-white/5 ${isSolutions ? 'text-dyson-gold-light' : 'text-dyson-taupe hover:text-dyson-text'}`}>Real Estate Solutions</button>
+          <button type="button" onClick={() => workspace.selectMode('news')} className={`w-full rounded-md px-3 py-2 text-left text-xs hover:bg-white/5 ${!workspace.entryOpen && workspace.mode === 'news' ? 'text-dyson-gold-light' : 'text-dyson-taupe hover:text-dyson-text'}`}>Real Estate News</button>
         </nav>
         <ChiefPilotModeRail activeMode={workspace.mode} onSelect={workspace.selectMode} preferredClientActive={workspace.preferredClientActive} heading="Administration" />
         <section>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MODES = [['chats', 'Chats'], ['news', 'News'], ['library', 'Library · For Preferred Clients']];
+const MODES = [['chats', 'Chats'], ['library', 'Library · For Preferred Clients']];
 
 export default function ChiefPilotModeRail({ activeMode, onSelect, heading }) {
   return (
