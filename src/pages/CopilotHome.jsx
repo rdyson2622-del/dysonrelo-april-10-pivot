@@ -3,6 +3,7 @@ import ChiefPilotDossier from '@/components/admin/chiefPilot/ChiefPilotDossier';
 import ChiefPilotOpeningDoor from '@/components/admin/chiefPilot/ChiefPilotOpeningDoor';
 import ChiefPilotSidebar from '@/components/admin/chiefPilot/ChiefPilotSidebar';
 import useChiefPilotWorkspace from '@/components/admin/chiefPilot/useChiefPilotWorkspace';
+import PreferredClientFloatingPill from '@/components/portal/PreferredClientFloatingPill';
 
 // Locked consumer entry point — the Chief Pilot IA promoted live.
 // Do not redesign this shell; Chief Pilot/Bob will keep tuning content in
@@ -59,6 +60,7 @@ export default function CopilotHome() {
           </div>
         </div>
       </div>
+      <PreferredClientFloatingPill />
     </div>
   );
 }
