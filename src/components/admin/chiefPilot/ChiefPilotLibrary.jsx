@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import ChiefPilotHowItWorks from './ChiefPilotHowItWorks';
 import ChiefPilotExampleFrame from './ChiefPilotExampleFrame';
 import ChiefPilotPreferredClientExplainer from './ChiefPilotPreferredClientExplainer';
+import ChiefPilotLiveVoiceTest from './ChiefPilotLiveVoiceTest';
 
 const STEPS = ['Save a discussion or property context to the private vault.', 'Search your chats and saved items any time from this page.', 'Keep client material separate from general news delivery.'];
 
