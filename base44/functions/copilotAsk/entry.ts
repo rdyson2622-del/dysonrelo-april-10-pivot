@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.49';
+import { waitUntil } from 'base44:runtime';
 
 // Public, no-login Charlie chat for the consumer-facing CoPilot front door.
 // Unlike adminCharlie (which requires an admin account), this is open to anonymous visitors.
@@ -14,7 +15,7 @@ Rules:
 export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
-    const { messages } = await req.json();
+    const { messages, visitor_id, question } = await req.json();
     if (!Array.isArray(messages) || messages.length === 0) {
       return Response.json({ error: 'Missing messages' }, { status: 400 });
     }
@@ -26,8 +27,21 @@ export default async function(req) {
     const prompt = `${COPILOT_SYSTEM}\n\nConversation so far:\n${transcript}\n\nRespond as Charlie to the most recent user message.`;
 
     const reply = await base44.asServiceRole.integrations.Core.InvokeLLM({ prompt });
+    const replyText = typeof reply === 'string' ? reply : String(reply);
 
-    return Response.json({ reply: typeof reply === 'string' ? reply : String(reply) });
+    // Persist this turn so it shows up in Admin > Client Conversations and the
+    // consumer's own My Library. Anonymous visitors have no authenticated user,
+    // so this write goes through the service role and is keyed by a stable
+    // per-browser visitor_id instead of a logged-in user id.
+    if (visitor_id) {
+      const questionText = String(question || messages[messages.length - 1]?.content || '').slice(0, 5000);
+      waitUntil(Promise.all([
+        base44.asServiceRole.entities.ChatMessage.create({ client_id: visitor_id, role: 'user', content: questionText }),
+        base44.asServiceRole.entities.ChatMessage.create({ client_id: visitor_id, role: 'charlie', content: replyText })
+      ]).catch(() => {}));
+    }
+
+    return Response.json({ reply: replyText });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

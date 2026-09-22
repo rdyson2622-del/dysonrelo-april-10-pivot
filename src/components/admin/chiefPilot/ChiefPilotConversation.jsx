@@ -10,6 +10,7 @@ export default function ChiefPilotConversation({ messages, loading, error, dark 
           <div key={`${message.role}-${index}`}>
             <p className={`mb-1 text-[11px] ${dark ? 'text-white/45' : 'text-dyson-text-dark/60'}`}>{message.role === 'user' ? 'You' : 'Chief Pilot'}</p>
             <p className={`whitespace-pre-wrap text-sm leading-7 ${dark ? 'text-white' : 'text-dyson-text-dark'}`}>{message.content}</p>
+            {message.audioUrl && <audio controls src={message.audioUrl} className="mt-2 h-8 max-w-xs" />}
             {message.handoff && <div className="mt-3 flex items-center gap-4 text-xs"><a href="tel:8583531200" className={`${dark ? 'text-dyson-gold-light' : 'text-dyson-gold-deep'} underline underline-offset-4`}>Call Bob</a><span className={dark ? 'text-white/65' : 'text-dyson-text-dark/70'}>Connect with Bob · (858) 353-1200</span></div>}
           </div>
         ))}

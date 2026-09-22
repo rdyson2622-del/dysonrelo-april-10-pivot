@@ -18,6 +18,14 @@ const ESCROW_STEPS = ['Escrow opened', 'Deposit and disclosures', 'Inspections a
 const fromSession = key => {
   try { return JSON.parse(sessionStorage.getItem(key) || 'null'); } catch (_) { return null; }
 };
+const VISITOR_ID_KEY = 'chief_pilot_visitor_id';
+const getOrCreateVisitorId = () => {
+  try {
+    let id = localStorage.getItem(VISITOR_ID_KEY);
+    if (!id) { id = `visitor_${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`; localStorage.setItem(VISITOR_ID_KEY, id); }
+    return id;
+  } catch (_) { return 'visitor_anon'; }
+};
 
 export default function useChiefPilotWorkspace() {
   const { user } = useAuth();
@@ -46,6 +54,7 @@ export default function useChiefPilotWorkspace() {
   const [saveStatus, setSaveStatus] = useState('idle');
   const [preferredClientActive, setPreferredClientActive] = useState(() => sessionStorage.getItem('chief_pilot_preferred_active') === '1');
   const [error, setError] = useState('');
+  const [visitorId] = useState(getOrCreateVisitorId);
   const activeSubject = mode === 'solutions' ? { id: 'real-estate-solutions', title: 'Real Estate Solutions' } : mode === 'buy' ? { id: 'buy', title: 'Buying Real Estate Should Start With a Logical Plan of Action. CoPilot Not Only Provides the Plan But Executes Most of the Requirements Along the Way for You' } : mode === 'relocation-management' ? { id: 'relocation-management', title: 'Relocation Management' } : mode === 'sell' ? { id: 'sell', title: 'Selling Property Can Be a Well Planned Event or Can Be a Nightmare' } : mode === 'news' ? { id: 'dnn-news', title: 'DNN News' } : mode === 'library' ? { id: 'library', title: 'My Library' } : subjects.find(subject => subject.id === activeId) || null;
   const isChatsInbox = mode === 'chats' && showChatsInbox;
   const preferredClient = getCheckedInUser(user);
@@ -202,14 +211,23 @@ export default function useChiefPilotWorkspace() {
     const known = displayProperty ? JSON.stringify({ example: isExample, address: displayProperty.address, fullAddress: displayProperty.fullAddress, building: displayProperty.building, listing: displayProperty.listing, valuation: displayProperty.valuation, comps: displayProperty.comps, risks: displayProperty.risks }) : 'No Active Property';
     const scoped = next.map((message, index) => index === next.length - 1 ? { ...message, content: `SELECTED SUBJECT: ${subject.title}\nVERIFIED ACTIVE PROPERTY DATA: ${known}\nUse only known data. Never invent property facts, comps, risks, dates, or prices. Do not execute actions or send/draft outreach. If the answer requires unavailable data, begin with [HANDOFF] and recommend Call / Connect with Bob.\n\nUSER MESSAGE: ${message.content}` } : message);
     try {
-      const res = await base44.functions.invoke('copilotAsk', { messages: scoped });
+      const res = await Promise.race([
+        base44.functions.invoke('copilotAsk', { messages: scoped, visitor_id: visitorId, question: text.trim() }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 20000))
+      ]);
       const raw = res.data?.reply || '[HANDOFF] I could not verify an answer from known data.';
       const handoff = raw.includes('[HANDOFF]') || /cannot verify|could not verify|not available in the known data|do not have verified/i.test(raw);
       const reply = raw.replace('[HANDOFF]', '').trim();
-      setConversations(current => ({ ...current, [contextId]: [...(current[contextId] || []), { role: 'charlie', content: reply, handoff, createdAt: new Date().toISOString() }] }));
+      const createdAt = new Date().toISOString();
+      setConversations(current => ({ ...current, [contextId]: [...(current[contextId] || []), { role: 'charlie', content: reply, handoff, createdAt }] }));
+      base44.functions.invoke('charlieSpeak', { text: reply }).then(voiceRes => {
+        const audioUrl = voiceRes.data?.audioUrl;
+        if (!audioUrl) return;
+        setConversations(current => ({ ...current, [contextId]: (current[contextId] || []).map(message => message.createdAt === createdAt ? { ...message, audioUrl } : message) }));
+      }).catch(() => {});
       return true;
     } catch (_) {
-      setConversations(current => ({ ...current, [contextId]: [...(current[contextId] || []), { role: 'charlie', content: 'I could not verify an answer from known data.', handoff: true, createdAt: new Date().toISOString() }] }));
+      setConversations(current => ({ ...current, [contextId]: [...(current[contextId] || []), { role: 'charlie', content: 'This is taking longer than expected to verify. Please try again, or call (858) 353-1200 to reach the team directly.', handoff: true, createdAt: new Date().toISOString() }] }));
       return true;
     } finally { setLoading(false); }
   };
@@ -229,5 +247,5 @@ export default function useChiefPilotWorkspace() {
     return runConversation(trimmed, false, subject);
   };
 
-  return { subjects, mode, isChatsInbox, entryOpen, openEntry, closeEntry, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, displayProperty, isExample, showExample, exampleLoading, hideExample, escrowStub, conversations, teamMessages, selectedAgentName, loading, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, error, rename, move, send, sendTeamMessage, runPropertySearch, askAnything, clearActiveProperty, requestVettedIntro, startEscrowWatch, activatePreferredClient, saveProperty };
+  return { subjects, mode, isChatsInbox, entryOpen, openEntry, closeEntry, selectMode, selectSubject, historyItems, openActivity, libraryItems, activeSubject, activeId, activeProperty, displayProperty, isExample, showExample, exampleLoading, hideExample, escrowStub, conversations, teamMessages, selectedAgentName, loading, searchLoading, searchError, introStatus, saveStatus, preferredClientActive, error, visitorId, rename, move, send, sendTeamMessage, runPropertySearch, askAnything, clearActiveProperty, requestVettedIntro, startEscrowWatch, activatePreferredClient, saveProperty };
 }
