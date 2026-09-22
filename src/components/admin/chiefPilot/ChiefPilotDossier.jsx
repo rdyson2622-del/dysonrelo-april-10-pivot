@@ -10,7 +10,7 @@ export default function ChiefPilotDossier({ mode, isChatsInbox, libraryItems, on
     return <div className="w-full max-w-3xl text-dyson-text-dark"><ChiefPilotLibrary items={libraryItems} onDeleteItem={onDeleteLibraryItem} onRenameItem={onRenameLibraryItem} visitorId={visitorId} isExample={showExample} onHideExample={onHideExample} onSearchOwn={onOpenEntry} /></div>;
   }
   if (mode === 'news') {
-    return <div className="mx-auto w-full max-w-3xl text-dyson-text-dark"><ChiefPilotDnnNewsPlayer title={subject.title} /></div>;
+    return <div className="mx-auto w-full max-w-3xl text-dyson-text-dark"><ChiefPilotDnnNewsPlayer title={subject.title} onSend={onSend} messages={messages} loading={loading} error={error} /></div>;
   }
   if (isChatsInbox) return <ChiefPilotClientChats />;
   if (mode === 'chats' && activeProperty?.level3Example) return <ChiefPilotSampleExplainer property={activeProperty} onBack={onOpenEntry} />;

@@ -3,12 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Radio } from 'lucide-react';
 import ChiefPilotDnnNewsLibrary from './ChiefPilotDnnNewsLibrary';
+import ChiefPilotDnnNewsAsk from './ChiefPilotDnnNewsAsk';
 
 // Canonical studio poster — Charlie at desk + DNN center screen + Bob Dyson standing.
 // Shown as the placeholder frame whenever no broadcast is currently running.
 const STUDIO_POSTER_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/cd821f5a9_Screenshot2026-09-09at110438AM.png';
 
-export default function ChiefPilotDnnNewsPlayer({ title }) {
+export default function ChiefPilotDnnNewsPlayer({ title, onSend, messages = [], loading = false, error = '' }) {
   const [showLibrary, setShowLibrary] = useState(false);
   const { data: broadcasts = [] } = useQuery({
     queryKey: ['chiefPilotDnnBroadcast'],
@@ -60,6 +61,7 @@ export default function ChiefPilotDnnNewsPlayer({ title }) {
       </div>
       {playUrl && headline && <p className="mt-3 text-sm font-semibold text-dyson-text-dark">{headline}</p>}
       <button type="button" onClick={() => setShowLibrary(true)} className="mt-6 rounded-full border border-dyson-gold-deep bg-dyson-warm-paper px-5 py-2.5 text-sm font-semibold text-dyson-gold-deep shadow-sm">Browse all DNN video stories →</button>
+      <ChiefPilotDnnNewsAsk onSend={onSend} messages={messages} loading={loading} error={error} />
     </div>
   );
 }
