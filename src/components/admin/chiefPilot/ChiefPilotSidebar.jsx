@@ -23,8 +23,8 @@ export default function ChiefPilotSidebar({ workspace }) {
       <div className={`${mobileOpen ? 'flex' : 'hidden'} min-h-0 flex-1 flex-col gap-4 overflow-y-auto md:flex`}>
         <nav className="flex flex-col gap-1 border-y border-white/10 py-3" aria-label="Chief Pilot services">
           <p className="mb-1 px-3 text-[11px] text-dyson-taupe">What We Do</p>
-          {['Buy', 'Relocation Management', 'Sell'].map(label => (
-            <button key={label} type="button" className="w-full rounded-md px-3 py-2 text-left text-xs text-dyson-taupe hover:bg-white/5 hover:text-dyson-text">{label}</button>
+          {[['buy', 'Buy'], ['relocation-management', 'Relocation Management'], ['sell', 'Sell']].map(([id, label]) => (
+            <button key={id} type="button" onClick={() => workspace.selectMode(id)} className={`w-full rounded-md px-3 py-2 text-left text-xs hover:bg-white/5 ${!workspace.entryOpen && workspace.mode === id ? 'text-dyson-gold-light' : 'text-dyson-taupe hover:text-dyson-text'}`}>{label}</button>
           ))}
           <button type="button" onClick={() => workspace.selectMode('solutions')} className={`w-full rounded-md px-3 py-2 text-left text-xs hover:bg-white/5 ${isSolutions ? 'text-dyson-gold-light' : 'text-dyson-taupe hover:text-dyson-text'}`}>Real Estate Solutions</button>
           <button type="button" onClick={() => workspace.selectMode('news')} className={`w-full rounded-md px-3 py-2 text-left text-xs hover:bg-white/5 ${!workspace.entryOpen && workspace.mode === 'news' ? 'text-dyson-gold-light' : 'text-dyson-taupe hover:text-dyson-text'}`}>Real Estate News</button>
