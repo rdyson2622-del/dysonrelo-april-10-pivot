@@ -26,12 +26,12 @@ export default function ChiefPilotSidebar({ workspace }) {
           {['Buy', 'Relocation Management', 'Sell'].map(label => (
             <button key={label} type="button" className="w-full rounded-md px-3 py-2 text-left text-xs text-dyson-taupe hover:bg-white/5 hover:text-dyson-text">{label}</button>
           ))}
+          <button type="button" onClick={() => workspace.selectMode('solutions')} className={`w-full rounded-md px-3 py-2 text-left text-xs hover:bg-white/5 ${isSolutions ? 'text-dyson-gold-light' : 'text-dyson-taupe hover:text-dyson-text'}`}>Real Estate Solutions</button>
         </nav>
         <ChiefPilotModeRail activeMode={workspace.mode} onSelect={workspace.selectMode} preferredClientActive={workspace.preferredClientActive} heading="Administration" />
         <section>
           <p className="mb-2 text-[11px] text-dyson-taupe">Subjects</p>
           <div className="space-y-1">
-            <button type="button" onClick={() => workspace.selectMode('solutions')} className={`block w-full border-l px-3 py-2 text-left text-sm ${isSolutions ? 'border-dyson-gold text-dyson-text' : 'border-transparent text-dyson-taupe hover:text-dyson-text'}`}>Real Estate Solutions</button>
             <ChiefPilotSubjectList subjects={workspace.subjects} activeId={activeSubjectId} onSelect={workspace.selectSubject} />
           </div>
         </section>
