@@ -32,7 +32,7 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
       </div>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
         {[['buy', 'Buy'], ['relocation-management', 'Relocation Management'], ['sell', 'Sell']].map(([id, label]) => (
-          <button key={id} type="button" onClick={() => workspace.selectMode(id)} className="rounded-full border border-black bg-dyson-black px-3 py-1.5 text-xs font-medium text-dyson-gold-light hover:border-dyson-gold-deep sm:px-6 sm:py-2.5 sm:text-sm">{label}</button>
+          <button key={id} type="button" onClick={() => workspace.selectMode(id)} className="rounded-full border border-black bg-dyson-black px-3 py-1.5 text-xs font-medium text-dyson-gold-light hover:border-dyson-gold-deep sm:px-3 sm:py-1.5 sm:text-xs lg:px-6 lg:py-2.5 lg:text-sm">{label}</button>
         ))}
       </div>
       <div className="mt-6 text-2xl font-medium leading-tight text-dyson-text-dark sm:text-3xl md:text-[1.9rem] lg:text-[2.7rem]">
