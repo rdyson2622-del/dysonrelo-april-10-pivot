@@ -28,6 +28,10 @@ const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 // (rhymes with "ice on" — like the vacuum brand), not "DIS-in" or "DIE-zon".
 const TEST_SCRIPT = "This is Bob Dye-sun with DNN Real Estate News. Solutions that move families forward.";
 
+// Approved 2026-09-23 PrRelease "Week-1 Dyson Homes CoPilot announce" script —
+// pass { action: 'dispatch', script: '<approved text>' } to render any
+// approved script through this same proven Bob look/voice/background.
+
 Deno.serve(async (req) => {
   try {
     if (req.method !== 'POST') {
@@ -68,6 +72,7 @@ Deno.serve(async (req) => {
     // (1280x720) upload of Bob's still every time — the original portrait
     // (1023x1537) source caused the pillarbox black-bar bug.
     const bobTalkingPhotoId = BOB_TALKING_PHOTO_ID;
+    const script = (typeof body.script === 'string' && body.script.trim()) ? body.script.trim() : TEST_SCRIPT;
     const renderRes = await fetch(`${HEYGEN_API}/v2/video/generate`, {
       method: 'POST',
       headers: {
@@ -86,7 +91,7 @@ Deno.serve(async (req) => {
             voice: {
               type: 'text',
               voice_id: BOB_VOICE_ID,
-              input_text: TEST_SCRIPT,
+              input_text: script,
               emotion: 'Excited',
               speed: 1.15,
             },
@@ -111,7 +116,7 @@ Deno.serve(async (req) => {
       success: true,
       video_id: renderData.data.video_id,
       talking_photo_id: bobTalkingPhotoId,
-      script: TEST_SCRIPT,
+      script,
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
