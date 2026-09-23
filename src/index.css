@@ -139,8 +139,7 @@
 }
 .animate-stress-shake {
   display: inline-block;
-  animation: stressShake 0.4s ease-in-out infinite;
-  animation-delay: 3s;
+  animation: stressShake 0.4s ease-in-out 8;
 }
 
 /* Marquee animation for pill placeholder */
