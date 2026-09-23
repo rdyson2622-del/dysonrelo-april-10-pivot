@@ -37,7 +37,7 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
       </div>
       <div className="mt-6 text-2xl font-medium leading-tight text-dyson-text-dark sm:text-3xl md:text-[1.9rem] lg:text-[2.7rem]">
         <p className="text-center">We Don't Sell Real Estate...</p>
-        <p className="text-center text-[1.084rem] sm:text-[1.352rem] md:text-[1.951rem] lg:translate-x-[9.434rem]"><em className="italic">We Reduce</em> <em className="italic animate-stress-shake">Stress</em>!</p>
+        <p className="text-center text-[1.084rem] sm:text-[1.352rem] md:text-[1.951rem] lg:translate-x-[9.434rem] text-dyson-gold-deep"><em className="italic">We Reduce</em> <em className="italic animate-stress-shake">Stress</em>!</p>
       </div>
       <div className="mt-6 flex flex-col items-start gap-2 text-left">
         <p className="text-lg text-dyson-text-dark">• We vet the top local agents with and for you in any city or state</p>
