@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * dnnSocialPostCore — shared multi-channel social posting logic.
  *
@@ -19,7 +20,7 @@
  *                   }
  * @returns { success, linkedin, facebook, instagram, distribution }
  */
-export async function postBroadcastToSocial(base44: any, broadcast: any, opts: any = {}) {
+export async function postBroadcastToSocial(base44, broadcast, opts = {}) {
   const channels = Array.isArray(opts.channels) ? opts.channels : ['linkedin', 'facebook'];
 
   // Build the list of LinkedIn targets (multi-page array takes precedence)
@@ -55,7 +56,7 @@ Subscribe for free daily intelligence: https://1dnn.com/subscribe
 
 #RealEstateNews #RelocationIntelligence #DNN #DysonAndDyson #HousingMarket #RealEstate`;
 
-  const results: any = { linkedin: [], facebook: null, instagram: null };
+  const results = { linkedin: [], facebook: null, instagram: null };
   const distribution = [...(broadcast.distribution || [])];
 
   // ─── LinkedIn video upload (one or more pages) ──────────────────────
