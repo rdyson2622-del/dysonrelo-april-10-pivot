@@ -86,6 +86,7 @@ const NAV_SECTIONS = [
     label: 'MARKETING & PREP',
     children: [
       { label: '📊 Marketing Flow Chart', path: '/admin/workflows/marketing', icon: GitBranch, highlight: true },
+      { label: '📈 Ads + Leads Dashboard', path: '/admin/ads-leads', icon: BarChart3, highlight: true },
       { label: 'Search Listing Profiles', path: '/admin/search-profiles', icon: Search },
       { label: 'Skip Trace Lookup', path: '/admin/skip-trace', icon: Fingerprint },
       { label: 'Outreach Pipeline', path: '/admin/outreach-pipeline', icon: SendHorizontal },

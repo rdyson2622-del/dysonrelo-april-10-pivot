@@ -1,0 +1,64 @@
+{
+  "name": "AdsSnapshot",
+  "type": "object",
+  "properties": {
+    "update_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date this snapshot of Google Ads numbers was recorded"
+    },
+    "spend_yesterday": {
+      "type": "number",
+      "description": "Ad spend yesterday, in USD"
+    },
+    "spend_mtd": {
+      "type": "number",
+      "description": "Ad spend month-to-date, in USD"
+    },
+    "clicks": {
+      "type": "number",
+      "description": "Clicks (month-to-date or as reported)"
+    },
+    "impressions": {
+      "type": "number",
+      "description": "Impressions (month-to-date or as reported)"
+    },
+    "cpc": {
+      "type": "number",
+      "description": "Optional average cost per click, in USD"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Free-text notes from Bob or admin"
+    },
+    "updated_by": {
+      "type": "string",
+      "description": "Email of the admin who entered this snapshot"
+    }
+  },
+  "required": [
+    "update_date"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
