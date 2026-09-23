@@ -78,6 +78,14 @@ Deno.serve(async (req) => {
       published_date: new Date().toISOString(),
     });
 
+    // One activity copy to Bob so he sees every blast live (not N-times Bcc)
+    await base44.asServiceRole.integrations.Core.SendEmail({
+      to: 'rdyson2622@gmail.com',
+      subject: `[Activity] DNN Breaking Brief blasted: ${article.headline}`,
+      body: `<p>DNN Breaking Brief "${article.headline}" was just blasted to ${sent} subscriber(s) (${failed} failed) out of ${targets.length} targeted.</p>`,
+      from_name: 'DNN Intelligence Bureau',
+    }).catch(() => {});
+
     return Response.json({ success: true, sent, failed, total: targets.length });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

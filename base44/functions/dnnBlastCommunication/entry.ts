@@ -108,6 +108,14 @@ Deno.serve(async (req) => {
       blasted_by: user.email,
     });
 
+    // One activity copy to Bob so he sees every blast live (not N-times Bcc)
+    await base44.asServiceRole.integrations.Core.SendEmail({
+      to: 'rdyson2622@gmail.com',
+      subject: `[Activity] DNN Communication blasted: ${comm.subject}`,
+      body: `<p>DNN Communication "${comm.subject}" was just blasted to ${sent} subscriber(s) (${failed} failed) out of ${subs.length} targeted.</p>`,
+      from_name: 'Bob Dyson — DNN',
+    }).catch(() => {});
+
     return Response.json({ success: true, sent, failed, total: subs.length });
 
   } catch (error) {

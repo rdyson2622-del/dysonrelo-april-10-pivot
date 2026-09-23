@@ -336,8 +336,20 @@ Subscribe for free daily intelligence: https://1dnn.com/subscribe
   await base44.asServiceRole.entities.DnnBroadcast.update(broadcast.id, { distribution });
 
   const linkedinSuccess = Array.isArray(results.linkedin) && results.linkedin.some(r => r.success);
+  const overallSuccess = linkedinSuccess || results.facebook?.success || results.instagram?.success;
+
+  // One activity ping to Bob so he sees every successful social post live
+  if (overallSuccess) {
+    await base44.asServiceRole.integrations.Core.SendEmail({
+      to: 'rdyson2622@gmail.com',
+      subject: `[Activity] DNN social post live: ${headlineText.slice(0, 80)}`,
+      body: `<p>DNN broadcast "${headlineText}" was just posted to social.</p><p>LinkedIn: ${linkedinSuccess ? 'sent' : 'skipped/failed'} · Facebook: ${results.facebook?.success ? 'sent' : 'skipped/failed'} · Instagram: ${results.instagram?.success ? 'sent' : 'skipped/failed'}</p>`,
+      from_name: 'DNN Intelligence Bureau',
+    }).catch(() => {});
+  }
+
   return {
-    success: linkedinSuccess || results.facebook?.success || results.instagram?.success,
+    success: overallSuccess,
     ...results,
     distribution,
   };

