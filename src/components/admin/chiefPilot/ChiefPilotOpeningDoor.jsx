@@ -36,7 +36,7 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
         ))}
       </div>
       <div className="mt-6 text-2xl font-medium leading-tight text-dyson-text-dark sm:text-3xl md:text-[2.7rem]">
-        <p className="text-center -translate-x-[15%]">We Don't Sell Real Estate...</p>
+        <p className="text-center">We Don't Sell Real Estate...</p>
         <p className="text-center text-[1.084rem] translate-x-[4.043rem] sm:text-[1.352rem] sm:translate-x-[6.739rem] md:text-[1.951rem] md:translate-x-[9.434rem]">We Reduce <em className="italic animate-stress-shake">Stress</em>!</p>
       </div>
       <div className="mt-6 flex flex-col items-start gap-2 text-left">
