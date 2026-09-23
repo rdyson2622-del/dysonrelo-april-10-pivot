@@ -336,20 +336,27 @@ Subscribe for free daily intelligence: https://1dnn.com/subscribe
   await base44.asServiceRole.entities.DnnBroadcast.update(broadcast.id, { distribution });
 
   const linkedinSuccess = Array.isArray(results.linkedin) && results.linkedin.some(r => r.success);
-  const overallSuccess = linkedinSuccess || results.facebook?.success || results.instagram?.success;
-
-  // One activity ping to Bob so he sees every successful social post live
-  if (overallSuccess) {
-    await base44.asServiceRole.integrations.Core.SendEmail({
-      to: 'rdyson2622@gmail.com',
-      subject: `[Activity] DNN social post live: ${headlineText.slice(0, 80)}`,
-      body: `<p>DNN broadcast "${headlineText}" was just posted to social.</p><p>LinkedIn: ${linkedinSuccess ? 'sent' : 'skipped/failed'} · Facebook: ${results.facebook?.success ? 'sent' : 'skipped/failed'} · Instagram: ${results.instagram?.success ? 'sent' : 'skipped/failed'}</p>`,
-      from_name: 'DNN Intelligence Bureau',
-    }).catch(() => {});
+  const anySuccess = linkedinSuccess || results.facebook?.success || results.instagram?.success;
+  if (anySuccess) {
+    try {
+      const liPages = Array.isArray(results.linkedin)
+        ? results.linkedin.filter(r => r.success).map(r => r.page || r.posted_as || 'linkedin').join(', ')
+        : '';
+      const channels = [
+        liPages ? `LinkedIn (${liPages})` : null,
+        results.facebook?.success ? `Facebook (${results.facebook.page_name || 'ok'})` : null,
+        results.instagram?.success ? `Instagram (${results.instagram.username || 'ok'})` : null,
+      ].filter(Boolean).join(' · ');
+      await base44.asServiceRole.integrations.Core.SendEmail({
+        to: 'rdyson2622@gmail.com',
+        subject: `DNN media activity: social post — ${broadcast.show_name || broadcast.id}`,
+        body: `<p>Social post complete.</p><p><strong>${broadcast.show_name || 'Broadcast'}</strong></p><p>Channels: ${channels}</p><p>Watch: https://1dnn.com/dnn-news</p>`,
+        from_name: 'DNN Intelligence Bureau',
+      });
+    } catch (_) { /* non-fatal */ }
   }
-
   return {
-    success: overallSuccess,
+    success: anySuccess,
     ...results,
     distribution,
   };
