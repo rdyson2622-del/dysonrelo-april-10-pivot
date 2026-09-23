@@ -43,7 +43,7 @@ export default function ChiefPilotSidebar({ workspace }) {
         </section>
         <ChiefPilotHistory items={workspace.historyItems} onOpen={workspace.openActivity} />
         {!workspace.entryOpen && <ChiefPilotChatComposer disabled={!workspace.activeSubject || !workspace.preferredClientActive} loading={workspace.loading} onSend={workspace.send} />}
-        <div className="shrink-0 border-t border-white/10 pt-3 text-center text-[10px] leading-relaxed text-dyson-taupe">
+        <div className="shrink-0 border-t border-white/10 pt-3 text-center text-[15px] leading-relaxed text-dyson-taupe">
           <p>The Dyson &amp; Dyson Companies, Inc.</p>
           <p>(858) 353 1200</p>
           <p>Ca.DRE# 02303118</p>
