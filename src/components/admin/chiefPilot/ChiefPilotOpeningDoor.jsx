@@ -47,10 +47,12 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
         <p className="mt-6 text-center text-3xl font-semibold text-dyson-text-dark">INTERVIEW US!<br />(858) 353 1200</p>
         {workspace.searchError && <p className="mt-4 text-sm text-dyson-text-dark">{workspace.searchError}</p>}
         <div className="mt-7 flex flex-wrap items-center justify-center gap-2 text-xs text-dyson-text-dark">
-          <ShieldCheck className="h-4 w-4" />
-          <span>A Independent research entity— no spam calls or agent involvement.</span>
           <span className="text-dyson-text-dark">Testimonial:</span>
           <a href={TESTIMONIAL_VIDEO_URL} target="_blank" rel="noopener noreferrer" className="rounded-md border border-black/20 bg-white/40 px-3 py-1 text-xs text-dyson-text-dark hover:border-dyson-gold-deep">Windean Strattons — Arizona to Arkansas Move</a>
+        </div>
+        <div className="mt-3 flex w-full items-center gap-2 text-xs text-dyson-text-dark">
+          <ShieldCheck className="h-4 w-4" />
+          <span>A Independent research entity— no spam calls or agent involvement.</span>
         </div>
       </div>
     </div>
