@@ -130,7 +130,7 @@ export default function Admin() {
 
   const [activeView, setActiveView] = useState(() => {
     // If explicitly viewing stats or overview
-    return searchParams.get('view') || 'subchoices';
+    return searchParams.get('view') || 'overview';
   });
   const [testingVoiceGreeting, setTestingVoiceGreeting] = useState(false);
 
