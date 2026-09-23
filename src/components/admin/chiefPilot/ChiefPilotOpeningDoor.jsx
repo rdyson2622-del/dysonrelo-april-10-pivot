@@ -35,7 +35,10 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
           <button key={id} type="button" onClick={() => workspace.selectMode(id)} className="rounded-full border border-black bg-dyson-black px-6 py-2.5 text-sm font-medium text-dyson-gold-light hover:border-dyson-gold-deep">{label}</button>
         ))}
       </div>
-      <p className="mt-6 text-2xl font-medium leading-tight text-dyson-text-dark sm:text-3xl md:text-[2.7rem]">We Don't Sell Real Estate...We Reduce Stress!</p>
+      <div className="mt-6 text-2xl font-medium leading-tight text-dyson-text-dark sm:text-3xl md:text-[2.7rem]">
+        <p className="text-center">We Don't Sell Real Estate...</p>
+        <p className="text-center translate-x-6 sm:translate-x-10 md:translate-x-14">We Reduce Stress!</p>
+      </div>
       <div className="mt-6 flex flex-col items-start gap-2 text-left">
         <p className="text-lg text-dyson-text-dark">• In any city or state, we vet the top local agents with & for you</p>
         <p className="text-lg text-dyson-text-dark">• Our Relocation Process saves you significant closing costs</p>
