@@ -14,7 +14,7 @@ export default function ChiefPilotSidebar({ workspace }) {
   const selectMode = id => { workspace.selectMode(id); setMobileOpen(false); };
   const selectSubject = id => { workspace.selectSubject(id); setMobileOpen(false); };
   return (
-    <aside className="flex min-h-0 flex-col gap-4 rounded-lg border border-white/10 bg-dyson-ink p-5 md:h-full">
+    <aside className={`flex min-h-0 flex-col gap-4 rounded-lg border border-white/10 bg-dyson-ink p-5 md:h-full ${mobileOpen ? 'fixed inset-0 z-50 overflow-y-auto md:static md:z-auto md:overflow-visible' : ''}`}>
       <div className="flex items-center justify-between gap-2">
         <button type="button" onClick={workspace.openEntry} title="Back to CoPilot home" className="flex items-center gap-2 rounded-md px-1 -mx-1 py-1 transition-colors hover:bg-white/5">
           <span className="text-[10px] tracking-[0.18em] text-dyson-text">DYSON HOMES</span><CopilotWordmark bold className="h-7 w-16" />
@@ -22,7 +22,7 @@ export default function ChiefPilotSidebar({ workspace }) {
         <Link to="/admin" title="Admin" className="flex items-center justify-center rounded-full p-1.5 text-dyson-taupe transition-colors hover:bg-white/5 hover:text-dyson-gold-light"><Settings className="h-4 w-4" /></Link>
         <button type="button" onClick={() => setMobileOpen(value => !value)} className="text-xs text-dyson-taupe md:hidden">{mobileOpen ? 'Close' : 'Menu'}</button>
       </div>
-      <div className={`${mobileOpen ? 'flex' : 'hidden'} min-h-0 flex-1 flex-col gap-4 overflow-y-auto md:flex`}>
+      <div className={`${mobileOpen ? 'flex' : 'hidden'} min-h-0 flex-1 flex-col gap-4 md:overflow-y-auto md:flex`}>
         <nav className="flex flex-col gap-1 border-y border-white/10 py-3" aria-label="Chief Pilot services">
           <p className="mb-1 px-3 text-[11px] text-dyson-taupe">What We Do</p>
           {[['buy', 'Buy'], ['relocation-management', 'Relocation Management'], ['sell', 'Sell']].map(([id, label]) => (
