@@ -27,11 +27,12 @@ export default function PreferredClientFloatingPill() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-20 right-4 md:bottom-6 md:right-6 z-40 flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-bold shadow-lg transition-transform hover:scale-105"
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-40 flex max-w-[calc(100vw-2rem)] items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold shadow-lg transition-transform hover:scale-105 sm:px-4 sm:py-2.5"
         style={{ background: GOLD, color: '#0a0a0a', border: '1px solid rgba(0,0,0,0.15)' }}
       >
         <Sparkles className="h-3.5 w-3.5 shrink-0" />
-        <span>Make Me a Preferred Client So I Can Save All My Data<br />At No Expense</span>
+        <span className="sm:hidden">Preferred Client — Free</span>
+        <span className="hidden sm:inline">Make Me a Preferred Client So I Can Save All My Data<br />At No Expense</span>
       </button>
       <CopilotPreferredClientModal
         isOpen={open}

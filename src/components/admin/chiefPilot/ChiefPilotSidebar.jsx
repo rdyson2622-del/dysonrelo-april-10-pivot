@@ -12,7 +12,7 @@ export default function ChiefPilotSidebar({ workspace }) {
   const isSolutions = !workspace.entryOpen && workspace.mode === 'solutions';
   const activeSubjectId = !workspace.entryOpen && workspace.mode === 'chats' && !workspace.isChatsInbox ? workspace.activeId : '';
   return (
-    <aside className="flex h-full min-h-0 flex-col gap-4 rounded-lg border border-white/10 bg-dyson-ink p-5">
+    <aside className="flex min-h-0 flex-col gap-4 rounded-lg border border-white/10 bg-dyson-ink p-5 md:h-full">
       <div className="flex items-center justify-between gap-2">
         <button type="button" onClick={workspace.openEntry} title="Back to CoPilot home" className="flex items-center gap-2 rounded-md px-1 -mx-1 py-1 transition-colors hover:bg-white/5">
           <span className="text-[10px] tracking-[0.18em] text-dyson-text">DYSON HOMES</span><CopilotWordmark bold className="h-7 w-16" />
@@ -39,7 +39,7 @@ export default function ChiefPilotSidebar({ workspace }) {
         <ChiefPilotHistory items={workspace.historyItems} onOpen={workspace.openActivity} />
         {!workspace.entryOpen && <ChiefPilotChatComposer disabled={!workspace.activeSubject || !workspace.preferredClientActive} loading={workspace.loading} onSend={workspace.send} />}
       </div>
-      <div className="border-t border-white/10 pt-3 text-center text-[10px] leading-relaxed text-dyson-taupe">
+      <div className={`${mobileOpen ? 'block' : 'hidden'} border-t border-white/10 pt-3 text-center text-[10px] leading-relaxed text-dyson-taupe md:block`}>
         <p>The Dyson &amp; Dyson Companies, Inc.</p>
         <p>(858) 353 1200</p>
         <p>Ca.DRE# 02303118</p>
