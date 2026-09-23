@@ -40,7 +40,7 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
         <p className="text-center text-[1.275rem] translate-x-[3.234rem] sm:text-[1.59rem] sm:translate-x-[5.391rem] md:text-[2.295rem] md:translate-x-[7.547rem]">We Reduce <em className="italic">Stress</em>!</p>
       </div>
       <div className="mt-6 flex flex-col items-start gap-2 text-left">
-        <p className="text-lg text-dyson-text-dark">• We vet, in any city or state, the top local agents with & for you</p>
+        <p className="text-lg text-dyson-text-dark">• We vet the top local agents with and for you in any city or state</p>
         <p className="text-lg text-dyson-text-dark">• Our Relocation Process saves you significant closing costs</p>
         <p className="text-lg text-dyson-text-dark">• Together, we orchestrate your entire move and reduce stress all along the way</p>
       </div>
