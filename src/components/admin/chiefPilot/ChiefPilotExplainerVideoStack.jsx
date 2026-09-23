@@ -58,7 +58,7 @@ function ExplainerVideoCard({ item }) {
 
 export default function ChiefPilotExplainerVideoStack({ explainers }) {
   return (
-    <div className="grid w-full max-w-[170px] content-start items-start gap-3 grid-cols-1 justify-self-end">
+    <div className="mx-auto grid w-full max-w-[170px] content-start items-start gap-3 grid-cols-1 lg:mx-0 lg:justify-self-end">
       {explainers.map(item => <ExplainerVideoCard key={item.id} item={item} />)}
     </div>
   );
