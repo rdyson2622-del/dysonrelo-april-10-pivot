@@ -63,7 +63,7 @@ export default function CopilotHome() {
           </div>
         </div>
       </div>
-      <PreferredClientFloatingPill />
+      <PreferredClientFloatingPill engaged={!workspace.entryOpen} />
     </div>
   );
 }

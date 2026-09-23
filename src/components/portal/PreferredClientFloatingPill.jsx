@@ -10,9 +10,10 @@ const GOLD = '#D4AF37';
  * page inviting visitors to become a Preferred Client (no expense, no password).
  * Hides itself once the visitor is already recognized as a Preferred Client.
  */
-export default function PreferredClientFloatingPill() {
+export default function PreferredClientFloatingPill({ engaged = false }) {
   const [isPreferred, setIsPreferred] = useState(() => !!getCheckedInUser()?.isPreferredClient);
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const refresh = () => setIsPreferred(!!getCheckedInUser()?.isPreferredClient);
@@ -20,20 +21,33 @@ export default function PreferredClientFloatingPill() {
     return () => window.removeEventListener('dyson_copilot_contact_updated', refresh);
   }, []);
 
-  if (isPreferred) return null;
+  // Engagement trigger: only reveal once the user has left the landing door
+  // (asked something / picked a mode) or scrolled past the first section —
+  // never block the screen on initial load.
+  useEffect(() => {
+    const content = document.getElementById('chief-pilot-content');
+    if (!content) return;
+    const onScroll = () => { if (content.scrollTop > 200) setScrolled(true); };
+    content.addEventListener('scroll', onScroll);
+    return () => content.removeEventListener('scroll', onScroll);
+  }, []);
+
+  if (isPreferred || !(engaged || scrolled)) return null;
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-40 flex max-w-[calc(100vw-2rem)] items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold shadow-lg transition-transform hover:scale-105 sm:px-4 sm:py-2.5"
-        style={{ background: GOLD, color: '#0a0a0a', border: '1px solid rgba(0,0,0,0.15)' }}
-      >
-        <Sparkles className="h-3.5 w-3.5 shrink-0" />
-        <span className="sm:hidden">Preferred Client — Free</span>
-        <span className="hidden sm:inline">Make Me a Preferred Client So I Can Save All My Data<br />At No Expense</span>
-      </button>
+      <div className="fixed inset-x-0 bottom-0 z-40 sm:inset-x-auto sm:bottom-6 sm:right-6">
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="flex w-full items-center justify-center gap-2 px-4 py-3 text-xs font-bold shadow-lg transition-transform sm:w-auto sm:rounded-full sm:px-4 sm:py-2.5 sm:hover:scale-105"
+          style={{ background: GOLD, color: '#0a0a0a', border: '1px solid rgba(0,0,0,0.15)' }}
+        >
+          <Sparkles className="h-3.5 w-3.5 shrink-0" />
+          <span className="sm:hidden">Preferred Client — Free</span>
+          <span className="hidden sm:inline">Make Me a Preferred Client So I Can Save All My Data<br />At No Expense</span>
+        </button>
+      </div>
       <CopilotPreferredClientModal
         isOpen={open}
         onClose={() => setOpen(false)}
