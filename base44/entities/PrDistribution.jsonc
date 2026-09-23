@@ -1,0 +1,95 @@
+{
+  "name": "PrDistribution",
+  "type": "object",
+  "properties": {
+    "pr_release_id": {
+      "type": "string",
+      "description": "Related PrRelease id"
+    },
+    "channel": {
+      "type": "string",
+      "enum": [
+        "YouTube",
+        "LinkedIn",
+        "1dnn",
+        "dysonhomes",
+        "Email",
+        "Google Ads",
+        "Press/earned",
+        "Other"
+      ]
+    },
+    "destination": {
+      "type": "string",
+      "description": "URL or account/label, e.g. DNN News YouTube"
+    },
+    "postedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "postedBy": {
+      "type": "string"
+    },
+    "externalId": {
+      "type": "string",
+      "description": "YouTube video id, LinkedIn post URL, etc."
+    },
+    "views": {
+      "type": "number"
+    },
+    "watchTime": {
+      "type": "number"
+    },
+    "likes": {
+      "type": "number"
+    },
+    "comments": {
+      "type": "number"
+    },
+    "shares": {
+      "type": "number"
+    },
+    "clicks": {
+      "type": "number"
+    },
+    "ctr": {
+      "type": "number"
+    },
+    "leadsAttributed": {
+      "type": "number"
+    },
+    "metricsUpdatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "pr_release_id",
+    "channel"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

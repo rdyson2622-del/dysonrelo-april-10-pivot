@@ -182,6 +182,13 @@ export default function Admin() {
 
           <div className="flex flex-wrap gap-2 mt-3">
             <Link
+              to="/admin/pr-campaign-library"
+              className="inline-flex items-center gap-1.5 text-xs font-black px-3.5 py-1.5 rounded-xl shadow-md transition-transform hover:scale-105 animate-pulse"
+              style={{ border: '2px solid #D4AF37', color: '#fff', background: '#000' }}
+            >
+              📣 PR &amp; Campaign Library (temp)
+            </Link>
+            <Link
               to="/admin/dysonhomes-copilot"
               className="inline-flex items-center gap-1.5 text-xs font-black px-3.5 py-1.5 rounded-xl shadow-md transition-transform hover:scale-105"
               style={{ border: '1.5px solid #D4AF37', color: '#000', background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}

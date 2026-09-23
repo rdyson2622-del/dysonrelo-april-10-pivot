@@ -1,0 +1,100 @@
+{
+  "name": "PrRelease",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Release title"
+    },
+    "slug": {
+      "type": "string",
+      "description": "URL-safe identifier"
+    },
+    "campaign": {
+      "type": "string",
+      "default": "Dyson Homes CoPilot Ongoing Media",
+      "description": "Campaign this release belongs to"
+    },
+    "weekLabel": {
+      "type": "string",
+      "description": "e.g. Week-1"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Approved",
+        "In production",
+        "Distributed",
+        "Archived"
+      ],
+      "default": "Draft"
+    },
+    "scriptBody": {
+      "type": "string",
+      "description": "Full spoken script"
+    },
+    "disclosure": {
+      "type": "string",
+      "description": "Legal disclosure line"
+    },
+    "disclosureMode": {
+      "type": "string",
+      "enum": [
+        "Spoken",
+        "On-screen only",
+        "Both"
+      ],
+      "description": "How the disclosure is delivered"
+    },
+    "ctaSite": {
+      "type": "string",
+      "default": "dysonhomes.com"
+    },
+    "ctaPhone": {
+      "type": "string"
+    },
+    "ctaOffer": {
+      "type": "string"
+    },
+    "approvedByBobAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "producedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "mediaAssetUrl": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

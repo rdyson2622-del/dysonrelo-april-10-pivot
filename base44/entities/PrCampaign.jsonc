@@ -1,0 +1,39 @@
+{
+  "name": "PrCampaign",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Campaign explainer title"
+    },
+    "body": {
+      "type": "string",
+      "description": "Editable explainer copy shown at the top of the PR & Campaign Library admin page"
+    }
+  },
+  "required": [
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
