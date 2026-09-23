@@ -180,7 +180,6 @@ ${pixelImg}</body></html>`;
       const mimeMessage =
         `To: ${encodeHeader(contact.contact_name)} <${contact.email}>\r\n` +
         `From: ${encodeHeader(senderName)} <${senderEmail}>\r\n` +
-        `Bcc: rdyson2622@gmail.com\r\n` +
         `Subject: ${encodeHeader(subject)}\r\n` +
         `Content-Type: multipart/alternative; boundary="dnnalt"\r\n` +
         `MIME-Version: 1.0\r\n\r\n` +
@@ -226,6 +225,27 @@ ${pixelImg}</body></html>`;
       } catch (e) {
         results.failed.push({ contact_id: contact.id, email: contact.email, error: e.message });
       }
+    }
+
+    // Bob activity copy (one email — not Bcc on every contact)
+    if (results.sent.length > 0) {
+      try {
+        const activitySubject = `DNN media activity: ${showName} — ${results.sent.length} sent`;
+        const activityText = `Audience distribute complete.\n\nShow: ${showName}\nAudience: ${audience.audience_name}\nSent: ${results.sent.length}\nFailed: ${results.failed.length}\nHeadline: ${headlineText}\nWatch: https://1dnn.com/dnn-news`;
+        const activityMime =
+          `To: rdyson2622@gmail.com\r\n` +
+          `From: ${encodeHeader(senderName)} <${senderEmail}>\r\n` +
+          `Subject: ${encodeHeader(activitySubject)}\r\n` +
+          `Content-Type: text/plain; charset=UTF-8\r\n` +
+          `MIME-Version: 1.0\r\n\r\n` +
+          activityText;
+        const activityRaw = toBase64Url(utf8ToBase64(activityMime));
+        await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ raw: activityRaw }),
+        });
+      } catch (_) { /* non-fatal */ }
     }
 
     // Record distribution on the broadcast
