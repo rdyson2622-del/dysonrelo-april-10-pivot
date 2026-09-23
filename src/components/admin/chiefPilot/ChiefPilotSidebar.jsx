@@ -11,6 +11,8 @@ export default function ChiefPilotSidebar({ workspace }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const isSolutions = !workspace.entryOpen && workspace.mode === 'solutions';
   const activeSubjectId = !workspace.entryOpen && workspace.mode === 'chats' && !workspace.isChatsInbox ? workspace.activeId : '';
+  const selectMode = id => { workspace.selectMode(id); setMobileOpen(false); };
+  const selectSubject = id => { workspace.selectSubject(id); setMobileOpen(false); };
   return (
     <aside className="flex min-h-0 flex-col gap-4 rounded-lg border border-white/10 bg-dyson-ink p-5 md:h-full">
       <div className="flex items-center justify-between gap-2">
@@ -24,16 +26,16 @@ export default function ChiefPilotSidebar({ workspace }) {
         <nav className="flex flex-col gap-1 border-y border-white/10 py-3" aria-label="Chief Pilot services">
           <p className="mb-1 px-3 text-[11px] text-dyson-taupe">What We Do</p>
           {[['buy', 'Buy'], ['relocation-management', 'Relocation Management'], ['sell', 'Sell']].map(([id, label]) => (
-            <button key={id} type="button" onClick={() => workspace.selectMode(id)} className={`w-full rounded-md px-3 py-2 text-left text-xs hover:bg-white/5 ${!workspace.entryOpen && workspace.mode === id ? 'text-dyson-gold-light' : 'text-dyson-taupe hover:text-dyson-text'}`}>{label}</button>
+            <button key={id} type="button" onClick={() => selectMode(id)} className={`w-full rounded-md px-3 py-2 text-left text-xs hover:bg-white/5 ${!workspace.entryOpen && workspace.mode === id ? 'text-dyson-gold-light' : 'text-dyson-taupe hover:text-dyson-text'}`}>{label}</button>
           ))}
-          <button type="button" onClick={() => workspace.selectMode('solutions')} className={`w-full rounded-md px-3 py-2 text-left text-xs hover:bg-white/5 ${isSolutions ? 'text-dyson-gold-light' : 'text-dyson-taupe hover:text-dyson-text'}`}>Real Estate Solutions</button>
-          <button type="button" onClick={() => workspace.selectMode('news')} className={`w-full rounded-md px-3 py-2 text-left text-xs hover:bg-white/5 ${!workspace.entryOpen && workspace.mode === 'news' ? 'text-dyson-gold-light' : 'text-dyson-taupe hover:text-dyson-text'}`}>Real Estate News</button>
+          <button type="button" onClick={() => selectMode('solutions')} className={`w-full rounded-md px-3 py-2 text-left text-xs hover:bg-white/5 ${isSolutions ? 'text-dyson-gold-light' : 'text-dyson-taupe hover:text-dyson-text'}`}>Real Estate Solutions</button>
+          <button type="button" onClick={() => selectMode('news')} className={`w-full rounded-md px-3 py-2 text-left text-xs hover:bg-white/5 ${!workspace.entryOpen && workspace.mode === 'news' ? 'text-dyson-gold-light' : 'text-dyson-taupe hover:text-dyson-text'}`}>Real Estate News</button>
         </nav>
-        <ChiefPilotModeRail activeMode={workspace.mode} onSelect={workspace.selectMode} preferredClientActive={workspace.preferredClientActive} heading="Administration" />
+        <ChiefPilotModeRail activeMode={workspace.mode} onSelect={selectMode} preferredClientActive={workspace.preferredClientActive} heading="Administration" />
         <section>
           <p className="mb-2 text-[11px] text-dyson-taupe">Subjects to Explore</p>
           <div className="space-y-1">
-            <ChiefPilotSubjectList subjects={workspace.subjects} activeId={activeSubjectId} onSelect={workspace.selectSubject} />
+            <ChiefPilotSubjectList subjects={workspace.subjects} activeId={activeSubjectId} onSelect={selectSubject} />
           </div>
         </section>
         <ChiefPilotHistory items={workspace.historyItems} onOpen={workspace.openActivity} />
