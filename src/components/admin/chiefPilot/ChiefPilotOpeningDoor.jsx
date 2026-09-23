@@ -35,7 +35,7 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
           <button key={id} type="button" onClick={() => workspace.selectMode(id)} className="rounded-full border border-black bg-dyson-black px-6 py-2.5 text-sm font-medium text-dyson-gold-light hover:border-dyson-gold-deep">{label}</button>
         ))}
       </div>
-      <div className="mt-6 text-2xl font-medium leading-tight text-dyson-text-dark sm:text-3xl md:text-[2.7rem]">
+      <div className="mt-6 text-2xl font-medium leading-tight text-dyson-text-dark sm:text-3xl md:text-[1.9rem] lg:text-[2.7rem]">
         <p className="text-center">We Don't Sell Real Estate...</p>
         <p className="text-center text-[1.084rem] sm:text-[1.352rem] md:text-[1.951rem] lg:translate-x-[9.434rem]"><em className="italic">We Reduce</em> <em className="italic animate-stress-shake">Stress</em>!</p>
       </div>
