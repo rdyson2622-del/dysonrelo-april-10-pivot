@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
     );
     const adminEmails = adminUsers.filter(u => u.email && u.email.trim()).map(u => u.email);
 
-    // Merge subscribers + admin team, dedup by email — Bob always sees the live blast
+    // Merge subscribers + admin team, dedup by email
     const subscriberEmails = subscribers.map(s => s.email);
     const allRecipients = [...new Set([...subscriberEmails, ...adminEmails, 'rdyson2622@gmail.com'])];
 
