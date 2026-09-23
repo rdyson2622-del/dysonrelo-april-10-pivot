@@ -15,6 +15,7 @@ export default function PrReleaseFormModal({ release, onClose, onSaved }) {
     campaign: release?.campaign || 'Dyson Homes CoPilot Ongoing Media',
     weekLabel: release?.weekLabel || '',
     scriptBody: release?.scriptBody || '',
+    newsSummary: release?.newsSummary || '',
     disclosure: release?.disclosure || '',
     disclosureMode: release?.disclosureMode || '',
     ctaSite: release?.ctaSite || 'dysonhomes.com',
@@ -49,6 +50,7 @@ export default function PrReleaseFormModal({ release, onClose, onSaved }) {
           </div>
           <Input placeholder="Campaign" value={form.campaign} onChange={e => set('campaign', e.target.value)} />
           <Textarea placeholder="Script body" rows={8} value={form.scriptBody} onChange={e => set('scriptBody', e.target.value)} />
+          <Textarea placeholder="News summary (optional — used as the DNN News article body instead of the full script)" rows={3} value={form.newsSummary} onChange={e => set('newsSummary', e.target.value)} />
           <Textarea placeholder="Disclosure line" rows={2} value={form.disclosure} onChange={e => set('disclosure', e.target.value)} />
           <Select value={form.disclosureMode} onValueChange={v => set('disclosureMode', v)}>
             <SelectTrigger><SelectValue placeholder="Disclosure mode" /></SelectTrigger>

@@ -2,6 +2,8 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 
+const CHANNEL_LABELS = { 'DNN in-app': 'DNN News section in app' };
+
 export default function PrDistributionTable({ distributions, onUpdateMetrics }) {
   if (!distributions.length) {
     return <p className="text-sm text-muted-foreground">No distributions yet.</p>;
@@ -23,7 +25,7 @@ export default function PrDistributionTable({ distributions, onUpdateMetrics }) 
       <tbody>
         {distributions.map(d => (
           <tr key={d.id} className="border-t">
-            <td className="p-2">{d.channel}</td>
+            <td className="p-2">{CHANNEL_LABELS[d.channel] || d.channel}</td>
             <td className="p-2">{d.destination || '—'}</td>
             <td className="p-2">{d.postedAt ? format(new Date(d.postedAt), 'MMM d, yyyy') : '—'}</td>
             <td className="p-2">{d.views ?? '—'}</td>

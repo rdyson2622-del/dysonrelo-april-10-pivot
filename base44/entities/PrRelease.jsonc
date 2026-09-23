@@ -34,6 +34,10 @@
       "type": "string",
       "description": "Full spoken script"
     },
+    "newsSummary": {
+      "type": "string",
+      "description": "Optional short summary used as the DNN News article body instead of the full script"
+    },
     "disclosure": {
       "type": "string",
       "description": "Legal disclosure line"
@@ -67,6 +71,10 @@
     },
     "mediaAssetUrl": {
       "type": "string"
+    },
+    "dnnArticleId": {
+      "type": "string",
+      "description": "Linked DnnArticle id created from this release's 'Post to DNN News (draft)' button"
     },
     "notes": {
       "type": "string"

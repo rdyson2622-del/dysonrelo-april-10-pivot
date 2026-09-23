@@ -16,6 +16,7 @@
         "Email",
         "Google Ads",
         "Press/earned",
+        "DNN in-app",
         "Other"
       ]
     },
@@ -32,7 +33,7 @@
     },
     "externalId": {
       "type": "string",
-      "description": "YouTube video id, LinkedIn post URL, etc."
+      "description": "YouTube video id, LinkedIn post URL, or linked DnnArticle id"
     },
     "views": {
       "type": "number"

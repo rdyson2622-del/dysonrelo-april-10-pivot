@@ -6,7 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 
-const CHANNELS = ['YouTube', 'LinkedIn', '1dnn', 'dysonhomes', 'Email', 'Google Ads', 'Press/earned', 'Other'];
+const CHANNELS = ['YouTube', 'LinkedIn', '1dnn', 'dysonhomes', 'Email', 'Google Ads', 'Press/earned', 'DNN in-app', 'Other'];
+const CHANNEL_LABELS = { 'DNN in-app': 'DNN News section in app' };
 
 export default function PrDistributionFormModal({ releaseId, distribution, onClose, onSaved }) {
   const [form, setForm] = useState({
@@ -63,7 +64,7 @@ export default function PrDistributionFormModal({ releaseId, distribution, onClo
         <div className="space-y-3">
           <Select value={form.channel} onValueChange={v => set('channel', v)}>
             <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>{CHANNELS.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+            <SelectContent>{CHANNELS.map(c => <SelectItem key={c} value={c}>{CHANNEL_LABELS[c] || c}</SelectItem>)}</SelectContent>
           </Select>
           <Input placeholder="Destination (URL or account label)" value={form.destination} onChange={e => set('destination', e.target.value)} />
           <div className="grid grid-cols-2 gap-3">

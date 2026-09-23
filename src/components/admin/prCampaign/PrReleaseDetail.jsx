@@ -1,13 +1,37 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Pencil, Plus } from 'lucide-react';
+import { ArrowLeft, Pencil, Plus, Newspaper } from 'lucide-react';
 import PrDistributionTable from '@/components/admin/prCampaign/PrDistributionTable';
 import PrDistributionFormModal from '@/components/admin/prCampaign/PrDistributionFormModal';
 
 export default function PrReleaseDetail({ release, distributions, onBack, onEdit, onChanged }) {
   const [showDistForm, setShowDistForm] = useState(false);
   const [editingDist, setEditingDist] = useState(null);
+  const [postingToDnn, setPostingToDnn] = useState(false);
+
+  const postToDnnNews = async () => {
+    setPostingToDnn(true);
+    const bodyText = [release.newsSummary || release.scriptBody, release.disclosure].filter(Boolean).join('\n\n');
+    const payload = { headline: release.title, body: bodyText, status: 'staged' };
+    let articleId = release.dnnArticleId;
+    if (articleId) {
+      await base44.entities.DnnArticle.update(articleId, payload);
+    } else {
+      const article = await base44.entities.DnnArticle.create(payload);
+      articleId = article.id;
+      await base44.entities.PrRelease.update(release.id, { dnnArticleId: articleId });
+    }
+    await base44.entities.PrDistribution.create({
+      pr_release_id: release.id,
+      channel: 'DNN in-app',
+      destination: 'DNN News section',
+      externalId: articleId,
+      postedAt: new Date().toISOString(),
+    });
+    setPostingToDnn(false);
+    onChanged();
+  };
 
   const markApproved = () => base44.entities.PrRelease.update(release.id, { status: 'Approved', approvedByBobAt: new Date().toISOString() }).then(onChanged);
   const markProduced = () => base44.entities.PrRelease.update(release.id, { status: 'In production', producedAt: new Date().toISOString() }).then(onChanged);
@@ -31,7 +55,16 @@ export default function PrReleaseDetail({ release, distributions, onBack, onEdit
         <Button size="sm" disabled={release.status !== 'Approved'} onClick={markProduced}>Mark Produced</Button>
         <Button size="sm" disabled={release.status !== 'In production' || distributions.length < 1} onClick={markDistributed}>Mark Distributed</Button>
         <Button size="sm" variant="destructive" disabled={release.status === 'Archived'} onClick={archive}>Archive</Button>
+        <Button size="sm" variant="outline" disabled={postingToDnn} onClick={postToDnnNews}>
+          <Newspaper className="h-4 w-4 mr-2" />
+          {postingToDnn ? 'Posting…' : release.dnnArticleId ? 'Update DNN News (draft)' : 'Post to DNN News (draft)'}
+        </Button>
       </div>
+      {release.dnnArticleId && (
+        <p className="text-xs text-muted-foreground">
+          Linked DNN News article is staged as a draft — it stays hidden from consumers until Bob publishes it from the DNN News admin tools.
+        </p>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-3 text-sm">
         <div><p className="text-muted-foreground">CTA Site</p><p className="text-foreground">{release.ctaSite || '—'}</p></div>
