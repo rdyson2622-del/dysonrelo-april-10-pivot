@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function ChiefPilotHistory({ items, onOpen }) {
   return (
-    <section className="min-h-0 flex-1 overflow-y-auto border-t border-white/10 pt-4">
+    <section className="max-h-56 overflow-y-auto border-t border-white/10 pt-4">
       <p className="mb-3 text-[11px] tracking-wide text-dyson-taupe">Prior activity</p>
       {items.length ? <div className="space-y-1">{items.map(item => (
         <button key={item.id} type="button" onClick={() => onOpen(item)} className="w-full rounded-md px-2 py-2 text-left hover:bg-white/5">
