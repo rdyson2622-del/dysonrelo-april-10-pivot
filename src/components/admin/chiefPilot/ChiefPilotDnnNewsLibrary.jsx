@@ -29,7 +29,14 @@ export default function ChiefPilotDnnNewsLibrary({ stories, copilotSeries = [], 
         <div className="mt-8 grid grid-cols-1 gap-6 text-left sm:grid-cols-2">
         {copilotSeries.map(story => (
           <article key={story.id} className="overflow-hidden rounded-xl border border-black/15 bg-dyson-warm-paper shadow-sm">
-            <video controls preload="metadata" poster={STUDIO_POSTER_URL} src={story.url} className="aspect-video w-full bg-black" aria-label={story.headline} />
+            <div className="relative">
+              <video controls preload="metadata" poster={STUDIO_POSTER_URL} src={story.url} className="aspect-video w-full bg-black" aria-label={story.headline} />
+              {story.titleOverlay && (
+                <p className="pointer-events-none absolute bottom-10 left-0 right-0 px-4 text-center text-sm font-bold uppercase tracking-wide text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.9)]">
+                  {story.titleOverlay}
+                </p>
+              )}
+            </div>
             <div className="p-4"><p className="text-sm font-semibold text-dyson-text-dark">{story.headline}</p></div>
           </article>
         ))}
