@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Pencil, Plus, Newspaper } from 'lucide-react';
 import PrDistributionTable from '@/components/admin/prCampaign/PrDistributionTable';
 import PrDistributionFormModal from '@/components/admin/prCampaign/PrDistributionFormModal';
+import PrReleaseVideoPanel from '@/components/admin/prCampaign/PrReleaseVideoPanel';
 
 export default function PrReleaseDetail({ release, distributions, onBack, onEdit, onChanged }) {
   const [showDistForm, setShowDistForm] = useState(false);
@@ -81,6 +82,8 @@ export default function PrReleaseDetail({ release, distributions, onBack, onEdit
         <p className="text-sm text-muted-foreground mb-1">Script</p>
         <p className="text-sm text-foreground whitespace-pre-wrap bg-muted/30 rounded-md p-4">{release.scriptBody}</p>
       </div>
+
+      <PrReleaseVideoPanel release={release} onChanged={onChanged} />
 
       {release.notes && (
         <div>
