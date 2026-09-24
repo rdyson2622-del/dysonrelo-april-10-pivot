@@ -8,13 +8,13 @@ const GOLD = '#D4AF37';
 
 const TYPE_ICONS = {
   press_release: '📰', headshot: '📸', logo: '🏷️', narrative: '📖',
-  bio: '👤', fact_sheet: '📋', media_kit: '📦', video: '🎬', other: '📁',
+  bio: '👤', fact_sheet: '📋', media_kit: '📦', video: '🎬', press_coverage: '🗞️', other: '📁',
 };
 
 const TYPE_LABELS = {
   press_release: 'Press Release', headshot: 'Headshot', logo: 'Logo',
   narrative: 'Narrative', bio: 'Bio', fact_sheet: 'Fact Sheet',
-  media_kit: 'Media Kit', video: 'Video', other: 'Other',
+  media_kit: 'Media Kit', video: 'Video', press_coverage: 'In The News', other: 'Other',
 };
 
 export default function MediaRoom() {

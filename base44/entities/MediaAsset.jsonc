@@ -17,9 +17,10 @@
         "fact_sheet",
         "media_kit",
         "video",
+        "press_coverage",
         "other"
       ],
-      "description": "Type of press kit asset"
+      "description": "Type of press kit asset. press_coverage = an article secured about us in outside media (use external_url for the article link)."
     },
     "description": {
       "type": "string",

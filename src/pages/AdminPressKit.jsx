@@ -7,11 +7,11 @@ import { Plus, Trash2, Edit2, Download, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const GOLD = '#D4AF37';
-const ASSET_TYPES = ['press_release','headshot','logo','narrative','bio','fact_sheet','media_kit','video','other'];
+const ASSET_TYPES = ['press_release','headshot','logo','narrative','bio','fact_sheet','media_kit','video','press_coverage','other'];
 
 const TYPE_ICONS = {
   press_release: '📰', headshot: '📸', logo: '🏷️', narrative: '📖',
-  bio: '👤', fact_sheet: '📋', media_kit: '📦', video: '🎬', other: '📁',
+  bio: '👤', fact_sheet: '📋', media_kit: '📦', video: '🎬', press_coverage: '🗞️', other: '📁',
 };
 
 const EMPTY_FORM = { title: '', asset_type: 'press_release', description: '', file_url: '', external_url: '', is_public: true, tags: [] };
