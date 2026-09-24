@@ -1,4 +1,5 @@
 import React from 'react';
+import CopilotSeriesVideoCard from './CopilotSeriesVideoCard';
 
 const STUDIO_POSTER_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/cd821f5a9_Screenshot2026-09-09at110438AM.png';
 
@@ -28,17 +29,7 @@ export default function ChiefPilotDnnNewsLibrary({ stories, copilotSeries = [], 
         ) : (
         <div className="mt-8 grid grid-cols-1 gap-6 text-left sm:grid-cols-2">
         {copilotSeries.map(story => (
-          <article key={story.id} className="overflow-hidden rounded-xl border border-black/15 bg-dyson-warm-paper shadow-sm">
-            <div className="relative">
-              <video controls preload="metadata" poster={STUDIO_POSTER_URL} src={story.url} className="aspect-video w-full bg-black" aria-label={story.headline} />
-              {story.titleOverlay && (
-                <p className="pointer-events-none absolute bottom-10 left-0 right-0 px-4 text-center text-sm font-bold uppercase tracking-wide text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.9)]">
-                  {story.titleOverlay}
-                </p>
-              )}
-            </div>
-            <div className="p-4"><p className="text-sm font-semibold text-dyson-text-dark">{story.headline}</p></div>
-          </article>
+          <CopilotSeriesVideoCard key={story.id} story={story} posterUrl={STUDIO_POSTER_URL} />
         ))}
         </div>
         )}
