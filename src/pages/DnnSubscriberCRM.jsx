@@ -65,12 +65,12 @@ export default function DnnSubscriberCRM() {
               <Users className="w-5 h-5" style={{ color: '#D4AF37' }} />
               <span className="text-xs font-bold tracking-[0.3em] uppercase" style={{ color: '#D4AF37' }}>DNN Intelligence Bureau</span>
             </div>
-            <h1 className="text-2xl font-black text-white">Subscriber CRM — The Power Base</h1>
+            <h1 className="text-2xl font-black text-white">Preferred Followers CRM — The Power Base</h1>
             <p className="text-sm text-slate-400 mt-1">Manage your 35,000-follower pipeline. Track tiers, hot leads, and engagement.</p>
           </div>
           <div className="flex gap-2">
             <Button onClick={() => setEditingSub({})} variant="outline" className="gap-2 text-white border-slate-700 hover:bg-slate-800">
-              <Users className="w-4 h-4" /> Add Subscriber
+              <Users className="w-4 h-4" /> Add Preferred Follower
             </Button>
             <Button onClick={() => setImportOpen(true)} className="gap-2 font-bold"
               style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000' }}>
@@ -116,12 +116,12 @@ export default function DnnSubscriberCRM() {
           {isLoading
             ? <div className="flex justify-center py-16"><div className="w-6 h-6 border-4 border-slate-700 border-t-yellow-400 rounded-full animate-spin" /></div>
             : filtered.length === 0
-              ? <div className="text-center py-16 text-slate-500">No subscribers match your filters.</div>
+              ? <div className="text-center py-16 text-slate-500">No Preferred Followers match your filters.</div>
               : (
                 <table className="w-full text-sm">
                   <thead className="border-b" style={{ borderColor: 'rgba(255,255,255,0.07)', background: 'rgba(255,255,255,0.03)' }}>
                     <tr className="text-xs text-slate-500 uppercase tracking-wider">
-                      <th className="text-left px-4 py-3">Subscriber</th>
+                      <th className="text-left px-4 py-3">Preferred Follower</th>
                       <th className="text-left px-4 py-3">Tier</th>
                       <th className="text-left px-4 py-3">Source</th>
                       <th className="text-left px-4 py-3">Hot Lead</th>
@@ -213,7 +213,7 @@ function SubscriberModal({ subscriber, onClose, onSave }) {
   return (
     <Dialog open onOpenChange={v => { if (!v) onClose(); }}>
       <DialogContent className="sm:max-w-md bg-slate-950 border-slate-800 text-white">
-        <DialogHeader><DialogTitle className="text-white">{subscriber.id ? 'Edit Subscriber' : 'Add Subscriber'}</DialogTitle></DialogHeader>
+        <DialogHeader><DialogTitle className="text-white">{subscriber.id ? 'Edit Preferred Follower' : 'Add Preferred Follower'}</DialogTitle></DialogHeader>
         <form onSubmit={handleSave} className="space-y-3">
           <div><label className="text-xs text-slate-400 mb-1 block">Full Name</label>
             <Input value={form.full_name} onChange={e => setForm({ ...form, full_name: e.target.value })} placeholder="Jane Smith" className="bg-slate-900 border-slate-700 text-white" /></div>
@@ -276,7 +276,7 @@ function ImportModal({ onClose, onImported }) {
   return (
     <Dialog open onOpenChange={v => { if (!v) onClose(); }}>
       <DialogContent className="sm:max-w-lg bg-slate-950 border-slate-800 text-white">
-        <DialogHeader><DialogTitle className="text-white">Import Subscriber List</DialogTitle></DialogHeader>
+        <DialogHeader><DialogTitle className="text-white">Import Preferred Follower List</DialogTitle></DialogHeader>
         <form onSubmit={handleImport} className="space-y-3">
           <p className="text-xs text-slate-400">Paste emails (one per line). Optionally include name before the email separated by a comma: <code className="bg-slate-800 px-1 rounded">Jane Smith, jane@example.com</code></p>
           <textarea value={text} onChange={e => setText(e.target.value)} rows={8}
@@ -293,7 +293,7 @@ function ImportModal({ onClose, onImported }) {
             <div className="flex-1"><label className="text-xs text-slate-400 mb-1 block">Source Label</label>
               <Input value={source} onChange={e => setSource(e.target.value)} placeholder="e.g. LinkedIn Export" className="bg-slate-900 border-slate-700 text-white" /></div>
           </div>
-          {result !== null && <p className="text-green-400 font-semibold text-sm">✓ Imported {result} subscribers!</p>}
+          {result !== null && <p className="text-green-400 font-semibold text-sm">✓ Imported {result} Preferred Followers!</p>}
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose} className="border-slate-700 text-white">Cancel</Button>
             <Button type="submit" disabled={importing || !text.trim()} style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)', color: '#000' }}>

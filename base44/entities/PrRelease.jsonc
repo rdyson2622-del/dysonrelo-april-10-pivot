@@ -19,6 +19,27 @@
       "type": "string",
       "description": "e.g. Week-1"
     },
+    "avatarPresenter": {
+      "type": "string",
+      "enum": [
+        "bob",
+        "charlie"
+      ],
+      "default": "bob",
+      "description": "Bob = external/public campaigns. Charlie = internal in-app explainers for Preferred Followers."
+    },
+    "loopDay": {
+      "type": "number",
+      "description": "Position (1-7) of this story in the Perpetual 7-Day Loop rotation. Day 1 is added in week 1, Day 2 joins the rotation in week 2, etc., until all 7 run daily every week."
+    },
+    "bannerHook": {
+      "type": "string",
+      "description": "Short one-line ad banner / campaign hook used for Google Search Ads headlines and social captions"
+    },
+    "targetAudience": {
+      "type": "string",
+      "description": "Primary audience this release targets, e.g. Homeowners with RE Assets"
+    },
     "status": {
       "type": "string",
       "enum": [
