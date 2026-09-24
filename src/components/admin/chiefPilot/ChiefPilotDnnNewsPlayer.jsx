@@ -51,6 +51,13 @@ export default function ChiefPilotDnnNewsPlayer({ title, onSend, messages = [], 
 
   const copilotSeries = prReleases
     .filter(r => r.mediaAssetUrl)
+    .sort((a, b) => {
+      // Planned series order first (loopDay), then chronological release order for ties/unnumbered releases
+      const dayA = a.loopDay ?? Infinity;
+      const dayB = b.loopDay ?? Infinity;
+      if (dayA !== dayB) return dayA - dayB;
+      return new Date(a.approvedByBobAt || a.created_date) - new Date(b.approvedByBobAt || b.created_date);
+    })
     .map(r => ({ id: r.id, url: r.mediaAssetUrl, headline: r.title }));
 
   if (showLibrary) return <ChiefPilotDnnNewsLibrary stories={stories} copilotSeries={copilotSeries} onBack={() => setShowLibrary(false)} />;
