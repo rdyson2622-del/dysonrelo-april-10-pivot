@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,21 +7,30 @@ import { Loader2 } from 'lucide-react';
 // Lets admin paste a HeyGen video_id (returned when a script was dispatched
 // via heygenBobDeskTest), pull its render status, and save the finished
 // video permanently onto this PrRelease record so it's kept for review here.
+// Auto-fills from release.heygenVideoId and auto-checks once on load so a
+// dispatched render shows up here without the admin having to know/paste the id.
 export default function PrReleaseVideoPanel({ release, onChanged }) {
-  const [videoId, setVideoId] = useState('');
+  const [videoId, setVideoId] = useState(release.heygenVideoId || '');
   const [checking, setChecking] = useState(false);
   const [error, setError] = useState(null);
 
-  const checkAndSave = async () => {
-    if (!videoId.trim()) return;
+  useEffect(() => {
+    if (release.heygenVideoId && !release.mediaAssetUrl) {
+      checkAndSave(release.heygenVideoId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [release.id]);
+
+  const checkAndSave = async (idOverride) => {
+    const id = (idOverride || videoId).trim();
+    if (!id) return;
     setChecking(true);
     setError(null);
     try {
-      const res = await base44.functions.invoke('heygenBobDeskTest', { action: 'status', video_id: videoId.trim() });
+      const res = await base44.functions.invoke('heygenBobDeskTest', { action: 'status', video_id: id });
       const { status, videoUrl, error: renderError } = res.data;
       if (status === 'completed' && videoUrl) {
-        await base44.entities.PrRelease.update(release.id, { mediaAssetUrl: videoUrl });
-        setVideoId('');
+        await base44.entities.PrRelease.update(release.id, { mediaAssetUrl: videoUrl, heygenVideoId: id });
         onChanged();
       } else if (status === 'failed') {
         setError(renderError || 'Render failed');
@@ -48,7 +57,7 @@ export default function PrReleaseVideoPanel({ release, onChanged }) {
           value={videoId}
           onChange={e => setVideoId(e.target.value)}
         />
-        <Button size="sm" onClick={checkAndSave} disabled={checking || !videoId.trim()}>
+        <Button size="sm" onClick={() => checkAndSave()} disabled={checking || !videoId.trim()}>
           {checking ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Check & Save'}
         </Button>
       </div>

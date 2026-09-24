@@ -2,6 +2,17 @@ import React, { useState, useMemo } from 'react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { format } from 'date-fns';
+import { CheckCircle2, Loader2, VideoOff } from 'lucide-react';
+
+function VideoStatusBadge({ release }) {
+  if (release.mediaAssetUrl) {
+    return <span className="inline-flex items-center gap-1 text-xs text-green-700"><CheckCircle2 className="h-3.5 w-3.5" />Ready to review</span>;
+  }
+  if (release.heygenVideoId) {
+    return <span className="inline-flex items-center gap-1 text-xs text-amber-700"><Loader2 className="h-3.5 w-3.5" />Rendering</span>;
+  }
+  return <span className="inline-flex items-center gap-1 text-xs text-muted-foreground"><VideoOff className="h-3.5 w-3.5" />No video yet</span>;
+}
 
 const STATUSES = ['Draft', 'Approved', 'In production', 'Distributed', 'Archived'];
 
@@ -45,6 +56,7 @@ export default function PrReleaseTable({ releases, distributions, loading, onSel
           <tr>
             <th className="p-3">Title</th>
             <th className="p-3">Week</th>
+            <th className="p-3">Video</th>
             <th className="p-3">Status</th>
             <th className="p-3">Approved</th>
             <th className="p-3"># Distributions</th>
@@ -56,6 +68,7 @@ export default function PrReleaseTable({ releases, distributions, loading, onSel
             <tr key={r.id} className="border-t cursor-pointer hover:bg-muted/30" onClick={() => onSelect(r.id)}>
               <td className="p-3 font-medium text-foreground">{r.title}</td>
               <td className="p-3">{r.weekLabel || '—'}</td>
+              <td className="p-3"><VideoStatusBadge release={r} /></td>
               <td className="p-3">{r.status}</td>
               <td className="p-3">{r.approvedByBobAt ? format(new Date(r.approvedByBobAt), 'MMM d, yyyy') : '—'}</td>
               <td className="p-3">{distCount(r.id)}</td>
@@ -63,7 +76,7 @@ export default function PrReleaseTable({ releases, distributions, loading, onSel
             </tr>
           ))}
           {!filtered.length && (
-            <tr><td colSpan={6} className="p-6 text-center text-muted-foreground">No releases found.</td></tr>
+            <tr><td colSpan={7} className="p-6 text-center text-muted-foreground">No releases found.</td></tr>
           )}
         </tbody>
       </table>

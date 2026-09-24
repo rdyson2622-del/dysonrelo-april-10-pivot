@@ -90,6 +90,10 @@
       "type": "string",
       "format": "date-time"
     },
+    "heygenVideoId": {
+      "type": "string",
+      "description": "HeyGen render job id for this release's Bob video, set as soon as the render is dispatched, so the Produced Video panel can auto-check and pull it in without retyping the id"
+    },
     "mediaAssetUrl": {
       "type": "string"
     },
