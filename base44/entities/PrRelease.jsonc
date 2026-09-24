@@ -110,9 +110,16 @@
   ],
   "rls": {
     "read": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$or": [
+        {
+          "data.status": "Distributed"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
     },
     "create": {
       "user_condition": {

@@ -21,6 +21,11 @@ export default function ChiefPilotDnnNewsPlayer({ title, onSend, messages = [], 
     queryFn: () => base44.entities.DnnArticle.filter({ production_status: 'complete' }, '-updated_date', 10),
     staleTime: 60 * 1000,
   });
+  const { data: prReleases = [] } = useQuery({
+    queryKey: ['chiefPilotCopilotSeries'],
+    queryFn: () => base44.entities.PrRelease.filter({ status: 'Distributed' }, '-updated_date', 20),
+    staleTime: 60 * 1000,
+  });
 
   const validArticles = articles.filter(a => a.video_url && !a.video_url.startsWith('heygen:pending:') && (a.video_url.includes('.mp4') || a.video_url.includes('.webm')));
   const validBroadcasts = broadcasts.filter(b => (b.compositedVideoUrl || b.videoUrl) && !String(b.compositedVideoUrl || b.videoUrl).startsWith('creatomate:pending:'));
@@ -44,7 +49,11 @@ export default function ChiefPilotDnnNewsPlayer({ title, onSend, messages = [], 
     ...validBroadcasts.map(b => ({ id: b.id, url: b.compositedVideoUrl && !String(b.compositedVideoUrl).startsWith('creatomate:pending:') ? b.compositedVideoUrl : b.videoUrl, headline: b.headlines?.[0] || b.show_name || 'DNN Broadcast' })),
   ];
 
-  if (showLibrary) return <ChiefPilotDnnNewsLibrary stories={stories} onBack={() => setShowLibrary(false)} />;
+  const copilotSeries = prReleases
+    .filter(r => r.mediaAssetUrl)
+    .map(r => ({ id: r.id, url: r.mediaAssetUrl, headline: r.title }));
+
+  if (showLibrary) return <ChiefPilotDnnNewsLibrary stories={stories} copilotSeries={copilotSeries} onBack={() => setShowLibrary(false)} />;
 
   return (
     <div className="mx-auto w-full max-w-2xl text-center">
