@@ -9,6 +9,7 @@ import PageNotFound from './lib/PageNotFound';
 import PageNumberBadge from './components/PageNumberBadge';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { safeReturnTo } from '@/lib/authReturnTo';
+import { initCallClickTracking } from '@/lib/googleAdsConversions';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -564,6 +565,7 @@ function App() {
         }
       } catch (e) {}
     }
+    initCallClickTracking();
   }, []);
 
   return (

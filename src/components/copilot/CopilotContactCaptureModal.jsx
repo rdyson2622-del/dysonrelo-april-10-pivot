@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
+import { fireLeadConversion } from '@/lib/googleAdsConversions';
 
 export default function CopilotContactCaptureModal({
   isOpen,
@@ -124,6 +125,7 @@ export default function CopilotContactCaptureModal({
         } catch (_) {}
       }
 
+      fireLeadConversion();
       setIsSuccess(true);
       setTimeout(() => {
         setIsSubmitting(false);

@@ -9,6 +9,7 @@ import RelocationRoadmap from '@/components/intake/RelocationRoadmap';
 import RelocationIntakeSolutionMap from '@/components/roadmap/RelocationIntakeSolutionMap';
 import ReloAgentScrollSequence from '@/components/intake/ReloAgentScrollSequence';
 import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
+import { fireLeadConversion } from '@/lib/googleAdsConversions';
 
 const SERVICE_AGREEMENTS = [
   'I understand this service is completely FREE to me as the buyer — agent compensation is handled separately.',
@@ -204,6 +205,7 @@ export default function RelocationIntake() {
         body: `New client intake submitted:\n\nName: ${form.full_name}\nEmail: ${form.email}\nPhone: ${form.phone}\nFrom: ${form.current_city}\nTo: ${form.destination_city}\nTimeline: ${form.move_date}\nBudget: ${form.budget}\nFamily Size: ${form.family_size}\nPriorities: ${form.priorities.join(', ')}\nNotes: ${form.notes}\n\nAGENT PREFERENCES: ${form.agent_preferences}\nPROPERTY CRITERIA: ${form.property_preferences}\nNEIGHBORHOOD NOTES: ${form.neighborhood_notes}\nDUE DILIGENCE: ${form.due_diligence_notes}\n\nINTRO CALL: ${scheduledCall ? `${scheduledCall.day?.label} at ${scheduledCall.time} (Pacific)` : 'Scheduled'}`,
       }).catch(() => {});
 
+      fireLeadConversion();
       setSubmitting(false);
       navigate('/client-roadmap?name=' + encodeURIComponent(form.full_name) + '&destination=' + encodeURIComponent(form.destination_city) + '&email=' + encodeURIComponent(form.email));
     } catch (e) {
@@ -313,6 +315,7 @@ export default function RelocationIntake() {
                 setSubmitting(false);
                 return;
               }
+              fireLeadConversion();
               setSubmitting(false);
               navigate('/client-roadmap?name=' + encodeURIComponent(form.full_name) + '&destination=' + encodeURIComponent(form.destination_city) + '&email=' + encodeURIComponent(form.email));
             }}
