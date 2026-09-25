@@ -41,15 +41,15 @@ export default function SponsorAdCard({ ad, onChange }) {
 
   return (
     <div className="rounded-2xl border border-white/10 bg-[#111111] p-4">
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between gap-2 mb-2">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
           <span className="shrink-0 w-6 h-6 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] text-xs font-bold flex items-center justify-center">
             {ad.loopDay || '—'}
           </span>
           <input
             value={title}
             onChange={e => setTitle(e.target.value)}
-            className="bg-transparent text-sm font-semibold text-white outline-none border-b border-transparent focus:border-[#D4AF37]/50 w-full"
+            className="bg-transparent text-sm font-semibold text-white outline-none border-b border-transparent focus:border-[#D4AF37]/50 min-w-0 flex-1"
           />
         </div>
         <span className={`text-xs font-bold uppercase tracking-wide shrink-0 ml-2 ${STATUS_COLOR[ad.status] || 'text-white/40'}`}>
