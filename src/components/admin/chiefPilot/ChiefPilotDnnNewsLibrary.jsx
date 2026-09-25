@@ -27,7 +27,7 @@ export default function ChiefPilotDnnNewsLibrary({ stories, copilotSeries = [], 
         {copilotSeries.length === 0 ? (
         <p className="mt-8 text-sm text-dyson-text-dark/60">No explainer videos are available yet.</p>
         ) : (
-        <div className="mt-8 grid grid-cols-1 gap-6 text-left sm:grid-cols-2">
+        <div className="mt-8 grid grid-cols-2 gap-3 text-left sm:grid-cols-4">
         {copilotSeries.map(story => (
           <CopilotSeriesVideoCard key={story.id} story={story} posterUrl={STUDIO_POSTER_URL} />
         ))}

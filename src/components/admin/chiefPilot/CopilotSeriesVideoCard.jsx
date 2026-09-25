@@ -29,7 +29,7 @@ export default function CopilotSeriesVideoCard({ story, posterUrl }) {
           </p>
         )}
       </div>
-      <div className="p-4"><p className="text-sm font-semibold text-dyson-text-dark">{story.headline}</p></div>
+      <div className="p-2"><p className="text-xs font-semibold text-dyson-text-dark">{story.headline}</p></div>
     </article>
   );
 }
