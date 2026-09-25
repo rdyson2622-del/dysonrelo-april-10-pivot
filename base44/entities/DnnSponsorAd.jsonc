@@ -1,0 +1,95 @@
+{
+  "name": "DnnSponsorAd",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Internal title for this sponsor ad slot"
+    },
+    "topic": {
+      "type": "string",
+      "enum": [
+        "federal_reserve",
+        "mortgage_lending",
+        "federal_legislation",
+        "national_housing_data",
+        "insurance_climate",
+        "regulatory_compliance",
+        "consumer_protection",
+        "general"
+      ],
+      "default": "general",
+      "description": "National issue this ad's opinion segment addresses"
+    },
+    "loopDay": {
+      "type": "number",
+      "description": "Position (1-7) in the daily rotation. Each day of the week plays a different sponsor ad, repeating weekly."
+    },
+    "script": {
+      "type": "string",
+      "description": "Bob Dyson's spoken opinion/solution script on this national issue"
+    },
+    "disclosure": {
+      "type": "string",
+      "description": "Sponsor/DRE disclosure line read or shown at the end of the ad. Admin must fill in Bob's real license number before this airs."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "rendering",
+        "completed",
+        "failed"
+      ],
+      "default": "draft",
+      "description": "HeyGen render lifecycle"
+    },
+    "heygenId": {
+      "type": "string",
+      "description": "HeyGen render job id"
+    },
+    "videoUrl": {
+      "type": "string",
+      "description": "Permanent URL of the rendered ad"
+    },
+    "errorMessage": {
+      "type": "string",
+      "description": "Last render error"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this ad is currently in the rotation"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal admin notes"
+    }
+  },
+  "required": [
+    "title",
+    "script"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

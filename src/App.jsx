@@ -207,6 +207,7 @@ import CopilotStopContact from './pages/CopilotStopContact';
 import AdminPreferredClientRoster from './pages/AdminPreferredClientRoster';
 import AdminPRCampaignLibrary from './pages/AdminPRCampaignLibrary';
 import AdminAdsLeadsDashboard from './pages/AdminAdsLeadsDashboard';
+import AdminDnnSponsorAds from './pages/AdminDnnSponsorAds';
 
 // On boot: ?visitor=1 sets dyson_viewer_mode=guest
 if (typeof window !== 'undefined') {
@@ -523,6 +524,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/preferred-clients" element={<AdminPreferredClientRoster />} />
         <Route path="/admin/pr-campaign-library" element={<AdminPRCampaignLibrary />} />
         <Route path="/admin/ads-leads" element={<AdminAdsLeadsDashboard />} />
+        <Route path="/admin/dnn/sponsor-ads" element={<AdminDnnSponsorAds />} />
         <Route path="/admin/archived/studio-landing" element={<DnnStudioLanding />} />
         <Route path="/admin/dnn/studio-landing-source" element={<AdminDnnStudioLandingSource />} />
         <Route path="/admin/dnn/charlie-studio-solution" element={<AdminDnnCharlieStudioSolution />} />

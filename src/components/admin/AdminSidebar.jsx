@@ -79,6 +79,7 @@ const NAV_SECTIONS = [
       { label: '📣 Agent Recruiting Broadcast', path: '/admin/dnn/recruiting', icon: Send },
       { label: '✅ Shard 1 Script Review', path: '/admin/dnn/script-review', icon: FileCheck },
       { label: '🎥 Explainer Videos', path: '/admin/dnn/explainer-videos', icon: Video, highlight: true },
+      { label: '📣 Sponsor Ads (7-Day Rotation)', path: '/admin/dnn/sponsor-ads', icon: Megaphone, highlight: true },
     ],
   },
   {
