@@ -262,6 +262,43 @@ Deno.serve(async (req) => {
       return Response.json({ checked: results.length, results });
     }
 
+    // ── action: 'restitch' — admin only. Re-runs just the Creatomate stitch
+    // step for an article whose Charlie+Bob clips already completed, using
+    // the current buildStudioComposite (e.g. after a bookend edit) without
+    // re-rendering HeyGen. ──
+    if (body.action === 'restitch') {
+      const restitchUser = await base44.auth.me().catch(() => null);
+      if (!restitchUser || restitchUser.role !== 'admin') return Response.json({ error: 'Unauthorized' }, { status: 401 });
+
+      const CREATOMATE_KEY = Deno.env.get('CREATOMATE');
+      if (!CREATOMATE_KEY) return Response.json({ error: 'CREATOMATE not configured' }, { status: 500 });
+
+      const { article_id } = body;
+      if (!article_id) return Response.json({ error: 'article_id is required' }, { status: 400 });
+
+      const article = await base44.asServiceRole.entities.DnnArticle.get(article_id);
+      if (!article) return Response.json({ error: 'Article not found' }, { status: 404 });
+
+      const clips = article.render_clips || {};
+      const charlieUrl = clips.opening?.video_url;
+      const bobUrl = clips.body?.video_url;
+      if (!charlieUrl || !bobUrl) {
+        return Response.json({ error: "This article's Charlie/Bob clips are not cached — dispatch a fresh render instead." }, { status: 400 });
+      }
+
+      try {
+        const { renderId } = await startStitch(CREATOMATE_KEY, { introUrl: CHARLIE_INTRO_URL, charlieUrl, bobUrl, outroUrl: CHARLIE_OUTRO_URL });
+        await base44.asServiceRole.entities.DnnArticle.update(article_id, {
+          production_status: 'rendering',
+          render_clips: { ...clips, creatomate_render_id: renderId },
+          last_render_error: null,
+        });
+        return Response.json({ success: true, renderId });
+      } catch (e) {
+        return Response.json({ error: e.message }, { status: 500 });
+      }
+    }
+
     // ── action: 'dispatch' (default) — admin triggers a direct render ──
     const user = await base44.auth.me().catch(() => null);
     if (!user || user.role !== 'admin') return Response.json({ error: 'Unauthorized' }, { status: 401 });
