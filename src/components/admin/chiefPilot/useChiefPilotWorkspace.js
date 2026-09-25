@@ -219,8 +219,10 @@ export default function useChiefPilotWorkspace() {
     const next = [...(conversations[contextId] || []), { role: 'user', content: text.trim(), createdAt: new Date().toISOString() }];
     setConversations(current => ({ ...current, [contextId]: next })); setLoading(true); setError('');
     recordActivity({ kind: 'Chat', label: text.trim(), subjectId: contextId, mode: 'chats' });
-    const known = displayProperty ? JSON.stringify({ example: isExample, address: displayProperty.address, fullAddress: displayProperty.fullAddress, building: displayProperty.building, listing: displayProperty.listing, valuation: displayProperty.valuation, comps: displayProperty.comps, risks: displayProperty.risks }) : 'No Active Property';
-    const scoped = next.map((message, index) => index === next.length - 1 ? { ...message, content: `SELECTED SUBJECT: ${subject.title}\nVERIFIED ACTIVE PROPERTY DATA: ${known}\nUse only known data. Never invent property facts, comps, risks, dates, or prices. Do not execute actions or send/draft outreach. If the answer requires unavailable data, begin with [HANDOFF] and recommend Call / Connect with Bob.\n\nUSER MESSAGE: ${message.content}` } : message);
+    // Only pass an ACTUAL searched property as context — never the illustrative
+    // demo/example property, which must never be presented as the user's own home.
+    const known = activeProperty ? JSON.stringify({ address: activeProperty.address, fullAddress: activeProperty.fullAddress, building: activeProperty.building, listing: activeProperty.listing, valuation: activeProperty.valuation, comps: activeProperty.comps, risks: activeProperty.risks }) : 'No Active Property';
+    const scoped = next.map((message, index) => index === next.length - 1 ? { ...message, content: `SELECTED SUBJECT: ${subject.title}\nVERIFIED ACTIVE PROPERTY DATA: ${known}\nUse only known data. Never invent property facts, comps, risks, dates, or prices, and never reference any address not given above. If VERIFIED ACTIVE PROPERTY DATA is "No Active Property", do not mention any specific address — instead ask the user for their property address, or offer to have Bob's team call them if they leave their contact info. Do not execute actions or send/draft outreach. If the answer requires unavailable data, begin with [HANDOFF] and recommend Call / Connect with Bob.\n\nUSER MESSAGE: ${message.content}` } : message);
     const milestones = SUBJECT_EXPLAINER_CONTENT[contextId]?.milestones || [];
     try {
       const res = await Promise.race([
