@@ -32,9 +32,6 @@ const NAV_SECTIONS = [
     label: 'QUICK LINKS',
     children: [
       { isCommsBadge: true },
-      { label: '✨ DYSONHOMES COPILOT LAB', path: '/admin/dysonhomes-copilot', icon: Sparkles, highlight: true },
-      { label: '↳ Page 1: Landing & Property Search', path: '/admin/dysonhomes-copilot?page=1', icon: Home, indent: true },
-      { label: '↳ Page 2: Fiduciary Command Center', path: '/admin/dysonhomes-copilot?page=2', icon: FileText, indent: true },
       { label: '📱 10 PLATFORM APPS & SPRINGBOARD SPECS', path: '/admin/app-store-mockup', icon: Star, highlight: true },
       { isWorkingModelsScroll: true },
       { label: '📞 Relocation Call Desk', path: '/admin/relocation-call-desk', icon: PhoneCall, highlight: true },
@@ -190,7 +187,6 @@ const NAV_SECTIONS = [
     label: 'CREATIVE LAB',
     children: [
       { label: '📊 Marketing Flow Chart', path: '/admin/workflows/marketing', icon: GitBranch, highlight: true },
-      { label: '✨ DysonHomes Copilot Lab', path: '/admin/dysonhomes-copilot', icon: Sparkles, highlight: true },
       { label: 'New Landing Page', path: '/admin/new-landing-page', icon: Globe },
       { label: '📦 Archived Studio Landing', path: '/admin/archived/studio-landing', icon: Archive, highlight: true },
     ],
@@ -456,7 +452,6 @@ export default function AdminSidebar() {
       <div className="px-3 pt-2 pb-1 space-y-2 shrink-0">
         {[
           { label: 'Admin Dashboard', path: '/admin', icon: LayoutDashboard },
-          { label: '✨ DysonHomes Copilot Lab', path: '/admin/dysonhomes-copilot', icon: Sparkles },
           { label: '📜 AI Library Specialists', path: '/admin/library-specialists', icon: Brain },
           { label: '👁️ Grok Screen Viewer', path: '/admin/claude-screen-viewer', icon: Monitor },
           { label: '🔌 Connect AI Assistant', path: '/connect', icon: Plug },
