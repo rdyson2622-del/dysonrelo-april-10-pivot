@@ -86,7 +86,6 @@ const NAV_SECTIONS = [
     label: 'MARKETING & PREP',
     children: [
       { label: '📊 Marketing Flow Chart', path: '/admin/workflows/marketing', icon: GitBranch, highlight: true },
-      { label: '📈 Ads + Leads Dashboard', path: '/admin/ads-leads', icon: BarChart3, highlight: true },
       { label: 'Search Listing Profiles', path: '/admin/search-profiles', icon: Search },
       { label: 'Skip Trace Lookup', path: '/admin/skip-trace', icon: Fingerprint },
       { label: 'Outreach Pipeline', path: '/admin/outreach-pipeline', icon: SendHorizontal },
@@ -354,6 +353,25 @@ export default function AdminSidebar() {
 
       {/* Sidebar Search — searches every link in every nav section below */}
       <AdminSidebarSearch items={buildSearchIndex(NAV_SECTIONS)} />
+
+      {/* ── PINNED: ADS + LEADS DASHBOARD ── */}
+      <div className="px-3 pt-2 pb-1 shrink-0">
+        <Link
+          to="/admin/ads-leads"
+          className={`flex items-center justify-center gap-2 px-3 py-2 rounded-full border transition-all cursor-pointer shadow-lg active:scale-95 group w-full ${
+            location.pathname === '/admin/ads-leads'
+              ? 'bg-[#2f2510] border-[#D4AF37] ring-1 ring-[#D4AF37]'
+              : 'bg-[#221c0e] hover:bg-[#2c2311] border-[#D4AF37]/75 hover:border-[#D4AF37]'
+          }`}
+          style={{ boxShadow: '0 4px 14px rgba(0,0,0,0.6)' }}
+          title="Open Ads + Leads Dashboard"
+        >
+          <BarChart3 className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 group-hover:scale-110 transition-transform" />
+          <span className="text-[11px] font-black uppercase tracking-wider text-[#D4AF37] truncate">
+            📈 Ads + Leads Dashboard
+          </span>
+        </Link>
+      </div>
 
       {/* ── TOP PINNED: 10 PLATFORM APPS & SPRINGBOARD SPECS ── */}
       <div className="px-3 pt-1 pb-1 shrink-0">
