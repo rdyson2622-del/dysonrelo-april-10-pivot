@@ -99,7 +99,9 @@ function buildStudioComposite({ introUrl, charlieUrl, bobUrl, outroUrl }) {
   const FULLSCREEN = { width: '100%', height: '100%', x: '50%', y: '50%', fit: 'cover' };
   return [
     { type: 'image', track: 1, source: DNN_STUDIO_BACKGROUND_URL, width: '100%', height: '100%', x: '50%', y: '50%', fit: 'cover' },
-    { type: 'video', track: 2, time: 0, source: introUrl, ...FULLSCREEN },
+    // Intro plays silent (no network sting) so it matches the outro's plain,
+    // sound-effect-free bookend look — only Charlie's and Bob's voice tracks carry audio.
+    { type: 'video', track: 2, time: 0, source: introUrl, volume: '0%', ...FULLSCREEN },
     { type: 'video', track: 2, time: 'auto', source: charlieUrl, ...FULLSCREEN },
     { type: 'video', track: 2, time: 'auto', source: bobUrl, ...BOB_BOX, x: '80%', x_anchor: '50%' },
     { type: 'video', track: 2, time: 'auto', source: outroUrl, ...FULLSCREEN },

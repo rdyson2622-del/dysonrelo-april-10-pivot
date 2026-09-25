@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Linkedin, Facebook, Instagram, Mail, Users, CheckCircle, XCircle, Clock,
-  RefreshCw, Send, DollarSign, ChevronRight, Radio
+  RefreshCw, Send, DollarSign, ChevronRight, Radio, Youtube, Music2, Image as ImageIcon
 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
@@ -193,6 +193,36 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
       dist: getDist('instagram'),
       action: () => setResult({ success: false, msg: 'Instagram not connected — connect the Instagram Business connector to enable posting' }),
       busy: posting === 'instagram',
+    },
+    {
+      key: 'tiktok',
+      label: 'TikTok',
+      icon: Music2,
+      color: '#25F4EE',
+      bgColor: 'rgba(37,244,238,0.1)',
+      dist: getDist('tiktok'),
+      action: () => setResult({ success: false, msg: 'TikTok not connected yet — no TikTok connector is set up for this app.' }),
+      busy: posting === 'tiktok',
+    },
+    {
+      key: 'youtube',
+      label: 'YouTube',
+      icon: Youtube,
+      color: '#FF0000',
+      bgColor: 'rgba(255,0,0,0.1)',
+      dist: getDist('youtube'),
+      action: () => setResult({ success: false, msg: 'YouTube not connected yet — no YouTube connector is set up for this app.' }),
+      busy: posting === 'youtube',
+    },
+    {
+      key: 'pinterest',
+      label: 'Pinterest',
+      icon: ImageIcon,
+      color: '#E60023',
+      bgColor: 'rgba(230,0,35,0.1)',
+      dist: getDist('pinterest'),
+      action: () => setResult({ success: false, msg: 'Pinterest not connected yet — no Pinterest connector is set up for this app.' }),
+      busy: posting === 'pinterest',
     },
     {
       key: 'subscriber_email',
