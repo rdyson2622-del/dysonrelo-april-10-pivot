@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { ShieldCheck } from 'lucide-react';
 import CopilotWordmark from '@/components/brand/CopilotWordmark';
 import ChiefPilotHowCopilotWorksExplainer from './ChiefPilotHowCopilotWorksExplainer';
+import CopilotSeriesIntroBanner from './CopilotSeriesIntroBanner';
+
+const INTRO_BANNER_SEEN_KEY = 'cp_intro_banner_seen';
 
 const HERO_IMAGE = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/efdc69af3_hero-evening-luxury-clean.png';
 const DD_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0c42dcd7c_DYSONDYSONLOGO2026.png';
@@ -11,15 +14,28 @@ const SCROLL_COPY = 'Real Estate Solutions... We execute most all real estate st
 export default function ChiefPilotOpeningDoor({ workspace }) {
   const [address, setAddress] = useState('');
   const [showHowItWorks, setShowHowItWorks] = useState(false);
+  const [showIntroBanner, setShowIntroBanner] = useState(() => {
+    try { return !sessionStorage.getItem(INTRO_BANNER_SEEN_KEY); } catch (e) { return true; }
+  });
+  const dismissIntroBanner = () => {
+    setShowIntroBanner(false);
+    try { sessionStorage.setItem(INTRO_BANNER_SEEN_KEY, '1'); } catch (e) {}
+  };
   if (showHowItWorks) return <ChiefPilotHowCopilotWorksExplainer onBack={() => setShowHowItWorks(false)} />;
   const search = async value => {
     const query = (value || address).trim();
     if (!query || workspace.searchLoading) return;
+    dismissIntroBanner();
     await workspace.askAnything(query);
+  };
+  const selectMode = id => {
+    dismissIntroBanner();
+    workspace.selectMode(id);
   };
 
   return (
     <div className="flex flex-col items-center text-center">
+      {showIntroBanner && <div className="w-full"><CopilotSeriesIntroBanner onDismiss={dismissIntroBanner} /></div>}
       <div className="w-full rounded-3xl border border-white/10 bg-dyson-black p-6 sm:p-8">
         <div className="grid min-h-full items-center gap-10 text-white lg:grid-cols-[1.2fr_0.8fr]">
           <div className="flex flex-col items-center text-center">
@@ -32,7 +48,7 @@ export default function ChiefPilotOpeningDoor({ workspace }) {
       </div>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
         {[['buy', 'Buy'], ['relocation-management', 'Relocation Management'], ['sell', 'Sell']].map(([id, label]) => (
-          <button key={id} type="button" onClick={() => workspace.selectMode(id)} className="rounded-full border border-black bg-dyson-black px-3 py-1.5 text-xs font-medium text-dyson-gold-light hover:border-dyson-gold-deep sm:px-3 sm:py-1.5 sm:text-xs lg:px-6 lg:py-2.5 lg:text-sm">{label}</button>
+          <button key={id} type="button" onClick={() => selectMode(id)} className="rounded-full border border-black bg-dyson-black px-3 py-1.5 text-xs font-medium text-dyson-gold-light hover:border-dyson-gold-deep sm:px-3 sm:py-1.5 sm:text-xs lg:px-6 lg:py-2.5 lg:text-sm">{label}</button>
         ))}
       </div>
       <div className="mt-6 text-2xl font-medium leading-tight text-dyson-text-dark sm:text-3xl md:text-[1.9rem] lg:text-[2.7rem]">
