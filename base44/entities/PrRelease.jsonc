@@ -101,6 +101,11 @@
       "type": "string",
       "description": "Linked DnnArticle id created from this release's 'Post to DNN News (draft)' button"
     },
+    "titleOverlayAppliedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the bannerHook lower-third title overlay was successfully burned into mediaAssetUrl via Creatomate (prReleaseTitleOverlay). Null means the current mediaAssetUrl does not have the title burned in yet."
+    },
     "notes": {
       "type": "string"
     }

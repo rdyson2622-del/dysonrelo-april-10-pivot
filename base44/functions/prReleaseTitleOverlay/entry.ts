@@ -37,7 +37,7 @@ Deno.serve(async (req) => {
       const upload = await base44.asServiceRole.integrations.Core.UploadFile({ file });
 
       if (body.releaseId) {
-        await base44.asServiceRole.entities.PrRelease.update(body.releaseId, { mediaAssetUrl: upload.file_url });
+        await base44.asServiceRole.entities.PrRelease.update(body.releaseId, { mediaAssetUrl: upload.file_url, titleOverlayAppliedAt: new Date().toISOString() });
       }
 
       return Response.json({ status: 'succeeded', mp4Url: upload.file_url });

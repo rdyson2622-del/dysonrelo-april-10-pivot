@@ -6,6 +6,7 @@ import PrCampaignExplainerCard from '@/components/admin/prCampaign/PrCampaignExp
 import PrReleaseTable from '@/components/admin/prCampaign/PrReleaseTable';
 import PrReleaseDetail from '@/components/admin/prCampaign/PrReleaseDetail';
 import PrReleaseFormModal from '@/components/admin/prCampaign/PrReleaseFormModal';
+import PrReleaseTitleOverlayBacklog from '@/components/admin/prCampaign/PrReleaseTitleOverlayBacklog';
 
 export default function AdminPRCampaignLibrary() {
   const [releases, setReleases] = useState([]);
@@ -46,6 +47,8 @@ export default function AdminPRCampaignLibrary() {
       </div>
 
       <PrCampaignExplainerCard />
+
+      {!selected && <PrReleaseTitleOverlayBacklog onDone={load} />}
 
       {selected ? (
         <PrReleaseDetail
