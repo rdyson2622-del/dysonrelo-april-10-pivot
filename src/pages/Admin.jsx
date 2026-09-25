@@ -180,14 +180,35 @@ export default function Admin() {
             </div>
           </div>
 
+          {/* Core Libraries — PR, DNN News, Google Ads — grouped together on their own header row */}
+          <div className="mt-3">
+            <p className="text-[10px] font-bold tracking-[0.25em] mb-1.5" style={{ color: '#854d0e' }}>CORE LIBRARIES</p>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                to="/admin/pr-campaign-library"
+                className="inline-flex items-center gap-1.5 text-xs font-black px-3.5 py-1.5 rounded-xl shadow-md transition-transform hover:scale-105 animate-pulse"
+                style={{ border: '2px solid #D4AF37', color: '#fff', background: '#000' }}
+              >
+                📣 PR &amp; Campaign Library
+              </Link>
+              <Link
+                to="/admin/dnn/daily-library"
+                className="inline-flex items-center gap-1.5 text-xs font-black px-3.5 py-1.5 rounded-xl shadow-md transition-transform hover:scale-105"
+                style={{ border: '2px solid #D4AF37', color: '#fff', background: '#000' }}
+              >
+                📰 DNN News
+              </Link>
+              <Link
+                to="/admin/ads-leads"
+                className="inline-flex items-center gap-1.5 text-xs font-black px-3.5 py-1.5 rounded-xl shadow-md transition-transform hover:scale-105"
+                style={{ border: '2px solid #D4AF37', color: '#fff', background: '#000' }}
+              >
+                📊 Google Ad Campaigns
+              </Link>
+            </div>
+          </div>
+
           <div className="flex flex-wrap gap-2 mt-3">
-            <Link
-              to="/admin/pr-campaign-library"
-              className="inline-flex items-center gap-1.5 text-xs font-black px-3.5 py-1.5 rounded-xl shadow-md transition-transform hover:scale-105 animate-pulse"
-              style={{ border: '2px solid #D4AF37', color: '#fff', background: '#000' }}
-            >
-              📣 PR &amp; Campaign Library (temp)
-            </Link>
             <Link
               to="/admin/dysonhomes-copilot"
               className="inline-flex items-center gap-1.5 text-xs font-black px-3.5 py-1.5 rounded-xl shadow-md transition-transform hover:scale-105"
