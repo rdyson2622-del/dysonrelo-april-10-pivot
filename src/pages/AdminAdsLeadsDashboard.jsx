@@ -2,6 +2,7 @@ import React from 'react';
 import GoogleAdsSnapshotCard from '@/components/admin/adsLeads/GoogleAdsSnapshotCard';
 import CopilotLeadsTable from '@/components/admin/adsLeads/CopilotLeadsTable';
 import PrLibrarySummaryCard from '@/components/admin/adsLeads/PrLibrarySummaryCard';
+import MediaDistributionPlanCard from '@/components/admin/adsLeads/MediaDistributionPlanCard';
 
 export default function AdminAdsLeadsDashboard() {
   return (
@@ -13,6 +14,7 @@ export default function AdminAdsLeadsDashboard() {
       <GoogleAdsSnapshotCard />
       <CopilotLeadsTable />
       <PrLibrarySummaryCard />
+      <MediaDistributionPlanCard />
     </div>
   );
 }
