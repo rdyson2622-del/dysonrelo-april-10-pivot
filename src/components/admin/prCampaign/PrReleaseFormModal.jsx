@@ -40,7 +40,7 @@ export default function PrReleaseFormModal({ release, onClose, onSaved }) {
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto [&_input::placeholder]:text-black/50 [&_textarea::placeholder]:text-black/50">
         <DialogHeader><DialogTitle>{release ? 'Edit Release' : 'New Release'}</DialogTitle></DialogHeader>
         <div className="space-y-3">
           <Input placeholder="Title" value={form.title} onChange={e => set('title', e.target.value)} />
