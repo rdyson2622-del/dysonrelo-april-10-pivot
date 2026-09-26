@@ -106,6 +106,24 @@ function buildStudioComposite({ introUrl, charlieUrl, bobUrl, outroUrl }) {
     // never on the open. The intro asset is literally a copy of the outro clip, so this
     // trim is the only thing preventing the sign-off text from bleeding into the open.
     { type: 'video', track: 2, time: 0, duration: '1.2 s', source: introUrl, volume: '0%', ...FULLSCREEN },
+    // Slide 2 — the full DNN logo bookend (same asset as the outro), played at its
+    // FULL duration (never trimmed) right after the intro. A solid navy rectangle is
+    // grouped with it in a composition (not a separate track) so it auto-sequences as
+    // ONE unit inside the main track-2 timeline — masking only the "SEE YOU AGAIN" line
+    // without touching the video's length or the final outro slide below.
+    {
+      type: 'composition',
+      track: 2,
+      time: 'auto',
+      width: '100%',
+      height: '100%',
+      x: '50%',
+      y: '50%',
+      elements: [
+        { type: 'video', track: 1, time: 0, source: outroUrl, volume: '0%', width: '100%', height: '100%', x: '50%', y: '50%', fit: 'cover' },
+        { type: 'shape', track: 2, time: 0, shape: 'rectangle', fill_color: '#0e1b3f', width: '42%', height: '7%', x: '50%', y: '63%', x_anchor: '50%', y_anchor: '50%' },
+      ],
+    },
     { type: 'video', track: 2, time: 'auto', source: charlieUrl, ...ANCHOR_BOX, x: '20%', x_anchor: '50%' },
     { type: 'video', track: 2, time: 'auto', source: bobUrl, ...ANCHOR_BOX, x: '80%', x_anchor: '50%' },
     { type: 'video', track: 2, time: 'auto', source: outroUrl, ...FULLSCREEN },
