@@ -1,10 +1,15 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
+import { postLinkedInVideoOrImage } from '../../shared/linkedinPost.ts';
 
 /**
- * dnnSocialBlast — Posts the latest DNN broadcast to the Dyson Facebook Page.
+ * dnnSocialBlast — Posts the next un-blasted, video-ready DNN article to
+ * Facebook AND the DNN LinkedIn page in one call.
  *
- * LinkedIn posting is handled separately by postToLinkedInV2 from the Video Preview Studio.
- * This function handles Facebook only.
+ * Each call picks the OLDEST video-ready 'published' article and, on success,
+ * marks it 'blasted' so the next call naturally moves to the next article in
+ * the queue. Running this multiple times a day (see the DNN Daily Social
+ * Blast workflow schedule) cycles through the week's articles across both
+ * socials with multiple runs per day.
  */
 
 Deno.serve(async (req) => {
@@ -37,7 +42,10 @@ Deno.serve(async (req) => {
       }, { status: 404 });
     }
 
-    const article = videoReady[0];
+    // Oldest-first so multiple runs in a day cycle through the week's stack in order.
+    const article = videoReady.sort(
+      (a, b) => new Date(a.generated_date || a.created_date) - new Date(b.generated_date || b.created_date)
+    )[0];
 
     // 2. Build social copy
     const firstPara = article.body?.split('\n').find(p => p.trim()) || '';
@@ -71,6 +79,7 @@ Subscribe for free daily intelligence: ${subscribeUrl}
     const results = {
       article_headline: article.headline,
       facebook: null,
+      linkedin: null,
     };
 
     // 3. Post to Facebook Pages
@@ -107,10 +116,23 @@ Subscribe for free daily intelligence: ${subscribeUrl}
       results.facebook = { success: false, error: e.message };
     }
 
+    // 4. Post to LinkedIn (DNN page)
+    try {
+      const linkedinResult = await postLinkedInVideoOrImage(base44, {
+        text: socialText,
+        videoUrl: article.video_url,
+        title: article.headline,
+        organizationName: 'DNN',
+      });
+      results.linkedin = { success: true, ...linkedinResult };
+    } catch (e) {
+      results.linkedin = { success: false, error: e.message };
+    }
+
     console.log('DNN Social Blast results:', JSON.stringify(results));
 
-    // Mark article as blasted if Facebook succeeded
-    if (results.facebook?.success && article.status === 'published') {
+    // Mark article as blasted if either channel succeeded
+    if ((results.facebook?.success || results.linkedin?.success) && article.status === 'published') {
       await base44.asServiceRole.entities.DnnArticle.update(article.id, { status: 'blasted' });
     }
 

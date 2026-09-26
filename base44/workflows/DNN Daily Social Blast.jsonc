@@ -1,23 +1,4 @@
 {
-  "name": "DNN Daily Social Blast",
-  "description": "Posts the latest DNN Intelligence Brief to LinkedIn and Facebook Pages daily at 6:00 AM PT",
-  "trigger": {
-    "condition": null,
-    "config": {
-      "trigger_type": "scheduled",
-      "events": [],
-      "schedule_mode": "recurring",
-      "cron_expression": "0 6 * * *",
-      "one_time_date": null,
-      "timezone": "UTC",
-      "interval_value": null,
-      "interval_unit": null,
-      "interval_anchor": null,
-      "ends_type": "never",
-      "ends_on_date": null,
-      "ends_after_count": null
-    }
-  },
   "definition": {
     "document": {
       "dsl": "1.0.0",
@@ -38,6 +19,25 @@
       }
     ]
   },
+  "name": "DNN Daily Social Blast",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 1,15,20 * * *",
+      "one_time_date": null,
+      "timezone": "UTC",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "description": "Posts the next un-blasted DNN article to LinkedIn and Facebook, 3x/day so the week's stack gets multiple exposure runs on the same socials",
   "x-base44-migrated-from-automation": {
     "legacy_payload_function": "dnnSocialBlast"
   }
