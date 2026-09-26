@@ -131,6 +131,22 @@ async function startStitch(creatomateKey, clips) {
   return { renderId: render.id, payload };
 }
 
+// HeyGen's signed clip URLs point at their own CDN — Creatomate fetching that
+// URL server-to-server has been the suspect for avatar clips silently coming
+// out blank (the timeline still reserves the clip's full duration, but the
+// pixels never render) even though the signed URL hasn't expired. Rehosting
+// each completed clip to Base44's own storage immediately once HeyGen
+// finishes gives Creatomate a plain, always-reachable URL to pull from.
+async function rehostToBase44(base44, url, filename) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Failed to fetch clip for rehosting (HTTP ${res.status})`);
+  const buf = await res.arrayBuffer();
+  const file = new File([buf], filename, { type: 'video/mp4' });
+  const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
+  if (!up?.file_url) throw new Error('Rehost upload failed — no file_url returned');
+  return up.file_url;
+}
+
 async function checkStitch(creatomateKey, renderId) {
   const res = await fetch(`https://api.creatomate.com/v2/renders/${encodeURIComponent(renderId)}`, {
     headers: { Authorization: `Bearer ${creatomateKey}` },
@@ -234,10 +250,16 @@ Deno.serve(async (req) => {
           const bothDone = nextClips.opening.video_url && nextClips.body.video_url;
           if (bothDone) {
             if (!CREATOMATE_KEY) throw new Error('CREATOMATE not configured — cannot stitch bookends');
+            // Rehost both HeyGen clips to Base44 storage before handing them to
+            // Creatomate — see rehostToBase44 comment above.
+            const stableCharlieUrl = await rehostToBase44(base44, nextClips.opening.video_url, `charlie_${article.id}.mp4`);
+            const stableBobUrl = await rehostToBase44(base44, nextClips.body.video_url, `bob_${article.id}.mp4`);
+            nextClips.opening.video_url = stableCharlieUrl;
+            nextClips.body.video_url = stableBobUrl;
             const { renderId, payload } = await startStitch(CREATOMATE_KEY, {
               introUrl: CHARLIE_INTRO_URL,
-              charlieUrl: nextClips.opening.video_url,
-              bobUrl: nextClips.body.video_url,
+              charlieUrl: stableCharlieUrl,
+              bobUrl: stableBobUrl,
               outroUrl: CHARLIE_OUTRO_URL,
             });
             console.log('Creatomate stitch payload:', JSON.stringify(payload));
@@ -284,17 +306,29 @@ Deno.serve(async (req) => {
       if (!article) return Response.json({ error: 'Article not found' }, { status: 404 });
 
       const clips = article.render_clips || {};
-      const charlieUrl = clips.opening?.video_url;
-      const bobUrl = clips.body?.video_url;
+      let charlieUrl = clips.opening?.video_url;
+      let bobUrl = clips.body?.video_url;
       if (!charlieUrl || !bobUrl) {
         return Response.json({ error: "This article's Charlie/Bob clips are not cached — dispatch a fresh render instead." }, { status: 400 });
       }
 
       try {
+        // Rehost cached clips still pointing at HeyGen's CDN before re-stitching —
+        // see rehostToBase44 comment above.
+        const updatedOpening = { ...clips.opening };
+        const updatedBody = { ...clips.body };
+        if (/heygen/i.test(charlieUrl)) {
+          charlieUrl = await rehostToBase44(base44, charlieUrl, `charlie_${article_id}.mp4`);
+          updatedOpening.video_url = charlieUrl;
+        }
+        if (/heygen/i.test(bobUrl)) {
+          bobUrl = await rehostToBase44(base44, bobUrl, `bob_${article_id}.mp4`);
+          updatedBody.video_url = bobUrl;
+        }
         const { renderId } = await startStitch(CREATOMATE_KEY, { introUrl: CHARLIE_INTRO_URL, charlieUrl, bobUrl, outroUrl: CHARLIE_OUTRO_URL });
         await base44.asServiceRole.entities.DnnArticle.update(article_id, {
           production_status: 'rendering',
-          render_clips: { ...clips, creatomate_render_id: renderId },
+          render_clips: { ...clips, opening: updatedOpening, body: updatedBody, creatomate_render_id: renderId },
           last_render_error: null,
         });
         return Response.json({ success: true, renderId });
