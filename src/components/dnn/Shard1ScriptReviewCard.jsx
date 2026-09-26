@@ -285,16 +285,24 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
                 ▶ Finished Broadcast
               </div>
               <video src={article.video_url} controls className="w-full max-h-[420px] bg-black" />
-              <div className="p-3 flex items-center gap-2" style={{ background: '#111' }}>
-                <div className="flex-1 min-w-0">
+              <div className="p-3 space-y-2" style={{ background: '#111' }}>
+                <div className="flex items-center gap-2">
+                  <span className="text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded-full shrink-0"
+                    style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.35)' }}>
+                    MP4 · Ready to Send/Post
+                  </span>
                   <p className="text-xs font-bold text-white truncate">{article.headline}</p>
-                  <p className="text-[10px] text-slate-500 truncate">{article.video_url}</p>
                 </div>
-                <button onClick={handleCopyLink}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 hover:opacity-80"
-                  style={{ background: copied ? 'rgba(74,222,128,0.15)' : 'rgba(74,222,128,0.12)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.35)' }}>
-                  {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />} {copied ? 'Copied' : 'Copy Name & Link'}
-                </button>
+                <div className="flex items-center gap-2">
+                  <input readOnly value={article.video_url} onFocus={(e) => e.target.select()}
+                    className="flex-1 min-w-0 rounded-lg px-2.5 py-1.5 text-[11px] font-mono text-slate-300"
+                    style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }} />
+                  <button onClick={handleCopyLink}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 hover:opacity-80"
+                    style={{ background: copied ? 'rgba(74,222,128,0.15)' : 'rgba(74,222,128,0.12)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.35)' }}>
+                    {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />} {copied ? 'Copied' : 'Copy Name & Link'}
+                  </button>
+                </div>
               </div>
             </div>
           ) : article.render_clips && (article.render_clips.opening?.video_url || article.render_clips.body?.video_url) && (
