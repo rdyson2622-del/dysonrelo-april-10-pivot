@@ -372,7 +372,6 @@ function VideoThumbnail({ article, isAdmin, onEdit, onDelete }) {
           autoPlay
           playsInline
           preload="auto"
-          crossOrigin="anonymous"
           style={{ width: '100%', display: 'block', borderRadius: '12px' }}
           onError={(e) => console.warn('Video load error:', e)}
         />
