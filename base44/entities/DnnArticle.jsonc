@@ -306,6 +306,11 @@
     "source_summary": {
       "type": "string",
       "description": "Short summary of the primary source material"
+    },
+    "last_social_post_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this article was last posted by dnnSocialBlast (Facebook/LinkedIn). Used to cycle the social blast queue: once every video-ready article has been posted at least once, the queue loops back to whichever one was posted longest ago instead of running dry."
     }
   },
   "required": [

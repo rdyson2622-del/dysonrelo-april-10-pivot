@@ -2,14 +2,16 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
 import { postLinkedInVideoOrImage } from '../../shared/linkedinPost.ts';
 
 /**
- * dnnSocialBlast — Posts the next un-blasted, video-ready DNN article to
+ * dnnSocialBlast — Posts the next-in-queue, video-ready DNN article to
  * Facebook AND the DNN LinkedIn page in one call.
  *
- * Each call picks the OLDEST video-ready 'published' article and, on success,
- * marks it 'blasted' so the next call naturally moves to the next article in
- * the queue. Running this multiple times a day (see the DNN Daily Social
- * Blast workflow schedule) cycles through the week's articles across both
- * socials with multiple runs per day.
+ * Each call picks whichever video-ready article was posted longest ago
+ * (least-recently-posted first, using last_social_post_at — never-posted
+ * articles count as oldest). On success it stamps last_social_post_at with
+ * now, so running this multiple times a day cycles forward through the
+ * whole stack — and once everything has been posted at least once, it loops
+ * back to the front instead of running dry, since the audience refreshes
+ * over that time anyway and new content will usually have landed by then.
  */
 
 Deno.serve(async (req) => {
@@ -25,9 +27,11 @@ Deno.serve(async (req) => {
       }
     }
 
-    // 1. Get the most recent published article with a completed video
+    // 1. Get every video-ready article — published OR already-blasted, so the
+    // queue can loop back through everything instead of running dry once the
+    // whole stack has been posted once.
     const candidates = await base44.asServiceRole.entities.DnnArticle.filter(
-      { status: 'published' }, '-generated_date', 50
+      { status: { $in: ['published', 'blasted'] } }, '-generated_date', 50
     );
 
     const videoReady = candidates.filter(a =>
@@ -42,10 +46,14 @@ Deno.serve(async (req) => {
       }, { status: 404 });
     }
 
-    // Oldest-first so multiple runs in a day cycle through the week's stack in order.
-    const article = videoReady.sort(
-      (a, b) => new Date(a.generated_date || a.created_date) - new Date(b.generated_date || b.created_date)
-    )[0];
+    // Least-recently-posted first — never-posted articles (no last_social_post_at)
+    // count as oldest so they go out before any repeat. Once every article has
+    // a timestamp, this naturally cycles back to whichever one is stalest.
+    const article = videoReady.sort((a, b) => {
+      const aTime = a.last_social_post_at ? new Date(a.last_social_post_at) : new Date(0);
+      const bTime = b.last_social_post_at ? new Date(b.last_social_post_at) : new Date(0);
+      return aTime - bTime;
+    })[0];
 
     // 2. Build social copy
     const firstPara = article.body?.split('\n').find(p => p.trim()) || '';
@@ -131,9 +139,12 @@ Subscribe for free daily intelligence: ${subscribeUrl}
 
     console.log('DNN Social Blast results:', JSON.stringify(results));
 
-    // Mark article as blasted if either channel succeeded
-    if ((results.facebook?.success || results.linkedin?.success) && article.status === 'published') {
-      await base44.asServiceRole.entities.DnnArticle.update(article.id, { status: 'blasted' });
+    // Stamp last_social_post_at (drives the loop-back queue) and mark
+    // blasted on first success — if either channel succeeded.
+    if (results.facebook?.success || results.linkedin?.success) {
+      const update = { last_social_post_at: new Date().toISOString() };
+      if (article.status === 'published') update.status = 'blasted';
+      await base44.asServiceRole.entities.DnnArticle.update(article.id, update);
     }
 
     return Response.json({ success: true, ...results });
