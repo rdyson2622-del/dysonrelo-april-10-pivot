@@ -1,0 +1,88 @@
+{
+  "name": "CharlieConversation",
+  "type": "object",
+  "properties": {
+    "session_start": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the live voice session started"
+    },
+    "session_end": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the live voice session ended (may be null if it dropped mid-call)"
+    },
+    "page": {
+      "type": "string",
+      "description": "The page path the conversation started from (e.g. /talking-app)"
+    },
+    "visitor_id": {
+      "type": "string",
+      "description": "Logged-in user id, or a generated guest id if not logged in"
+    },
+    "visitor_email": {
+      "type": "string",
+      "description": "Visitor email if known (logged-in users only)"
+    },
+    "visitor_name": {
+      "type": "string",
+      "description": "Visitor full name if known (logged-in users only)"
+    },
+    "model": {
+      "type": "string",
+      "description": "Gemini Live model used for this session, e.g. models/gemini-3.8-live"
+    },
+    "transcript": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "assistant"
+            ]
+          },
+          "text": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "description": "Time-ordered conversation turns, built live as each turn completes so partial calls are never lost"
+    },
+    "talking_session_log_id": {
+      "type": "string",
+      "description": "Linked TalkingSessionLog id for cost/analytics cross-reference"
+    }
+  },
+  "required": [
+    "session_start"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
