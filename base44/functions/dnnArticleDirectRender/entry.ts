@@ -101,9 +101,11 @@ function buildStudioComposite({ introUrl, charlieUrl, bobUrl, outroUrl }) {
     { type: 'image', track: 1, source: DNN_STUDIO_BACKGROUND_URL, width: '100%', height: '100%', x: '50%', y: '50%', fit: 'cover' },
     // Intro plays silent (no network sting) so it matches the outro's plain,
     // sound-effect-free bookend look — only Charlie's and Bob's voice tracks carry audio.
-    // Cut before 1.8s: the source clip's "See you again" sign-off text fades in at 2s —
-    // that phrase belongs on the closing bookend only, never on the open.
-    { type: 'video', track: 2, time: 0, duration: '1.8 s', source: introUrl, volume: '0%', ...FULLSCREEN },
+    // Cut at 1.2s (wider safety margin): the source clip's "See you again" sign-off
+    // text starts fading in at 2s — that phrase belongs on the closing bookend only,
+    // never on the open. The intro asset is literally a copy of the outro clip, so this
+    // trim is the only thing preventing the sign-off text from bleeding into the open.
+    { type: 'video', track: 2, time: 0, duration: '1.2 s', source: introUrl, volume: '0%', ...FULLSCREEN },
     { type: 'video', track: 2, time: 'auto', source: charlieUrl, ...ANCHOR_BOX, x: '20%', x_anchor: '50%' },
     { type: 'video', track: 2, time: 'auto', source: bobUrl, ...ANCHOR_BOX, x: '80%', x_anchor: '50%' },
     { type: 'video', track: 2, time: 'auto', source: outroUrl, ...FULLSCREEN },
