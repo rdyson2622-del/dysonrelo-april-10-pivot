@@ -250,7 +250,7 @@ export default function TalkingApp() {
                 </div>
 
                 {/* 50% Reduced Mic Box Tucked into the Lower Right Corner */}
-                <div className="absolute bottom-0 right-0 z-20 shrink-0">
+                <div className="absolute bottom-0 right-0 z-20 shrink-0 flex flex-col items-end gap-1">
                   <TalkingOrb
                     status={status}
                     setStatus={setStatus}
@@ -261,6 +261,9 @@ export default function TalkingApp() {
                     buttonLabel="Talk with Charlie"
                     compact={true}
                   />
+                  <p className="text-[8px] text-white/60 bg-black/70 px-2 py-0.5 rounded-full max-w-[124px] text-center leading-tight">
+                    Conversations may be recorded as text to help serve you.
+                  </p>
                 </div>
 
               </div>

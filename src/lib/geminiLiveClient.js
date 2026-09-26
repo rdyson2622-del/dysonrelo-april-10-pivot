@@ -202,6 +202,7 @@ export class GeminiLiveSessionClient {
 
     this.ws = null;
     this.sessionLogId = null;
+    this.conversationId = null;
     this.startTime = null;
     this.turnCount = 0;
     this.active = false;
@@ -210,6 +211,12 @@ export class GeminiLiveSessionClient {
     this.isMuted = false;
     this.pendingNav = null;
     this.accumulatedTurnText = '';
+    // Buffers for Gemini's own input/output audio transcription (the
+    // authoritative transcript source — enabled via inputAudioTranscription /
+    // outputAudioTranscription in the setup message below), flushed into
+    // CharlieConversation.transcript as each side's turn completes.
+    this._pendingUserText = '';
+    this._pendingAssistantText = '';
 
     // Audio input/output
     this.micStream = null;
@@ -262,19 +269,21 @@ export class GeminiLiveSessionClient {
       const res = await base44.functions.invoke('geminiLiveProxy', {
         action: 'start_session',
         systemPrompt: this.systemPrompt,
+        page: typeof window !== 'undefined' ? window.location.pathname : '',
       });
 
       if (!res?.data?.wsUrl) {
         throw new Error(res?.data?.error || 'Failed to initialize Gemini Live session');
       }
 
-      const { wsUrl, model, systemPrompt, voiceName, sessionLogId } = res.data;
+      const { wsUrl, model, systemPrompt, voiceName, sessionLogId, conversationId } = res.data;
       this.sessionLogId = sessionLogId;
+      this.conversationId = conversationId || null;
       if (sessionLogId) {
         this.onSessionLogId?.(sessionLogId);
       }
 
-      const rawModel = model || 'models/gemini-2.5-flash-preview-native-audio-dialog';
+      const rawModel = model || 'models/gemini-3.8-live';
       const resolvedModel = rawModel.startsWith('models/') ? rawModel : `models/${rawModel}`;
       const resolvedVoiceName = voiceName || this.voiceName || 'Algieba';
 
@@ -293,6 +302,9 @@ export class GeminiLiveSessionClient {
         this.dispatchGlobalState('connecting', true);
 
         // 3. Send setup message (do not start mic until setupComplete)
+        // inputAudioTranscription / outputAudioTranscription turn on Gemini's
+        // own text transcript of both sides of the call — these are siblings
+        // of generationConfig in the setup message, not nested inside it.
         const setupMessage = {
           setup: {
             model: resolvedModel,
@@ -313,6 +325,8 @@ export class GeminiLiveSessionClient {
                 },
               ],
             },
+            inputAudioTranscription: {},
+            outputAudioTranscription: {},
           },
         };
 
@@ -367,15 +381,33 @@ export class GeminiLiveSessionClient {
             return;
           }
 
-          // Handle server barge-in / interruption
+          // Handle server barge-in / interruption — flush whatever of
+          // Charlie's reply was transcribed so far as a partial turn before
+          // clearing, so an interruption never silently drops it.
           if (msg.serverContent?.interrupted) {
             this.pcmPlayer.stop();
             this.accumulatedTurnText = '';
+            this.flushPendingAssistantText();
             this.onSpeaker?.('user');
             this.dispatchGlobalSpeaker('user');
             this.onStatusChange?.('listening');
             this.dispatchGlobalState('listening', true);
             return;
+          }
+
+          // Gemini's own transcript of the user's speech (authoritative —
+          // replaces guessing from the browser's local SpeechRecognition).
+          // Buffer chunks; flush once the model starts responding, which
+          // marks the end of the user's turn.
+          if (msg.serverContent?.inputTranscription?.text) {
+            this._pendingUserText += msg.serverContent.inputTranscription.text;
+          }
+
+          // Gemini's own transcript of Charlie's spoken reply. Buffer chunks;
+          // flush on turnComplete below.
+          if (msg.serverContent?.outputTranscription?.text) {
+            this.flushPendingUserText();
+            this._pendingAssistantText += msg.serverContent.outputTranscription.text;
           }
 
           // Handle incoming audio parts from Gemini Live
@@ -412,6 +444,7 @@ export class GeminiLiveSessionClient {
           if (msg.serverContent?.turnComplete) {
             this.turnCount++;
             this.accumulatedTurnText = '';
+            this.flushPendingAssistantText();
           }
         } catch (e) {
           console.warn('Error processing Gemini Live message:', e);
@@ -643,6 +676,32 @@ export class GeminiLiveSessionClient {
   }
 
   /**
+   * Flush buffered Gemini-transcribed text for one side of the conversation
+   * into a persisted CharlieConversation turn. Called on turn boundaries and
+   * on stop(), so a dropped call still saves whatever was transcribed.
+   */
+  flushPendingUserText() {
+    if (this._pendingUserText.trim()) {
+      this.appendTurnToServer('user', this._pendingUserText.trim());
+      this._pendingUserText = '';
+    }
+  }
+
+  flushPendingAssistantText() {
+    if (this._pendingAssistantText.trim()) {
+      this.appendTurnToServer('assistant', this._pendingAssistantText.trim());
+      this._pendingAssistantText = '';
+    }
+  }
+
+  appendTurnToServer(role, text) {
+    if (!this.conversationId || !text) return;
+    base44.functions
+      .invoke('geminiLiveProxy', { action: 'append_turn', conversationId: this.conversationId, role, text })
+      .catch(() => {});
+  }
+
+  /**
    * Send text turn over Gemini Live WebSocket
    */
   sendTextMessage(text) {
@@ -679,6 +738,11 @@ export class GeminiLiveSessionClient {
   stop() {
     this.active = false;
     this._setupDone = false;
+
+    // 0. Flush any not-yet-completed transcript turns — ensures a dropped
+    // or manually ended call still saves partial turns.
+    this.flushPendingUserText();
+    this.flushPendingAssistantText();
 
     // 1. Close WebSocket connection
     if (this.ws) {
@@ -734,6 +798,7 @@ export class GeminiLiveSessionClient {
         .invoke('geminiLiveProxy', {
           action: 'end_session',
           sessionLogId: this.sessionLogId,
+          conversationId: this.conversationId,
           duration_seconds,
           transcript_turns: this.turnCount,
         })
